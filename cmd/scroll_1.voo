@@ -1,0 +1,18 @@
+./voodoo run "$0" "$@"
+exit "$?"
+
+
+x = ":)"
+y = "abc"
+
+// A list
+// More comments
+alphabet = [
+	"a"
+	"b"		// The letter 'b'
+	"c"
+]
+
+for i, v <- alphabet
+	@Println("${i}: ${v}")
+end
