@@ -104,6 +104,7 @@ type Scroll struct {
 	Lines []string						// Raw lines from the scroll
 	Length int							// Length of the scroll
 	Index int								// Current line index
+	Number int							// Current line number
 	Code string							// Code from current line 
 	Comment string				// Comment from current line
 }
@@ -139,7 +140,7 @@ func LoadScroll(path string) (scroll Scroll, err error) {
 // if there are lines still to be executed.
 func (scroll *Scroll) MoveToNextCodeLine() bool {
 	for {
-		scroll.Increment()
+		scroll.increment()
 		if scroll.IsEndOfScroll() {
 			return false
 		}
@@ -243,11 +244,6 @@ func (scroll *Scroll) IsEndOfScroll() bool {
 	return false
 }
 
-// Increment increments the line index counter by one.
-func (scroll *Scroll) Increment() {
-	scroll.Index += 1
-}
-
 // PrintComment prints the comment in the current line.
 func (scroll *Scroll) PrintComment() {
 	scroll.PrintCommentAt(scroll.Index)
@@ -305,9 +301,16 @@ func (scroll *Scroll) PrintLines(from int, to int) {
 	}
 }
 
+// increment increments the line index counter by one.
+func (scroll *Scroll) increment() {
+	next := scroll.Index + 1
+	scroll.JumpToLine(next)
+}
+
 // JumpToLine sets the next line cursor to the specified line index.
 func (scroll *Scroll) JumpToLine(index int) {
 	scroll.Index = index
+	scroll.Number = index + 1
 }
 
 /******************************************************************************
