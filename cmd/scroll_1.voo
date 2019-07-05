@@ -13,6 +13,10 @@ alphabet = [
 	"c"
 ]
 
+printAlphabet = spell(index, letter)
+	@Println("${index}: ${letter}")
+end
+
 for i, v <- alphabet
-	@Println("${i}: ${v}")
+	printAlphabet(i, v)
 end
