@@ -99,10 +99,12 @@ func voodooRun() {
 	github.com/PaulioRandall/voodoo-go/cmd/scroll
 ******************************************************************************/
 
-// Scroll represents a scroll and it's current working state.
+// Scroll represents a scroll and it's current state.
 type Scroll struct {
+	// Scroll
 	Lines []string						// Raw lines from the scroll
 	Length int							// Length of the scroll
+	// State
 	Index int								// Current line index
 	Number int							// Current line number
 	Code string							// Code from current line 
@@ -152,8 +154,14 @@ func (scroll *Scroll) MoveToNextCodeLine() bool {
 	}
 }
 
-// prepareLine finds and trims the line indicated by the
-// current index then sets it as the 'CurrentLine' .
+// increment increments the line index counter by one.
+func (scroll *Scroll) increment() {
+	next := scroll.Index + 1
+	scroll.JumpToLine(next)
+}
+
+// prepLine finds, splits, trims, and sets the code and comments
+// of the line indicated by the current index.
 func (scroll *Scroll) prepLine() {
 	line := scroll.Lines[scroll.Index]
 	code, comment := cleaveLine(line)
@@ -189,22 +197,53 @@ func prepLinePart(runes []rune) string {
 // findCleavePoint finds the rune index where a comment starts
 // in a line. -1 is returned if there is no point.
 func findCleavePoint(line string) int {
+	prevIndex := 0
+	prev := ""
+	
+	return  findIndexInLine(line, func(i int, r rune) int {
+		s := string(r)
+		
+		if (i - 1) == prevIndex && prev == "/" && s == "/" {
+			return prevIndex
+		}
+		
+		prevIndex = i
+		prev = s
+		return -1
+	})
+}
+
+// findIndexInLine searches a line to find whatever the 'onEachRune'
+// function is searching for. Runes within string literals are not
+// passed to the function so no special handling is required within
+// the supplied function. 'onEachRune' function accepts the index
+// as the first value and the rune as the second while a non-negative
+// index if the required index has been found.
+func findIndexInLine(line string, onEachRune func(int, rune) int) int {
 	inLiteral := false
 	prev := ""
 	
 	for i, r := range line {
-		curr := string(r)
+		s := string(r)
+		wasInLiteral := false
 		
-		switch {
-		case curr == "\"" && prev != "\\":
-			inLiteral = !inLiteral
-		case inLiteral:
-			// Do nothing!
-		case curr == "/" && prev == "/":
-			return i - 1
+		if inLiteral && prev != "\\" && s == "\"" {
+			inLiteral = false
+			wasInLiteral = true
 		}
 		
-		prev = curr
+		if !inLiteral {
+			index := onEachRune(i, r)
+			if index > -1 {
+				return index
+			}
+		}
+		
+		if !inLiteral && !wasInLiteral && s == "\"" {
+			inLiteral = true
+		}
+		
+		prev = s
 	}
 	
 	return -1
@@ -299,12 +338,6 @@ func (scroll *Scroll) PrintLines(from int, to int) {
 	for i, v := range lines {
 		printNumberedLine(i, v)
 	}
-}
-
-// increment increments the line index counter by one.
-func (scroll *Scroll) increment() {
-	next := scroll.Index + 1
-	scroll.JumpToLine(next)
 }
 
 // JumpToLine sets the next line cursor to the specified line index.
