@@ -101,11 +101,11 @@ func voodooRun() {
 
 // Scroll represents a scroll and it's current working state.
 type Scroll struct {
-	Lines []string
-	Length int
-	Index int
-	LineCode string
-	LineComment string
+	Lines []string						// Raw lines from the scroll
+	Length int							// Length of the scroll
+	Index int								// Current line index
+	Code string							// Code from current line 
+	Comment string				// Comment from current line
 }
 
 // LoadScroll reads the lines of the scroll and creates a
@@ -156,8 +156,8 @@ func (scroll *Scroll) MoveToNextCodeLine() bool {
 func (scroll *Scroll) prepLine() {
 	line := scroll.Lines[scroll.Index]
 	code, comment := cleaveLine(line)
-	scroll.LineCode = code
-	scroll.LineComment = comment
+	scroll.Code = code
+	scroll.Comment = comment
 }
 
 // cleaveLine splits the line into the code part and comment part.
@@ -212,7 +212,7 @@ func findCleavePoint(line string) int {
 // IsCodeLine returns true if the currrent line contains
 // executable code.
 func (scroll *Scroll) IsCodeLine() bool {
-	if scroll.LineCode != "" {
+	if scroll.Code != "" {
 		return true
 	}
 	return false
@@ -221,7 +221,7 @@ func (scroll *Scroll) IsCodeLine() bool {
 // IsCommentLine returns true if the current line is a
 // comment line.
 func (scroll *Scroll) IsCommentLine() bool {
-	if scroll.LineComment != ""{
+	if scroll.Comment != ""{
 		return true
 	}
 	return false
@@ -255,9 +255,8 @@ func (scroll *Scroll) PrintLineComment() {
 
 // PrintLineCommentAt prints the comment of the specified line.
 func (scroll *Scroll) PrintLineCommentAt(index int) {
-	comment := scroll.LineComment
-	out := fmt.Sprintf("%d: %v", index, comment)
-	fmt.Println(out)
+	comment := scroll.Comment
+	printNumberedLine(index, comment)
 }
 
 // PrintLineCode prints the code in the current line.
@@ -267,9 +266,8 @@ func (scroll *Scroll) PrintLineCode() {
 
 // PrintLineCodeAt prints the code of the specified line.
 func (scroll *Scroll) PrintLineCodeAt(index int) {
-	code := scroll.LineCode
-	out := fmt.Sprintf("%d: %v", index, code)
-	fmt.Println(out)
+	code := scroll.Code
+	printNumberedLine(index, code)
 }
 
 // PrintLine prints the current line.
@@ -280,7 +278,14 @@ func (scroll *Scroll) PrintLine() {
 // PrintLineAt prints the specified line.
 func (scroll *Scroll) PrintLineAt(index int) {
 	line := scroll.Lines[index]
-	out := fmt.Sprintf("%d: %v", index, line)
+	printNumberedLine(index, line)
+}
+
+// printNumberedLine prints the line number then the line
+// contents
+func printNumberedLine(index int, line string) {
+	num := index + 1
+	out := fmt.Sprintf("%-3d: %v", num, line)
 	fmt.Println(out)
 }
 
@@ -296,8 +301,7 @@ func (scroll *Scroll) PrintLines(from int, to int) {
 	
 	lines := scroll.Lines[from:to]
 	for i, v := range lines {
-		out := fmt.Sprintf("%d: %v", i, v)
-		fmt.Println(out)
+		printNumberedLine(i, v)
 	}
 }
 
