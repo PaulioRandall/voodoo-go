@@ -5,21 +5,15 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"time"
-	"runtime"
 	"bufio"
 	"strings"
 	"regexp"
 )
 
-// TODO Write build and run script so I don't forget how to do it
-
 // main is the entry point for this script. It wraps the standard Go format,
 // build, test, run, and install operations specifically for this project.
 func main() {
-	//clearTerminal()
-
 	stopWatch := StopWatch{}
 	stopWatch.Start()
 	fmt.Printf("Started\t%v\n\n", stopWatch.Started.UTC())
@@ -40,23 +34,6 @@ func main() {
 	stopWatch.PrintElapsed(time.Microsecond)
 
 	os.Exit(0)
-}
-
-// clearTerminal clears the terminal.
-func clearTerminal() {
-	p := runtime.GOOS
-	switch p {
-	case "linux":
-		cmd := exec.Command("clear")
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-	case "windows":
-		cmd := exec.Command("cmd", "/c", "cls")
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-	default:
-		panic("Platform '" + p + "' not currently supported")
-	}
 }
 
 // getArgument returns the argument passed that represents the operation to

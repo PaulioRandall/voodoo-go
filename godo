@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -f cmd/voodoo
+
 if [[ "$1" == "build" || "$1" == "run" ]]; then
 	echo Building...
 	cd cmd
