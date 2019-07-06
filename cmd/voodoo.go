@@ -100,12 +100,7 @@ func voodooRun() {
 		// exists in a line it must be assigning something to a variable.
 		isAssignment, err := regexp.MatchString(`\s=\s`, scroll.Code)
 		if err != nil {
-			// TODO: Write a function that prints out a bug then exits
-			fmt.Println("[COMPILER BUG]")
-			bugMsg := fmt.Sprintf("\t...when parsing line '%d' of '%s'", scroll.Number, scrollPath)
-			fmt.Println(bugMsg)
-			fmt.Println("\t...bad regex used for finding assignment operator")
-			os.Exit(1)
+			compilerBug(scroll, "bad regex used for finding assignment operator")
 		}
 		
 		if isAssignment {
@@ -116,7 +111,6 @@ func voodooRun() {
 				fmt.Println(v)
 			}
 			
-			// TODO: Parse the variable names, there may be more than 1
 			// TODO: Parse the value being assigned
 		}
 	}
@@ -134,9 +128,21 @@ func assignmentCleave(line string) (varNames []string, statOrExpr string) {
 	return
 }
 
+// compilerBug writes a compiler bug to output then exits the program
+// with code 1.
+func compilerBug(scroll *Scroll, msg string) {
+	fmt.Println("[COMPILER BUG]")
+	info := fmt.Sprintf("\t...when parsing line '%d' of '%s'", scroll.Number, scroll.File)
+	fmt.Println(info)
+	fmt.Print("\t..." + msg)
+	os.Exit(1)
+}
+
 /******************************************************************************
 	github.com/PaulioRandall/voodoo-go/cmd/variable
 ******************************************************************************/
+
+// TODO: Move this code to it's own package
 
 // ValueType represents the type of a voodoo value.
 type ValueType int
@@ -172,10 +178,13 @@ type VoodooValue struct {
 	github.com/PaulioRandall/voodoo-go/cmd/scroll
 ******************************************************************************/
 
+// TODO: Move this code to it's own package
+
 // Scroll represents a scroll and it's current state.
 type Scroll struct {
 	// Scroll
-	Lines []string					// Raw lines from the scroll
+	File string								// File path to the scroll
+	Lines []string						// Raw lines from the scroll
 	Length int							// Length of the scroll
 	// Line state
 	Index int								// Current line index
@@ -188,7 +197,7 @@ type Scroll struct {
 
 // LoadScroll reads the lines of the scroll and creates a
 // new Scroll instance for it.
-func LoadScroll(path string) (scroll Scroll, err error) {
+func LoadScroll(path string) (scroll *Scroll, err error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return
@@ -196,17 +205,17 @@ func LoadScroll(path string) (scroll Scroll, err error) {
 	defer file.Close()
 
 	lines, err := scanLines(file)
-	
 	if err == nil {
-		scroll = newScroll(lines)
+		scroll = newScroll(path, lines)
 	}
 	
 	return
 }
 
 // newScroll creates a new Scroll instance.
-func newScroll(lines []string) Scroll {
-	return Scroll{
+func newScroll(file string, lines []string) *Scroll {
+	return &Scroll{
+		File: file,
 		Lines: lines,
 		Length: len(lines),
 	}
