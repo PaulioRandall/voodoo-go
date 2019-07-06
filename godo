@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ "$1" == "build" || "$1" == "run" ]]; then
+	echo Building...
+	cd cmd
+	go build voodoo.go
+	cd ..
+fi
+
+if [[ "$1" == "run" ]]; then
+	echo Running...
+	cd cmd
+	./voodoo run scroll_1.voo
+	cd ..
+fi

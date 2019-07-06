@@ -18,7 +18,7 @@ import (
 // main is the entry point for this script. It wraps the standard Go format,
 // build, test, run, and install operations specifically for this project.
 func main() {
-	clearTerminal()
+	//clearTerminal()
 
 	stopWatch := StopWatch{}
 	stopWatch.Start()
