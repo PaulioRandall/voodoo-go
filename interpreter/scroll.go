@@ -61,7 +61,7 @@ func (scroll *Scroll) NextCodeLine() bool {
 
 // increment increments the line index counter by one.
 func (scroll *Scroll) increment() {
-	next := scroll.Index + 1
+	next := scroll.Index + 2
 	scroll.JumpToLine(next)
 }
 
@@ -253,7 +253,7 @@ func printLineNumber(index int) {
 }
 
 // JumpToLine sets the next line cursor to the specified line index.
-func (scroll *Scroll) JumpToLine(index int) {
-	scroll.Index = index
-	scroll.Number = index + 1
+func (scroll *Scroll) JumpToLine(num int) {
+	scroll.Index = num - 1
+	scroll.Number = num
 }

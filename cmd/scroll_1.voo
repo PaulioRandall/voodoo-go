@@ -1,6 +1,4 @@
-./voodoo run "$0" "$@"
-exit "$?"
-
+./voodoo run "$0" "$@"; exit "$?"
 
 a = true
 b, c = 123

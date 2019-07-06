@@ -29,8 +29,7 @@ func LoadScroll(path string) (scroll *Scroll, err error) {
 // Execute runs the voodoo scroll.
 func Execute(scroll *Scroll, scrollArgs []string) (exitCode int, err error) {
 	
-	lastIgnoredLine := 2
-	scroll.JumpToLine(lastIgnoredLine)
+	scroll.JumpToLine(1) // Ignore first line
 	
 	for scroll.NextCodeLine() {
 		
@@ -77,42 +76,6 @@ func compilerBug(scroll *Scroll, msg string) {
 	fmt.Println(info)
 	fmt.Print("\t..." + msg)
 	os.Exit(1)
-}
-
-/******************************************************************************
-	github.com/PaulioRandall/voodoo-go/cmd/variable
-******************************************************************************/
-
-// TODO: Move this code to it's own package
-
-// ValueType represents the type of a voodoo value.
-type ValueType int
-
-// Declaration of Value types.
-const (
-	BoolType ValueType = iota + 1
-	NumType
-	StrType
-	ListType
-	ObjType
-	FuncType
-)
-
-// KeyValuePair represents with a key value pair.
-type KeyValuePair struct {
-	Key VoodooValue
-	Value VoodooValue
-}
-
-// VoodooValue represents a value within the scroll.
-type VoodooValue struct {
-	ValueType ValueType
-	BoolValue bool
-	NumValue float64
-	StrValue string
-	ListValue []VoodooValue
-	ObjValue []KeyValuePair
-	FuncValue []string
 }
 
 /******************************************************************************
