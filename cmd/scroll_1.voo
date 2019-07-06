@@ -1,22 +1,8 @@
 ./voodoo run "$0" "$@"
 exit "$?"
 
+a = true
+b, c = 123
+d = "xyz"		// Code and a comment on the same line!
 
-x = ":)"
-y = "abc"
-
-// A list
-// More comments
-alphabet = [
-	"a"
-	"b"		// The letter 'b'
-	"c"
-]
-
-printAlphabet = spell(index, letter)
-	@Println("${index}: ${letter}")
-end
-
-for i, v <- alphabet
-	printAlphabet(i, v)
-end
+f()

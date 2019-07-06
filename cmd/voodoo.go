@@ -10,7 +10,10 @@ import (
 	"runtime"
 	"bufio"
 	"strings"
+	"regexp"
 )
+
+// TODO Write build and run script so I don't forget how to do it
 
 // main is the entry point for this script. It wraps the standard Go format,
 // build, test, run, and install operations specifically for this project.
@@ -90,9 +93,79 @@ func voodooRun() {
 	lastIgnoredLine := 2
 	scroll.JumpToLine(lastIgnoredLine)
 	
-	for scroll.MoveToNextCodeLine() {
-		scroll.PrintCode()
+	for scroll.NextCodeLine() {
+		
+		// Note: The assignment operator '=' must have whitespace on both sides
+		// of it. It is only used for assignment, therefore, if the operator
+		// exists in a line it must be assigning something to a variable.
+		isAssignment, err := regexp.MatchString(`\s=\s`, scroll.Code)
+		if err != nil {
+			// TODO: Write a function that prints out a bug then exits
+			fmt.Println("[COMPILER BUG]")
+			bugMsg := fmt.Sprintf("\t...when parsing line '%d' of '%s'", scroll.Number, scrollPath)
+			fmt.Println(bugMsg)
+			fmt.Println("\t...bad regex used for finding assignment operator")
+			os.Exit(1)
+		}
+		
+		if isAssignment {
+			varNames, _ := assignmentCleave(scroll.Code)
+			
+			for _, v := range varNames {
+				printLineNumber(scroll.Index)
+				fmt.Println(v)
+			}
+			
+			// TODO: Parse the variable names, there may be more than 1
+			// TODO: Parse the value being assigned
+		}
 	}
+}
+
+// assignmentCleave splits a scroll line that performs an assignment
+// into an array of variable names and the statement or expression.
+func assignmentCleave(line string) (varNames []string, statOrExpr string) {
+	parts := strings.SplitN(line, "=", 2)
+	statOrExpr = parts[1]
+	varNames = strings.Split(parts[0], ",")
+	for i, v := range varNames {
+		varNames[i] = strings.TrimSpace(v)
+	}
+	return
+}
+
+/******************************************************************************
+	github.com/PaulioRandall/voodoo-go/cmd/variable
+******************************************************************************/
+
+// ValueType represents the type of a voodoo value.
+type ValueType int
+
+// Declaration of Value types.
+const (
+	BoolType ValueType = iota + 1
+	NumType
+	StrType
+	ListType
+	ObjType
+	FuncType
+)
+
+// KeyValuePair represents with a key value pair.
+type KeyValuePair struct {
+	Key VoodooValue
+	Value VoodooValue
+}
+
+// VoodooValue represents a value within the scroll.
+type VoodooValue struct {
+	ValueType ValueType
+	BoolValue bool
+	NumValue float64
+	StrValue string
+	ListValue []VoodooValue
+	ObjValue []KeyValuePair
+	FuncValue []string
 }
 
 /******************************************************************************
@@ -102,13 +175,15 @@ func voodooRun() {
 // Scroll represents a scroll and it's current state.
 type Scroll struct {
 	// Scroll
-	Lines []string						// Raw lines from the scroll
+	Lines []string					// Raw lines from the scroll
 	Length int							// Length of the scroll
-	// State
+	// Line state
 	Index int								// Current line index
 	Number int							// Current line number
 	Code string							// Code from current line 
-	Comment string				// Comment from current line
+	Comment string					// Comment from current line
+	// Variable state
+	Variables map[string]VoodooValue			// Currently used variables
 }
 
 // LoadScroll reads the lines of the scroll and creates a
@@ -120,27 +195,37 @@ func LoadScroll(path string) (scroll Scroll, err error) {
 	}
 	defer file.Close()
 
-	lines := make([]string, 0)
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
+	lines, err := scanLines(file)
 	
-	err = scanner.Err()
 	if err == nil {
-		scroll = Scroll{
-			Lines: lines,
-			Length: len(lines),
-		}
+		scroll = newScroll(lines)
 	}
 	
 	return
 }
 
-// MoveToNextCodeLine moves the line index counter to
+// newScroll creates a new Scroll instance.
+func newScroll(lines []string) Scroll {
+	return Scroll{
+		Lines: lines,
+		Length: len(lines),
+	}
+}
+
+// scanLines reads in the lines of an opened file.
+func scanLines(file *os.File) ([]string, error) {
+	lines := make([]string, 0)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
+}
+
+// NextCodeLine moves the line index counter to
 // the next line that has executable code. True is returned
 // if there are lines still to be executed.
-func (scroll *Scroll) MoveToNextCodeLine() bool {
+func (scroll *Scroll) NextCodeLine() bool {
 	for {
 		scroll.increment()
 		if scroll.IsEndOfScroll() {
@@ -283,49 +368,41 @@ func (scroll *Scroll) IsEndOfScroll() bool {
 	return false
 }
 
-// PrintComment prints the comment in the current line.
-func (scroll *Scroll) PrintComment() {
-	scroll.PrintCommentAt(scroll.Index)
+// PrintlnComment prints the comment in the current line.
+func (scroll *Scroll) PrintlnComment() {
+	scroll.PrintlnCommentAt(scroll.Index)
 }
 
-// PrintCommentAt prints the comment of the specified line.
-func (scroll *Scroll) PrintCommentAt(index int) {
+// PrintlnCommentAt prints the comment of the specified line.
+func (scroll *Scroll) PrintlnCommentAt(index int) {
 	comment := scroll.Comment
-	printNumberedLine(index, comment)
+	printlnNumberedLine(index, comment)
 }
 
-// PrintCode prints the code in the current line.
-func (scroll *Scroll) PrintCode() {
-	scroll.PrintCodeAt(scroll.Index)
+// PrintlnCode prints the code in the current line.
+func (scroll *Scroll) PrintlnCode() {
+	scroll.PrintlnCodeAt(scroll.Index)
 }
 
-// PrintCodeAt prints the code of the specified line.
-func (scroll *Scroll) PrintCodeAt(index int) {
+// PrintlnCodeAt prints the code of the specified line.
+func (scroll *Scroll) PrintlnCodeAt(index int) {
 	code := scroll.Code
-	printNumberedLine(index, code)
+	printlnNumberedLine(index, code)
 }
 
-// PrintLine prints the current line.
-func (scroll *Scroll) PrintLine() {
-	scroll.PrintLineAt(scroll.Index)
+// PrintlnLine prints the current line.
+func (scroll *Scroll) PrintlnLine() {
+	scroll.PrintlnLineAt(scroll.Index)
 }
 
-// PrintLineAt prints the specified line.
-func (scroll *Scroll) PrintLineAt(index int) {
+// PrintlnLineAt prints the specified line.
+func (scroll *Scroll) PrintlnLineAt(index int) {
 	line := scroll.Lines[index]
-	printNumberedLine(index, line)
+	printlnNumberedLine(index, line)
 }
 
-// printNumberedLine prints the line number then the line
-// contents.
-func printNumberedLine(index int, line string) {
-	num := index + 1
-	out := fmt.Sprintf("%-3d: %v", num, line)
-	fmt.Println(out)
-}
-
-// PrintLines prints all lines within the specified range.
-func (scroll *Scroll) PrintLines(from int, to int) {
+// PrintlnLines prints all lines within the specified range.
+func (scroll *Scroll) PrintlnLines(from int, to int) {
 	switch {
 	case from < 0, to < 0, from > to:
 		e := fmt.Sprintf("Invalid line range: from %d to %d", from, to)
@@ -336,8 +413,23 @@ func (scroll *Scroll) PrintLines(from int, to int) {
 	
 	lines := scroll.Lines[from:to]
 	for i, v := range lines {
-		printNumberedLine(i, v)
+		printlnNumberedLine(i, v)
 	}
+}
+
+// printlnNumberedLine prints the line number then the line
+// contents.
+func printlnNumberedLine(index int, line string) {
+	printLineNumber(index)
+	fmt.Println(line)
+}
+
+// printLineNumber prints the line number but does not add
+// a new line character to the end.
+func printLineNumber(index int) {
+	num := index + 1
+	out := fmt.Sprintf("%-3d: ", num)
+	fmt.Print(out)
 }
 
 // JumpToLine sets the next line cursor to the specified line index.
