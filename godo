@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 rm -f cmd/voodoo
 
 if [[ "$1" == "build" || "$1" == "run" ]]; then
