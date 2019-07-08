@@ -1,0 +1,23 @@
+#!/bin/bash
+
+clear
+rm -f cmd/voodoo.exe
+
+if [[ "$1" == "" ]]; then
+	echo "No parameter supplied, I don't know what to do!"
+	exit 1
+fi
+
+if [[ "$1" == "build" || "$1" == "run" ]]; then
+	echo Building...
+	cd cmd
+	go build voodoo.go
+	cd ..
+fi
+
+if [[ "$1" == "run" ]]; then
+	echo Running...
+	cd cmd
+	./voodoo.exe exe scroll_1.voo
+	cd ..
+fi

@@ -3,8 +3,6 @@ package interpreter
 
 import (
 	"fmt"
-	"os"
-	"bufio"
 	"strings"
 )
 
@@ -30,16 +28,6 @@ func newScroll(file string, lines []string) *Scroll {
 		Lines: lines,
 		Length: len(lines),
 	}
-}
-
-// scanLines reads in the lines of an opened file.
-func scanLines(file *os.File) ([]string, error) {
-	lines := make([]string, 0)
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines, scanner.Err()
 }
 
 // NextCodeLine moves the line index counter to
@@ -105,7 +93,8 @@ func findCleavePoint(line string) int {
 	prevIndex := 0
 	prev := ""
 	
-	return  findIndexInLine(line, func(i int, r rune) int {
+	snip := Snippet(line)
+	return snip.findIndex(func(i int, r rune) int {
 		s := string(r)
 		
 		if (i - 1) == prevIndex && prev == "/" && s == "/" {
@@ -116,42 +105,6 @@ func findCleavePoint(line string) int {
 		prev = s
 		return -1
 	})
-}
-
-// findIndexInLine searches a line to find whatever the 'onEachRune'
-// function is searching for. Runes within string literals are not
-// passed to the function so no special handling is required within
-// the supplied function. 'onEachRune' function accepts the index
-// as the first value and the rune as the second while a non-negative
-// index if the required index has been found.
-func findIndexInLine(line string, onEachRune func(int, rune) int) int {
-	inLiteral := false
-	prev := ""
-	
-	for i, r := range line {
-		s := string(r)
-		wasInLiteral := false
-		
-		if inLiteral && prev != "\\" && s == "\"" {
-			inLiteral = false
-			wasInLiteral = true
-		}
-		
-		if !inLiteral {
-			index := onEachRune(i, r)
-			if index > -1 {
-				return index
-			}
-		}
-		
-		if !inLiteral && !wasInLiteral && s == "\"" {
-			inLiteral = true
-		}
-		
-		prev = s
-	}
-	
-	return -1
 }
 
 // IsCodeLine returns true if the currrent line contains
