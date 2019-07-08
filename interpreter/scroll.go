@@ -17,6 +17,12 @@ type Scroll struct {
 	Number int							// Current line number
 	Code string							// Code from current line 
 	Comment string					// Comment from current line
+	
+	// TODO: Variables are not accessed globally but functions are
+	// TODO: Only store functions here and copy them to each blocks
+	// TODO: Variable set at the beginning of each block.
+	// TODO: Block variable declaration will overide a function
+	// TODO: Variable so keep functions as VoodooValues.
 	// Variable state
 	Variables map[string]VoodooValue			// Currently used variables
 }
@@ -93,7 +99,9 @@ func findCleavePoint(line string) int {
 	prevIndex := 0
 	prev := ""
 	
-	snip := Snippet(line)
+	snip := Snippet{
+		Code: line,
+	}
 	return snip.findIndex(func(i int, r rune) int {
 		s := string(r)
 		

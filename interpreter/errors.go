@@ -4,14 +4,20 @@ package interpreter
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 // compilerBug writes a compiler bug to output then exits the program
 // with code 1.
-func compilerBug(scroll *Scroll, msg string) {
-	fmt.Println("[COMPILER BUG]")
-	info := fmt.Sprintf("\t...when parsing line '%d' of '%s'", scroll.Number, scroll.File)
+func compilerBug(lineNum int, msg string) {
+	fmt.Print("[COMPILER BUG]")
+	info := fmt.Sprintf("...when parsing line '%d'", lineNum)
 	fmt.Println(info)
-	fmt.Print("\t..." + msg)
+	
+	msgLines := strings.Split(msg, "\n")
+	for _, v := range msgLines {
+		fmt.Print("\t..." + v)
+	}
+	
 	os.Exit(1)
 }
