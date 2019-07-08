@@ -9,6 +9,7 @@ if [[ "$1" == "" ]]; then
 fi
 
 if [[ "$1" == "build" || "$1" == "run" ]]; then
+	valid="true"
 	echo Building...
 	cd cmd
 	go build voodoo.go
@@ -16,8 +17,13 @@ if [[ "$1" == "build" || "$1" == "run" ]]; then
 fi
 
 if [[ "$1" == "run" ]]; then
+	valid="true"
 	echo Running...
 	cd cmd
-	./voodoo.exe exe scroll_1.voo
+	./voodoo.exe run scroll_1.voo
 	cd ..
+fi
+
+if [[ "$valid" != "true" ]]; then
+	echo "I don't understand the option '$1'..."
 fi

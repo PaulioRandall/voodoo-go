@@ -21,7 +21,7 @@ func main() {
 	// this way.
 	option := getOption()
 	switch option {
-	case "exe":
+	case "run":
 		exeScroll()
 
 	default:
