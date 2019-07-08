@@ -16,15 +16,15 @@ type Scroll struct {
 	Index int								// Current line index
 	Number int							// Current line number
 	Code string							// Code from current line 
-	Comment string					// Comment from current line
+	Comment string				// Comment from current line
 	
 	// TODO: Variables are not accessed globally but functions are
 	// TODO: Only store functions here and copy them to each blocks
 	// TODO: Variable set at the beginning of each block.
 	// TODO: Block variable declaration will overide a function
 	// TODO: Variable so keep functions as VoodooValues.
-	// Variable state
-	Variables map[string]VoodooValue			// Currently used variables
+	Block ScrollBlockExe			// Executes top level lines
+	//Variables map[string]VoodooValue			// Currently used variables
 }
 
 // newScroll creates a new Scroll instance.

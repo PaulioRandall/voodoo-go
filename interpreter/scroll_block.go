@@ -6,9 +6,9 @@ import (
 	"strings"
 )
 
-// ScrollBlock represents the scroll itself as a block.
-type ScrollBlock struct {
-	Variables map[string]VoodooValue			// Currently used variables
+// ScrollBlockExe represents the scroll itself as a block executor.
+type ScrollBlockExe struct {
+	//Variables map[string]VoodooValue			// Currently used variables
 }
 
 // executeLines continues execution of the scroll lines at the root
