@@ -28,10 +28,10 @@ func NewScroll(file string, lines []string) *Scroll {
 	}
 }
 
-// NextCodeLine moves the line index counter to
-// the next line that has executable code. True is returned
-// if there are lines still to be executed.
-func (scroll *Scroll) NextCodeLine() bool {
+// Next moves the line index counter to the next line that
+// has executable code. True is returned if there are lines
+// still to be executed.
+func (scroll *Scroll) Next() bool {
 	for {
 		scroll.increment()
 		if scroll.IsEndOfScroll() {

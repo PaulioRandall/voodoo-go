@@ -5,6 +5,7 @@ import (
 	"strings"
 	
 	sc "github.com/PaulioRandall/voodoo-go/scroll"
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // ScrollActivity represents the scroll itself as an activity.
@@ -12,29 +13,32 @@ type ScrollActivity struct {
 	vars map[string]sc.VooValue
 }
 
-// Exe satisfies the Activity interface.
-func (se *ScrollActivity) Exe(scroll *sc.Scroll) (exitCode int, err error) {
-	for scroll.NextCodeLine() {
-	
-		firstCol := 1
-		snip := sc.Snippet{
-			Code: scroll.Code,
-			Row: scroll.Number,
-			Col: firstCol,
-		}
-	
-		switch {
-		case snip.HasAssignOperator():
-			onAssignment(scroll)
-		}
+// NewScrollActivity returns a new scroll activity.
+func NewScrollActivity() *ScrollActivity {
+	return &ScrollActivity{
+		vars: make(map[string]sc.VooValue),
 	}
-	
-	return exitCode, err
 }
 
-// Vars satisfies the activity interface
-func (se *ScrollActivity) Vars() map[string]sc.VooValue {
-	return se.vars
+// ExeLine satisfies the Executor interface.
+func (sa *ScrollActivity) ExeLine(scroll *sc.Scroll, line string) (sh.ExitCode, Executor, sh.ExeError) {
+	exitCode := sh.OK
+	next := Executor(sa)
+	var err sh.ExeError = nil
+	
+	firstCol := 1
+	snip := sc.Snippet{
+		Code: line,
+		Row: scroll.Number,
+		Col: firstCol,
+	}
+	
+	switch {
+	case snip.HasAssignOperator():
+		onAssignment(scroll)
+	}
+	
+	return exitCode, next, err
 }
 
 // onAssignment handles a line of scroll that assigns something

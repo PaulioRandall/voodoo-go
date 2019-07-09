@@ -3,6 +3,7 @@ package executors
 
 import (
 	sc "github.com/PaulioRandall/voodoo-go/scroll"
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // OperatorType represents the type of an operation.
@@ -22,13 +23,7 @@ type Operation struct {
 	Snip sc.Snippet
 }
 
-// Exe satisfies the Executor interface.
-func (op *Operation) Exe(scroll *sc.Scroll) (exitCode int, err error) {
-	// TODO: Move stuff from snippet 
-	return exitCode, err
-}
-
-// Vars satisfies the Executor interface.
-func (op *Operation) Vars() map[string]sc.VooValue {
-	return nil
+// ExeLine satisfies the Executor interface.
+func (op *Operation) ExeLine(scroll *sc.Scroll, line string) (sh.ExitCode, Executor, sh.ExeError) {
+	return sh.CatchAllErr, nil, sh.NewError(sh.CatchAllErr, "Not yet implemented")
 }

@@ -7,6 +7,7 @@ import (
 	
 	sc "github.com/PaulioRandall/voodoo-go/scroll"
 	ex "github.com/PaulioRandall/voodoo-go/executors"
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // LoadScroll reads the lines of the scroll and creates a
@@ -37,9 +38,22 @@ func scanLines(file *os.File) ([]string, error) {
 }
 
 // Execute runs the voodoo scroll.
-func Execute(scroll *sc.Scroll, scrollArgs []string) (exitCode int, err error) {
+func Execute(scroll *sc.Scroll, scrollArgs []string) (code sh.ExitCode, exErr sh.ExeError) {
+	
+	var exe ex.Executor
+	exe = ex.NewScrollActivity()
 	
 	scroll.JumpToLine(1) // Ignore the first line
-	ac := ex.ScrollActivity{}
-	return ac.Exe(scroll)
+	
+	for scroll.Next() {
+		line := scroll.Code
+		code, exe, exErr = exe.ExeLine(scroll, line)
+		
+		if code != sh.OK {
+			return
+		}
+	}
+	
+	return
 }
+
