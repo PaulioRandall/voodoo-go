@@ -8,20 +8,20 @@ import (
 	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
-// ScrollActivity represents the scroll itself as an activity.
-type ScrollActivity struct {
+// ScrollExecutor represents the scroll itself as an activity.
+type ScrollExecutor struct {
 	vars map[string]sc.VooValue
 }
 
-// NewScrollActivity returns a new scroll activity.
-func NewScrollActivity() *ScrollActivity {
-	return &ScrollActivity{
+// NewScrollExecutor returns a new scroll executor.
+func NewScrollExecutor() *ScrollExecutor {
+	return &ScrollExecutor{
 		vars: make(map[string]sc.VooValue),
 	}
 }
 
 // ExeLine satisfies the Executor interface.
-func (sa *ScrollActivity) ExeLine(scroll *sc.Scroll, line string) (sh.ExitCode, Executor, sh.ExeError) {
+func (sa *ScrollExecutor) ExeLine(scroll *sc.Scroll, line string) (sh.ExitCode, Executor, sh.ExeError) {
 	exitCode := sh.OK
 	next := Executor(sa)
 	var err sh.ExeError = nil

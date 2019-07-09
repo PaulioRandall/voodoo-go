@@ -41,7 +41,7 @@ func scanLines(file *os.File) ([]string, error) {
 func Execute(scroll *sc.Scroll, scrollArgs []string) (code sh.ExitCode, exErr sh.ExeError) {
 	
 	var exe ex.Executor
-	exe = ex.NewScrollActivity()
+	exe = ex.NewScrollExecutor()
 	
 	scroll.JumpToLine(1) // Ignore the first line
 	
