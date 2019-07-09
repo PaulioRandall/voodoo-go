@@ -1,7 +1,11 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
 a = true
-b, c = 123
+b, c = 123, 456
 d = "xyz"		// Code and a comment on the same line!
+
+f = spell(a, b) r
+	@Println("Voodoo")
+end
 
 f()
