@@ -9,8 +9,8 @@ import (
 // Executor executes a block of code that may have it's own set of
 // variables and context rules.
 type Executor interface {
-	
-	// ExeLine executes a line of code returning an exit code and the executor
-	// that should execute the next line.
-	ExeLine(scroll *sc.Scroll, line string) (sh.ExitCode, Executor, sh.ExeError)
+
+	// Exe executes a statement returning an exit code and an executor
+	// that will execute the next statement.
+	Exe(scroll *sc.Scroll, line sc.Statement) (sh.ExitCode, Executor, sh.ExeError)
 }

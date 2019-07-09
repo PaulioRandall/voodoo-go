@@ -37,23 +37,33 @@ func scanLines(file *os.File) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-// Execute runs the voodoo scroll.
+// Execute runs a voodoo scroll.
 func Execute(scroll *sc.Scroll, scrollArgs []string) (code sh.ExitCode, exErr sh.ExeError) {
 	
 	var exe ex.Executor
 	exe = ex.NewScrollExecutor()
 	
-	scroll.JumpToLine(1) // Ignore the first line
+	ignoreFirstLine(scroll)
 	
 	for scroll.Next() {
-		line := scroll.Code
-		code, exe, exErr = exe.ExeLine(scroll, line)
+		stat := sc.Statement{
+			Val: scroll.Code,
+			Row: scroll.Line,
+			Col: 1,
+		}
 		
+		code, exe, exErr = exe.Exe(scroll, stat)
 		if code != sh.OK {
 			return
 		}
 	}
 	
 	return
+}
+
+// ignoreFirstLine skips the first line of a scroll so shebang's can
+// be used easily.
+func ignoreFirstLine(scroll *sc.Scroll) {
+	scroll.JumpToLine(1)
 }
 

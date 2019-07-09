@@ -14,7 +14,7 @@ type Scroll struct {
 	Length int							// Length of the scroll
 	// State
 	Index int								// Current line index
-	Number int							// Current line number
+	Line int									// Current line number
 	Code string							// Code from current line 
 	Comment string				// Comment from current line
 }
@@ -91,10 +91,10 @@ func findCleavePoint(line string) int {
 	prevIndex := 0
 	prev := ""
 	
-	snip := Snippet{
-		Code: line,
+	stat := Statement{
+		Val: line,
 	}
-	return snip.findIndex(func(i int, r rune) int {
+	return stat.findIndex(func(i int, r rune) int {
 		s := string(r)
 		
 		if (i - 1) == prevIndex && prev == "/" && s == "/" {
@@ -212,5 +212,5 @@ func printLineNumber(index int) {
 // JumpToLine sets the next line cursor to the specified line index.
 func (scroll *Scroll) JumpToLine(num int) {
 	scroll.Index = num - 1
-	scroll.Number = num
+	scroll.Line = num
 }

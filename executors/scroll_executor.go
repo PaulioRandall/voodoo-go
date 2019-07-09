@@ -21,20 +21,13 @@ func NewScrollExecutor() *ScrollExecutor {
 }
 
 // ExeLine satisfies the Executor interface.
-func (sa *ScrollExecutor) ExeLine(scroll *sc.Scroll, line string) (sh.ExitCode, Executor, sh.ExeError) {
+func (sa *ScrollExecutor) Exe(scroll *sc.Scroll, line sc.Statement) (sh.ExitCode, Executor, sh.ExeError) {
 	exitCode := sh.OK
 	next := Executor(sa)
 	var err sh.ExeError = nil
 	
-	firstCol := 1
-	snip := sc.Snippet{
-		Code: line,
-		Row: scroll.Number,
-		Col: firstCol,
-	}
-	
 	switch {
-	case snip.HasAssignOperator():
+	case line.IsAssignment():
 		onAssignment(scroll)
 	}
 	
