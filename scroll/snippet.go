@@ -1,8 +1,10 @@
 
-package interpreter
+package scroll
 
 import (
 	"regexp"
+	
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // Most operators must have whitespace on both sides and are only used for
@@ -26,31 +28,43 @@ type BoolOperator Operator
 // MathOperator represents a enum type of maths operators.
 type MathOperator Operator
 
+// AssignOperator represents a enum type of assign operators.
+type AssignOperator Operator
+
+// TruthyOperator represents a enum type of truthy operators.
+type TruthyOperator Operator
+
 const (
-	BoolEqual BoolOperator = `\s==\s`
-	BoolNotEqual BoolOperator = `\s!=\s`
-	BoolLessThan BoolOperator = `\s<\s`
-	BoolGreaterThan BoolOperator = `\s>\s`
-	BoolLessThanOrEqual BoolOperator = `\s<=\s`
-	BoolGreaterThanOrEqual BoolOperator = `\s>=\s`
-	BoolAnd BoolOperator = `\s&&\s`
-	BoolOr BoolOperator = `\s||\s`
+	BoolEqual BoolOperator = `==`
+	BoolNotEqual BoolOperator = `!=`
+	BoolLessThan BoolOperator = `<`
+	BoolGreaterThan BoolOperator = `>`
+	BoolLessThanOrEqual BoolOperator = `<=`
+	BoolGreaterThanOrEqual BoolOperator = `>=`
+	BoolAnd BoolOperator = `&&`
+	BoolOr BoolOperator = `||`
 	
-	MathAdd MathOperator = `\s+\s`
-	MathSub MathOperator = `\s-\s`
-	MathMul MathOperator = `\s*\s`
-	MathDiv MathOperator = `\s/\s`
+	MathAdd MathOperator = `+`
+	MathSub MathOperator = `-`
+	MathMul MathOperator = `*`
+	MathDiv MathOperator = `/`
+	
+	AssignEqu AssignOperator = `=`
+	
+	TruthyQue TruthyOperator = `?`
 )
 
 // HasAssignOperator returns true if the snippet contains an assigning of a
-// value or the result of an expression to a variable. 
+// value or the result of an expression to a variable.
 func (snip Snippet) HasAssignOperator() bool {
-  return snip.regex(`\s=\s`)
+	op := string(AssignEqu)
+  return snip.regex(op)
 }
 
-// HasBoolOperator returns true if the snippet contains a boolean operator. 
+// HasBoolOperator returns true if the snippet contains a boolean operator.
 func (snip Snippet) HasBoolOperator(boolOp BoolOperator) bool {
-	op := Operator(boolOp)
+	op := string(boolOp)
+	op = `\s` + op + `\s`
   return snip.regex(op)
 }
 
@@ -73,8 +87,9 @@ func (snip Snippet) ContainsBoolOperator() bool {
 
 // HasMathOperator returns true if the snippet contains a arithmetic operator.
 func (snip Snippet) HasMathOperator(mathOp MathOperator) bool {
-	op := Operator(mathOp)
-  return snip.regex(op)
+	op := string(mathOp)
+	op = `\s` + op + `\s`
+	return snip.regex(op)
 }
 
 // ContainsMathOperator returns true if the snippet contains an arithmetic operator.
@@ -92,7 +107,9 @@ func (snip Snippet) ContainsMathOperator() bool {
 
 // HasTruthyOperator returns true if the snippet contains a 'truthy' operator.
 func (snip Snippet) HasTruthyOperator() bool {
-	return snip.regex(`?[\)|\s]`)
+	op := string(TruthyQue)
+	op = op + `[\)|\s]`
+	return snip.regex(op)
 }
 
 // HasNotOperator returns true if the snippet contains a 'not' operator.
@@ -116,9 +133,8 @@ func (snip Snippet) HasCalc() bool {
 
 // regex performs a regular expression issuing a compiler bug if
 // the regex is bad.
-func (snip Snippet) regex(regex Operator) bool {
-	reg := string(regex)
-	r, err := regexp.MatchString(reg, snip.Code)
+func (snip Snippet) regex(regex string) bool {
+	r, err := regexp.MatchString(regex, snip.Code)
 	snip.regexErr(err)
 	return r
 }
@@ -126,7 +142,7 @@ func (snip Snippet) regex(regex Operator) bool {
 // regexErr handles rexexp errors when identifying expressions.
 func (snip Snippet) regexErr(err error) {
 	if err != nil {
-		compilerBug(snip.Row, "bad regex used for identifying expression")
+		sh.CompilerBug(snip.Row, "bad regex used for identifying expression")
 	}
 }
 

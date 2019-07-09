@@ -1,24 +1,23 @@
 
-package interpreter
+package executors
 
 import (
-	"fmt"
 	"strings"
+	
+	sc "github.com/PaulioRandall/voodoo-go/scroll"
 )
 
-// ScrollBlockExe represents the scroll itself as a block executor.
-type ScrollBlockExe struct {
-	//Variables map[string]VoodooValue			// Currently used variables
+// ScrollActivity represents the scroll itself as an activity.
+type ScrollActivity struct {
+	vars map[string]sc.VooValue
 }
 
-// executeLines continues execution of the scroll lines at the root
-// of the scroll until an error, an exit scroll command, or the end
-// of file is encountered.
-func executeLines(scroll *Scroll) {
+// Exe satisfies the Activity interface.
+func (se *ScrollActivity) Exe(scroll *sc.Scroll) (exitCode int, err error) {
 	for scroll.NextCodeLine() {
 	
 		firstCol := 1
-		snip := Snippet{
+		snip := sc.Snippet{
 			Code: scroll.Code,
 			Row: scroll.Number,
 			Col: firstCol,
@@ -29,16 +28,22 @@ func executeLines(scroll *Scroll) {
 			onAssignment(scroll)
 		}
 	}
+	
+	return exitCode, err
+}
+
+// Vars satisfies the activity interface
+func (se *ScrollActivity) Vars() map[string]sc.VooValue {
+	return se.vars
 }
 
 // onAssignment handles a line of scroll that assigns something
 // to a variable.
-func onAssignment(scroll *Scroll) {
+func onAssignment(scroll *sc.Scroll) {
 	varNames, _ := assignmentCleave(scroll.Code)
 			
 	for _, v := range varNames {
-		printLineNumber(scroll.Index)
-		fmt.Println(v)
+		scroll.PrintlnWithLineNum(v)
 	}
 			
 	// TODO: Parse the value being assigned

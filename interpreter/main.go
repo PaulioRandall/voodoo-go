@@ -4,11 +4,14 @@ package interpreter
 import (
 	"os"
 	"bufio"
+	
+	sc "github.com/PaulioRandall/voodoo-go/scroll"
+	ex "github.com/PaulioRandall/voodoo-go/executors"
 )
 
 // LoadScroll reads the lines of the scroll and creates a
 // new Scroll instance for it.
-func LoadScroll(path string) (scroll *Scroll, err error) {
+func LoadScroll(path string) (scroll *sc.Scroll, err error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return
@@ -17,7 +20,7 @@ func LoadScroll(path string) (scroll *Scroll, err error) {
 
 	lines, err := scanLines(file)
 	if err == nil {
-		scroll = newScroll(path, lines)
+		scroll = sc.NewScroll(path, lines)
 	}
 	
 	return
@@ -34,9 +37,9 @@ func scanLines(file *os.File) ([]string, error) {
 }
 
 // Execute runs the voodoo scroll.
-func Execute(scroll *Scroll, scrollArgs []string) (exitCode int, err error) {
+func Execute(scroll *sc.Scroll, scrollArgs []string) (exitCode int, err error) {
 	
-	scroll.JumpToLine(1) // Ignore first line
-	executeLines(scroll)
-	return 1, nil
+	scroll.JumpToLine(1) // Ignore the first line
+	ac := ex.ScrollActivity{}
+	return ac.Exe(scroll)
 }

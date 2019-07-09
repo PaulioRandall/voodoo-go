@@ -1,5 +1,5 @@
 
-package interpreter
+package scroll
 
 import (
 	"strings"
