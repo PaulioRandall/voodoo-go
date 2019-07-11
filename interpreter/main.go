@@ -43,27 +43,16 @@ func Execute(scroll *sc.Scroll, scrollArgs []string) (code sh.ExitCode, exErr sh
 	var exe ex.Executor
 	exe = ex.NewScrollExecutor()
 	
-	ignoreFirstLine(scroll)
+	line := scroll.Next(nil)
+	line = scroll.Next(line) // Ignoring first line, shebang
 	
-	for scroll.Next() {
-		stat := sc.Statement{
-			Val: scroll.Code,
-			Row: scroll.Line,
-			Col: 1,
-		}
-		
-		code, exe, exErr = exe.Exe(scroll, stat)
+	for line != nil {		
+		code, exe, exErr = exe.Exe(scroll, *line)
 		if code != sh.OK {
 			return
 		}
+		line = scroll.Next(line)
 	}
 	
 	return
 }
-
-// ignoreFirstLine skips the first line of a scroll so shebang's can
-// be used easily.
-func ignoreFirstLine(scroll *sc.Scroll) {
-	scroll.JumpToLine(1)
-}
-

@@ -4,19 +4,22 @@ package scroll
 import (
 	"fmt"
 	"strings"
+	
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
-// Scroll represents a scroll and it's current state.
-type Scroll struct {
-	// Scroll
-	File string								// File path to the scroll
-	Lines []string						// Raw lines from the scroll
-	Length int							// Length of the scroll
-	// State
+// Line represents a line in a scroll.
+type Line struct {
 	Index int								// Current line index
-	Line int									// Current line number
-	Code string							// Code from current line 
-	Comment string				// Comment from current line
+	Num int									// Current line number
+	Val string							// Current line as a string
+}
+
+// Scroll represents a scroll.
+type Scroll struct {
+	File string							// File path to the scroll
+	Lines []string					// Raw lines from the scroll
+	Length int							// Length of the scroll
 }
 
 // NewScroll creates a new Scroll instance.
@@ -28,150 +31,48 @@ func NewScroll(file string, lines []string) *Scroll {
 	}
 }
 
-// Next moves the line index counter to the next line that
-// has executable code. True is returned if there are lines
-// still to be executed.
-func (scroll *Scroll) Next() bool {
-	for {
-		scroll.increment()
-		if scroll.IsEndOfScroll() {
-			return false
-		}
-		
-		scroll.prepLine()
-		if scroll.IsCodeLine() {
-			return true
-		}
+// Print prints the line
+func (line *Line) Print() {
+	printlnWithLineNum(line.Index, line.Val)
+}
+
+// Next returns the line after the input line returning nil
+// if there are no more lines left. If nil is supplied then
+// the first line is returned. Whitespace, 'ain't nobody
+// got time for that'; all leading and trailing whitespace is
+// trimmed from the value of the returned line.
+func (scroll *Scroll) Next(prev *Line) *Line {
+	if prev == nil {
+		return scroll.getLine(0)
+	}
+
+	i := prev.Index + 1
+	if scroll.IsEndOfScroll(i) {
+		return nil
+	}
+	
+	return scroll.getLine(i)
+}
+
+// getLine returns the line specified by the index.
+func (scroll *Scroll) getLine(i int) *Line {
+	v := scroll.Lines[i]
+	return &Line{
+		Index: i,
+		Num: i + 1,
+		Val: strings.TrimSpace(v),
 	}
 }
 
-// increment increments the line index counter by one.
-func (scroll *Scroll) increment() {
-	next := scroll.Index + 2
-	scroll.JumpToLine(next)
-}
-
-// prepLine finds, splits, trims, and sets the code and comments
-// of the line indicated by the current index.
-func (scroll *Scroll) prepLine() {
-	line := scroll.Lines[scroll.Index]
-	code, comment := cleaveLine(line)
-	scroll.Code = code
-	scroll.Comment = comment
-}
-
-// cleaveLine splits the line into the code part and comment part.
-// Both parts are trimmed before being returned.
-func cleaveLine(line string) (code string, comment string) {
-	cleaveIndex := findCleavePoint(line)
-	runes := []rune(line)
-	
-	if cleaveIndex == -1 {
-		code = prepLinePart(runes)
-		comment = ""
-	} else {
-		code = prepLinePart(runes[:cleaveIndex])
-		comment = prepLinePart(runes[cleaveIndex:])
-	}
-	
-	return
-}
-
-// prepLinePart prepares the code or comment part of a
-// line for processing by removing redudant whitespace
-// and converting it to a string.
-func prepLinePart(runes []rune) string {
-	str := string(runes)
-	return strings.TrimSpace(str)
-}
-
-// findCleavePoint finds the rune index where a comment starts
-// in a line. -1 is returned if there is no point.
-func findCleavePoint(line string) int {
-	prevIndex := 0
-	prev := ""
-	
-	stat := Statement{
-		Val: line,
-	}
-	return stat.findIndex(func(i int, r rune) int {
-		s := string(r)
-		
-		if (i - 1) == prevIndex && prev == "/" && s == "/" {
-			return prevIndex
-		}
-		
-		prevIndex = i
-		prev = s
-		return -1
-	})
-}
-
-// IsCodeLine returns true if the currrent line contains
-// executable code.
-func (scroll *Scroll) IsCodeLine() bool {
-	if scroll.Code != "" {
+// IsEndOfScroll returns true if the the end of the scroll has been
+// reached.
+func (scroll *Scroll) IsEndOfScroll(index int) bool {
+	if index < 0 {
+		sh.CompilerBug(index + 1, "How can a line index be negative?!")
+	} else if index >= scroll.Length {
 		return true
 	}
 	return false
-}
-
-// IsCommentLine returns true if the current line is a
-// comment line.
-func (scroll *Scroll) IsCommentLine() bool {
-	if scroll.Comment != ""{
-		return true
-	}
-	return false
-}
-
-// HasMoreLines returns true if the there are lines
-// in the scroll still to be executed.
-func (scroll *Scroll) HasMoreLines() bool {
-	return !scroll.IsEndOfScroll()
-}
-
-// IsEndOfScroll returns true if the the end of the
-// scroll has been reached.
-func (scroll *Scroll) IsEndOfScroll() bool {
-	i := scroll.Index
-	if i < 0 || i >= scroll.Length {
-		return true
-	}
-	return false
-}
-
-// PrintlnComment prints the comment in the current line.
-func (scroll *Scroll) PrintlnComment() {
-	scroll.PrintlnCommentAt(scroll.Index)
-}
-
-// PrintlnCommentAt prints the comment of the specified line.
-func (scroll *Scroll) PrintlnCommentAt(index int) {
-	comment := scroll.Comment
-	printlnWithLineNum(index, comment)
-}
-
-// PrintlnCode prints the code in the current line.
-func (scroll *Scroll) PrintlnCode() {
-	scroll.PrintlnCodeAt(scroll.Index)
-}
-
-// PrintlnCodeAt prints the code of the specified line.
-func (scroll *Scroll) PrintlnCodeAt(index int) {
-	code := scroll.Code
-	printlnWithLineNum(index, code)
-}
-
-// PrintlnLine prints the current line.
-func (scroll *Scroll) PrintlnLine() {
-	scroll.PrintlnLineAt(scroll.Index)
-}
-
-// PrintlnLineAt prints the specified line.
-func (scroll *Scroll) PrintlnLineAt(index int) {
-	line := scroll.Lines[index]
-	printlnWithLineNum(index, line)
 }
 
 // PrintlnLines prints all lines within the specified range.
@@ -190,11 +91,6 @@ func (scroll *Scroll) PrintlnLines(from int, to int) {
 	}
 }
 
-// PrintlnWithLineNum prints the line number then the argument.
-func (scroll *Scroll) PrintlnWithLineNum(s string) {
-	printlnWithLineNum(scroll.Index, s)
-}
-
 // printlnWithLineNum prints the line number then the argument.
 func printlnWithLineNum(i int, s string) {
 	printLineNumber(i)
@@ -207,10 +103,4 @@ func printLineNumber(index int) {
 	num := index + 1
 	out := fmt.Sprintf("%-3d: ", num)
 	fmt.Print(out)
-}
-
-// JumpToLine sets the next line cursor to the specified line index.
-func (scroll *Scroll) JumpToLine(num int) {
-	scroll.Index = num - 1
-	scroll.Line = num
 }

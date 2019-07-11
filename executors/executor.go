@@ -12,5 +12,5 @@ type Executor interface {
 
 	// Exe executes a statement returning an exit code and an executor
 	// that will execute the next statement.
-	Exe(scroll *sc.Scroll, line sc.Statement) (sh.ExitCode, Executor, sh.ExeError)
+	Exe(scroll *sc.Scroll, line sc.Line) (sh.ExitCode, Executor, sh.ExeError)
 }

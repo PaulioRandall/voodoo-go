@@ -1,11 +1,9 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
-a = true
-b, c = 123, 456
-d = "xyz"		// Code and a comment on the same line!
+a = 8
+b = 0
 
-f = spell(a, b) r
-	@Println("Voodoo")
+when b == 0
+	true => err <- "Can't divide by zero"
+	false => c <- a / b
 end
-
-f()
