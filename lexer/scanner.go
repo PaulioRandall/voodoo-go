@@ -125,16 +125,17 @@ func strSym(itr *StrItr, lineNum int) (Symbol, error) {
 	sb := strings.Builder{}
 
 	isEscaped := false
-	first := true
-	var ru rune
+	isFirst := true
 
 	for itr.HasNext() {
-		ru = itr.Next()
+		ru := itr.Next()
 		sb.WriteRune(ru)
 
 		switch {
-		case first:
-			first = false
+		case !itr.HasNext():
+			break
+		case isFirst:
+			isFirst = false
 		case ru == '\\':
 			isEscaped = !isEscaped
 		case !isEscaped && ru == '"':
@@ -144,7 +145,7 @@ func strSym(itr *StrItr, lineNum int) (Symbol, error) {
 		}
 	}
 
-	if ru != '"' {
+	if isFirst || isEscaped || itr.PeekPrev() != '"' {
 		return Symbol{}, errors.New("Did someone forget to close a string literal?!")
 	}
 

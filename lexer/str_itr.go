@@ -82,10 +82,44 @@ func (itr *StrItr) PeekAsatte() rune {
 	return rune(itr.str[i])
 }
 
+// HasPrev returns true if at least call to Next() has occurred.
+func (itr *StrItr) HasPrev() bool {
+	if itr.index > 0 {
+		return true
+	}
+	return false
+}
+
+// PeekPrev returns the previous rune without decrementing
+// the iterator index.
+func (itr *StrItr) PeekPrev() rune {
+	i := itr.index - 1
+	itr.bugIfOutOfBounds(i)
+	return rune(itr.str[i])
+}
+
+// HasOtotoi returns true if at least two calls to Next() have
+// been made.
+func (itr *StrItr) HasOtotoi() bool {
+	i := itr.index - 2
+	if i > 0 {
+		return true
+	}
+	return false
+}
+
+// PeekOtotoi returns the rune before the previous one without
+// decrementing the iterator index.
+func (itr *StrItr) PeekOtotoi() rune {
+	i := itr.index - 2
+	itr.bugIfOutOfBounds(i)
+	return rune(itr.str[i])
+}
+
 // bugIfOutOfBounds will print error message and exit compilation if there
 // are no items left in the string.
 func (itr *StrItr) bugIfOutOfBounds(i int) {
-	if i >= itr.length {
+	if i < 0 || i >= itr.length {
 		sh.CompilerBug(-1, "Iterator call to Next(), Peek(), or AsattePeek() but no items remain")
 	}
 }

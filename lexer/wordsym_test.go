@@ -1,5 +1,6 @@
 package lexer
 
+/*
 import (
 	"strconv"
 	"testing"
@@ -7,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStrSym(t *testing.T) {
-	for i, tc := range strSymTests() {
-		t.Log("strSym() test case: " + strconv.Itoa(i+1))
+func TestWordSym(t *testing.T) {
+	for i, tc := range wordSymTests() {
+		t.Log("wordSym() test case: " + strconv.Itoa(i+1))
 
 		itr := NewStrItr(tc.Input)
 		a, err := strSym(itr, tc.Line)
@@ -22,10 +23,12 @@ func TestStrSym(t *testing.T) {
 	}
 }
 
-func strSymTests() []symTest {
+// TODO: NEXT <<<<<<<<----------------------------
+func wordSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Input:   `""`,
+			Line:    0,
+			Input:   `abc`,
 			Expects: Symbol{`""`, 0, 2, 0},
 		},
 		symTest{
@@ -34,20 +37,15 @@ func strSymTests() []symTest {
 			Expects: Symbol{`"From hell with love"`, 0, 21, 123},
 		},
 		symTest{
+			Line:    0,
 			Input:   `"Bam: \"Leaders eat last!\""`,
 			Expects: Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0},
 		},
 		symTest{
+			Line:    0,
 			Input:   `"\\\\\""`,
 			Expects: Symbol{`"\\\\\""`, 0, 8, 0},
 		},
-		symTest{
-			Input:     `"`,
-			ExpectErr: true,
-		},
-		symTest{
-			Input:     `"escaped \"`,
-			ExpectErr: true,
-		},
 	}
 }
+*/
