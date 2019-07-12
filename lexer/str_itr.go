@@ -19,6 +19,11 @@ func NewStrItr(str string) *StrItr {
 	}
 }
 
+// Index returns the current index of the iterator.
+func (itr *StrItr) Index() int {
+	return itr.index
+}
+
 // increment increments the index counter.
 func (itr *StrItr) increment() {
 	itr.index = itr.index + 1
