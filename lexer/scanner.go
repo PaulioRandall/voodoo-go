@@ -132,8 +132,22 @@ func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
 func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
-	// TODO
-	return Symbol{}, errors.New("TODO: Implement this function!")
+	r := initSym(itr.NextIndex(), lineNum)
+	sb := strings.Builder{}
+
+	for itr.HasNext() {
+		ru := itr.Peek()
+
+		if unicode.IsSpace(ru) {
+			sb.WriteRune(itr.Next())
+		} else {
+			break
+		}
+	}
+
+	r.Val = sb.String()
+	r.End = itr.NextIndex()
+	return r, nil
 }
 
 // curseSym handles symbols that start with a at sign rune `@`.
