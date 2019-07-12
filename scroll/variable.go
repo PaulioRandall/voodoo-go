@@ -1,9 +1,8 @@
-
 package scroll
 
 import (
-	"strings"
 	"strconv"
+	"strings"
 )
 
 // VooType represents the type of a voodoo value.
@@ -11,12 +10,12 @@ type VooType string
 
 // Declaration of voo types.
 const (
-	BoolType VooType = "bool"
-	NumType VooType = "number"
-	StrType VooType = "string"
+	BoolType   VooType = "bool"
+	NumType    VooType = "number"
+	StrType    VooType = "string"
 	KeyValType VooType = "key-value"
-	ListType VooType = "list"
-	SpellType VooType = "spell"
+	ListType   VooType = "list"
+	SpellType  VooType = "spell"
 )
 
 // VooValue represents a value within the current block.
@@ -24,7 +23,7 @@ type VooValue interface {
 
 	// Type returns the type of the value
 	Type() VooType
-	
+
 	// String returns the string representation of the value.
 	String() string
 }
@@ -33,7 +32,7 @@ type VooValue interface {
 // or string.
 type VooPrimitive interface {
 	VooValue
-	
+
 	// PrimitiveOnly does nothing when invoked. It ensures
 	// compile failure if non-primitive types used where they
 	// should not.
@@ -124,7 +123,7 @@ func (kv VooKeyVal) String() string {
 // VooList represents a list type.
 type VooList struct {
 	ValueType VooType
-	Val []VooValue
+	Val       []VooValue
 }
 
 // Type satisfies the VooValue interface.
@@ -136,25 +135,25 @@ func (v VooList) Type() VooType {
 func (vl VooList) String() string {
 	var sb strings.Builder
 	sb.WriteString("[\n")
-	
+
 	list := vl.Val
 	last := len(list) - 1
 	for i, v := range list {
 		t := v.Type()
-		
-		if t == BoolType && t == NumType {
+
+		if t == BoolType || t == NumType {
 			sb.WriteString(v.String())
 		} else {
 			sb.WriteRune('\'')
 			sb.WriteString(v.String())
 			sb.WriteRune('\'')
 		}
-		
+
 		if i < last {
 			sb.WriteString(", ")
 		}
 	}
-	
+
 	sb.WriteRune(']')
 	return sb.String()
 }

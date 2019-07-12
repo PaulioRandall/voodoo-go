@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-	
+
 	inter "github.com/PaulioRandall/voodoo-go/interpreter"
 )
 
@@ -39,18 +39,18 @@ func main() {
 func exeScroll() {
 	scrollPath := getScroll()
 	scrollArgs := getScrollArgs()
-	
+
 	scroll, err := inter.LoadScroll(scrollPath)
 	if err != nil {
 		panic(err)
 	}
-	
+
 	// TODO: Handle when error returned.
 	exitCode, err := inter.Execute(scroll, scrollArgs)
 	if err != nil {
 		panic(err)
 	}
-	
+
 	// TODO: What to do when non-zero exit code?
 	exitMsg := fmt.Sprintf("\nExit %d", exitCode)
 	fmt.Println(exitMsg)

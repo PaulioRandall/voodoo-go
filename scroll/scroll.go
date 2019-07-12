@@ -1,32 +1,31 @@
-
 package scroll
 
 import (
 	"fmt"
 	"strings"
-	
+
 	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // Line represents a line in a scroll.
 type Line struct {
-	Index int								// Current line index
-	Num int									// Current line number
-	Val string							// Current line as a string
+	Index int    // Current line index
+	Num   int    // Current line number
+	Val   string // Current line as a string
 }
 
 // Scroll represents a scroll.
 type Scroll struct {
-	File string							// File path to the scroll
-	Lines []string					// Raw lines from the scroll
-	Length int							// Length of the scroll
+	File   string   // File path to the scroll
+	Lines  []string // Raw lines from the scroll
+	Length int      // Length of the scroll
 }
 
 // NewScroll creates a new Scroll instance.
 func NewScroll(file string, lines []string) *Scroll {
 	return &Scroll{
-		File: file,
-		Lines: lines,
+		File:   file,
+		Lines:  lines,
 		Length: len(lines),
 	}
 }
@@ -50,7 +49,7 @@ func (scroll *Scroll) Next(prev *Line) *Line {
 	if scroll.IsEndOfScroll(i) {
 		return nil
 	}
-	
+
 	return scroll.getLine(i)
 }
 
@@ -59,8 +58,8 @@ func (scroll *Scroll) getLine(i int) *Line {
 	v := scroll.Lines[i]
 	return &Line{
 		Index: i,
-		Num: i + 1,
-		Val: strings.TrimSpace(v),
+		Num:   i + 1,
+		Val:   strings.TrimSpace(v),
 	}
 }
 
@@ -68,7 +67,7 @@ func (scroll *Scroll) getLine(i int) *Line {
 // reached.
 func (scroll *Scroll) IsEndOfScroll(index int) bool {
 	if index < 0 {
-		sh.CompilerBug(index + 1, "How can a line index be negative?!")
+		sh.CompilerBug(index+1, "How can a line index be negative?!")
 	} else if index >= scroll.Length {
 		return true
 	}
@@ -84,7 +83,7 @@ func (scroll *Scroll) PrintlnLines(from int, to int) {
 	case to > scroll.Length:
 		to = scroll.Length
 	}
-	
+
 	lines := scroll.Lines[from:to]
 	for i, v := range lines {
 		printlnWithLineNum(i, v)

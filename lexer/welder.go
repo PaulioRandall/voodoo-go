@@ -1,4 +1,3 @@
-
 package lexer
 
 import (
@@ -34,39 +33,32 @@ func Weld(frags []Symbol) []Symbol {
 
 	itr := NewSymItr(frags)
 	r := handleIfEmptyLine(itr)
-	
+
 	if r != nil {
 		return r
 	}
-	
+
 	r = []Symbol{}
 	for itr.HasNext() {
-		
+
 		f := Symbol(itr.Next())
 		ru := rune(f.Val[0])
 		var el Symbol
-		
+
 		switch {
 		case ru == '"':
-			el = strElem(f, itr)			
+			el = strElem(f, itr)
 		case unicode.IsDigit(ru):
 			el = numElem(f, itr)
 		case unicode.IsLetter(ru):
 			el = wordElem(f, itr)
 		default:
-			if itr.HasNext() {
-				n := itr.Peek()
-				if isComment(f.Val + n.Val) {
-					el = commentElem(f, itr)
-				} else {
-					el = fragToElem(f)
-				}
-			}
+			el = fragToElem(f)
 		}
-		
+
 		r = append(r, el)
 	}
-	
+
 	return r
 }
 
@@ -77,7 +69,7 @@ func handleIfEmptyLine(itr *SymItr) []Symbol {
 	if len(f.Val) != 0 {
 		return nil
 	}
-	
+
 	return []Symbol{
 		Symbol{
 			Line: f.Line,
@@ -89,7 +81,7 @@ func handleIfEmptyLine(itr *SymItr) []Symbol {
 // start index initialised to that of the input fragment.
 func initElem(f Symbol) Symbol {
 	return Symbol{
-		Val: f.Val,
+		Val:   f.Val,
 		Start: f.Start,
 	}
 }
@@ -99,12 +91,12 @@ func initElem(f Symbol) Symbol {
 func strElem(f Symbol, itr *SymItr) Symbol {
 	el := initElem(f)
 	isEscaped := false
-	
+
 	for itr.HasNext() {
-		f = itr.Next()		
+		f = itr.Next()
 		s := f.Val
 		el.Val = el.Val + s
-		
+
 		switch {
 		case s == `\`:
 			isEscaped = !isEscaped
@@ -114,7 +106,7 @@ func strElem(f Symbol, itr *SymItr) Symbol {
 			isEscaped = false
 		}
 	}
-	
+
 	el.End = f.End
 	return el
 }
@@ -123,17 +115,17 @@ func strElem(f Symbol, itr *SymItr) Symbol {
 // literal element is produced. Grammer rules not enforced here.
 func numElem(f Symbol, itr *SymItr) Symbol {
 	el := initElem(f)
-	
+
 	update := func(f Symbol) {
 		el.Val = el.Val + f.Val
 		el.End = f.End
 		itr.Skip()
 	}
-	
+
 	for itr.HasNext() {
 		f = itr.Peek()
 		s := f.Val
-		
+
 		switch {
 		case isDigitStr(s):
 			update(f)
@@ -145,7 +137,7 @@ func numElem(f Symbol, itr *SymItr) Symbol {
 			break
 		}
 	}
-	
+
 	return el
 }
 
@@ -153,17 +145,17 @@ func numElem(f Symbol, itr *SymItr) Symbol {
 // element is produced.
 func wordElem(f Symbol, itr *SymItr) Symbol {
 	el := initElem(f)
-	
+
 	update := func(f Symbol) {
 		el.Val = el.Val + f.Val
 		el.End = f.End
 		itr.Skip()
 	}
-	
+
 	for itr.HasNext() {
 		f = itr.Peek()
 		s := f.Val
-		
+
 		switch {
 		case isDigitStr(s):
 			update(f)
@@ -175,7 +167,7 @@ func wordElem(f Symbol, itr *SymItr) Symbol {
 			break
 		}
 	}
-	
+
 	return el
 }
 
@@ -183,12 +175,12 @@ func wordElem(f Symbol, itr *SymItr) Symbol {
 // comment element is produced.
 func commentElem(f Symbol, itr *SymItr) Symbol {
 	el := initElem(f)
-	
+
 	for itr.HasNext() {
 		f = itr.Next()
 		el.Val = el.Val + f.Val
 	}
-	
+
 	el.End = f.End
 	return el
 }
@@ -196,9 +188,9 @@ func commentElem(f Symbol, itr *SymItr) Symbol {
 // fragToElem converts a fragment into an element.
 func fragToElem(f Symbol) Symbol {
 	return Symbol{
-		Val: f.Val,
+		Val:   f.Val,
 		Start: f.Start,
-		End: f.End,
-		Line: f.Line,
+		End:   f.End,
+		Line:  f.Line,
 	}
 }

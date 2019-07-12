@@ -3,27 +3,68 @@
 clear
 rm -f cmd/voodoo
 
+contains() {
+	local arg=$1
+	for option in "${@:2}"
+	do
+		if [[ "$arg" == "$option" ]]; then
+			return 1
+		fi
+	done
+	return 0
+}
+
+exitIfNotZero() {
+	if [[ "$1" != "0" ]]; then
+		exit 1
+	fi
+}
+
 if [[ "$1" == "" ]]; then
 	echo "No parameter supplied, I don't know what to do!"
+	echo "You can choose from 'build', 'test', or 'run'."
 	exit 1
 fi
 
-if [[ "$1" == "build" || "$1" == "run" ]]; then
-	valid="true"
+contains "$1" "build" "test" "run"
+if [[ $? != 1 ]]; then
+	echo "I don't understand the option '$1'..."
+	echo "I only deal with 'build', 'test', or 'run' commands, take it leave it."
+	exit 1
+fi
+
+contains "$1" "build" "test" "run"
+if [[ $? == 1 ]]; then
 	echo Building...
 	cd cmd
 	go build voodoo.go
 	cd ..
 fi
 
-if [[ "$1" == "run" ]]; then
-	valid="true"
+exitIfNotZero "$?"
+contains "$1" "build" "test" "run"
+if [[ $? == 1 ]]; then
+	echo Formatting...
+	go fmt ./cmd
+	go fmt ./executors
+	go fmt ./interpreter
+	go fmt ./lexer
+	go fmt ./scroll
+	go fmt ./shared
+fi
+
+exitIfNotZero $?
+contains "$1" "test" "run"
+if [[ $? == 1 ]]; then
+	echo Testing...
+	go test ./...
+fi
+
+exitIfNotZero $?
+contains "$1" "run"
+if [[ $? == 1 ]]; then
 	echo Running...
 	cd cmd
 	./voodoo run scroll_1.voo
 	cd ..
-fi
-
-if [[ "$valid" != "true" ]]; then
-	echo "I don't understand the option '$1'..."
 fi

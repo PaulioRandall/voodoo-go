@@ -1,19 +1,17 @@
-
 package executors
 
 import (
+	cl "github.com/PaulioRandall/voodoo-go/lexer"
 	sc "github.com/PaulioRandall/voodoo-go/scroll"
 	sh "github.com/PaulioRandall/voodoo-go/shared"
-	cl "github.com/PaulioRandall/voodoo-go/lexer"
 )
-
 
 type TokenType string
 
 const (
-	Keyword TokenType = "keyword"
+	Keyword  TokenType = "keyword"
 	VarNames TokenType = "variable-names"
-	Void TokenType = "void"
+	Void     TokenType = "void"
 )
 
 // ScrollExecutor represents the scroll itself as an activity.
@@ -33,10 +31,10 @@ func (sa *ScrollExecutor) Exe(scroll *sc.Scroll, line sc.Line) (sh.ExitCode, Exe
 	exitCode := sh.OK
 	next := Executor(sa)
 	var err sh.ExeError = nil
-	
+
 	// TODO
 	frags := cl.Cleave(line.Val, line.Num)
 	cl.PrintlnSymbols(frags)
-	
+
 	return exitCode, next, err
 }

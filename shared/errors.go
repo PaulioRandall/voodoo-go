@@ -1,11 +1,10 @@
-
 package shared
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
-	"errors"
 )
 
 // ExitCode represents a program exit code
@@ -22,15 +21,15 @@ type ExeError interface {
 
 	// Code returns the exit code.
 	Code() ExitCode
-	
+
 	// Err returns the Go error.
 	Err() error
 }
 
 // simpleExeError is an implementation of ExeError.
-type simpleExeError struct {	
+type simpleExeError struct {
 	code ExitCode
-	err error
+	err  error
 }
 
 // Code satisfies the ExeError interface.
@@ -46,14 +45,14 @@ func (see simpleExeError) Err() error {
 // Error satisfies the error interface.
 func (see simpleExeError) Error() string {
 	return see.err.Error()
-} 
+}
 
 // WrapError returns a error wrapped as a new ExeError.
 func WrapError(code ExitCode, err error) ExeError {
 	// TODO: do I need to check exit code is valid?
 	return simpleExeError{
 		code: code,
-		err: err,
+		err:  err,
 	}
 }
 
@@ -62,7 +61,7 @@ func NewError(code ExitCode, msg string) ExeError {
 	// TODO: do I need to check exit code is valid?
 	return simpleExeError{
 		code: code,
-		err: errors.New(msg),
+		err:  errors.New(msg),
 	}
 }
 
@@ -72,11 +71,11 @@ func CompilerBug(lineNum int, msg string) {
 	fmt.Print("[COMPILER BUG]")
 	info := fmt.Sprintf("...when parsing line '%d'", lineNum)
 	fmt.Println(info)
-	
+
 	msgLines := strings.Split(msg, "\n")
 	for _, v := range msgLines {
 		fmt.Print("\t..." + v)
 	}
-	
+
 	os.Exit(1)
 }

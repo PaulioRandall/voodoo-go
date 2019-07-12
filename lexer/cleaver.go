@@ -1,4 +1,3 @@
-
 package lexer
 
 import (
@@ -32,29 +31,29 @@ import (
 // Cleave splits a string into symbols to make the rest of the
 // scanning process an additive one rather than a splitting one.
 func Cleave(s string, line int) []Symbol {
-	
+
 	r := []Symbol{}
 	var f Symbol
 	c := unicodeCat(none)
 	sb := strings.Builder{}
-	
+
 	for i, ru := range s {
 		cat := unicodeCatOf(ru)
-		
+
 		switch {
 		case (c == none):
 			f, c = reset(&sb, i, cat)
 		case (c == letter) && (cat == letter):
 		case (c == digit) && (cat == digit):
 		default:
-			push(r, f, &sb, i, line)
+			r = push(r, f, &sb, i, line)
 			f, c = reset(&sb, i, cat)
 		}
-		
+
 		sb.WriteRune(ru)
 	}
-	
-	push(r, f, &sb, len(s), line)
+
+	r = push(r, f, &sb, len(s), line)
 	return r
 }
 
@@ -70,10 +69,9 @@ func push(r []Symbol, f Symbol, sb *strings.Builder, end int, line int) []Symbol
 // reset resets the string builder and creates a new
 // fragment.
 func reset(sb *strings.Builder, start int, cat unicodeCat) (Symbol, unicodeCat) {
-		sb.Reset()
-		f := Symbol{
-			Start: start,
-		}
-		return f, cat
+	sb.Reset()
+	f := Symbol{
+		Start: start,
 	}
-	
+	return f, cat
+}

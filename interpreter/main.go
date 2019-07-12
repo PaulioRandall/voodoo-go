@@ -1,12 +1,11 @@
-
 package interpreter
 
 import (
-	"os"
 	"bufio"
-	
-	sc "github.com/PaulioRandall/voodoo-go/scroll"
+	"os"
+
 	ex "github.com/PaulioRandall/voodoo-go/executors"
+	sc "github.com/PaulioRandall/voodoo-go/scroll"
 	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
@@ -23,7 +22,7 @@ func LoadScroll(path string) (scroll *sc.Scroll, err error) {
 	if err == nil {
 		scroll = sc.NewScroll(path, lines)
 	}
-	
+
 	return
 }
 
@@ -39,20 +38,20 @@ func scanLines(file *os.File) ([]string, error) {
 
 // Execute runs a voodoo scroll.
 func Execute(scroll *sc.Scroll, scrollArgs []string) (code sh.ExitCode, exErr sh.ExeError) {
-	
+
 	var exe ex.Executor
 	exe = ex.NewScrollExecutor()
-	
+
 	line := scroll.Next(nil)
 	line = scroll.Next(line) // Ignoring first line, shebang
-	
-	for line != nil {		
+
+	for line != nil {
 		code, exe, exErr = exe.Exe(scroll, *line)
 		if code != sh.OK {
 			return
 		}
 		line = scroll.Next(line)
 	}
-	
+
 	return
 }

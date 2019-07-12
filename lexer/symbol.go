@@ -1,11 +1,10 @@
-
 package lexer
 
 import (
 	"fmt"
-	"strings"
 	"strconv"
-	
+	"strings"
+
 	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
@@ -13,16 +12,16 @@ import (
 // that equates to a meaningful item within the
 // grammer rules.
 type Symbol struct {
-	Val string				// Symbol value
-	Start int					// Index of first rune
-	End int					// Index after last rune
-	Line int					// Line number from scroll
+	Val   string // Symbol value
+	Start int    // Index of first rune
+	End   int    // Index after last rune
+	Line  int    // Line number from scroll
 }
 
 // String creates a string representation of the symbol.
 func (sym Symbol) String() string {
 	start := strconv.Itoa(sym.Start)
-	start = strings.Repeat(` `, 3 - len(start)) + start
+	start = strings.Repeat(` `, 3-len(start)) + start
 	return fmt.Sprintf("Line %-3d [%s->%-3d] `%s`", sym.Line, start, sym.End, sym.Val)
 }
 
@@ -40,16 +39,16 @@ func PrintlnSymbols(syms []Symbol) {
 
 // SymItr provides a way to iterate symbol arrays.
 type SymItr struct {
-	index int
+	index  int
 	length int
-	syms []Symbol
+	syms   []Symbol
 }
 
 // NewSymItr creates a new symbol iterator.
 func NewSymItr(syms []Symbol) *SymItr {
 	return &SymItr{
 		length: len(syms),
-		syms: syms,
+		syms:   syms,
 	}
 }
 
@@ -72,7 +71,7 @@ func (itr *SymItr) increment() {
 func (itr *SymItr) Skip() {
 	itr.bugIfNoNext()
 	itr.increment()
-} 
+}
 
 // Next returns the next symbol in the array and increases the
 // iterator index.
