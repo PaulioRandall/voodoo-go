@@ -1,107 +1,79 @@
 
-package cleaver
+package lexer
 
 import (
-	"fmt"
 	"strings"
-	"strconv"
 )
 
 // The purpose of the cleaver is to split up a string, usually a line,
-// into fragments of elements that represent either a potential
-// lexeme/token or part of a potential one. Assuming valid syntax,
-// each fragment can be one of:
-// - terminal UTF-8 rune symbol such as '=', '+', a whitespace rune, etc
-// - part of a terminal UTF-8 string symbol such as '=', '>', etc
-//	 (resolving to '=>')
-// - terminal UTF-8 string symbol such as 'spell', 'true', etc
-// - non-terminal UTF-8 string symbol such as 'i', 'isAlive', etc
-// - part of a non-terminal UTf-8 string symbol such as 'is', '_', 'alive'
-//	 that may share runes with terminal symbols such that the examples come
-//	 together to form the identifier 'is_alive'.
+// into symbols that represent either a potential lexeme/token or
+// part of a one. Assuming valid syntax, each symbol can be one of:
+// - terminal UTF-8 rune such as '=', '+', a whitespace rune, etc
+// - part of a terminal UTF-8 string such as '=', '>', etc (resolving to '=>')
+// - terminal UTF-8 string such as 'spell', 'true', etc
+// - non-terminal UTF-8 string such as 'i', 'isAlive', etc
+// - part of a non-terminal UTf-8 string such as 'is', '_', 'alive' that
+//   may share runes with terminal symbols such that the prior
+//   example comes together to form the identifier 'is_alive'.
 //
-// Fragments are joined back together later to form elements which are
-// scanned to form lexemes which are evaluated to form tokens. Tokens
-// represent a meaningful symbol, and if applicable, with a value.
+// During the welding phase, fragmented symbols are joined together
+// then scanned to form lexemes which are evaluated to form tokens.
+// Tokens represent a meaningful symbol, and if applicable, with a value.
 //
-// A nice property of cleaving is that a returned Fragment array containing
-// a single empty fragment, one that contains no runes, always represents
-// an empty line in the scroll. This will be useful for formatting or
+// A nice property of cleaving is that a symbol array containing a single
+// empty symbol, one that contains no runes, always represents an
+// empty line in the scroll. This will be useful for formatting or
 // reccreating the scroll later if we wish; allthough all lines would be
-// void of leading and trailing whiitespace if so but correct indentation
+// void of leading and trailing whiitespace, however, correct indentation
 // can be inferred.
 //
-// Example:
-// Original: true => @Print("It's true!")
-// Cleaved_: [
-//             `true`, ` `, `=`, `>`, ` `, `@`,      // `true => @`
-//             `Print`, `(`, `"`, `It`, `'`, `s`,    // `Print("It's`
-//             ` `, `true`, `!`, `"`, `)`            // ` true!")`
-//           ]
-
-// Fragment are described above. 
-type Fragment struct {
-	Val string
-	Start int
-	End int				// Exclusive
-}
-
-// String creates a string representation of the Fragment.
-// TODO: Is this a duplicate of an Element?
-func (frag Fragment) String() string {
-	start := strconv.Itoa(frag.Start)
-	start = strings.Repeat(` `, 3 - len(start)) + start
-	return fmt.Sprintf("[%s:%-3d] `%s`", start, frag.End, frag.Val)
-}
-
-// PrintFragments prints an array of Fragments.
-func PrintFragments(frags []Fragment) {
-	for _, v := range frags {
-		fmt.Println(v)
-	}
-}
-
 // TODO: Create SQL flow diagram of what the cleaver does!
-//
-// Cleave splits a string into Fragments to make the rest of the
+
+// Cleave splits a string into symbols to make the rest of the
 // scanning process an additive one rather than a splitting one.
-// Paulio: I found it easier this way.
-func Cleave(s string) []Fragment {
-	result := []Fragment{}
-	fragType := none
-	var frag Fragment
-	var val strings.Builder
+func Cleave(s string, line int) []Symbol {
 	
-	push := func(end int) {
-		frag.Val = val.String()
-		frag.End = end
-		result = append(result, frag)
-	}
+	r := []Symbol{}
+	var f Symbol
+	c := unicodeCat(none)
+	sb := strings.Builder{}
 	
-	reset := func(start int, rt runeType) {
-		val.Reset()
-		frag = Fragment{
-			Start: start,
-		}
-		fragType = rt
-	}
-	
-	for i, r := range s {
-		rt := runeTypeOf(r)
+	for i, ru := range s {
+		cat := unicodeCatOf(ru)
 		
 		switch {
-		case (fragType == none):
-			reset(i, rt)
-		case (fragType == letter) && (rt == letter):
-		case (fragType == number) && (rt == number):
+		case (c == none):
+			f, c = reset(&sb, i, cat)
+		case (c == letter) && (cat == letter):
+		case (c == digit) && (cat == digit):
 		default:
-			push(i)
-			reset(i, rt)
+			push(r, f, &sb, i, line)
+			f, c = reset(&sb, i, cat)
 		}
 		
-		val.WriteRune(r)
+		sb.WriteRune(ru)
 	}
 	
-	push(len(s))
-	return result
+	push(r, f, &sb, len(s), line)
+	return r
 }
+
+// push pushes a fragment onto the result list.
+func push(r []Symbol, f Symbol, sb *strings.Builder, end int, line int) []Symbol {
+	f.Val = sb.String()
+	f.End = end
+	f.Line = line
+	r = append(r, f)
+	return r
+}
+
+// reset resets the string builder and creates a new
+// fragment.
+func reset(sb *strings.Builder, start int, cat unicodeCat) (Symbol, unicodeCat) {
+		sb.Reset()
+		f := Symbol{
+			Start: start,
+		}
+		return f, cat
+	}
+	

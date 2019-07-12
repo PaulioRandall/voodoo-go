@@ -35,8 +35,8 @@ func (sa *ScrollExecutor) Exe(scroll *sc.Scroll, line sc.Line) (sh.ExitCode, Exe
 	var err sh.ExeError = nil
 	
 	// TODO
-	frags := cl.Cleave(line.Val)
-	cl.PrintFragments(frags)
+	frags := cl.Cleave(line.Val, line.Num)
+	cl.PrintlnSymbols(frags)
 	
 	return exitCode, next, err
 }

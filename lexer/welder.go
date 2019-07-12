@@ -1,19 +1,14 @@
 
-package cleaver
+package lexer
 
 import (
-	"fmt"
-	"strings"
-	"strconv"
+	"unicode"
 )
 
-// The purpose of the welder is to take the Fragments of Elements
-// produced by the cleaver and use, but not enforce, some of the
-// language grammer rules to produce Elements. Some Fragments map
-// directly to Elements and some are 'welded' (joined) together to
+// The purpose of the welder is to take the fragments of elements
+// produced by the cleaver and produce elements. Some fragments
+// map directly to elements and some are 'welded' (joined) together to
 // form them.
-//
-// TODO: Create SQL flow diagrams of these!
 //
 // Elements that require welding include:
 // - String literals: anything between double quotes `"`.
@@ -21,319 +16,189 @@ import (
 //										(optional) followed by a single dot then at least one number
 //										(optional) followed by numbers and underscores.
 // - Words: A letter followed by letters, numbers and underscores.
-// - Comments: Two forward slashes `//` followed by the rest of the fragments in the line.
+// - Comments: Two forward slashes `//` followed by the rest of the
+//							 fragments in the line.
+// - Whitespace: all whitespace runes that appear concurrently to
+//							  each other should be combined into a single element.
 //
-// E.g. @Print("It's true!") will weld together [ `"`, `It`, `'`,
-// `s`, ` `, `true`, `!`, `"` ] because they are all part of a string
-// literal.
-//
-// Just like Fragments, Elements are a 'lossless' way to recreate the
+// Just like fragments, elements are a 'lossless' way to recreate the
 // original scroll with the ommission of leading and trailing
-// whitespace on each line of course, leading indentation being
-// inferrable.
-
-// Element represents the string that makes up a lexeme.
-type Element struct {
-	Val string
-	Start int
-	End int				// Exclusive
-}
-
-// String creates a string representation of the Element.
-// TODO: Is this a duplicate of a Fragment?
-func (elem Element) String() string {
-	start := strconv.Itoa(elem.Start)
-	start = strings.Repeat(` `, 3 - len(start)) + start
-	return fmt.Sprintf("[%s:%-3d] `%s`", start, elem.End, elem.Val)
-}
-
-// PrintElements prints an array of Elements.
-func PrintElements(elems []Element) {
-	for _, v := range elems {
-		fmt.Println(v)
-	}
-}
-
-// fragItr allows a Fragment array to be iterated.
-type fragItr struct {
-	index int
-	length int
-	array []Fragment
-}
-
-// newFragItr creates a new Fragment iterator.
-func newFragItr(frags []Fragment) *fragItr {
-	return &fragItr{
-		length: len(frags),
-		array: frags,
-	}
-}
-
-// hasNext returns true if the iterator has yet to be fully used.
-func (itr *fragItr) hasNext() bool {
-	i = itr.index + 1
-	if itr.index < itr.length {
-		return true
-	}
-	return false
-}
-
-// skip the next Fragment in the array and by incrementing the
-// iterator index without returning anything.
-func (itr *fragItr) skip() {
-	bugIfNoNext()
-	itr.index++
-} 
-
-// next returns the next Fragment in the array and increases the
-// iterator index.
-func (itr *fragItr) next() Fragment {
-	defer itr.index++
-	return itr.peek()
-}
-
-// peek returns the next Fragment in the array without incrementing
-// the iterator index.
-func (itr *fragItr) peek() Fragment {
-	bugIfNoNext()
-	i := itr.index + 1
-	return itr.array[i]
-}
-
-// bugIfNoNext will print error message and exit compilation if there
-// are no items lft in the array.
-func (itr *fragItr) bugIfNoNext() {
-	if !itr.hasNext() {
-		sh.CompilerBug(-1, "Iterator call to next() or peek() but no items remain")
-	}
-}
-
-// TODO: Create SQL flow diagram of what the welder does!
+// whitespace on each line, leading indentation is inferrable.
 //
-// Weld joins together Fragments into Elements so the next phase
+// TODO: Create SQL flow diagrams of these!
+
+// Weld joins together fragments of elements so the next phase
 // deals with units of statments and doesn't have to worry about
 // splitting and joining strings.
-func Weld(frags []Fragment) []Element {
+func Weld(frags []Symbol) []Symbol {
 
-	itr := newFragIter(frags)
-	v := itr.peek()
+	itr := NewSymItr(frags)
+	r := handleIfEmptyLine(itr)
 	
-	if len(v.Val) == 0 {
-		return []Element{
-			Element{}
-		}
+	if r != nil {
+		return r
 	}
 	
-	elems := []Element{}
+	r = []Symbol{}
 	for itr.HasNext() {
 		
-		v = itr.Next()
-		if len(v.Val) == 0 {
-			result = append(result, Element{})
-			break
-		}
-		
-		r := rune(v.Val)
-		var el Element
+		f := Symbol(itr.Next())
+		ru := rune(f.Val[0])
+		var el Symbol
 		
 		switch {
-		case isDoubleQuote(r):
-			el = strElem(v, itr)			
-		case isNumber(r):
-			el = numElem(v, itr)
-		case isLetter(r):
-			el = wordElem(v, itr)
+		case ru == '"':
+			el = strElem(f, itr)			
+		case unicode.IsDigit(ru):
+			el = numElem(f, itr)
+		case unicode.IsLetter(ru):
+			el = wordElem(f, itr)
 		default:
-			if itr.hasNext() {
+			if itr.HasNext() {
 				n := itr.Peek()
-				if isComment(v.Val + n.Val) {
-					el = commentElem(v, itr)
+				if isComment(f.Val + n.Val) {
+					el = commentElem(f, itr)
 				} else {
-					el = fragToElem(v)
+					el = fragToElem(f)
 				}
 			}
 		}
 		
-		elems = append(elems, e)
+		r = append(r, el)
 	}
 	
-	return elems
+	return r
+}
+
+// handleIfEmptyLine returns an element array if the fragment
+// array represents an empty line, nil is returned if not.
+func handleIfEmptyLine(itr *SymItr) []Symbol {
+	f := itr.Peek()
+	if len(f.Val) != 0 {
+		return nil
+	}
+	
+	return []Symbol{
+		Symbol{
+			Line: f.Line,
+		},
+	}
+}
+
+// initElem creates a new element with the value and
+// start index initialised to that of the input fragment.
+func initElem(f Symbol) Symbol {
+	return Symbol{
+		Val: f.Val,
+		Start: f.Start,
+	}
 }
 
 // strElem continues iterating the fragment array until a string
-// literal element is produced.
-func strElem(first Fragment, itr *fragItr) Element {
-	elem := Element{
-		Val: first.Val,
-		Start: first.Start,
-	}
+// literal element is produced. Grammer rules not enforced here.
+func strElem(f Symbol, itr *SymItr) Symbol {
+	el := initElem(f)
+	isEscaped := false
 	
-	isEscaped = false
 	for itr.HasNext() {
-		v := itr.Next()
-		elem.End = v.End
-		
-		s := v.Val
-		elem.Val = elem.Val + s
+		f = itr.Next()		
+		s := f.Val
+		el.Val = el.Val + s
 		
 		switch {
 		case s == `\`:
 			isEscaped = !isEscaped
 		case !isEscaped && s == `"`:
-			return elem
+			break
 		default:
 			isEscaped = false
 		}
 	}
 	
-	return elem
+	el.End = f.End
+	return el
 }
 
 // numElem continues iterating the fragment array until a number
-// literal element is produced.
-func numElem(first Fragment, itr *fragItr) Element {
-	elem := Element{
-		Val: first.Val,
-		Start: first.Start,
-	}
+// literal element is produced. Grammer rules not enforced here.
+func numElem(f Symbol, itr *SymItr) Symbol {
+	el := initElem(f)
 	
-	update = func(f Fragment) {
-		elem.Val = elem.Val + f.Val
-		elem.End = f.End
-		itr.skip()
+	update := func(f Symbol) {
+		el.Val = el.Val + f.Val
+		el.End = f.End
+		itr.Skip()
 	}
 	
 	for itr.HasNext() {
-		v := itr.Peek()
-		s := v.Val
+		f = itr.Peek()
+		s := f.Val
 		
 		switch {
-		case isNumStr(s):
-			update(v)
-		case isPoint(s[0]):
-			update(v)
-		case isUnderscore(s[0]):
-			update(v)
+		case isDigitStr(s):
+			update(f)
+		case rune(s[0]) == '.':
+			update(f)
+		case rune(s[0]) == '_':
+			update(f)
 		default:
 			break
 		}
 	}
 	
-	return elem
+	return el
 }
 
 // wordElem continues iterating the fragment array until a word
 // element is produced.
-func wordElem(first Fragment, itr *fragItr) Element {
-	elem := Element{
-		Val: first.Val,
-		Start: first.Start,
-	}
+func wordElem(f Symbol, itr *SymItr) Symbol {
+	el := initElem(f)
 	
-	update = func(f Fragment) {
-		elem.Val = elem.Val + f.Val
-		elem.End = f.End
-		itr.skip()
+	update := func(f Symbol) {
+		el.Val = el.Val + f.Val
+		el.End = f.End
+		itr.Skip()
 	}
 	
 	for itr.HasNext() {
-		v := itr.Peek()
-		s := v.Val
+		f = itr.Peek()
+		s := f.Val
 		
 		switch {
-		case isNumStr(s):
-			update(v)
+		case isDigitStr(s):
+			update(f)
 		case isLetterStr(s):
-			update(v)
-		case isUnderscore(s[0]):
-			update(v)
+			update(f)
+		case rune(s[0]) == '_':
+			update(f)
 		default:
 			break
 		}
 	}
 	
-	return elem
+	return el
 }
 
 // commentElem continues iterating the fragment array until a
 // comment element is produced.
-func commentElem(first Fragment, itr *fragItr) Element {
-	elem := Element{
-		Val: first.Val,
-		Start: first.Start,
-	}
+func commentElem(f Symbol, itr *SymItr) Symbol {
+	el := initElem(f)
 	
-	var v Fragment
 	for itr.HasNext() {
-		v = itr.next()
-		elem.Val = elem.Val + v.Val
+		f = itr.Next()
+		el.Val = el.Val + f.Val
 	}
-	elem.End = v.End
 	
-	return elem
+	el.End = f.End
+	return el
 }
 
-// fragToElem converts a Fragment into an Element.
-func fragToElem(f Fragment) Element {
-	return Element{
+// fragToElem converts a fragment into an element.
+func fragToElem(f Symbol) Symbol {
+	return Symbol{
 		Val: f.Val,
 		Start: f.Start,
 		End: f.End,
+		Line: f.Line,
 	}
-}
-
-// JoinFragments joins together all Fragments in the passed
-// array to form an Element.
-func joinFragments(frags []Fragment) Element {
-	elem := Element{}
-	lastIndex := len(frags) - 1 
-	
-	for i, frag := range frags {
-		if i == 0 {
-			elem.Start = frag.Start
-		} else if i == lastIndex {
-			elem.End = frag.End
-		}
-		
-		elem.Val = elem.Val + frag.Val
-	}
-	
-	return elem
-}
-
-// isNewElem returns true if the Element, represented by
-// an array of Fragments is new, array is empty.
-func isNewElem(elem []Fragment) {
-	return len(elem) == 0
-}
-
-// whenNewElem handles the first fragment in the new element. 
-func whenNewElem(frag Fragment) (isComplete bool, isStrDelim bool) {
-	s := frag.Val()
-	l := len(s)
-	
-	switch {
-	case len(s) == 1:
-		isComplete, isStrDelim = whenSingleRune(rune(s[0]))
-	default:
-		elemComplete = false 
-	}
-	
-	return
-}
-
-// whenSingleRune handles when the first fragment has a single rune.
-func whenSingleRune(r rune) (isComplete bool, isStrDelim bool) {
-	switch {
-	case isWhitespace(r):
-		elemComplete = true
-	case isDoubleQuote(r):
-		isStrDelim = true
-	case isLetter(r):
-	case isNumber(r):
-	case isUnderscore(r):
-	default:
-		elemComplete = true
-	}
-	return
 }
