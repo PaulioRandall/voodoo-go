@@ -82,8 +82,8 @@ func initSym(start, lineNum int) Symbol {
 // - keyword
 // - boolean value (`true` or `false`)
 func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
-
 	ru := itr.Peek()
+
 	if !itr.HasNext() || !unicode.IsLetter(ru) {
 		m := "You can't call this function unless the iterators first rune is a letter"
 		sh.CompilerBug(lineNum, m)
@@ -93,18 +93,25 @@ func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 	return r, nil
 }
 
-// extractWord iterates a string iterator until a single word has been
-// extracted.
-func extractWord(itr *StrItr, lineNum int) Symbol {
+// numSym handles symbols that start with a unicode category Nd rune.
+// I.e. any number from 0 to 9, a number may resolve into a:
+// - literal number
+func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 	r := initSym(itr.NextIndex(), lineNum)
 	sb := strings.Builder{}
 	exit := false
+	hasPoint := false
 
 	for itr.HasNext() && !exit {
 		ru := itr.Peek()
 
 		switch {
-		case unicode.IsLetter(ru):
+		case ru == '.':
+			if hasPoint {
+				m := `Theres two decimal points in this number`
+				return Symbol{}, errors.New(m)
+			}
+			hasPoint = true
 			fallthrough
 		case unicode.IsDigit(ru):
 			fallthrough
@@ -117,15 +124,7 @@ func extractWord(itr *StrItr, lineNum int) Symbol {
 
 	r.Val = sb.String()
 	r.End = itr.NextIndex()
-	return r
-}
-
-// numSym handles symbols that start with a unicode category Nd rune.
-// I.e. any number from 0 to 9, a number may resolve into a:
-// - literal number
-func numSym(itr *StrItr, lineNum int) (Symbol, error) {
-	// TODO
-	return Symbol{}, errors.New("TODO: Implement this function!")
+	return r, nil
 }
 
 // spaceSym handles symbols that start with a rune with the
@@ -212,4 +211,31 @@ func commentSym(itr *StrItr, lineNum int) (Symbol, error) {
 func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	// TODO
 	return Symbol{}, errors.New("TODO: Implement this function!")
+}
+
+// extractWord iterates a string iterator until a single word has been
+// extracted.
+func extractWord(itr *StrItr, lineNum int) Symbol {
+	r := initSym(itr.NextIndex(), lineNum)
+	sb := strings.Builder{}
+	exit := false
+
+	for itr.HasNext() && !exit {
+		ru := itr.Peek()
+
+		switch {
+		case unicode.IsLetter(ru):
+			fallthrough
+		case unicode.IsDigit(ru):
+			fallthrough
+		case ru == '_':
+			sb.WriteRune(itr.Next())
+		default:
+			exit = true
+		}
+	}
+
+	r.Val = sb.String()
+	r.End = itr.NextIndex()
+	return r
 }
