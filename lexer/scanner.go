@@ -1,8 +1,11 @@
 package lexer
 
 import (
+	"errors"
 	"strings"
 	"unicode"
+
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // ScanLine scans a line and creates an array of symbols
@@ -18,24 +21,33 @@ func ScanLine(line string, lineNum int) []Symbol {
 
 	for itr.HasNext() {
 		ru := itr.Peek()
+		start := itr.NextIndex()
+		var s Symbol
+		var err error
 
 		switch {
 		case unicode.IsLetter(ru):
-			r = append(r, wordSym(itr, lineNum))
+			s, err = wordSym(itr, lineNum)
 		case unicode.IsDigit(ru):
-			r = append(r, numSym(itr, lineNum))
+			s, err = numSym(itr, lineNum)
 		case unicode.IsSpace(ru):
-			r = append(r, spaceSym(itr, lineNum))
+			s, err = spaceSym(itr, lineNum)
 		case ru == '@':
-			r = append(r, curseSym(itr, lineNum))
+			s, err = curseSym(itr, lineNum)
 		case ru == '"':
-			r = append(r, strSym(itr, lineNum))
+			s, err = strSym(itr, lineNum)
 		case isComment(itr):
-			r = append(r, commentSym(itr, lineNum))
+			s, err = commentSym(itr, lineNum)
 		default:
-			r = append(r, otherSym(itr, lineNum))
+			s, err = otherSym(itr, lineNum)
 		}
 
+		if err != nil {
+			end := itr.NextIndex()
+			sh.SyntaxError(lineNum, start, end, err)
+		}
+
+		r = append(r, s)
 		itr.Next() // TEMP
 	}
 
@@ -69,49 +81,60 @@ func initSym(start, lineNum int) Symbol {
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(itr *StrItr, lineNum int) Symbol {
+func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 	// TODO
-	return Symbol{}
+	return Symbol{}, errors.New("TODO: Implement this function!")
 }
 
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
-func numSym(itr *StrItr, lineNum int) Symbol {
+func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 	// TODO
-	return Symbol{}
+	return Symbol{}, errors.New("TODO: Implement this function!")
 }
 
 // spaceSym handles symbols that start with a rune with the
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *StrItr, lineNum int) Symbol {
+func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 	// TODO
-	return Symbol{}
+	return Symbol{}, errors.New("TODO: Implement this function!")
 }
 
 // curseSym handles symbols that start with a at sign rune `@`.
 // Curse symbols may resolve into a:
 // - go function call
-func curseSym(itr *StrItr, lineNum int) Symbol {
+func curseSym(itr *StrItr, lineNum int) (Symbol, error) {
 	// TODO
-	return Symbol{}
+	return Symbol{}, errors.New("TODO: Implement this function!")
 }
 
 // strSym handles symbols that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(itr *StrItr, lineNum int) Symbol {
-	r := initSym(itr.Index(), lineNum)
-	isEscaped := false
+func strSym(itr *StrItr, lineNum int) (Symbol, error) {
+
+	if !itr.HasNext() || itr.Peek() != '"' {
+		m := "You can't call this function unless the iterators first rune is `\"`"
+		sh.CompilerBug(lineNum, m)
+	}
+
+	r := initSym(itr.NextIndex(), lineNum)
 	sb := strings.Builder{}
 
+	isEscaped := false
+	first := true
+	var ru rune
+
 	for itr.HasNext() {
-		ru := itr.Next()
+		ru = itr.Next()
 		sb.WriteRune(ru)
 
 		switch {
+		case first:
+			first = false
 		case ru == '\\':
 			isEscaped = !isEscaped
 		case !isEscaped && ru == '"':
@@ -121,9 +144,13 @@ func strSym(itr *StrItr, lineNum int) Symbol {
 		}
 	}
 
+	if ru != '"' {
+		return Symbol{}, errors.New("Did someone forget to close a string literal?!")
+	}
+
 	r.Val = sb.String()
-	r.End = itr.Index()
-	return r
+	r.End = itr.NextIndex()
+	return r, nil
 }
 
 // isComment return true if the rest of the string is a comment.
@@ -135,9 +162,9 @@ func isComment(itr *StrItr) bool {
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *StrItr, lineNum int) Symbol {
+func commentSym(itr *StrItr, lineNum int) (Symbol, error) {
 	// TODO
-	return Symbol{}
+	return Symbol{}, errors.New("TODO: Implement this function!")
 }
 
 // otherSym handles any symbols that don't have a specific handling
@@ -147,7 +174,7 @@ func commentSym(itr *StrItr, lineNum int) Symbol {
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(itr *StrItr, lineNum int) Symbol {
+func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	// TODO
-	return Symbol{}
+	return Symbol{}, errors.New("TODO: Implement this function!")
 }

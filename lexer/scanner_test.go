@@ -7,23 +7,31 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestScanner_1(t *testing.T) {
-	for i, tc := range testCases() {
+func ETestScannerApi(t *testing.T) {
+	for i, tc := range apiTests() {
 		t.Log("Scanner test case: " + strconv.Itoa(i+1))
 		a := ScanLine(tc.Input, tc.Line)
 		assert.Equal(t, tc.Expects, a)
 	}
 }
 
-type testCase struct {
-	Line    int
-	Input   string
-	Expects []Symbol
+type symTest struct {
+	Line      int
+	Input     string
+	Expects   Symbol
+	ExpectErr bool
 }
 
-func testCases() []testCase {
-	return []testCase{
-		testCase{
+type symArrayTest struct {
+	Line      int
+	Input     string
+	Expects   []Symbol
+	ExpectErr bool
+}
+
+func apiTests() []symArrayTest {
+	return []symArrayTest{
+		symArrayTest{
 			Line:  0,
 			Input: `x = 1`,
 			Expects: []Symbol{
@@ -34,7 +42,7 @@ func testCases() []testCase {
 				Symbol{`1`, 4, 5, 0},
 			},
 		},
-		testCase{
+		symArrayTest{
 			Line:  123,
 			Input: `x = true`,
 			Expects: []Symbol{
@@ -45,7 +53,7 @@ func testCases() []testCase {
 				Symbol{`true`, 4, 8, 123},
 			},
 		},
-		testCase{
+		symArrayTest{
 			Line:  9,
 			Input: `x = "Whelp!"`,
 			Expects: []Symbol{
@@ -59,7 +67,7 @@ func testCases() []testCase {
 				Symbol{`"`, 11, 12, 9},
 			},
 		},
-		testCase{
+		symArrayTest{
 			Line:  0,
 			Input: `@Println("First line\nsecond line")`,
 			Expects: []Symbol{

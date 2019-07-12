@@ -19,8 +19,13 @@ func NewStrItr(str string) *StrItr {
 	}
 }
 
-// Index returns the current index of the iterator.
-func (itr *StrItr) Index() int {
+// PrevIndex returns the index of the previous rune.
+func (itr *StrItr) PrevIndex() int {
+	return itr.index - 1
+}
+
+// NextIndex returns the index of the next rune.
+func (itr *StrItr) NextIndex() int {
 	return itr.index
 }
 
@@ -32,15 +37,14 @@ func (itr *StrItr) increment() {
 // Skip the next rune by incrementing the iterator index
 // without returning anything.
 func (itr *StrItr) Skip() {
-	i := itr.index + 1
+	i := itr.index
 	itr.bugIfOutOfBounds(i)
 	itr.increment()
 }
 
 // HasNext returns true if there are runes still to be iterated.
 func (itr *StrItr) HasNext() bool {
-	i := itr.index + 1
-	if i < itr.length {
+	if itr.index < itr.length {
 		return true
 	}
 	return false
@@ -55,7 +59,7 @@ func (itr *StrItr) Next() rune {
 // Peek returns the next rune without incrementing the iterator
 // index.
 func (itr *StrItr) Peek() rune {
-	i := itr.index + 1
+	i := itr.index
 	itr.bugIfOutOfBounds(i)
 	return rune(itr.str[i])
 }
@@ -63,7 +67,7 @@ func (itr *StrItr) Peek() rune {
 // HasAsatte returns true if there are at least two more runes
 // still to be iterated.
 func (itr *StrItr) HasAsatte() bool {
-	i := itr.index + 2
+	i := itr.index + 1
 	if i < itr.length {
 		return true
 	}
@@ -73,7 +77,7 @@ func (itr *StrItr) HasAsatte() bool {
 // PeekAsatte returns the rune after the next rune without
 // incrementing the iterator index.
 func (itr *StrItr) PeekAsatte() rune {
-	i := itr.index + 2
+	i := itr.index + 1
 	itr.bugIfOutOfBounds(i)
 	return rune(itr.str[i])
 }

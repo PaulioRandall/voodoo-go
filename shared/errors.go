@@ -79,3 +79,24 @@ func CompilerBug(lineNum int, msg string) {
 
 	os.Exit(1)
 }
+
+// SyntaxError writes a syntax error to output then exits the program
+// with code 1.
+func SyntaxError(lineNum int, start, end int, err error) {
+	SyntaxErr(lineNum, start, end, err.Error())
+}
+
+// SyntaxErr writes a syntax error to output then exits the program
+// with code 1.
+func SyntaxErr(lineNum int, start, end int, msg string) {
+	fmt.Print("[SYNTAX BUG]")
+	info := fmt.Sprintf("...at line %d, columns %d -> %d ", lineNum, start, end)
+	fmt.Println(info)
+
+	msgLines := strings.Split(msg, "\n")
+	for _, v := range msgLines {
+		fmt.Print("\t..." + v)
+	}
+
+	os.Exit(1)
+}
