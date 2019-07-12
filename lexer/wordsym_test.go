@@ -1,6 +1,5 @@
 package lexer
 
-/*
 import (
 	"strconv"
 	"testing"
@@ -13,7 +12,7 @@ func TestWordSym(t *testing.T) {
 		t.Log("wordSym() test case: " + strconv.Itoa(i+1))
 
 		itr := NewStrItr(tc.Input)
-		a, err := strSym(itr, tc.Line)
+		a, err := wordSym(itr, tc.Line)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
@@ -23,29 +22,24 @@ func TestWordSym(t *testing.T) {
 	}
 }
 
-// TODO: NEXT <<<<<<<<----------------------------
 func wordSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Line:    0,
-			Input:   `abc`,
-			Expects: Symbol{`""`, 0, 2, 0},
-		},
-		symTest{
 			Line:    123,
-			Input:   `"From hell with love"`,
-			Expects: Symbol{`"From hell with love"`, 0, 21, 123},
+			Input:   `a`,
+			Expects: Symbol{`a`, 0, 1, 123},
 		},
 		symTest{
-			Line:    0,
-			Input:   `"Bam: \"Leaders eat last!\""`,
-			Expects: Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0},
+			Input:   `abc`,
+			Expects: Symbol{`abc`, 0, 3, 0},
 		},
 		symTest{
-			Line:    0,
-			Input:   `"\\\\\""`,
-			Expects: Symbol{`"\\\\\""`, 0, 8, 0},
+			Input:   `abc_123`,
+			Expects: Symbol{`abc_123`, 0, 7, 0},
+		},
+		symTest{
+			Input:   `a__________123456789`,
+			Expects: Symbol{`a__________123456789`, 0, 20, 0},
 		},
 	}
 }
-*/
