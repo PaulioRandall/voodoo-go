@@ -19,6 +19,11 @@ func NewStrItr(str string) *StrItr {
 	}
 }
 
+// Length returns the total length of the array.
+func (itr *StrItr) Length() int {
+	return itr.length
+}
+
 // PrevIndex returns the index of the previous rune.
 func (itr *StrItr) PrevIndex() int {
 	return itr.index - 1
@@ -64,6 +69,7 @@ func (itr *StrItr) Peek() rune {
 	return rune(itr.str[i])
 }
 
+// TODO: Replace with HasRel(int)
 // HasAsatte returns true if there are at least two more runes
 // still to be iterated.
 func (itr *StrItr) HasAsatte() bool {
@@ -74,6 +80,7 @@ func (itr *StrItr) HasAsatte() bool {
 	return false
 }
 
+// TODO: Replace with PeekRel(int)
 // PeekAsatte returns the rune after the next rune without
 // incrementing the iterator index.
 func (itr *StrItr) PeekAsatte() rune {
@@ -82,6 +89,9 @@ func (itr *StrItr) PeekAsatte() rune {
 	return rune(itr.str[i])
 }
 
+// TODO: Add IndexRel(int)
+
+// TODO: remove
 // HasPrev returns true if at least call to Next() has occurred.
 func (itr *StrItr) HasPrev() bool {
 	if itr.index > 0 {
@@ -90,6 +100,7 @@ func (itr *StrItr) HasPrev() bool {
 	return false
 }
 
+// TODO: remove
 // PeekPrev returns the previous rune without decrementing
 // the iterator index.
 func (itr *StrItr) PeekPrev() rune {
@@ -98,6 +109,7 @@ func (itr *StrItr) PeekPrev() rune {
 	return rune(itr.str[i])
 }
 
+// TODO: remove
 // HasOtotoi returns true if at least two calls to Next() have
 // been made.
 func (itr *StrItr) HasOtotoi() bool {
@@ -108,6 +120,7 @@ func (itr *StrItr) HasOtotoi() bool {
 	return false
 }
 
+// TODO: remove
 // PeekOtotoi returns the rune before the previous one without
 // decrementing the iterator index.
 func (itr *StrItr) PeekOtotoi() rune {

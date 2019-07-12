@@ -82,8 +82,8 @@ func initSym(start, lineNum int) Symbol {
 // - keyword
 // - boolean value (`true` or `false`)
 func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
-	ru := itr.Peek()
 
+	ru := itr.Peek()
 	if !itr.HasNext() || !unicode.IsLetter(ru) {
 		m := "You can't call this function unless the iterators first rune is a letter"
 		sh.CompilerBug(lineNum, m)
@@ -97,13 +97,20 @@ func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
 func numSym(itr *StrItr, lineNum int) (Symbol, error) {
+
+	ru := itr.Peek()
+	if !itr.HasNext() || !unicode.IsDigit(ru) {
+		m := "You can't call this function unless the iterators first rune is a digit"
+		sh.CompilerBug(lineNum, m)
+	}
+
 	r := initSym(itr.NextIndex(), lineNum)
 	sb := strings.Builder{}
 	exit := false
 	hasPoint := false
 
 	for itr.HasNext() && !exit {
-		ru := itr.Peek()
+		ru = itr.Peek()
 
 		switch {
 		case ru == '.':
@@ -132,11 +139,18 @@ func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
 func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
+
+	ru := itr.Peek()
+	if !itr.HasNext() || !unicode.IsSpace(ru) {
+		m := "You can't call this function unless the iterators first rune is whitespace"
+		sh.CompilerBug(lineNum, m)
+	}
+
 	r := initSym(itr.NextIndex(), lineNum)
 	sb := strings.Builder{}
 
 	for itr.HasNext() {
-		ru := itr.Peek()
+		ru = itr.Peek()
 
 		if unicode.IsSpace(ru) {
 			sb.WriteRune(itr.Next())
@@ -154,8 +168,27 @@ func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 // Curse symbols may resolve into a:
 // - go function call
 func curseSym(itr *StrItr, lineNum int) (Symbol, error) {
-	// TODO
-	return Symbol{}, errors.New("TODO: Implement this function!")
+
+	if !itr.HasNext() || itr.Peek() != '@' {
+		m := "You can't call this function unless the iterators first rune is an `@`"
+		sh.CompilerBug(lineNum, m)
+	}
+
+	switch {
+	case !itr.HasAsatte():
+		fallthrough
+	case !unicode.IsLetter(itr.PeekAsatte()):
+		m := "You can't call this function unless the iterators first rune is an `@`"
+		sh.SyntaxErr(lineNum, itr.NextIndex()+1, itr.Length(), m)
+	}
+
+	index := itr.NextIndex()
+	first := string(itr.Next())
+	r := extractWord(itr, lineNum)
+	r.Start = index
+	r.Val = first + r.Val
+
+	return r, nil
 }
 
 // strSym handles symbols that start with the double quote `"` rune.
