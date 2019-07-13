@@ -29,8 +29,52 @@ func otherSymTests() []symTest {
 			Expects: Symbol{`<`, 0, 1, 0},
 		},
 		symTest{
+			Input:   `>`,
+			Expects: Symbol{`>`, 0, 1, 0},
+		},
+		symTest{
 			Input:   `<=`,
 			Expects: Symbol{`<=`, 0, 2, 0},
+		},
+		symTest{
+			Input:   `>=`,
+			Expects: Symbol{`>=`, 0, 2, 0},
+		},
+		symTest{
+			Input:   `=`,
+			Expects: Symbol{`=`, 0, 1, 0},
+		},
+		symTest{
+			Input:   `=>`,
+			Expects: Symbol{`=>`, 0, 2, 0},
+		},
+		symTest{
+			Input:   `==`,
+			Expects: Symbol{`==`, 0, 2, 0},
+		},
+		symTest{
+			Input:   `+`,
+			Expects: Symbol{`+`, 0, 1, 0},
+		},
+		symTest{
+			Input:   `-`,
+			Expects: Symbol{`-`, 0, 1, 0},
+		},
+		symTest{
+			Input:   `*`,
+			Expects: Symbol{`*`, 0, 1, 0},
+		},
+		symTest{
+			Input:   `/`,
+			Expects: Symbol{`/`, 0, 1, 0},
+		},
+		symTest{
+			Input:   `%`,
+			Expects: Symbol{`%`, 0, 1, 0},
+		},
+		symTest{
+			Input:   `?`,
+			Expects: Symbol{`?`, 0, 1, 0},
 		},
 	}
 }

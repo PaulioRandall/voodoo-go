@@ -284,18 +284,30 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	r := initSym(itr.NextIndex(), lineNum)
 	ru := itr.Next()
 	r.Val = string(ru)
+	hasTwoRunes := false
 
 	switch {
 	case ru == '<':
-		fallthrough
+		hasTwoRunes = itr.NextIsIn(`=-`)
 	case ru == '>':
-		if itr.HasNext() && strings.ContainsRune(`=`, itr.Peek()) {
-			r.Val = r.Val + string(itr.Next())
-		}
+		hasTwoRunes = itr.NextIsIn(`=-`)
 	case ru == '=':
-		if itr.HasNext() && strings.ContainsRune(`=>`, itr.Peek()) {
-			r.Val = r.Val + string(itr.Next())
-		}
+		hasTwoRunes = itr.NextIsIn(`=>`)
+	case ru == '+':
+	case ru == '-':
+		hasTwoRunes = itr.NextIsIn(`>`)
+	case ru == '*':
+	case ru == '/':
+	case ru == '%':
+	case ru == '?':
+	default:
+		m := "I don't know what to do with this rune '" + string(ru) + "'"
+		i := itr.NextIndex()
+		sh.SyntaxErr(lineNum, i, i+1, m)
+	}
+
+	if hasTwoRunes {
+		r.Val = r.Val + string(itr.Next())
 	}
 
 	r.End = itr.NextIndex()

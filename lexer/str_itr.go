@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"strings"
+
 	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
@@ -127,6 +129,15 @@ func (itr *StrItr) PeekOtotoi() rune {
 	i := itr.index - 2
 	itr.bugIfOutOfBounds(i)
 	return rune(itr.str[i])
+}
+
+// NextIsIn returns true if there is a next rune and the next
+// rune is in the input string.
+func (itr *StrItr) NextIsIn(s string) bool {
+	if itr.HasNext() {
+		return strings.ContainsRune(`=>`, itr.Peek())
+	}
+	return false
 }
 
 // bugIfOutOfBounds will print error message and exit compilation if there
