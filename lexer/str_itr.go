@@ -135,7 +135,7 @@ func (itr *StrItr) PeekOtotoi() rune {
 // rune is in the input string.
 func (itr *StrItr) NextIsIn(s string) bool {
 	if itr.HasNext() {
-		return strings.ContainsRune(`=>`, itr.Peek())
+		return strings.ContainsRune(s, itr.Peek())
 	}
 	return false
 }

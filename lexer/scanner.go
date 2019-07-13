@@ -283,8 +283,13 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	r := initSym(itr.NextIndex(), lineNum)
 	ru := itr.Next()
-	r.Val = string(ru)
 	hasTwoRunes := false
+
+	onErr := func() {
+		m := "I don't know what to do with this symbol '" + string(ru) + "'"
+		i := itr.NextIndex()
+		sh.SyntaxErr(lineNum, i, i+1, m)
+	}
 
 	switch {
 	case ru == '<':
@@ -293,6 +298,7 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 		hasTwoRunes = itr.NextIsIn(`=-`)
 	case ru == '=':
 		hasTwoRunes = itr.NextIsIn(`=>`)
+	case ru == '!':
 	case ru == '+':
 	case ru == '-':
 		hasTwoRunes = itr.NextIsIn(`>`)
@@ -300,14 +306,23 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == '/':
 	case ru == '%':
 	case ru == '?':
+	case ru == '|' && itr.HasNext() && itr.NextIsIn(`|`):
+		hasTwoRunes = true
+	case ru == '&' && itr.HasNext() && itr.NextIsIn(`&`):
+		hasTwoRunes = true
+	case ru == '(':
+	case ru == ')':
+	case ru == '[':
+	case ru == ']':
+	case ru == ',':
 	default:
-		m := "I don't know what to do with this rune '" + string(ru) + "'"
-		i := itr.NextIndex()
-		sh.SyntaxErr(lineNum, i, i+1, m)
+		onErr()
 	}
 
 	if hasTwoRunes {
-		r.Val = r.Val + string(itr.Next())
+		r.Val = string(ru) + string(itr.Next())
+	} else {
+		r.Val = string(ru)
 	}
 
 	r.End = itr.NextIndex()

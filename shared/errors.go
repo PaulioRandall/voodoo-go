@@ -74,7 +74,7 @@ func CompilerBug(lineNum int, msg string) {
 
 	msgLines := strings.Split(msg, "\n")
 	for _, v := range msgLines {
-		fmt.Print("\t..." + v)
+		fmt.Println("\t..." + v)
 	}
 
 	os.Exit(1)
