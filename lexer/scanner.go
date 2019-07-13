@@ -85,7 +85,7 @@ func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	ru := itr.Peek()
 	if !itr.HasNext() || !unicode.IsLetter(ru) {
-		m := "You can't call this function unless the iterators first rune is a letter"
+		m := "Can't call this function when the first rune is not letter"
 		sh.CompilerBug(lineNum, m)
 	}
 
@@ -100,7 +100,7 @@ func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	ru := itr.Peek()
 	if !itr.HasNext() || !unicode.IsDigit(ru) {
-		m := "You can't call this function unless the iterators first rune is a digit"
+		m := "Can't call this function when the first rune is not digit"
 		sh.CompilerBug(lineNum, m)
 	}
 
@@ -142,7 +142,7 @@ func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	ru := itr.Peek()
 	if !itr.HasNext() || !unicode.IsSpace(ru) {
-		m := "You can't call this function unless the iterators first rune is whitespace"
+		m := "Can't call this function when the first rune is not whitespace"
 		sh.CompilerBug(lineNum, m)
 	}
 
@@ -170,7 +170,7 @@ func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 func curseSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	if !itr.HasNext() || itr.Peek() != '@' {
-		m := "You can't call this function unless the iterators first rune is an `@`"
+		m := "Can't call this function when the first rune is not `@`"
 		sh.CompilerBug(lineNum, m)
 	}
 
@@ -197,7 +197,7 @@ func curseSym(itr *StrItr, lineNum int) (Symbol, error) {
 func strSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	if !itr.HasNext() || itr.Peek() != '"' {
-		m := "You can't call this function unless the iterators first rune is `\"`"
+		m := "Can't call this function when the first rune is not `\"`"
 		sh.CompilerBug(lineNum, m)
 	}
 
@@ -226,7 +226,8 @@ func strSym(itr *StrItr, lineNum int) (Symbol, error) {
 	}
 
 	if isFirst || isEscaped || itr.PeekPrev() != '"' {
-		return Symbol{}, errors.New("Did someone forget to close a string literal?!")
+		m := "Did someone forget to close a string literal?!"
+		return Symbol{}, errors.New(m)
 	}
 
 	r.Val = sb.String()
@@ -236,7 +237,11 @@ func strSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 // isComment return true if the rest of the string is a comment.
 func isComment(itr *StrItr) bool {
-	// TODO
+	if itr.HasNext() && itr.HasAsatte() {
+		if itr.Peek() == '/' && itr.PeekAsatte() == '/' {
+			return true
+		}
+	}
 	return false
 }
 
@@ -244,8 +249,22 @@ func isComment(itr *StrItr) bool {
 // `//`. Double forward slashes may resolve into a:
 // - comment
 func commentSym(itr *StrItr, lineNum int) (Symbol, error) {
-	// TODO
-	return Symbol{}, errors.New("TODO: Implement this function!")
+
+	if !itr.HasNext() || itr.Peek() != '/' {
+		m := "Can't call this function when the first rune is not `/`"
+		sh.CompilerBug(lineNum, m)
+	}
+
+	r := initSym(itr.NextIndex(), lineNum)
+	sb := strings.Builder{}
+
+	for itr.HasNext() {
+		sb.WriteRune(itr.Next())
+	}
+
+	r.Val = sb.String()
+	r.End = itr.NextIndex()
+	return r, nil
 }
 
 // otherSym handles any symbols that don't have a specific handling
