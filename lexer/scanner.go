@@ -275,8 +275,31 @@ func commentSym(itr *StrItr, lineNum int) (Symbol, error) {
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
 func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
-	// TODO
-	return Symbol{}, errors.New("TODO: Implement this function!")
+
+	if !itr.HasNext() {
+		m := "Can't call this function with a finished iterator"
+		sh.CompilerBug(lineNum, m)
+	}
+
+	r := initSym(itr.NextIndex(), lineNum)
+	ru := itr.Next()
+	r.Val = string(ru)
+
+	switch {
+	case ru == '<':
+		fallthrough
+	case ru == '>':
+		if itr.HasNext() && strings.ContainsRune(`=`, itr.Peek()) {
+			r.Val = r.Val + string(itr.Next())
+		}
+	case ru == '=':
+		if itr.HasNext() && strings.ContainsRune(`=>`, itr.Peek()) {
+			r.Val = r.Val + string(itr.Next())
+		}
+	}
+
+	r.End = itr.NextIndex()
+	return r, nil
 }
 
 // extractWord iterates a string iterator until a single word has been
