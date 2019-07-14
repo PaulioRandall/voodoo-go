@@ -194,41 +194,45 @@ func strSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	if !itr.HasNext() || itr.Peek() != '"' {
 		m := "Can't call this function when the first rune is not `\"`"
-		sh.CompilerBug(lineNum, m)
+		return Symbol{}, errors.New(m)
 	}
 
 	r := initSym(itr.NextIndex(), lineNum)
-	sb := strings.Builder{}
+	isEscaped, s := extractStr(itr)
 
+	if isEscaped || len(s) < 2 || itr.PeekPrev() != '"' {
+		m := "Did someone forget to close a string literal?!"
+		return Symbol{}, errors.New(m)
+	}
+
+	r.Val = s
+	r.End = itr.NextIndex()
+	return r, nil
+}
+
+// extractStr extracts a string literal from a string iterator
+// returning true if the last rune was escaped.
+func extractStr(itr *StrItr) (bool, string) {
+
+	sb := strings.Builder{}
+	sb.WriteRune(itr.Next())
 	isEscaped := false
-	isFirst := true
 
 	for itr.HasNext() {
 		ru := itr.Next()
 		sb.WriteRune(ru)
 
 		switch {
-		case !itr.HasNext():
-			break
-		case isFirst:
-			isFirst = false
+		case !isEscaped && ru == '"':
+			return false, sb.String()
 		case ru == '\\':
 			isEscaped = !isEscaped
-		case !isEscaped && ru == '"':
-			break
-		default:
+		case itr.HasNext():
 			isEscaped = false
 		}
 	}
 
-	if isFirst || isEscaped || itr.PeekPrev() != '"' {
-		m := "Did someone forget to close a string literal?!"
-		return Symbol{}, errors.New(m)
-	}
-
-	r.Val = sb.String()
-	r.End = itr.NextIndex()
-	return r, nil
+	return isEscaped, sb.String()
 }
 
 // isComment return true if the rest of the string is a comment.
@@ -274,18 +278,12 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	if !itr.HasNext() {
 		m := "Can't call this function with a finished iterator"
-		sh.CompilerBug(lineNum, m)
+		return Symbol{}, errors.New(m)
 	}
 
 	r := initSym(itr.NextIndex(), lineNum)
 	ru := itr.Next()
 	hasTwoRunes := false
-
-	onErr := func() {
-		m := "I don't know what to do with this symbol '" + string(ru) + "'"
-		i := itr.NextIndex()
-		sh.SyntaxErr(lineNum, i, i+1, m)
-	}
 
 	switch {
 	case ru == '<':
@@ -312,7 +310,8 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == ']':
 	case ru == ',':
 	default:
-		onErr()
+		m := "I don't know what to do with this symbol '" + string(ru) + "'"
+		return Symbol{}, errors.New(m)
 	}
 
 	if hasTwoRunes {

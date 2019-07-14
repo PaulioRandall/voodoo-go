@@ -17,6 +17,7 @@ func TestNumSym(t *testing.T) {
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
 		} else {
+			assert.Nil(t, err)
 			assert.Equal(t, tc.Expects, a)
 		}
 	}

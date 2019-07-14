@@ -17,6 +17,7 @@ func TestStrSym(t *testing.T) {
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
 		} else {
+			assert.Nil(t, err)
 			assert.Equal(t, tc.Expects, a)
 		}
 	}
@@ -42,8 +43,20 @@ func strSymTests() []symTest {
 			Expects: Symbol{`"\\\\\""`, 0, 8, 0},
 		},
 		symTest{
+			Input:     ``,
+			ExpectErr: true,
+		},
+		symTest{
+			Input:     `:(`,
+			ExpectErr: true,
+		},
+		symTest{
 			Input:     `"`,
 			ExpectErr: true,
+		},
+		symTest{
+			Input:   `"a"x`,
+			Expects: Symbol{`"a"`, 0, 3, 0},
 		},
 		symTest{
 			Input:     `"escaped \"`,
