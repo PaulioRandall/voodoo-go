@@ -46,7 +46,6 @@ contains "$1" "build" "test" "run"
 if [[ $? == 1 ]]; then
 	echo Formatting...
 	go fmt ./cmd
-	go fmt ./executors
 	go fmt ./interpreter
 	go fmt ./lexer
 	go fmt ./scroll

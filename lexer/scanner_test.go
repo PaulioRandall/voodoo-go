@@ -10,8 +10,13 @@ import (
 func ETestScannerApi(t *testing.T) {
 	for i, tc := range apiTests() {
 		t.Log("Scanner test case: " + strconv.Itoa(i+1))
-		a := ScanLine(tc.Input, tc.Line)
-		assert.Equal(t, tc.Expects, a)
+		a, err := ScanLine(tc.Input, tc.Line)
+
+		if tc.ExpectErr {
+			assert.NotNil(t, err)
+		} else {
+			assert.Equal(t, tc.Expects, a)
+		}
 	}
 }
 

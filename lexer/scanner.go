@@ -10,20 +10,18 @@ import (
 
 // ScanLine scans a line and creates an array of symbols
 // based on the grammer rules of the language.
-func ScanLine(line string, lineNum int) []Symbol {
+func ScanLine(line string, lineNum int) (r []Symbol, err error) {
 
 	if line == `` {
-		return emptyLineSyms(lineNum)
+		r = emptyLineSyms(lineNum)
+		return
 	}
 
 	itr := NewStrItr(line)
-	r := []Symbol{}
 
 	for itr.HasNext() {
-		ru := itr.Peek()
-		start := itr.NextIndex()
 		var s Symbol
-		var err error
+		ru := itr.Peek()
 
 		switch {
 		case unicode.IsLetter(ru):
@@ -43,15 +41,13 @@ func ScanLine(line string, lineNum int) []Symbol {
 		}
 
 		if err != nil {
-			end := itr.NextIndex()
-			sh.SyntaxError(lineNum, start, end, err)
+			break
 		}
 
 		r = append(r, s)
-		itr.Next() // TEMP
 	}
 
-	return r
+	return
 }
 
 // emptyLineSyms returns an array containing a single empty

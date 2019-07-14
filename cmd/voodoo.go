@@ -7,13 +7,15 @@ import (
 	"os"
 	"time"
 
-	inter "github.com/PaulioRandall/voodoo-go/interpreter"
+	in "github.com/PaulioRandall/voodoo-go/interpreter"
+	sc "github.com/PaulioRandall/voodoo-go/scroll"
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // main is the entry point for this script. It wraps the standard Go format,
 // build, test, run, and install operations specifically for this project.
 func main() {
-	stopWatch := inter.StopWatch{}
+	stopWatch := sh.StopWatch{}
 	stopWatch.Start()
 	fmt.Printf("Started\t%v\n\n", stopWatch.Started.UTC())
 
@@ -35,27 +37,6 @@ func main() {
 	os.Exit(0)
 }
 
-// exeScroll loads then executes the scroll supplied as a parameter.
-func exeScroll() {
-	scrollPath := getScroll()
-	scrollArgs := getScrollArgs()
-
-	scroll, err := inter.LoadScroll(scrollPath)
-	if err != nil {
-		panic(err)
-	}
-
-	// TODO: Handle when error returned.
-	exitCode, err := inter.Execute(scroll, scrollArgs)
-	if err != nil {
-		panic(err)
-	}
-
-	// TODO: What to do when non-zero exit code?
-	exitMsg := fmt.Sprintf("\nExit %d", exitCode)
-	fmt.Println(exitMsg)
-}
-
 // getOption returns the argument passed that represents the operation to
 // perform.
 func getOption() string {
@@ -65,8 +46,8 @@ func getOption() string {
 	return os.Args[1]
 }
 
-// getScroll returns the scroll path argument.
-func getScroll() string {
+// getScrollPath returns the scroll path argument.
+func getScrollPath() string {
 	if len(os.Args) < 3 {
 		badSyntax()
 	}
@@ -86,4 +67,25 @@ func badSyntax() {
 
 	fmt.Println(syntax + "\n")
 	os.Exit(1)
+}
+
+// exeScroll loads then executes the scroll supplied as a parameter.
+func exeScroll() {
+	scrollPath := getScrollPath()
+	scrollArgs := getScrollArgs()
+
+	scroll, err := sc.LoadScroll(scrollPath)
+	if err != nil {
+		panic(err)
+	}
+
+	exitCode, err := in.Execute(scroll, scrollArgs)
+	if err != nil {
+		// TODO: Handle when error returned.
+		panic(err)
+	}
+
+	// TODO: What to do when non-zero exit code?
+	exitMsg := fmt.Sprintf("\nExit %d", exitCode)
+	fmt.Println(exitMsg)
 }
