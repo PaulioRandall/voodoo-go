@@ -6,14 +6,66 @@ import (
 	"strings"
 )
 
+// SymbolType represents the type of the symbol.
+type SymbolType int
+
+const (
+	UNDEFINED SymbolType = iota
+	// Composite
+	KEYWORD_SCROLL // scroll
+	KEYWORD_SPELL  // spell
+	KEYWORD_LOOP   // loop
+	KEYWORD_WHEN   // when
+	KEYWORD_END    // end
+	KEYWORD_KEY    // key
+	KEYWORD_VAL    // value
+	VARIABLE
+	BOOLEAN // true/false
+	NUMBER  // -##.###
+	STRING  // "blahblah"
+	COMMENT // // blahblah
+	SPELL   // @Blahblah
+	// Misc
+	WHITESPACE
+	ASSIGNMENT // <-
+	VOID       // _
+	RANGE      // ..
+	// Conditional
+	IF_TRUE_THEN // =>
+	NEGATION     // !
+	// Boolean operators
+	EQUAL                 // ==
+	NOT_EQUAL             // !=
+	LESS_THAN             // <
+	LESS_THAN_OR_EQUAL    // <=
+	GREATER_THAN          // >
+	GREATER_THAN_OR_EQUAL // >=
+	OR                    // ||
+	AND                   // &&
+	// Arithmetic operators
+	ADD      // +
+	MULTIPLY // *
+	DIVIDE   // /
+	MODULO   // %
+	// Brackets
+	CIRCLE_BRACE_LEFT  // (
+	CIRCLE_BRACE_RIGHT // )
+	SQUARE_BRACE_LEFT  // [
+	SQUARE_BRACE_RIGHT // ]
+	// Separators
+	VALUE_SEPARATOR     // ,
+	KEY_VALUE_SEPARATOR // :
+)
+
 // Symbol represents a rune or string within the code
 // that equates to a meaningful item within the
 // grammer rules.
 type Symbol struct {
-	Val   string // Symbol value
-	Start int    // Index of first rune
-	End   int    // Index after last rune
-	Line  int    // Line number from scroll
+	Val   string     // Symbol value
+	Start int        // Index of first rune
+	End   int        // Index after last rune
+	Line  int        // Line number from scroll
+	Type  SymbolType // Type of symbol
 }
 
 // String creates a string representation of the symbol.

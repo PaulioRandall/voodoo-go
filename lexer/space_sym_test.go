@@ -28,15 +28,15 @@ func spaceSymTests() []symTest {
 		symTest{
 			Line:    123,
 			Input:   " ",
-			Expects: Symbol{" ", 0, 1, 123},
+			Expects: Symbol{" ", 0, 1, 123, UNDEFINED},
 		},
 		symTest{
 			Input:   "\t",
-			Expects: Symbol{"\t", 0, 1, 0},
+			Expects: Symbol{"\t", 0, 1, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   "\t\n \f \v\r",
-			Expects: Symbol{"\t\n \f \v\r", 0, 7, 0},
+			Expects: Symbol{"\t\n \f \v\r", 0, 7, 0, UNDEFINED},
 		},
 	}
 }

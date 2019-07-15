@@ -27,6 +27,8 @@ func ScanLine(line string, lineNum int) (r []Symbol, err error) {
 		case unicode.IsLetter(ru):
 			s, err = wordSym(itr, lineNum)
 		case unicode.IsDigit(ru):
+			fallthrough
+		case ru == '-' && unicode.IsDigit(itr.PeekAsatte()):
 			s, err = numSym(itr, lineNum)
 		case unicode.IsSpace(ru):
 			s, err = spaceSym(itr, lineNum)
@@ -82,10 +84,34 @@ func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 	ru := itr.Peek()
 	if !itr.HasNext() || !unicode.IsLetter(ru) {
 		m := "Can't call this function when the first rune is not letter"
-		sh.CompilerBug(lineNum, m)
+		return Symbol{}, errors.New(m)
 	}
 
 	r := extractWord(itr, lineNum)
+
+	switch strings.ToLower(r.Val) {
+	case `scroll`:
+		r.Type = KEYWORD_SCROLL
+	case `spell`:
+		r.Type = KEYWORD_SPELL
+	case `loop`:
+		r.Type = KEYWORD_LOOP
+	case `when`:
+		r.Type = KEYWORD_WHEN
+	case `end`:
+		r.Type = KEYWORD_END
+	case `key`:
+		r.Type = KEYWORD_KEY
+	case `val`:
+		r.Type = KEYWORD_VAL
+	case `true`:
+		r.Type = BOOLEAN
+	case `false`:
+		r.Type = BOOLEAN
+	default:
+		r.Type = VARIABLE
+	}
+
 	return r, nil
 }
 
@@ -94,25 +120,36 @@ func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 // - literal number
 func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 
-	ru := itr.Peek()
-	if !itr.HasNext() || !unicode.IsDigit(ru) {
-		m := "Can't call this function when the first rune is not digit"
-		sh.CompilerBug(lineNum, m)
-	}
-
 	r := initSym(itr.NextIndex(), lineNum)
 	sb := strings.Builder{}
+	if itr.NextIsIn(`-`) {
+		sb.WriteRune(itr.Next())
+	}
+
+	if !itr.HasNext() || !unicode.IsDigit(itr.Peek()) {
+		m := "Can't call this function when the first or second rune is not digit"
+		return Symbol{}, errors.New(m)
+	}
+
+	onFinish := func() {
+		r.Val = sb.String()
+		r.End = itr.NextIndex()
+	}
+
 	exit := false
 	hasPoint := false
 
 	for itr.HasNext() && !exit {
-		ru = itr.Peek()
+		ru := itr.Peek()
 
 		switch {
 		case ru == '.':
 			if hasPoint {
-				m := `Theres two decimal points in this number`
+				m := "Numbers can't have two fractional parts"
 				return Symbol{}, errors.New(m)
+			} else if itr.PeekAsatte() == '.' {
+				onFinish()
+				return r, nil
 			}
 			hasPoint = true
 			fallthrough
@@ -125,8 +162,7 @@ func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 		}
 	}
 
-	r.Val = sb.String()
-	r.End = itr.NextIndex()
+	onFinish()
 	return r, nil
 }
 
@@ -289,17 +325,16 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == '<':
 		hasTwoRunes = itr.NextIsIn(`=-`)
 	case ru == '>':
-		hasTwoRunes = itr.NextIsIn(`=-`)
+		hasTwoRunes = itr.NextIsIn(`=`)
 	case ru == '=':
 		hasTwoRunes = itr.NextIsIn(`=>`)
 	case ru == '!':
+		hasTwoRunes = itr.NextIsIn(`=`)
 	case ru == '+':
 	case ru == '-':
-		hasTwoRunes = itr.NextIsIn(`>`)
 	case ru == '*':
 	case ru == '/':
 	case ru == '%':
-	case ru == '?':
 	case ru == '|' && itr.HasNext() && itr.NextIsIn(`|`):
 		hasTwoRunes = true
 	case ru == '&' && itr.HasNext() && itr.NextIsIn(`&`):
@@ -310,8 +345,10 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == ']':
 	case ru == ',':
 	case ru == ':':
+	case ru == '.' && itr.HasNext() && itr.NextIsIn(`.`):
+		hasTwoRunes = true
 	default:
-		m := "I don't know what to do with this symbol '" + string(ru) + "'"
+		m := "I don't know what this symbol means '" + string(ru) + "'"
 		return Symbol{}, errors.New(m)
 	}
 

@@ -28,15 +28,15 @@ func curseSymTests() []symTest {
 		symTest{
 			Line:    123,
 			Input:   `@P`,
-			Expects: Symbol{`@P`, 0, 2, 123},
+			Expects: Symbol{`@P`, 0, 2, 123, UNDEFINED},
 		},
 		symTest{
 			Input:   `@Println`,
-			Expects: Symbol{`@Println`, 0, 8, 0},
+			Expects: Symbol{`@Println`, 0, 8, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   `@a__12__xy__`,
-			Expects: Symbol{`@a__12__xy__`, 0, 12, 0},
+			Expects: Symbol{`@a__12__xy__`, 0, 12, 0, UNDEFINED},
 		},
 	}
 }

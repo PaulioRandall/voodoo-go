@@ -28,31 +28,39 @@ func numSymTests() []symTest {
 		symTest{
 			Line:    123,
 			Input:   `2`,
-			Expects: Symbol{`2`, 0, 1, 123},
+			Expects: Symbol{`2`, 0, 1, 123, UNDEFINED},
 		},
 		symTest{
 			Input:   `123`,
-			Expects: Symbol{`123`, 0, 3, 0},
+			Expects: Symbol{`123`, 0, 3, 0, UNDEFINED},
+		},
+		symTest{
+			Input:   `-789`,
+			Expects: Symbol{`-789`, 0, 4, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   `123_456`,
-			Expects: Symbol{`123_456`, 0, 7, 0},
+			Expects: Symbol{`123_456`, 0, 7, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   `123.456`,
-			Expects: Symbol{`123.456`, 0, 7, 0},
+			Expects: Symbol{`123.456`, 0, 7, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   `123.456_789`,
-			Expects: Symbol{`123.456_789`, 0, 11, 0},
+			Expects: Symbol{`123.456_789`, 0, 11, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   `1__2__3__.__4__5__6__`,
-			Expects: Symbol{`1__2__3__.__4__5__6__`, 0, 21, 0},
+			Expects: Symbol{`1__2__3__.__4__5__6__`, 0, 21, 0, UNDEFINED},
 		},
 		symTest{
-			Input:     `123..456`,
-			ExpectErr: true,
+			Input:   `-123_.__456`,
+			Expects: Symbol{`-123_.__456`, 0, 11, 0, UNDEFINED},
+		},
+		symTest{
+			Input:   `123..456`,
+			Expects: Symbol{`123`, 0, 3, 0, UNDEFINED},
 		},
 		symTest{
 			Input:     `1_._2_._3`,
