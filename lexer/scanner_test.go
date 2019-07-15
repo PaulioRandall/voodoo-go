@@ -67,5 +67,42 @@ func apiTests() []symArrayTest {
 				Symbol{`]`, 16, 17, 0},
 			},
 		},
+		symArrayTest{
+			Input: "\tresult <- spell(a, b) r, err     ",
+			Expects: []Symbol{
+				Symbol{"\t", 0, 1, 0},
+				Symbol{`result`, 1, 7, 0},
+				Symbol{` `, 7, 8, 0},
+				Symbol{`<-`, 8, 10, 0},
+				Symbol{` `, 10, 11, 0},
+				Symbol{`spell`, 11, 16, 0},
+				Symbol{`(`, 16, 17, 0},
+				Symbol{`a`, 17, 18, 0},
+				Symbol{`,`, 18, 19, 0},
+				Symbol{` `, 19, 20, 0},
+				Symbol{`b`, 20, 21, 0},
+				Symbol{`)`, 21, 22, 0},
+				Symbol{` `, 22, 23, 0},
+				Symbol{`r`, 23, 24, 0},
+				Symbol{`,`, 24, 25, 0},
+				Symbol{` `, 25, 26, 0},
+				Symbol{`err`, 26, 29, 0},
+				Symbol{`     `, 29, 34, 0},
+			},
+		},
+		symArrayTest{
+			Input: `keyValue <- "pi": 3.1419`,
+			Expects: []Symbol{
+				Symbol{`keyValue`, 0, 8, 0},
+				Symbol{` `, 8, 9, 0},
+				Symbol{`<-`, 9, 11, 0},
+				Symbol{` `, 11, 12, 0},
+				Symbol{`"pi"`, 12, 16, 0},
+				Symbol{`:`, 16, 17, 0},
+				Symbol{` `, 17, 18, 0},
+				Symbol{`3.1419`, 18, 24, 0},
+			},
+		},
+		// alphabet <- ["a", "b", "c"]
 	}
 }

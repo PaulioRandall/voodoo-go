@@ -309,6 +309,7 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == '[':
 	case ru == ']':
 	case ru == ',':
+	case ru == ':':
 	default:
 		m := "I don't know what to do with this symbol '" + string(ru) + "'"
 		return Symbol{}, errors.New(m)

@@ -117,5 +117,9 @@ func otherSymTests() []symTest {
 			Input:   `,`,
 			Expects: Symbol{`,`, 0, 1, 0},
 		},
+		symTest{
+			Input:   `:`,
+			Expects: Symbol{`:`, 0, 1, 0},
+		},
 	}
 }
