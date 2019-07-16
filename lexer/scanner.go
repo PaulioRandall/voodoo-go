@@ -134,6 +134,7 @@ func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 	onFinish := func() {
 		r.Val = sb.String()
 		r.End = itr.NextIndex()
+		r.Type = NUMBER
 	}
 
 	exit := false

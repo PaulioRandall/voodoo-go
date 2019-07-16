@@ -44,7 +44,7 @@ func apiTests() []symArrayTest {
 				Symbol{` `, 1, 2, 0, UNDEFINED},
 				Symbol{`=`, 2, 3, 0, UNDEFINED},
 				Symbol{` `, 3, 4, 0, UNDEFINED},
-				Symbol{`1`, 4, 5, 0, UNDEFINED},
+				Symbol{`1`, 4, 5, 0, NUMBER},
 			},
 		},
 		symArrayTest{
@@ -54,7 +54,7 @@ func apiTests() []symArrayTest {
 				Symbol{` `, 1, 2, 0, UNDEFINED},
 				Symbol{`=`, 2, 3, 0, UNDEFINED},
 				Symbol{` `, 3, 4, 0, UNDEFINED},
-				Symbol{`-1.1`, 4, 8, 0, UNDEFINED},
+				Symbol{`-1.1`, 4, 8, 0, NUMBER},
 			},
 		},
 		symArrayTest{
@@ -110,7 +110,7 @@ func apiTests() []symArrayTest {
 				Symbol{`"pi"`, 12, 16, 0, STRING},
 				Symbol{`:`, 16, 17, 0, UNDEFINED},
 				Symbol{` `, 17, 18, 0, UNDEFINED},
-				Symbol{`3.1419`, 18, 24, 0, UNDEFINED},
+				Symbol{`3.1419`, 18, 24, 0, NUMBER},
 			},
 		},
 		symArrayTest{
@@ -140,9 +140,9 @@ func apiTests() []symArrayTest {
 				Symbol{` `, 6, 7, 0, UNDEFINED},
 				Symbol{`<-`, 7, 9, 0, UNDEFINED},
 				Symbol{` `, 9, 10, 0, UNDEFINED},
-				Symbol{`0`, 10, 11, 0, UNDEFINED},
+				Symbol{`0`, 10, 11, 0, NUMBER},
 				Symbol{`..`, 11, 13, 0, UNDEFINED},
-				Symbol{`5`, 13, 14, 0, UNDEFINED},
+				Symbol{`5`, 13, 14, 0, NUMBER},
 			},
 		},
 	}
