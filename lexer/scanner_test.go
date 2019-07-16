@@ -71,7 +71,7 @@ func apiTests() []symArrayTest {
 		symArrayTest{
 			Input: `@Println["Whelp"]`,
 			Expects: []Symbol{
-				Symbol{`@Println`, 0, 8, 0, UNDEFINED},
+				Symbol{`@Println`, 0, 8, 0, SOURCERY},
 				Symbol{`[`, 8, 9, 0, UNDEFINED},
 				Symbol{`"Whelp"`, 9, 16, 0, STRING},
 				Symbol{`]`, 16, 17, 0, UNDEFINED},

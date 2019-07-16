@@ -33,7 +33,7 @@ func ScanLine(line string, lineNum int) (r []Symbol, err error) {
 		case unicode.IsSpace(ru):
 			s, err = spaceSym(itr, lineNum)
 		case ru == '@':
-			s, err = curseSym(itr, lineNum)
+			s, err = sourcerySym(itr, lineNum)
 		case ru == '"':
 			s, err = strSym(itr, lineNum)
 		case isComment(itr):
@@ -198,10 +198,10 @@ func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 	return r, nil
 }
 
-// curseSym handles symbols that start with a at sign rune `@`.
-// Curse symbols may resolve into a:
+// sourcerySym handles symbols that start with a at sign rune `@`.
+// Sourcery symbols may resolve into a:
 // - go function call
-func curseSym(itr *StrItr, lineNum int) (Symbol, error) {
+func sourcerySym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	if !itr.HasNext() || itr.Peek() != '@' {
 		m := "Can't call this function when the first rune is not `@`"
@@ -221,6 +221,7 @@ func curseSym(itr *StrItr, lineNum int) (Symbol, error) {
 	r := extractWord(itr, lineNum)
 	r.Start = index
 	r.Val = first + r.Val
+	r.Type = SOURCERY
 
 	return r, nil
 }
