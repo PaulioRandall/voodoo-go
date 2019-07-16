@@ -359,12 +359,19 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == '%':
 		r.Type = MODULO
 	case ru == '(':
+		r.Type = CIRCLE_BRACE_OPEN
 	case ru == ')':
+		r.Type = CIRCLE_BRACE_CLOSE
 	case ru == '[':
+		r.Type = SQUARE_BRACE_OPEN
 	case ru == ']':
+		r.Type = SQUARE_BRACE_CLOSE
 	case ru == ',':
+		r.Type = VALUE_SEPARATOR
 	case ru == ':':
+		r.Type = KEY_VALUE_SEPARATOR
 	case ru == '.' && itr.NextIsIn(`.`):
+		r.Type = RANGE
 		hasTwoRunes = true
 	default:
 		m := "I don't know what this symbol means '" + string(ru) + "'"

@@ -91,31 +91,31 @@ func otherSymTests() []symTest {
 		},
 		symTest{
 			Input:   `(`,
-			Expects: Symbol{`(`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`(`, 0, 1, 0, CIRCLE_BRACE_OPEN},
 		},
 		symTest{
 			Input:   `)`,
-			Expects: Symbol{`)`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`)`, 0, 1, 0, CIRCLE_BRACE_CLOSE},
 		},
 		symTest{
 			Input:   `[`,
-			Expects: Symbol{`[`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`[`, 0, 1, 0, SQUARE_BRACE_OPEN},
 		},
 		symTest{
 			Input:   `]`,
-			Expects: Symbol{`]`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`]`, 0, 1, 0, SQUARE_BRACE_CLOSE},
 		},
 		symTest{
 			Input:   `,`,
-			Expects: Symbol{`,`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`,`, 0, 1, 0, VALUE_SEPARATOR},
 		},
 		symTest{
 			Input:   `:`,
-			Expects: Symbol{`:`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`:`, 0, 1, 0, KEY_VALUE_SEPARATOR},
 		},
 		symTest{
 			Input:   `..`,
-			Expects: Symbol{`..`, 0, 2, 0, UNDEFINED},
+			Expects: Symbol{`..`, 0, 2, 0, RANGE},
 		},
 		symTest{
 			Input:     `=`,
