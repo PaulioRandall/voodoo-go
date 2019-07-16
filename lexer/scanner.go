@@ -243,6 +243,7 @@ func strSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	r.Val = s
 	r.End = itr.NextIndex()
+	r.Type = STRING
 	return r, nil
 }
 

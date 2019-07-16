@@ -27,20 +27,20 @@ func strSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:   `""`,
-			Expects: Symbol{`""`, 0, 2, 0, UNDEFINED},
+			Expects: Symbol{`""`, 0, 2, 0, STRING},
 		},
 		symTest{
 			Line:    123,
 			Input:   `"From hell with love"`,
-			Expects: Symbol{`"From hell with love"`, 0, 21, 123, UNDEFINED},
+			Expects: Symbol{`"From hell with love"`, 0, 21, 123, STRING},
 		},
 		symTest{
 			Input:   `"Bam: \"Leaders eat last!\""`,
-			Expects: Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, UNDEFINED},
+			Expects: Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, STRING},
 		},
 		symTest{
 			Input:   `"\\\\\""`,
-			Expects: Symbol{`"\\\\\""`, 0, 8, 0, UNDEFINED},
+			Expects: Symbol{`"\\\\\""`, 0, 8, 0, STRING},
 		},
 		symTest{
 			Input:     ``,
@@ -56,7 +56,7 @@ func strSymTests() []symTest {
 		},
 		symTest{
 			Input:   `"a"x`,
-			Expects: Symbol{`"a"`, 0, 3, 0, UNDEFINED},
+			Expects: Symbol{`"a"`, 0, 3, 0, STRING},
 		},
 		symTest{
 			Input:     `"escaped \"`,
