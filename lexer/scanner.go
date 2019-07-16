@@ -326,34 +326,44 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	ru := itr.Next()
 	hasTwoRunes := false
 
+	ifNextIsInElse := func(s string, onTrue SymbolType, onFalse SymbolType) {
+		if itr.NextIsIn(s) {
+			r.Type = onTrue
+			hasTwoRunes = true
+		} else {
+			r.Type = onFalse
+		}
+	}
+
 	switch {
 	case ru == '<':
-		if itr.NextIsIn(`-`) {
-			r.Type = ASSIGNMENT
-			hasTwoRunes = true
-		}
+		ifNextIsInElse(`-`, ASSIGNMENT, LESS_THAN)
+		ifNextIsInElse(`=`, LESS_THAN_OR_EQUAL, r.Type)
 	case ru == '>':
-		hasTwoRunes = itr.NextIsIn(`=`)
+		ifNextIsInElse(`=`, GREATER_THAN_OR_EQUAL, GREATER_THAN)
 	case ru == '=' && itr.NextIsIn(`=>`):
-		hasTwoRunes = true
+		ifNextIsInElse(`=`, EQUAL, UNDEFINED)
+		ifNextIsInElse(`>`, UNDEFINED, r.Type)
 	case ru == '!':
-		hasTwoRunes = itr.NextIsIn(`=`)
+		ifNextIsInElse(`=`, NOT_EQUAL, UNDEFINED)
+	case ru == '|' && itr.NextIsIn(`|`):
+		r.Type = OR
+		hasTwoRunes = true
+	case ru == '&' && itr.NextIsIn(`&`):
+		r.Type = AND
+		hasTwoRunes = true
 	case ru == '+':
 	case ru == '-':
 	case ru == '*':
 	case ru == '/':
 	case ru == '%':
-	case ru == '|' && itr.HasNext() && itr.NextIsIn(`|`):
-		hasTwoRunes = true
-	case ru == '&' && itr.HasNext() && itr.NextIsIn(`&`):
-		hasTwoRunes = true
 	case ru == '(':
 	case ru == ')':
 	case ru == '[':
 	case ru == ']':
 	case ru == ',':
 	case ru == ':':
-	case ru == '.' && itr.HasNext() && itr.NextIsIn(`.`):
+	case ru == '.' && itr.NextIsIn(`.`):
 		hasTwoRunes = true
 	default:
 		m := "I don't know what this symbol means '" + string(ru) + "'"

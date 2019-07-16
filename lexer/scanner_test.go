@@ -155,5 +155,15 @@ func apiTests() []symArrayTest {
 				Symbol{`// The value of x is now 2`, 5, 31, 0, COMMENT},
 			},
 		},
+		symArrayTest{
+			Input: `isLandscape<-length<height`,
+			Expects: []Symbol{
+				Symbol{`isLandscape`, 0, 11, 0, VARIABLE},
+				Symbol{`<-`, 11, 13, 0, ASSIGNMENT},
+				Symbol{`length`, 13, 19, 0, VARIABLE},
+				Symbol{`<`, 19, 20, 0, LESS_THAN},
+				Symbol{`height`, 20, 26, 0, VARIABLE},
+			},
+		},
 	}
 }

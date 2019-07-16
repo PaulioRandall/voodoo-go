@@ -26,16 +26,36 @@ func TestOtherSym(t *testing.T) {
 func otherSymTests() []symTest {
 	return []symTest{
 		symTest{
+			Input:   `==`,
+			Expects: Symbol{`==`, 0, 2, 0, EQUAL},
+		},
+		symTest{
+			Input:   `!=`,
+			Expects: Symbol{`!=`, 0, 2, 0, NOT_EQUAL},
+		},
+		symTest{
 			Input:   `<`,
-			Expects: Symbol{`<`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`<`, 0, 1, 0, LESS_THAN},
+		},
+		symTest{
+			Input:   `<=`,
+			Expects: Symbol{`<=`, 0, 2, 0, LESS_THAN_OR_EQUAL},
 		},
 		symTest{
 			Input:   `>`,
-			Expects: Symbol{`>`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`>`, 0, 1, 0, GREATER_THAN},
 		},
 		symTest{
 			Input:   `>=`,
-			Expects: Symbol{`>=`, 0, 2, 0, UNDEFINED},
+			Expects: Symbol{`>=`, 0, 2, 0, GREATER_THAN_OR_EQUAL},
+		},
+		symTest{
+			Input:   `||`,
+			Expects: Symbol{`||`, 0, 2, 0, OR},
+		},
+		symTest{
+			Input:   `&&`,
+			Expects: Symbol{`&&`, 0, 2, 0, AND},
 		},
 		symTest{
 			Input:   `<-`,
@@ -48,14 +68,6 @@ func otherSymTests() []symTest {
 		symTest{
 			Input:   `!`,
 			Expects: Symbol{`!`, 0, 1, 0, UNDEFINED},
-		},
-		symTest{
-			Input:   `==`,
-			Expects: Symbol{`==`, 0, 2, 0, UNDEFINED},
-		},
-		symTest{
-			Input:   `!=`,
-			Expects: Symbol{`!=`, 0, 2, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   `+`,
@@ -76,14 +88,6 @@ func otherSymTests() []symTest {
 		symTest{
 			Input:   `%`,
 			Expects: Symbol{`%`, 0, 1, 0, UNDEFINED},
-		},
-		symTest{
-			Input:   `||`,
-			Expects: Symbol{`||`, 0, 2, 0, UNDEFINED},
-		},
-		symTest{
-			Input:   `&&`,
-			Expects: Symbol{`&&`, 0, 2, 0, UNDEFINED},
 		},
 		symTest{
 			Input:   `(`,
