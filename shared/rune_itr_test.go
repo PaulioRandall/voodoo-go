@@ -37,3 +37,14 @@ func TestRuneItr_RelRune(t *testing.T) {
 	assert.Equal(t, int32(-1), itr.RelRune(-3))
 	assert.Equal(t, int32(-1), itr.RelRune(20))
 }
+
+func TestRuneItr_NextRune(t *testing.T) {
+	s := `abc`
+	itr := NewRuneItr(s)
+
+	assert.Equal(t, 'a', itr.NextRune())
+	assert.Equal(t, 'b', itr.NextRune())
+	assert.Equal(t, 'c', itr.NextRune())
+	assert.Equal(t, int32(-1), itr.NextRune())
+	assert.Equal(t, int32(-1), itr.NextRune())
+}

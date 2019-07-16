@@ -54,6 +54,22 @@ func (itr *RuneItr) RelRune(offset int) rune {
 	return -1
 }
 
+// increment increments the iterators index.
+func (itr *RuneItr) increment() {
+	itr.index += 1
+}
+
+// NextRune returns the next rune in the array and increments
+// the iterators index.
+func (itr *RuneItr) NextRune() rune {
+	if itr.HasRelRune(0) {
+		defer itr.increment()
+		return itr.runes[itr.index]
+	}
+
+	return -1
+}
+
 // ##################################################
 // ##################################################
 // NEXT: Test the 2 functions above
@@ -64,11 +80,6 @@ func (itr *RuneItr) RelRune(offset int) rune {
 // NextIndex returns the index of the next rune.
 func (itr *RuneItr) NextIndex() int {
 	return itr.index
-}
-
-// increment increments the index counter.
-func (itr *RuneItr) increment() {
-	itr.index = itr.index + 1
 }
 
 // Skip the next rune by incrementing the iterator index
