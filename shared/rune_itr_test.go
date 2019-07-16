@@ -81,3 +81,32 @@ func TestRuneItr_HasNext(t *testing.T) {
 	itr.index += 1
 	assert.False(t, itr.HasNext())
 }
+
+func TestRuneItr_IsNext(t *testing.T) {
+	s := `ab語`
+	itr := NewRuneItr(s)
+
+	assert.True(t, itr.IsNext('a'))
+	assert.False(t, itr.IsNext('b'))
+	itr.index += 1
+	assert.True(t, itr.IsNext('b'))
+	assert.False(t, itr.IsNext('語'))
+	itr.index += 1
+	assert.True(t, itr.IsNext('語'))
+	itr.index += 1
+	assert.False(t, itr.IsNext('語'))
+}
+
+func TestRuneItr_IsNextIn(t *testing.T) {
+	s := `ab語`
+	itr := NewRuneItr(s)
+
+	assert.True(t, itr.IsNextIn("ab語"))
+	assert.False(t, itr.IsNextIn("xyz"))
+	itr.index += 1
+	assert.True(t, itr.IsNextIn("ab語"))
+	assert.False(t, itr.IsNextIn("xyz"))
+	itr.index += 1
+	itr.index += 1
+	assert.False(t, itr.IsNextIn("ab語"))
+}

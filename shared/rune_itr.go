@@ -94,17 +94,21 @@ func (itr *RuneItr) HasNext() bool {
 	return false
 }
 
-// ##################################################
-// ##################################################
-// NEXT: Update func below
-// ##################################################
-// ##################################################
-
-// NextIsIn returns true if there is a next rune and the next
-// rune is in the input string.
-func (itr *RuneItr) NextIsIn(s string) bool {
+// IsNext returns true if the next rune is equal to the input
+// rune. False is also returned if no more runes remain to be
+// iterated.
+func (itr *RuneItr) IsNext(r rune) bool {
 	if itr.HasNext() {
-		return strings.ContainsRune(s, -1)
+		return itr.PeekRune() == r
+	}
+	return false
+}
+
+// IsNextIn returns true if there is a next rune and the next
+// rune appears within the input string.
+func (itr *RuneItr) IsNextIn(s string) bool {
+	if itr.HasNext() {
+		return strings.ContainsRune(s, itr.PeekRune())
 	}
 	return false
 }
