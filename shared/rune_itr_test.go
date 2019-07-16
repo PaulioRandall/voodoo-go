@@ -9,9 +9,31 @@ import (
 func TestRuneItr_Length(t *testing.T) {
 	s := `Cry Out For A Hero`
 	itr := NewRuneItr(s)
+	assert.Equal(t, len(s), itr.Length())
+}
 
-	exp := len(s)
-	act := itr.Length()
+func TestRuneItr_HasRelRune(t *testing.T) {
+	s := `Cry Out For A Hero`
+	itr := NewRuneItr(s)
+	itr.index = 2
 
-	assert.Equal(t, exp, act)
+	assert.True(t, itr.HasRelRune(0))
+	assert.True(t, itr.HasRelRune(1))
+	assert.True(t, itr.HasRelRune(-1))
+
+	assert.False(t, itr.HasRelRune(-3))
+	assert.False(t, itr.HasRelRune(20))
+}
+
+func TestRuneItr_RelRune(t *testing.T) {
+	s := `Cry Out For A Hero`
+	itr := NewRuneItr(s)
+	itr.index = 2
+
+	assert.Equal(t, 'y', itr.RelRune(0))
+	assert.Equal(t, ' ', itr.RelRune(1))
+	assert.Equal(t, 'r', itr.RelRune(-1))
+
+	assert.Equal(t, int32(-1), itr.RelRune(-3))
+	assert.Equal(t, int32(-1), itr.RelRune(20))
 }

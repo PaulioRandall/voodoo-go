@@ -31,10 +31,10 @@ func (itr *RuneItr) Length() int {
 	return itr.length
 }
 
-// HasRuneAt returns true if the index calculated by offsetting
-// the current index by the input references a rune within the
-// bounds of the rune array.
-func (itr *RuneItr) HasRuneAt(offset int) bool {
+// HasRuneRelTo returns true if the index calculated by
+// offsetting the current index by the input references
+// a rune within the bounds of the rune array.
+func (itr *RuneItr) HasRelRune(offset int) bool {
 	i := itr.index + offset
 	if i >= 0 && i < itr.length {
 		return true
@@ -42,12 +42,12 @@ func (itr *RuneItr) HasRuneAt(offset int) bool {
 	return false
 }
 
-// RuneAt returns the rune specified by the index calculated
+// RelRune returns the rune specified by the index calculated
 // by offsetting the current index by the input. The offset
 // may be negative to return previous runes. If no rune exists
 // then the -1 will be returned.
-func (itr *RuneItr) RuneAt(offset int) rune {
-	if itr.HasRuneAt(offset) {
+func (itr *RuneItr) RelRune(offset int) rune {
+	if itr.HasRelRune(offset) {
 		i := itr.index + offset
 		return itr.runes[i]
 	}
