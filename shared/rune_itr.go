@@ -26,6 +26,11 @@ func NewRuneItr(str string) *RuneItr {
 	}
 }
 
+// increment increments the iterators index.
+func (itr *RuneItr) increment() {
+	itr.index += 1
+}
+
 // Length returns the total number of runes.
 func (itr *RuneItr) Length() int {
 	return itr.length
@@ -54,11 +59,6 @@ func (itr *RuneItr) RelRune(offset int) rune {
 	return -1
 }
 
-// increment increments the iterators index.
-func (itr *RuneItr) increment() {
-	itr.index += 1
-}
-
 // NextRune returns the next rune in the array and increments
 // the iterators index.
 func (itr *RuneItr) NextRune() rune {
@@ -68,6 +68,15 @@ func (itr *RuneItr) NextRune() rune {
 	}
 
 	return -1
+}
+
+// HasNext returns true if there are any items left to
+// iterate.
+func (itr *RuneItr) HasNext() bool {
+	if itr.index < itr.length {
+		return true
+	}
+	return false
 }
 
 // ##################################################
@@ -88,14 +97,6 @@ func (itr *RuneItr) Skip() {
 	i := itr.index
 	itr.bugIfOutOfBounds(i)
 	itr.increment()
-}
-
-// HasNext returns true if there are runes still to be iterated.
-func (itr *RuneItr) HasNext() bool {
-	if itr.index < itr.length {
-		return true
-	}
-	return false
 }
 
 // Next returns the next rune and increases the iterator index.

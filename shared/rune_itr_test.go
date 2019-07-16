@@ -48,3 +48,18 @@ func TestRuneItr_NextRune(t *testing.T) {
 	assert.Equal(t, int32(-1), itr.NextRune())
 	assert.Equal(t, int32(-1), itr.NextRune())
 }
+
+func TestRuneItr_HasNext(t *testing.T) {
+	s := `abc`
+	itr := NewRuneItr(s)
+
+	assert.True(t, itr.HasNext())
+	itr.index += 1
+	assert.True(t, itr.HasNext())
+	itr.index += 1
+	assert.True(t, itr.HasNext())
+	itr.index += 1
+	assert.False(t, itr.HasNext())
+	itr.index += 1
+	assert.False(t, itr.HasNext())
+}
