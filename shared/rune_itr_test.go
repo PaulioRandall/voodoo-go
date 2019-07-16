@@ -7,20 +7,22 @@ import (
 )
 
 func TestRuneItr_Length(t *testing.T) {
-	s := `Cry Out For A Hero`
+	// Japanese rune has 3 bytes
+	s := `Cry Out For A Hero 語`
 	itr := NewRuneItr(s)
-	assert.Equal(t, len(s), itr.Length())
+	exp := len([]rune(s))
+	assert.Equal(t, exp, itr.Length())
 }
 
 func TestRuneItr_Index(t *testing.T) {
-	s := `Cry Out For A Hero`
+	s := `Cry Out For A Hero 語`
 	itr := NewRuneItr(s)
 	itr.index = 12
 	assert.Equal(t, 12, itr.Index())
 }
 
 func TestRuneItr_HasRelRune(t *testing.T) {
-	s := `Cry Out For A Hero`
+	s := `Cry Out For A Hero 語`
 	itr := NewRuneItr(s)
 	itr.index = 2
 
@@ -32,32 +34,41 @@ func TestRuneItr_HasRelRune(t *testing.T) {
 	assert.False(t, itr.HasRelRune(20))
 }
 
-func TestRuneItr_RelRune(t *testing.T) {
-	s := `Cry Out For A Hero`
+func TestRuneItr_PeekRelRune(t *testing.T) {
+	s := `Cry Out For A Hero 語`
 	itr := NewRuneItr(s)
 	itr.index = 2
 
-	assert.Equal(t, 'y', itr.RelRune(0))
-	assert.Equal(t, ' ', itr.RelRune(1))
-	assert.Equal(t, 'r', itr.RelRune(-1))
+	assert.Equal(t, 'y', itr.PeekRelRune(0))
+	assert.Equal(t, ' ', itr.PeekRelRune(1))
+	assert.Equal(t, 'r', itr.PeekRelRune(-1))
 
-	assert.Equal(t, int32(-1), itr.RelRune(-3))
-	assert.Equal(t, int32(-1), itr.RelRune(20))
+	assert.Equal(t, int32(-1), itr.PeekRelRune(-3))
+	assert.Equal(t, int32(-1), itr.PeekRelRune(20))
 }
 
 func TestRuneItr_NextRune(t *testing.T) {
-	s := `abc`
+	s := `ab語`
 	itr := NewRuneItr(s)
 
 	assert.Equal(t, 'a', itr.NextRune())
 	assert.Equal(t, 'b', itr.NextRune())
-	assert.Equal(t, 'c', itr.NextRune())
+	assert.Equal(t, '語', itr.NextRune())
 	assert.Equal(t, int32(-1), itr.NextRune())
 	assert.Equal(t, int32(-1), itr.NextRune())
 }
 
+func TestRuneItr_PeekRune(t *testing.T) {
+	s := `ab語`
+	itr := NewRuneItr(s)
+
+	assert.Equal(t, 'a', itr.PeekRune())
+	itr.index = 5
+	assert.Equal(t, int32(-1), itr.PeekRune())
+}
+
 func TestRuneItr_HasNext(t *testing.T) {
-	s := `abc`
+	s := `ab語`
 	itr := NewRuneItr(s)
 
 	assert.True(t, itr.HasNext())
