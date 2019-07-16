@@ -12,6 +12,13 @@ func TestRuneItr_Length(t *testing.T) {
 	assert.Equal(t, len(s), itr.Length())
 }
 
+func TestRuneItr_Index(t *testing.T) {
+	s := `Cry Out For A Hero`
+	itr := NewRuneItr(s)
+	itr.index = 12
+	assert.Equal(t, 12, itr.Index())
+}
+
 func TestRuneItr_HasRelRune(t *testing.T) {
 	s := `Cry Out For A Hero`
 	itr := NewRuneItr(s)

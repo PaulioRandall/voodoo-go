@@ -36,6 +36,11 @@ func (itr *RuneItr) Length() int {
 	return itr.length
 }
 
+// Index returns the index of the next rune.
+func (itr *RuneItr) Index() int {
+	return itr.index
+}
+
 // HasRuneRelTo returns true if the index calculated by
 // offsetting the current index by the input references
 // a rune within the bounds of the rune array.
