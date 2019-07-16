@@ -38,34 +38,34 @@ type symArrayTest struct {
 func apiTests() []symArrayTest {
 	return []symArrayTest{
 		symArrayTest{
-			Input: `x = 1`,
+			Input: `x <- 1`,
 			Expects: []Symbol{
 				Symbol{`x`, 0, 1, 0, VARIABLE},
 				Symbol{` `, 1, 2, 0, WHITESPACE},
-				Symbol{`=`, 2, 3, 0, UNDEFINED},
-				Symbol{` `, 3, 4, 0, WHITESPACE},
-				Symbol{`1`, 4, 5, 0, NUMBER},
+				Symbol{`<-`, 2, 4, 0, UNDEFINED},
+				Symbol{` `, 4, 5, 0, WHITESPACE},
+				Symbol{`1`, 5, 6, 0, NUMBER},
 			},
 		},
 		symArrayTest{
-			Input: `y = -1.1`,
+			Input: `y <- -1.1`,
 			Expects: []Symbol{
 				Symbol{`y`, 0, 1, 0, VARIABLE},
 				Symbol{` `, 1, 2, 0, WHITESPACE},
-				Symbol{`=`, 2, 3, 0, UNDEFINED},
-				Symbol{` `, 3, 4, 0, WHITESPACE},
-				Symbol{`-1.1`, 4, 8, 0, NUMBER},
+				Symbol{`<-`, 2, 4, 0, UNDEFINED},
+				Symbol{` `, 4, 5, 0, WHITESPACE},
+				Symbol{`-1.1`, 5, 9, 0, NUMBER},
 			},
 		},
 		symArrayTest{
 			Line:  123,
-			Input: `x = true`,
+			Input: `x <- true`,
 			Expects: []Symbol{
 				Symbol{`x`, 0, 1, 123, VARIABLE},
 				Symbol{` `, 1, 2, 123, WHITESPACE},
-				Symbol{`=`, 2, 3, 123, UNDEFINED},
-				Symbol{` `, 3, 4, 123, WHITESPACE},
-				Symbol{`true`, 4, 8, 123, BOOLEAN},
+				Symbol{`<-`, 2, 4, 123, UNDEFINED},
+				Symbol{` `, 4, 5, 123, WHITESPACE},
+				Symbol{`true`, 5, 9, 123, BOOLEAN},
 			},
 		},
 		symArrayTest{
@@ -143,6 +143,16 @@ func apiTests() []symArrayTest {
 				Symbol{`0`, 10, 11, 0, NUMBER},
 				Symbol{`..`, 11, 13, 0, UNDEFINED},
 				Symbol{`5`, 13, 14, 0, NUMBER},
+			},
+		},
+		symArrayTest{
+			Input: `x<-2 // The value of x is now 2`,
+			Expects: []Symbol{
+				Symbol{`x`, 0, 1, 0, VARIABLE},
+				Symbol{`<-`, 1, 3, 0, UNDEFINED},
+				Symbol{`2`, 3, 4, 0, NUMBER},
+				Symbol{` `, 4, 5, 0, WHITESPACE},
+				Symbol{`// The value of x is now 2`, 5, 31, 0, COMMENT},
 			},
 		},
 	}

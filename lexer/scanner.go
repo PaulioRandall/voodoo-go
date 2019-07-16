@@ -304,6 +304,7 @@ func commentSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	r.Val = sb.String()
 	r.End = itr.NextIndex()
+	r.Type = COMMENT
 	return r, nil
 }
 

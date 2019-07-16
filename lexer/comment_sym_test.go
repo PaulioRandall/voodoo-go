@@ -28,15 +28,15 @@ func commentSymTests() []symTest {
 		symTest{
 			Line:    123,
 			Input:   `//`,
-			Expects: Symbol{`//`, 0, 2, 123, UNDEFINED},
+			Expects: Symbol{`//`, 0, 2, 123, COMMENT},
 		},
 		symTest{
 			Input:   `// A comment`,
-			Expects: Symbol{`// A comment`, 0, 12, 0, UNDEFINED},
+			Expects: Symbol{`// A comment`, 0, 12, 0, COMMENT},
 		},
 		symTest{
 			Input:   `// Abc // 123 // xyz`,
-			Expects: Symbol{`// Abc // 123 // xyz`, 0, 20, 0, UNDEFINED},
+			Expects: Symbol{`// Abc // 123 // xyz`, 0, 20, 0, COMMENT},
 		},
 	}
 }
