@@ -194,6 +194,7 @@ func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	r.Val = sb.String()
 	r.End = itr.NextIndex()
+	r.Type = WHITESPACE
 	return r, nil
 }
 
