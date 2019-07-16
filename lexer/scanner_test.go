@@ -42,7 +42,7 @@ func apiTests() []symArrayTest {
 			Expects: []Symbol{
 				Symbol{`x`, 0, 1, 0, VARIABLE},
 				Symbol{` `, 1, 2, 0, WHITESPACE},
-				Symbol{`<-`, 2, 4, 0, UNDEFINED},
+				Symbol{`<-`, 2, 4, 0, ASSIGNMENT},
 				Symbol{` `, 4, 5, 0, WHITESPACE},
 				Symbol{`1`, 5, 6, 0, NUMBER},
 			},
@@ -52,7 +52,7 @@ func apiTests() []symArrayTest {
 			Expects: []Symbol{
 				Symbol{`y`, 0, 1, 0, VARIABLE},
 				Symbol{` `, 1, 2, 0, WHITESPACE},
-				Symbol{`<-`, 2, 4, 0, UNDEFINED},
+				Symbol{`<-`, 2, 4, 0, ASSIGNMENT},
 				Symbol{` `, 4, 5, 0, WHITESPACE},
 				Symbol{`-1.1`, 5, 9, 0, NUMBER},
 			},
@@ -63,7 +63,7 @@ func apiTests() []symArrayTest {
 			Expects: []Symbol{
 				Symbol{`x`, 0, 1, 123, VARIABLE},
 				Symbol{` `, 1, 2, 123, WHITESPACE},
-				Symbol{`<-`, 2, 4, 123, UNDEFINED},
+				Symbol{`<-`, 2, 4, 123, ASSIGNMENT},
 				Symbol{` `, 4, 5, 123, WHITESPACE},
 				Symbol{`true`, 5, 9, 123, BOOLEAN},
 			},
@@ -83,7 +83,7 @@ func apiTests() []symArrayTest {
 				Symbol{"\t", 0, 1, 0, WHITESPACE},
 				Symbol{`result`, 1, 7, 0, VARIABLE},
 				Symbol{` `, 7, 8, 0, WHITESPACE},
-				Symbol{`<-`, 8, 10, 0, UNDEFINED},
+				Symbol{`<-`, 8, 10, 0, ASSIGNMENT},
 				Symbol{` `, 10, 11, 0, WHITESPACE},
 				Symbol{`spell`, 11, 16, 0, KEYWORD_SPELL},
 				Symbol{`(`, 16, 17, 0, UNDEFINED},
@@ -105,7 +105,7 @@ func apiTests() []symArrayTest {
 			Expects: []Symbol{
 				Symbol{`keyValue`, 0, 8, 0, VARIABLE},
 				Symbol{` `, 8, 9, 0, WHITESPACE},
-				Symbol{`<-`, 9, 11, 0, UNDEFINED},
+				Symbol{`<-`, 9, 11, 0, ASSIGNMENT},
 				Symbol{` `, 11, 12, 0, WHITESPACE},
 				Symbol{`"pi"`, 12, 16, 0, STRING},
 				Symbol{`:`, 16, 17, 0, UNDEFINED},
@@ -118,7 +118,7 @@ func apiTests() []symArrayTest {
 			Expects: []Symbol{
 				Symbol{`alphabet`, 0, 8, 0, VARIABLE},
 				Symbol{` `, 8, 9, 0, WHITESPACE},
-				Symbol{`<-`, 9, 11, 0, UNDEFINED},
+				Symbol{`<-`, 9, 11, 0, ASSIGNMENT},
 				Symbol{` `, 11, 12, 0, WHITESPACE},
 				Symbol{`[`, 12, 13, 0, UNDEFINED},
 				Symbol{`"a"`, 13, 16, 0, STRING},
@@ -138,7 +138,7 @@ func apiTests() []symArrayTest {
 				Symbol{` `, 4, 5, 0, WHITESPACE},
 				Symbol{`i`, 5, 6, 0, VARIABLE},
 				Symbol{` `, 6, 7, 0, WHITESPACE},
-				Symbol{`<-`, 7, 9, 0, UNDEFINED},
+				Symbol{`<-`, 7, 9, 0, ASSIGNMENT},
 				Symbol{` `, 9, 10, 0, WHITESPACE},
 				Symbol{`0`, 10, 11, 0, NUMBER},
 				Symbol{`..`, 11, 13, 0, UNDEFINED},
@@ -149,7 +149,7 @@ func apiTests() []symArrayTest {
 			Input: `x<-2 // The value of x is now 2`,
 			Expects: []Symbol{
 				Symbol{`x`, 0, 1, 0, VARIABLE},
-				Symbol{`<-`, 1, 3, 0, UNDEFINED},
+				Symbol{`<-`, 1, 3, 0, ASSIGNMENT},
 				Symbol{`2`, 3, 4, 0, NUMBER},
 				Symbol{` `, 4, 5, 0, WHITESPACE},
 				Symbol{`// The value of x is now 2`, 5, 31, 0, COMMENT},

@@ -328,11 +328,14 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 	switch {
 	case ru == '<':
-		hasTwoRunes = itr.NextIsIn(`=-`)
+		if itr.NextIsIn(`-`) {
+			r.Type = ASSIGNMENT
+			hasTwoRunes = true
+		}
 	case ru == '>':
 		hasTwoRunes = itr.NextIsIn(`=`)
-	case ru == '=':
-		hasTwoRunes = itr.NextIsIn(`=>`)
+	case ru == '=' && itr.NextIsIn(`=>`):
+		hasTwoRunes = true
 	case ru == '!':
 		hasTwoRunes = itr.NextIsIn(`=`)
 	case ru == '+':

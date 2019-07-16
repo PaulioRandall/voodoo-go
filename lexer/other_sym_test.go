@@ -34,20 +34,12 @@ func otherSymTests() []symTest {
 			Expects: Symbol{`>`, 0, 1, 0, UNDEFINED},
 		},
 		symTest{
-			Input:   `<=`,
-			Expects: Symbol{`<=`, 0, 2, 0, UNDEFINED},
-		},
-		symTest{
 			Input:   `>=`,
 			Expects: Symbol{`>=`, 0, 2, 0, UNDEFINED},
 		},
 		symTest{
-			Input:   `=`,
-			Expects: Symbol{`=`, 0, 1, 0, UNDEFINED},
-		},
-		symTest{
 			Input:   `<-`,
-			Expects: Symbol{`<-`, 0, 2, 0, UNDEFINED},
+			Expects: Symbol{`<-`, 0, 2, 0, ASSIGNMENT},
 		},
 		symTest{
 			Input:   `=>`,
@@ -120,6 +112,10 @@ func otherSymTests() []symTest {
 		symTest{
 			Input:   `..`,
 			Expects: Symbol{`..`, 0, 2, 0, UNDEFINED},
+		},
+		symTest{
+			Input:     `=`,
+			ExpectErr: true,
 		},
 	}
 }
