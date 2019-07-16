@@ -35,10 +35,6 @@ func numSymTests() []symTest {
 			Expects: Symbol{`123`, 0, 3, 0, NUMBER},
 		},
 		symTest{
-			Input:   `-789`,
-			Expects: Symbol{`-789`, 0, 4, 0, NUMBER},
-		},
-		symTest{
 			Input:   `123_456`,
 			Expects: Symbol{`123_456`, 0, 7, 0, NUMBER},
 		},
@@ -53,10 +49,6 @@ func numSymTests() []symTest {
 		symTest{
 			Input:   `1__2__3__.__4__5__6__`,
 			Expects: Symbol{`1__2__3__.__4__5__6__`, 0, 21, 0, NUMBER},
-		},
-		symTest{
-			Input:   `-123_.__456`,
-			Expects: Symbol{`-123_.__456`, 0, 11, 0, NUMBER},
 		},
 		symTest{
 			Input:   `123..456`,

@@ -54,7 +54,8 @@ func apiTests() []symArrayTest {
 				Symbol{` `, 1, 2, 0, WHITESPACE},
 				Symbol{`<-`, 2, 4, 0, ASSIGNMENT},
 				Symbol{` `, 4, 5, 0, WHITESPACE},
-				Symbol{`-1.1`, 5, 9, 0, NUMBER},
+				Symbol{`-`, 5, 6, 0, SUBTRACT},
+				Symbol{`1.1`, 6, 9, 0, NUMBER},
 			},
 		},
 		symArrayTest{
@@ -163,6 +164,22 @@ func apiTests() []symArrayTest {
 				Symbol{`length`, 13, 19, 0, VARIABLE},
 				Symbol{`<`, 19, 20, 0, LESS_THAN},
 				Symbol{`height`, 20, 26, 0, VARIABLE},
+			},
+		},
+		symArrayTest{
+			Input: `x<-3.14*(1-2+3)`,
+			Expects: []Symbol{
+				Symbol{`x`, 0, 1, 0, VARIABLE},
+				Symbol{`<-`, 1, 3, 0, ASSIGNMENT},
+				Symbol{`3.14`, 3, 7, 0, NUMBER},
+				Symbol{`*`, 7, 8, 0, MULTIPLY},
+				Symbol{`(`, 8, 9, 0, UNDEFINED},
+				Symbol{`1`, 9, 10, 0, NUMBER},
+				Symbol{`-`, 10, 11, 0, SUBTRACT},
+				Symbol{`2`, 11, 12, 0, NUMBER},
+				Symbol{`+`, 12, 13, 0, ADD},
+				Symbol{`3`, 13, 14, 0, NUMBER},
+				Symbol{`)`, 14, 15, 0, UNDEFINED},
 			},
 		},
 	}

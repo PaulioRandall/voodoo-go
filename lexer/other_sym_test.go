@@ -71,23 +71,23 @@ func otherSymTests() []symTest {
 		},
 		symTest{
 			Input:   `+`,
-			Expects: Symbol{`+`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`+`, 0, 1, 0, ADD},
 		},
 		symTest{
 			Input:   `-`,
-			Expects: Symbol{`-`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`-`, 0, 1, 0, SUBTRACT},
 		},
 		symTest{
 			Input:   `*`,
-			Expects: Symbol{`*`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`*`, 0, 1, 0, MULTIPLY},
 		},
 		symTest{
 			Input:   `/`,
-			Expects: Symbol{`/`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`/`, 0, 1, 0, DIVIDE},
 		},
 		symTest{
 			Input:   `%`,
-			Expects: Symbol{`%`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`%`, 0, 1, 0, MODULO},
 		},
 		symTest{
 			Input:   `(`,

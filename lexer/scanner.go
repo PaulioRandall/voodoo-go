@@ -28,7 +28,7 @@ func ScanLine(line string, lineNum int) (r []Symbol, err error) {
 			s, err = wordSym(itr, lineNum)
 		case unicode.IsDigit(ru):
 			fallthrough
-		case ru == '-' && unicode.IsDigit(itr.PeekAsatte()):
+		case unicode.IsDigit(ru):
 			s, err = numSym(itr, lineNum)
 		case unicode.IsSpace(ru):
 			s, err = spaceSym(itr, lineNum)
@@ -120,25 +120,21 @@ func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 // - literal number
 func numSym(itr *StrItr, lineNum int) (Symbol, error) {
 
-	r := initSym(itr.NextIndex(), lineNum)
-	sb := strings.Builder{}
-	if itr.NextIsIn(`-`) {
-		sb.WriteRune(itr.Next())
-	}
-
 	if !itr.HasNext() || !unicode.IsDigit(itr.Peek()) {
-		m := "Can't call this function when the first or second rune is not digit"
+		m := "Can't call this function when the first rune is not digit"
 		return Symbol{}, errors.New(m)
 	}
+
+	r := initSym(itr.NextIndex(), lineNum)
+	sb := strings.Builder{}
+	exit := false
+	hasPoint := false
 
 	onFinish := func() {
 		r.Val = sb.String()
 		r.End = itr.NextIndex()
 		r.Type = NUMBER
 	}
-
-	exit := false
-	hasPoint := false
 
 	for itr.HasNext() && !exit {
 		ru := itr.Peek()
@@ -353,10 +349,15 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 		r.Type = AND
 		hasTwoRunes = true
 	case ru == '+':
+		r.Type = ADD
 	case ru == '-':
+		r.Type = SUBTRACT
 	case ru == '*':
+		r.Type = MULTIPLY
 	case ru == '/':
+		r.Type = DIVIDE
 	case ru == '%':
+		r.Type = MODULO
 	case ru == '(':
 	case ru == ')':
 	case ru == '[':
