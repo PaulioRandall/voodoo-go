@@ -338,10 +338,10 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == '>':
 		ifNextIsInElse(`=`, GREATER_THAN_OR_EQUAL, GREATER_THAN)
 	case ru == '=' && itr.NextIsIn(`=>`):
-		ifNextIsInElse(`=`, EQUAL, UNDEFINED)
-		ifNextIsInElse(`>`, UNDEFINED, r.Type)
+		ifNextIsInElse(`=`, EQUAL, IF_TRUE_THEN)
+		ifNextIsInElse(`>`, IF_TRUE_THEN, r.Type)
 	case ru == '!':
-		ifNextIsInElse(`=`, NOT_EQUAL, UNDEFINED)
+		ifNextIsInElse(`=`, NOT_EQUAL, NEGATION)
 	case ru == '|' && itr.NextIsIn(`|`):
 		r.Type = OR
 		hasTwoRunes = true
@@ -373,6 +373,8 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	case ru == '.' && itr.NextIsIn(`.`):
 		r.Type = RANGE
 		hasTwoRunes = true
+	case ru == '_':
+		r.Type = VOID
 	default:
 		m := "I don't know what this symbol means '" + string(ru) + "'"
 		return Symbol{}, errors.New(m)

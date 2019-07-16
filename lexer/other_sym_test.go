@@ -63,11 +63,15 @@ func otherSymTests() []symTest {
 		},
 		symTest{
 			Input:   `=>`,
-			Expects: Symbol{`=>`, 0, 2, 0, UNDEFINED},
+			Expects: Symbol{`=>`, 0, 2, 0, IF_TRUE_THEN},
+		},
+		symTest{
+			Input:   `_`,
+			Expects: Symbol{`_`, 0, 1, 0, VOID},
 		},
 		symTest{
 			Input:   `!`,
-			Expects: Symbol{`!`, 0, 1, 0, UNDEFINED},
+			Expects: Symbol{`!`, 0, 1, 0, NEGATION},
 		},
 		symTest{
 			Input:   `+`,

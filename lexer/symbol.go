@@ -20,11 +20,11 @@ const (
 	KEYWORD_KEY    // key
 	KEYWORD_VAL    // value
 	VARIABLE
-	BOOLEAN // true/false
-	NUMBER  // -##.###
-	STRING  // "blahblah"
-	COMMENT // // blahblah
-	SPELL   // @Blahblah
+	BOOLEAN  // true/false
+	NUMBER   // -##.###
+	STRING   // "blahblah"
+	COMMENT  // // blahblah
+	SOURCERY // @Blahblah
 	// Misc
 	WHITESPACE
 	ASSIGNMENT // <-
@@ -44,14 +44,15 @@ const (
 	AND                   // &&
 	// Arithmetic operators
 	ADD      // +
+	SUBTRACT // -
 	MULTIPLY // *
 	DIVIDE   // /
 	MODULO   // %
 	// Brackets
-	CIRCLE_BRACE_LEFT  // (
-	CIRCLE_BRACE_RIGHT // )
-	SQUARE_BRACE_LEFT  // [
-	SQUARE_BRACE_RIGHT // ]
+	CIRCLE_BRACE_OPEN  // (
+	CIRCLE_BRACE_CLOSE // )
+	SQUARE_BRACE_OPEN  // [
+	SQUARE_BRACE_CLOSE // ]
 	// Separators
 	VALUE_SEPARATOR     // ,
 	KEY_VALUE_SEPARATOR // :

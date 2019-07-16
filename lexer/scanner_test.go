@@ -182,5 +182,20 @@ func apiTests() []symArrayTest {
 				Symbol{`)`, 14, 15, 0, CIRCLE_BRACE_CLOSE},
 			},
 		},
+		symArrayTest{
+			Input: `!x => y <- _`,
+			Expects: []Symbol{
+				Symbol{`!`, 0, 1, 0, NEGATION},
+				Symbol{`x`, 1, 2, 0, VARIABLE},
+				Symbol{` `, 2, 3, 0, WHITESPACE},
+				Symbol{`=>`, 3, 5, 0, IF_TRUE_THEN},
+				Symbol{` `, 5, 6, 0, WHITESPACE},
+				Symbol{`y`, 6, 7, 0, VARIABLE},
+				Symbol{` `, 7, 8, 0, WHITESPACE},
+				Symbol{`<-`, 8, 10, 0, ASSIGNMENT},
+				Symbol{` `, 10, 11, 0, WHITESPACE},
+				Symbol{`_`, 11, 12, 0, VOID},
+			},
+		},
 	}
 }
