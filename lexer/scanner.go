@@ -146,7 +146,7 @@ func extractNum(itr *sh.RuneItr) (string, LexError) {
 
 	for itr.HasNext() {
 		if itr.IsNextStr(`..`) {
-			return sb.String(), nil
+			break
 		}
 
 		if itr.IsNext('.') {
@@ -188,29 +188,32 @@ func extractFractional(itr *sh.RuneItr, sb *strings.Builder) (string, LexError) 
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
+func spaceSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	if !itr.IsNextSpace() {
 		m := "Expected first rune to be whitespace"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	s := initSym(itr.Index())
+	start := itr.Index()
 	sb := strings.Builder{}
 
 	for itr.HasNext() {
 		if !itr.IsNextSpace() {
 			break
 		}
-
 		sb.WriteRune(itr.NextRune())
 	}
 
-	s.Val = sb.String()
-	s.End = itr.Index()
-	s.Type = sym.WHITESPACE
+	s = &sym.Symbol{
+		Val:   sb.String(),
+		Start: start,
+		End:   itr.Index(),
+		Type:  sym.WHITESPACE,
+	}
 
-	return s, nil
+	return
 }
 
 // sourcerySym handles symbols that start with a at sign rune `@`.
