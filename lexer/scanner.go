@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"errors"
 	"strings"
 	"unicode"
 
@@ -31,13 +30,13 @@ func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 		case itr.IsNextSpace():
 			s, lxErr = spaceSym(itr)
 		case itr.IsNext('@'):
-			s, err = sourcerySym(itr)
+			s, lxErr = sourcerySym(itr)
 		case itr.IsNext('"'):
-			s, err = strSym(itr)
+			s, lxErr = strSym(itr)
 		case itr.IsNextStr(`//`):
-			s, err = commentSym(itr)
+			s, lxErr = commentSym(itr)
 		default:
-			s, err = otherSym(itr)
+			s, lxErr = otherSym(itr)
 		}
 
 		if err != nil {
@@ -200,16 +199,16 @@ func spaceSym(itr *sh.RuneItr) (Symbol, LexError) {
 // sourcerySym handles symbols that start with a at sign rune `@`.
 // Sourcery symbols may resolve into a:
 // - go function call
-func sourcerySym(itr *sh.RuneItr) (Symbol, error) {
+func sourcerySym(itr *sh.RuneItr) (Symbol, LexError) {
 
 	if !itr.IsNext('@') {
 		m := "Expected first rune to be `@`"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	if !unicode.IsLetter(itr.PeekRelRune(1)) {
 		m := "Expected first rune after `@` to be a letter"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	start := itr.Index()
@@ -226,11 +225,11 @@ func sourcerySym(itr *sh.RuneItr) (Symbol, error) {
 // strSym handles symbols that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(itr *sh.RuneItr) (Symbol, error) {
+func strSym(itr *sh.RuneItr) (Symbol, LexError) {
 
 	if !itr.IsNext('"') {
 		m := "Expected first rune to be `\"`"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	r := initSym(itr.Index())
@@ -238,7 +237,7 @@ func strSym(itr *sh.RuneItr) (Symbol, error) {
 
 	if isEscaped || len(s) < 2 || s[len(s)-1] != '"' {
 		m := "Did someone forget to close a string literal?!"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	r.Val = s
@@ -276,11 +275,11 @@ func extractStr(itr *sh.RuneItr) (bool, string) {
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *sh.RuneItr) (Symbol, error) {
+func commentSym(itr *sh.RuneItr) (Symbol, LexError) {
 
 	if !itr.IsNextStr(`//`) {
 		m := "Expected first two runes to be `//`"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	r := initSym(itr.Index())
@@ -298,11 +297,11 @@ func commentSym(itr *sh.RuneItr) (Symbol, error) {
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(itr *sh.RuneItr) (Symbol, error) {
+func otherSym(itr *sh.RuneItr) (Symbol, LexError) {
 
 	if !itr.HasNext() {
 		m := "Expected an unfinished iterator"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	r := initSym(itr.Index())
@@ -365,12 +364,13 @@ func otherSym(itr *sh.RuneItr) (Symbol, error) {
 	default:
 		ru := itr.NextRune()
 		m := "I don't know what this symbol means '" + string(ru) + "'"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	s, err := itr.NextStr(runeCount)
 	if err != nil {
-		return Symbol{}, err
+		lxErr := NewLexError(err.Error(), itr.Index())
+		return Symbol{}, lxErr
 	}
 
 	r.Val = s
