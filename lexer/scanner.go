@@ -17,26 +17,23 @@ func ScanLine(line string, lineNum int) (r []Symbol, err error) {
 		return
 	}
 
-	itr := NewStrItr(line)
+	itr := sh.NewRuneItr(line)
 
 	for itr.HasNext() {
 		var s Symbol
-		ru := itr.Peek()
 
 		switch {
-		case unicode.IsLetter(ru):
+		case itr.IsNextLetter():
 			s, err = wordSym(itr, lineNum)
-		case unicode.IsDigit(ru):
-			fallthrough
-		case unicode.IsDigit(ru):
+		case itr.IsNextDigit():
 			s, err = numSym(itr, lineNum)
-		case unicode.IsSpace(ru):
+		case itr.IsNextSpace():
 			s, err = spaceSym(itr, lineNum)
-		case ru == '@':
+		case itr.IsNext('@'):
 			s, err = sourcerySym(itr, lineNum)
-		case ru == '"':
+		case itr.IsNext('"'):
 			s, err = strSym(itr, lineNum)
-		case isComment(itr):
+		case itr.IsNextStr(`//`):
 			s, err = commentSym(itr, lineNum)
 		default:
 			s, err = otherSym(itr, lineNum)
@@ -74,24 +71,12 @@ func initSym(start, lineNum int) Symbol {
 	}
 }
 
-func (itr *StrItr) toRuneItr() *sh.RuneItr { // TEMP REFACTORING
-	r := sh.NewRuneItr(itr.str) // TEMP REFACTORING
-	r.SetIndex(itr.NextIndex()) // TEMP REFACTORING
-	return r                    // TEMP REFACTORING
-}
-
-func (itr *StrItr) setIndex(i int) { // TEMP REFACTORING
-	itr.index = i // TEMP REFACTORING
-} // TEMP REFACTORING
-
 // wordSym handles symbols that start with a unicode category L rune.
 // I.e. a letter from any alphabet, a word may resolve into a:
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(sItr *StrItr, lineNum int) (Symbol, error) {
-
-	itr := sItr.toRuneItr() // TEMP REFACTORING
+func wordSym(itr *sh.RuneItr, lineNum int) (Symbol, error) {
 
 	if !itr.IsNextLetter() {
 		m := "Expected first rune to be a letter"
@@ -123,16 +108,13 @@ func wordSym(sItr *StrItr, lineNum int) (Symbol, error) {
 		r.Type = VARIABLE
 	}
 
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
-func numSym(sItr *StrItr, lineNum int) (Symbol, error) {
-
-	itr := sItr.toRuneItr() // TEMP REFACTORING
+func numSym(itr *sh.RuneItr, lineNum int) (Symbol, error) {
 
 	if !itr.IsNextDigit() {
 		m := "Expected first rune to be a digit"
@@ -150,7 +132,6 @@ func numSym(sItr *StrItr, lineNum int) (Symbol, error) {
 	r.End = itr.Index()
 	r.Type = NUMBER
 
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
@@ -185,9 +166,7 @@ func extractNum(itr *sh.RuneItr) (string, error) {
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(sItr *StrItr, lineNum int) (Symbol, error) {
-
-	itr := sItr.toRuneItr() // TEMP REFACTORING
+func spaceSym(itr *sh.RuneItr, lineNum int) (Symbol, error) {
 
 	if !itr.IsNextSpace() {
 		m := "Expected first rune to be whitespace"
@@ -209,16 +188,13 @@ func spaceSym(sItr *StrItr, lineNum int) (Symbol, error) {
 	r.End = itr.Index()
 	r.Type = WHITESPACE
 
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
 // sourcerySym handles symbols that start with a at sign rune `@`.
 // Sourcery symbols may resolve into a:
 // - go function call
-func sourcerySym(sItr *StrItr, lineNum int) (Symbol, error) {
-
-	itr := sItr.toRuneItr() // TEMP REFACTORING
+func sourcerySym(itr *sh.RuneItr, lineNum int) (Symbol, error) {
 
 	if !itr.IsNext('@') {
 		m := "Expected first rune to be `@`"
@@ -238,16 +214,13 @@ func sourcerySym(sItr *StrItr, lineNum int) (Symbol, error) {
 	r.Val = val + r.Val
 	r.Type = SOURCERY
 
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
 // strSym handles symbols that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(sItr *StrItr, lineNum int) (Symbol, error) {
-
-	itr := sItr.toRuneItr() // TEMP REFACTORING
+func strSym(itr *sh.RuneItr, lineNum int) (Symbol, error) {
 
 	if !itr.IsNext('"') {
 		m := "Expected first rune to be `\"`"
@@ -266,7 +239,6 @@ func strSym(sItr *StrItr, lineNum int) (Symbol, error) {
 	r.End = itr.Index()
 	r.Type = STRING
 
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
@@ -295,21 +267,10 @@ func extractStr(itr *sh.RuneItr) (bool, string) {
 	return isEscaped, sb.String()
 }
 
-// isComment return true if the rest of the string is a comment.
-func isComment(sItr *StrItr) bool {
-	itr := sItr.toRuneItr() // TEMP REFACTORING
-	if itr.IsNextStr(`//`) {
-		return true
-	}
-	return false
-}
-
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(sItr *StrItr, lineNum int) (Symbol, error) {
-
-	itr := sItr.toRuneItr() // TEMP REFACTORING
+func commentSym(itr *sh.RuneItr, lineNum int) (Symbol, error) {
 
 	if !itr.IsNextStr(`//`) {
 		m := "Expected first two runes to be `//`"
@@ -321,7 +282,6 @@ func commentSym(sItr *StrItr, lineNum int) (Symbol, error) {
 	r.End = itr.Index()
 	r.Type = COMMENT
 
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
@@ -332,9 +292,7 @@ func commentSym(sItr *StrItr, lineNum int) (Symbol, error) {
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(sItr *StrItr, lineNum int) (Symbol, error) {
-
-	itr := sItr.toRuneItr() // TEMP REFACTORING
+func otherSym(itr *sh.RuneItr, lineNum int) (Symbol, error) {
 
 	if !itr.HasNext() {
 		m := "Expected an unfinished iterator"
@@ -412,7 +370,6 @@ func otherSym(sItr *StrItr, lineNum int) (Symbol, error) {
 	r.Val = s
 	r.End = itr.Index()
 
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 

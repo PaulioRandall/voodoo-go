@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	sh "github.com/PaulioRandall/voodoo-go/shared"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -11,7 +12,7 @@ func TestSpaceSym(t *testing.T) {
 	for i, tc := range spaceSymTests() {
 		t.Log("spaceSym() test case: " + strconv.Itoa(i+1))
 
-		itr := NewStrItr(tc.Input)
+		itr := sh.NewRuneItr(tc.Input)
 		a, err := spaceSym(itr, tc.Line)
 
 		if tc.ExpectErr {
