@@ -10,7 +10,7 @@ import (
 
 // ScanLine scans a line and creates an array of symbols
 // based on the grammer rules of the language.
-func ScanLine(line string, lineNum int) (r []Symbol, err error) {
+func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 
 	if line == `` {
 		r = emptyLineSyms(lineNum)
@@ -21,6 +21,7 @@ func ScanLine(line string, lineNum int) (r []Symbol, err error) {
 
 	for itr.HasNext() {
 		var s Symbol
+		var err error
 
 		switch {
 		case itr.IsNextLetter():
@@ -40,6 +41,7 @@ func ScanLine(line string, lineNum int) (r []Symbol, err error) {
 		}
 
 		if err != nil {
+			lxErr = NewLexError(err.Error(), -1)
 			break
 		}
 

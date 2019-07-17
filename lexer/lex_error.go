@@ -18,8 +18,8 @@ type stdLexError struct {
 }
 
 // NewLexError returns a new initialised LexError.
-func NewLexError(err string, line, col int) LexError {
-	e := stdLexError{err, line, col}
+func NewLexError(err string, col int) LexError {
+	e := stdLexError{err, 0, col}
 	return LexError(e)
 }
 
