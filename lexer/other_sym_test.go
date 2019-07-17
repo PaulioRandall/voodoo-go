@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
+	sym "github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,99 +31,99 @@ func otherSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:   `==`,
-			Expects: Symbol{`==`, 0, 2, 0, EQUAL},
+			Expects: sym.Symbol{`==`, 0, 2, 0, sym.EQUAL},
 		},
 		symTest{
 			Input:   `!=`,
-			Expects: Symbol{`!=`, 0, 2, 0, NOT_EQUAL},
+			Expects: sym.Symbol{`!=`, 0, 2, 0, sym.NOT_EQUAL},
 		},
 		symTest{
 			Input:   `<`,
-			Expects: Symbol{`<`, 0, 1, 0, LESS_THAN},
+			Expects: sym.Symbol{`<`, 0, 1, 0, sym.LESS_THAN},
 		},
 		symTest{
 			Input:   `<=`,
-			Expects: Symbol{`<=`, 0, 2, 0, LESS_THAN_OR_EQUAL},
+			Expects: sym.Symbol{`<=`, 0, 2, 0, sym.LESS_THAN_OR_EQUAL},
 		},
 		symTest{
 			Input:   `>`,
-			Expects: Symbol{`>`, 0, 1, 0, GREATER_THAN},
+			Expects: sym.Symbol{`>`, 0, 1, 0, sym.GREATER_THAN},
 		},
 		symTest{
 			Input:   `>=`,
-			Expects: Symbol{`>=`, 0, 2, 0, GREATER_THAN_OR_EQUAL},
+			Expects: sym.Symbol{`>=`, 0, 2, 0, sym.GREATER_THAN_OR_EQUAL},
 		},
 		symTest{
 			Input:   `||`,
-			Expects: Symbol{`||`, 0, 2, 0, OR},
+			Expects: sym.Symbol{`||`, 0, 2, 0, sym.OR},
 		},
 		symTest{
 			Input:   `&&`,
-			Expects: Symbol{`&&`, 0, 2, 0, AND},
+			Expects: sym.Symbol{`&&`, 0, 2, 0, sym.AND},
 		},
 		symTest{
 			Input:   `<-`,
-			Expects: Symbol{`<-`, 0, 2, 0, ASSIGNMENT},
+			Expects: sym.Symbol{`<-`, 0, 2, 0, sym.ASSIGNMENT},
 		},
 		symTest{
 			Input:   `=>`,
-			Expects: Symbol{`=>`, 0, 2, 0, IF_TRUE_THEN},
+			Expects: sym.Symbol{`=>`, 0, 2, 0, sym.IF_TRUE_THEN},
 		},
 		symTest{
 			Input:   `_`,
-			Expects: Symbol{`_`, 0, 1, 0, VOID},
+			Expects: sym.Symbol{`_`, 0, 1, 0, sym.VOID},
 		},
 		symTest{
 			Input:   `!`,
-			Expects: Symbol{`!`, 0, 1, 0, NEGATION},
+			Expects: sym.Symbol{`!`, 0, 1, 0, sym.NEGATION},
 		},
 		symTest{
 			Input:   `+`,
-			Expects: Symbol{`+`, 0, 1, 0, ADD},
+			Expects: sym.Symbol{`+`, 0, 1, 0, sym.ADD},
 		},
 		symTest{
 			Input:   `-`,
-			Expects: Symbol{`-`, 0, 1, 0, SUBTRACT},
+			Expects: sym.Symbol{`-`, 0, 1, 0, sym.SUBTRACT},
 		},
 		symTest{
 			Input:   `*`,
-			Expects: Symbol{`*`, 0, 1, 0, MULTIPLY},
+			Expects: sym.Symbol{`*`, 0, 1, 0, sym.MULTIPLY},
 		},
 		symTest{
 			Input:   `/`,
-			Expects: Symbol{`/`, 0, 1, 0, DIVIDE},
+			Expects: sym.Symbol{`/`, 0, 1, 0, sym.DIVIDE},
 		},
 		symTest{
 			Input:   `%`,
-			Expects: Symbol{`%`, 0, 1, 0, MODULO},
+			Expects: sym.Symbol{`%`, 0, 1, 0, sym.MODULO},
 		},
 		symTest{
 			Input:   `(`,
-			Expects: Symbol{`(`, 0, 1, 0, CIRCLE_BRACE_OPEN},
+			Expects: sym.Symbol{`(`, 0, 1, 0, sym.CIRCLE_BRACE_OPEN},
 		},
 		symTest{
 			Input:   `)`,
-			Expects: Symbol{`)`, 0, 1, 0, CIRCLE_BRACE_CLOSE},
+			Expects: sym.Symbol{`)`, 0, 1, 0, sym.CIRCLE_BRACE_CLOSE},
 		},
 		symTest{
 			Input:   `[`,
-			Expects: Symbol{`[`, 0, 1, 0, SQUARE_BRACE_OPEN},
+			Expects: sym.Symbol{`[`, 0, 1, 0, sym.SQUARE_BRACE_OPEN},
 		},
 		symTest{
 			Input:   `]`,
-			Expects: Symbol{`]`, 0, 1, 0, SQUARE_BRACE_CLOSE},
+			Expects: sym.Symbol{`]`, 0, 1, 0, sym.SQUARE_BRACE_CLOSE},
 		},
 		symTest{
 			Input:   `,`,
-			Expects: Symbol{`,`, 0, 1, 0, VALUE_SEPARATOR},
+			Expects: sym.Symbol{`,`, 0, 1, 0, sym.VALUE_SEPARATOR},
 		},
 		symTest{
 			Input:   `:`,
-			Expects: Symbol{`:`, 0, 1, 0, KEY_VALUE_SEPARATOR},
+			Expects: sym.Symbol{`:`, 0, 1, 0, sym.KEY_VALUE_SEPARATOR},
 		},
 		symTest{
 			Input:   `..`,
-			Expects: Symbol{`..`, 0, 2, 0, RANGE},
+			Expects: sym.Symbol{`..`, 0, 2, 0, sym.RANGE},
 		},
 		symTest{
 			Input:     `=`,

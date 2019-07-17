@@ -4,6 +4,7 @@ import (
 	lx "github.com/PaulioRandall/voodoo-go/lexer"
 	sc "github.com/PaulioRandall/voodoo-go/scroll"
 	sh "github.com/PaulioRandall/voodoo-go/shared"
+	sym "github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 // Execute runs a Voodoo scroll.
@@ -19,7 +20,7 @@ func Execute(scroll *sc.Scroll, scrollArgs []string) (sh.ExitCode, error) {
 			return 1, err
 		}
 
-		lx.PrintlnSymbols(s)
+		sym.PrintlnSymbols(s)
 
 		line = scroll.Next(line)
 	}

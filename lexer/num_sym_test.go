@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
+	sym "github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,31 +31,31 @@ func numSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:   `2`,
-			Expects: Symbol{`2`, 0, 1, 0, NUMBER},
+			Expects: sym.Symbol{`2`, 0, 1, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:   `123`,
-			Expects: Symbol{`123`, 0, 3, 0, NUMBER},
+			Expects: sym.Symbol{`123`, 0, 3, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:   `123_456`,
-			Expects: Symbol{`123_456`, 0, 7, 0, NUMBER},
+			Expects: sym.Symbol{`123_456`, 0, 7, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:   `123.456`,
-			Expects: Symbol{`123.456`, 0, 7, 0, NUMBER},
+			Expects: sym.Symbol{`123.456`, 0, 7, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:   `123.456_789`,
-			Expects: Symbol{`123.456_789`, 0, 11, 0, NUMBER},
+			Expects: sym.Symbol{`123.456_789`, 0, 11, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:   `1__2__3__.__4__5__6__`,
-			Expects: Symbol{`1__2__3__.__4__5__6__`, 0, 21, 0, NUMBER},
+			Expects: sym.Symbol{`1__2__3__.__4__5__6__`, 0, 21, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:   `123..456`,
-			Expects: Symbol{`123`, 0, 3, 0, NUMBER},
+			Expects: sym.Symbol{`123`, 0, 3, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:     `1_._2_._3`,

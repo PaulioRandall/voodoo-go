@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
+	sym "github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,19 +31,19 @@ func strSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:   `""`,
-			Expects: Symbol{`""`, 0, 2, 0, STRING},
+			Expects: sym.Symbol{`""`, 0, 2, 0, sym.STRING},
 		},
 		symTest{
 			Input:   `"From hell with love"`,
-			Expects: Symbol{`"From hell with love"`, 0, 21, 0, STRING},
+			Expects: sym.Symbol{`"From hell with love"`, 0, 21, 0, sym.STRING},
 		},
 		symTest{
 			Input:   `"Bam: \"Leaders eat last!\""`,
-			Expects: Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, STRING},
+			Expects: sym.Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, sym.STRING},
 		},
 		symTest{
 			Input:   `"\\\\\""`,
-			Expects: Symbol{`"\\\\\""`, 0, 8, 0, STRING},
+			Expects: sym.Symbol{`"\\\\\""`, 0, 8, 0, sym.STRING},
 		},
 		symTest{
 			Input:     ``,
@@ -58,7 +59,7 @@ func strSymTests() []symTest {
 		},
 		symTest{
 			Input:   `"a"x`,
-			Expects: Symbol{`"a"`, 0, 3, 0, STRING},
+			Expects: sym.Symbol{`"a"`, 0, 3, 0, sym.STRING},
 		},
 		symTest{
 			Input:     `"escaped \"`,

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
+	sym "github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,15 +31,15 @@ func spaceSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:   " ",
-			Expects: Symbol{" ", 0, 1, 0, WHITESPACE},
+			Expects: sym.Symbol{" ", 0, 1, 0, sym.WHITESPACE},
 		},
 		symTest{
 			Input:   "\t",
-			Expects: Symbol{"\t", 0, 1, 0, WHITESPACE},
+			Expects: sym.Symbol{"\t", 0, 1, 0, sym.WHITESPACE},
 		},
 		symTest{
 			Input:   "\t\n \f \v\r",
-			Expects: Symbol{"\t\n \f \v\r", 0, 7, 0, WHITESPACE},
+			Expects: sym.Symbol{"\t\n \f \v\r", 0, 7, 0, sym.WHITESPACE},
 		},
 	}
 }

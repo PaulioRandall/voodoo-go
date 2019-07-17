@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
+	sym "github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,15 +31,15 @@ func sourcerySymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:   `@P`,
-			Expects: Symbol{`@P`, 0, 2, 0, SOURCERY},
+			Expects: sym.Symbol{`@P`, 0, 2, 0, sym.SOURCERY},
 		},
 		symTest{
 			Input:   `@Println`,
-			Expects: Symbol{`@Println`, 0, 8, 0, SOURCERY},
+			Expects: sym.Symbol{`@Println`, 0, 8, 0, sym.SOURCERY},
 		},
 		symTest{
 			Input:   `@a__12__xy__`,
-			Expects: Symbol{`@a__12__xy__`, 0, 12, 0, SOURCERY},
+			Expects: sym.Symbol{`@a__12__xy__`, 0, 12, 0, sym.SOURCERY},
 		},
 	}
 }

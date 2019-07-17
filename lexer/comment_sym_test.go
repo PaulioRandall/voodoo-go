@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
+	sym "github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,15 +31,15 @@ func commentSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:   `//`,
-			Expects: Symbol{`//`, 0, 2, 0, COMMENT},
+			Expects: sym.Symbol{`//`, 0, 2, 0, sym.COMMENT},
 		},
 		symTest{
 			Input:   `// A comment`,
-			Expects: Symbol{`// A comment`, 0, 12, 0, COMMENT},
+			Expects: sym.Symbol{`// A comment`, 0, 12, 0, sym.COMMENT},
 		},
 		symTest{
 			Input:   `// Abc // 123 // xyz`,
-			Expects: Symbol{`// Abc // 123 // xyz`, 0, 20, 0, COMMENT},
+			Expects: sym.Symbol{`// Abc // 123 // xyz`, 0, 20, 0, sym.COMMENT},
 		},
 	}
 }
