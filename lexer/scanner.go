@@ -185,34 +185,31 @@ func extractNum(itr *sh.RuneItr) (string, error) {
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
+func spaceSym(sItr *StrItr, lineNum int) (Symbol, error) {
 
-	//itr := sItr.toRuneItr() // TEMP REFACTORING
+	itr := sItr.toRuneItr() // TEMP REFACTORING
 
-	ru := itr.Peek()
-	if !itr.HasNext() || !unicode.IsSpace(ru) {
-		m := "Can't call this function when the first rune is not whitespace"
-		sh.CompilerBug(lineNum, m)
+	if !itr.IsNextSpace() {
+		m := "Expected first rune to be whitespace"
+		return Symbol{}, errors.New(m)
 	}
 
-	r := initSym(itr.NextIndex(), lineNum)
+	r := initSym(itr.Index(), lineNum)
 	sb := strings.Builder{}
 
 	for itr.HasNext() {
-		ru = itr.Peek()
-
-		if unicode.IsSpace(ru) {
-			sb.WriteRune(itr.Next())
+		if itr.IsNextSpace() {
+			sb.WriteRune(itr.NextRune())
 		} else {
 			break
 		}
 	}
 
 	r.Val = sb.String()
-	r.End = itr.NextIndex()
+	r.End = itr.Index()
 	r.Type = WHITESPACE
 
-	//sItr.setIndex(itr.Index()) // TEMP REFACTORING
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
