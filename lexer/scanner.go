@@ -74,17 +74,15 @@ func initSym(start, lineNum int) Symbol {
 	}
 }
 
-// TODO: Delete after refactoring.
-func (itr *StrItr) strItrToRuneItr() *sh.RuneItr {
-	r := sh.NewRuneItr(itr.str)
-	r.SetIndex(itr.NextIndex())
-	return r
+func (itr *StrItr) toRuneItr() *sh.RuneItr { // TEMP REFACTORING
+	r := sh.NewRuneItr(itr.str) // TEMP REFACTORING
+	r.SetIndex(itr.NextIndex()) // TEMP REFACTORING
+	return r                    // TEMP REFACTORING
 }
 
-// TODO: Delete after refactoring.
-func (itr *StrItr) setIndex(i int) {
-	itr.index = i
-}
+func (itr *StrItr) setIndex(i int) { // TEMP REFACTORING
+	itr.index = i // TEMP REFACTORING
+} // TEMP REFACTORING
 
 // wordSym handles symbols that start with a unicode category L rune.
 // I.e. a letter from any alphabet, a word may resolve into a:
@@ -402,29 +400,36 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 	return r, nil
 }
 
-// extractWord iterates a string iterator until a single word has been
-// extracted.
-func extractWord(itr *StrItr, lineNum int) Symbol {
-	r := initSym(itr.NextIndex(), lineNum)
+// extractWord iterates a rune iterator until a single word has been
+// extracted returning it as a symbol.
+func extractWord(sItr *StrItr, lineNum int) Symbol {
+	itr := sItr.toRuneItr() // TEMP REFACTORING
+
+	r := initSym(itr.Index(), lineNum)
+	r.Val = extractWordStr(itr)
+	r.End = itr.Index()
+
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
+	return r
+}
+
+// extractWordStr iterates a rune iterator until a single word has
+// been extracted retruning the string.
+func extractWordStr(itr *sh.RuneItr) string {
 	sb := strings.Builder{}
-	exit := false
 
-	for itr.HasNext() && !exit {
-		ru := itr.Peek()
-
+	for itr.HasNext() {
 		switch {
-		case unicode.IsLetter(ru):
+		case itr.IsNextLetter():
 			fallthrough
-		case unicode.IsDigit(ru):
+		case itr.IsNextDigit():
 			fallthrough
-		case ru == '_':
-			sb.WriteRune(itr.Next())
+		case itr.IsNext('_'):
+			sb.WriteRune(itr.NextRune())
 		default:
-			exit = true
+			return sb.String()
 		}
 	}
 
-	r.Val = sb.String()
-	r.End = itr.NextIndex()
-	return r
+	return sb.String()
 }
