@@ -115,25 +115,28 @@ func wordSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
-func numSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
+func numSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	if !itr.IsNextDigit() {
 		m := "Expected first rune to be a digit"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	s := initSym(itr.Index())
-
+	start := itr.Index()
 	n, err := extractNum(itr)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	s.Val = n
-	s.End = itr.Index()
-	s.Type = sym.NUMBER
+	s = &sym.Symbol{
+		Val:   n,
+		Start: start,
+		End:   itr.Index(),
+		Type:  sym.NUMBER,
+	}
 
-	return s, nil
+	return
 }
 
 // extractNum extracts a number, as a string, from the supplied
