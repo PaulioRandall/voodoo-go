@@ -13,7 +13,7 @@ func TestNumSym(t *testing.T) {
 		t.Log("numSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		a, err := numSym(itr, tc.Line)
+		a, err := numSym(itr)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
@@ -27,9 +27,8 @@ func TestNumSym(t *testing.T) {
 func numSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Line:    123,
 			Input:   `2`,
-			Expects: Symbol{`2`, 0, 1, 123, NUMBER},
+			Expects: Symbol{`2`, 0, 1, 0, NUMBER},
 		},
 		symTest{
 			Input:   `123`,

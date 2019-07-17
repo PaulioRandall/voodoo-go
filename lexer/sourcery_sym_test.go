@@ -13,7 +13,7 @@ func TestSourcerySym(t *testing.T) {
 		t.Log("sourcerySym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		a, err := sourcerySym(itr, tc.Line)
+		a, err := sourcerySym(itr)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
@@ -27,9 +27,8 @@ func TestSourcerySym(t *testing.T) {
 func sourcerySymTests() []symTest {
 	return []symTest{
 		symTest{
-			Line:    123,
 			Input:   `@P`,
-			Expects: Symbol{`@P`, 0, 2, 123, SOURCERY},
+			Expects: Symbol{`@P`, 0, 2, 0, SOURCERY},
 		},
 		symTest{
 			Input:   `@Println`,

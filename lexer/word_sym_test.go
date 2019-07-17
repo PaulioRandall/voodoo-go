@@ -13,7 +13,7 @@ func TestWordSym(t *testing.T) {
 		t.Log("wordSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		a, err := wordSym(itr, tc.Line)
+		a, err := wordSym(itr)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
@@ -27,9 +27,8 @@ func TestWordSym(t *testing.T) {
 func wordSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Line:    123,
 			Input:   `a`,
-			Expects: Symbol{`a`, 0, 1, 123, VARIABLE},
+			Expects: Symbol{`a`, 0, 1, 0, VARIABLE},
 		},
 		symTest{
 			Input:   `abc`,

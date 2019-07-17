@@ -13,7 +13,7 @@ func TestOtherSym(t *testing.T) {
 		t.Log("otherSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		a, err := otherSym(itr, tc.Line)
+		a, err := otherSym(itr)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)

@@ -13,7 +13,7 @@ func TestSpaceSym(t *testing.T) {
 		t.Log("spaceSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		a, err := spaceSym(itr, tc.Line)
+		a, err := spaceSym(itr)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
@@ -27,9 +27,8 @@ func TestSpaceSym(t *testing.T) {
 func spaceSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Line:    123,
 			Input:   " ",
-			Expects: Symbol{" ", 0, 1, 123, WHITESPACE},
+			Expects: Symbol{" ", 0, 1, 0, WHITESPACE},
 		},
 		symTest{
 			Input:   "\t",

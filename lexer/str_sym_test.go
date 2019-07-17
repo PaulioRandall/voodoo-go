@@ -13,7 +13,7 @@ func TestStrSym(t *testing.T) {
 		t.Log("strSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		a, err := strSym(itr, tc.Line)
+		a, err := strSym(itr)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
@@ -31,9 +31,8 @@ func strSymTests() []symTest {
 			Expects: Symbol{`""`, 0, 2, 0, STRING},
 		},
 		symTest{
-			Line:    123,
 			Input:   `"From hell with love"`,
-			Expects: Symbol{`"From hell with love"`, 0, 21, 123, STRING},
+			Expects: Symbol{`"From hell with love"`, 0, 21, 0, STRING},
 		},
 		symTest{
 			Input:   `"Bam: \"Leaders eat last!\""`,

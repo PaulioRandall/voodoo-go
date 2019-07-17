@@ -13,7 +13,7 @@ func TestCommentSym(t *testing.T) {
 		t.Log("commentSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		a, err := commentSym(itr, tc.Line)
+		a, err := commentSym(itr)
 
 		if tc.ExpectErr {
 			assert.NotNil(t, err)
@@ -27,9 +27,8 @@ func TestCommentSym(t *testing.T) {
 func commentSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Line:    123,
 			Input:   `//`,
-			Expects: Symbol{`//`, 0, 2, 123, COMMENT},
+			Expects: Symbol{`//`, 0, 2, 0, COMMENT},
 		},
 		symTest{
 			Input:   `// A comment`,
