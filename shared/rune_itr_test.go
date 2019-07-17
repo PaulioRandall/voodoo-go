@@ -123,3 +123,18 @@ func TestRuneItr_IsNextLetter(t *testing.T) {
 	itr.index += 1
 	assert.False(t, itr.IsNextLetter())
 }
+
+func TestRuneItr_IsNextDigit(t *testing.T) {
+	s := `0a語2`
+	itr := NewRuneItr(s)
+
+	assert.True(t, itr.IsNextDigit())
+	itr.index += 1
+	assert.False(t, itr.IsNextDigit())
+	itr.index += 1
+	assert.False(t, itr.IsNextDigit())
+	itr.index += 1
+	assert.True(t, itr.IsNextDigit())
+	itr.index += 1
+	assert.False(t, itr.IsNextDigit())
+}

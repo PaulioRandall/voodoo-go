@@ -125,3 +125,13 @@ func (itr *RuneItr) IsNextLetter() bool {
 	}
 	return false
 }
+
+// IsNextDigit returns true if the next rune is in the unicode
+// category 'Nd' for decimal digit. False is also returned if no
+// more runes remain to iterate.
+func (itr *RuneItr) IsNextDigit() bool {
+	if itr.HasNext() {
+		return unicode.IsDigit(itr.PeekRune())
+	}
+	return false
+}
