@@ -187,6 +187,8 @@ func extractNum(itr *sh.RuneItr) (string, error) {
 // - meaningless symbol that can be ignored when parsing
 func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 
+	//itr := sItr.toRuneItr() // TEMP REFACTORING
+
 	ru := itr.Peek()
 	if !itr.HasNext() || !unicode.IsSpace(ru) {
 		m := "Can't call this function when the first rune is not whitespace"
@@ -209,6 +211,8 @@ func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 	r.Val = sb.String()
 	r.End = itr.NextIndex()
 	r.Type = WHITESPACE
+
+	//sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 

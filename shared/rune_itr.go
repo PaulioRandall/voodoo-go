@@ -147,6 +147,16 @@ func (itr *RuneItr) IsNextDigit() bool {
 	return false
 }
 
+// IsNextSpace returns true if the next rune has the unicode
+// property 'whitespace'. False is also returned if no more
+// runes remain to iterate.
+func (itr *RuneItr) IsNextSpace() bool {
+	if itr.HasNext() {
+		return unicode.IsSpace(itr.PeekRune())
+	}
+	return false
+}
+
 // RemainingStr returns all remaining runes as a string and sets
 // iterator index to the index after the last rune.
 func (itr *RuneItr) RemainingStr() string {

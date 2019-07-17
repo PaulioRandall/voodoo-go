@@ -167,6 +167,21 @@ func TestRuneItr_IsNextDigit(t *testing.T) {
 	assert.False(t, itr.IsNextDigit())
 }
 
+func TestRuneItr_IsNextSpace(t *testing.T) {
+	s := "a 語\t"
+	itr := NewRuneItr(s)
+
+	assert.False(t, itr.IsNextSpace())
+	itr.index += 1
+	assert.True(t, itr.IsNextSpace())
+	itr.index += 1
+	assert.False(t, itr.IsNextSpace())
+	itr.index += 1
+	assert.True(t, itr.IsNextSpace())
+	itr.index += 1
+	assert.False(t, itr.IsNextSpace())
+}
+
 func TestRuneItr_RemainingStr(t *testing.T) {
 	s := `abc語123`
 	var itr *RuneItr
