@@ -25,11 +25,11 @@ func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 
 		switch {
 		case itr.IsNextLetter():
-			s, err = wordSym(itr)
+			s, lxErr = wordSym(itr)
 		case itr.IsNextDigit():
-			s, err = numSym(itr)
+			s, lxErr = numSym(itr)
 		case itr.IsNextSpace():
-			s, err = spaceSym(itr)
+			s, lxErr = spaceSym(itr)
 		case itr.IsNext('@'):
 			s, err = sourcerySym(itr)
 		case itr.IsNext('"'):
@@ -42,6 +42,10 @@ func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 
 		if err != nil {
 			lxErr = NewLexError(err.Error(), -1)
+		}
+
+		if lxErr != nil {
+			lxErr.Line(lineNum)
 			break
 		}
 
@@ -78,11 +82,11 @@ func initSym(start int) Symbol {
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(itr *sh.RuneItr) (Symbol, error) {
+func wordSym(itr *sh.RuneItr) (Symbol, LexError) {
 
 	if !itr.IsNextLetter() {
 		m := "Expected first rune to be a letter"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	r := extractWord(itr)
@@ -116,11 +120,11 @@ func wordSym(itr *sh.RuneItr) (Symbol, error) {
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
-func numSym(itr *sh.RuneItr) (Symbol, error) {
+func numSym(itr *sh.RuneItr) (Symbol, LexError) {
 
 	if !itr.IsNextDigit() {
 		m := "Expected first rune to be a digit"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	r := initSym(itr.Index())
@@ -139,7 +143,7 @@ func numSym(itr *sh.RuneItr) (Symbol, error) {
 
 // extractNum extracts a number, as a string, from the supplied
 // iterator.
-func extractNum(itr *sh.RuneItr) (string, error) {
+func extractNum(itr *sh.RuneItr) (string, LexError) {
 	sb := strings.Builder{}
 	hasPoint := false
 
@@ -147,7 +151,7 @@ func extractNum(itr *sh.RuneItr) (string, error) {
 		switch {
 		case hasPoint && itr.IsNext('.'):
 			m := "Numbers can't have two fractional parts"
-			return "", errors.New(m)
+			return "", NewLexError(m, itr.Index())
 		case itr.IsNext('.'):
 			if itr.PeekRelRune(1) == '.' {
 				return sb.String(), nil
@@ -168,11 +172,11 @@ func extractNum(itr *sh.RuneItr) (string, error) {
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *sh.RuneItr) (Symbol, error) {
+func spaceSym(itr *sh.RuneItr) (Symbol, LexError) {
 
 	if !itr.IsNextSpace() {
 		m := "Expected first rune to be whitespace"
-		return Symbol{}, errors.New(m)
+		return Symbol{}, NewLexError(m, itr.Index())
 	}
 
 	r := initSym(itr.Index())

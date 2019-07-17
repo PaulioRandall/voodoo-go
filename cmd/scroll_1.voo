@@ -1,7 +1,7 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
-a = 8
-b = 0
+a <- 8
+b <- 0
 
 when b == 0
 	true => err <- "Can't divide by zero"
