@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"errors"
 	"strings"
 	"unicode"
 )
@@ -68,7 +69,8 @@ func (itr *RuneItr) PeekRelRune(offset int) rune {
 }
 
 // NextRune returns the next rune in the array and increments
-// the iterators index.
+// the iterators index. -1 is returned if no runes remain to
+// return.
 func (itr *RuneItr) NextRune() rune {
 	if itr.HasRelRune(0) {
 		defer itr.increment()
@@ -86,6 +88,21 @@ func (itr *RuneItr) PeekRune() rune {
 	}
 
 	return -1
+}
+
+// NextStr returns 'n' runes, as a string, in the array and adds
+// 'n' to the iterators index. An error is returned if 'n' <= 0
+// or the index + 'n' is out of bounds.
+func (itr *RuneItr) NextStr(n int) (string, error) {
+	end := itr.index + n
+	if n <= 0 || end > itr.length {
+		m := "Input is either zero, negative, or puts the iterator index out of bounds"
+		return "", errors.New(m)
+	}
+
+	r := itr.runes[itr.index:end]
+	itr.index = end
+	return string(r), nil
 }
 
 // HasNext returns true if there are any items left to

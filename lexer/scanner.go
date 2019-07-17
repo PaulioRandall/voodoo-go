@@ -332,82 +332,87 @@ func commentSym(sItr *StrItr, lineNum int) (Symbol, error) {
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
+func otherSym(sItr *StrItr, lineNum int) (Symbol, error) {
+
+	itr := sItr.toRuneItr() // TEMP REFACTORING
 
 	if !itr.HasNext() {
-		m := "Can't call this function with a finished iterator"
+		m := "Expected an unfinished iterator"
 		return Symbol{}, errors.New(m)
 	}
 
-	r := initSym(itr.NextIndex(), lineNum)
-	ru := itr.Next()
-	hasTwoRunes := false
+	r := initSym(itr.Index(), lineNum)
 
-	ifNextIsInElse := func(s string, onTrue SymbolType, onFalse SymbolType) {
-		if itr.NextIsIn(s) {
-			r.Type = onTrue
-			hasTwoRunes = true
-		} else {
-			r.Type = onFalse
-		}
+	runeCount := 0
+	set := func(t SymbolType, runesInOperator int) {
+		r.Type = t
+		runeCount = runesInOperator
 	}
 
 	switch {
-	case ru == '<':
-		ifNextIsInElse(`-`, ASSIGNMENT, LESS_THAN)
-		ifNextIsInElse(`=`, LESS_THAN_OR_EQUAL, r.Type)
-	case ru == '>':
-		ifNextIsInElse(`=`, GREATER_THAN_OR_EQUAL, GREATER_THAN)
-	case ru == '=' && itr.NextIsIn(`=>`):
-		ifNextIsInElse(`=`, EQUAL, IF_TRUE_THEN)
-		ifNextIsInElse(`>`, IF_TRUE_THEN, r.Type)
-	case ru == '!':
-		ifNextIsInElse(`=`, NOT_EQUAL, NEGATION)
-	case ru == '|' && itr.NextIsIn(`|`):
-		r.Type = OR
-		hasTwoRunes = true
-	case ru == '&' && itr.NextIsIn(`&`):
-		r.Type = AND
-		hasTwoRunes = true
-	case ru == '+':
-		r.Type = ADD
-	case ru == '-':
-		r.Type = SUBTRACT
-	case ru == '*':
-		r.Type = MULTIPLY
-	case ru == '/':
-		r.Type = DIVIDE
-	case ru == '%':
-		r.Type = MODULO
-	case ru == '(':
-		r.Type = CIRCLE_BRACE_OPEN
-	case ru == ')':
-		r.Type = CIRCLE_BRACE_CLOSE
-	case ru == '[':
-		r.Type = SQUARE_BRACE_OPEN
-	case ru == ']':
-		r.Type = SQUARE_BRACE_CLOSE
-	case ru == ',':
-		r.Type = VALUE_SEPARATOR
-	case ru == ':':
-		r.Type = KEY_VALUE_SEPARATOR
-	case ru == '.' && itr.NextIsIn(`.`):
-		r.Type = RANGE
-		hasTwoRunes = true
-	case ru == '_':
-		r.Type = VOID
+	case itr.IsNextStr(`<-`):
+		set(ASSIGNMENT, 2)
+	case itr.IsNextStr(`<=`):
+		set(LESS_THAN_OR_EQUAL, 2)
+	case itr.IsNext('<'):
+		set(LESS_THAN, 1)
+	case itr.IsNextStr(`>=`):
+		set(GREATER_THAN_OR_EQUAL, 2)
+	case itr.IsNext('>'):
+		set(GREATER_THAN, 1)
+	case itr.IsNextStr(`==`):
+		set(EQUAL, 2)
+	case itr.IsNextStr(`=>`):
+		set(IF_TRUE_THEN, 2)
+	case itr.IsNextStr(`!=`):
+		set(NOT_EQUAL, 2)
+	case itr.IsNext('!'):
+		set(NEGATION, 1)
+	case itr.IsNextStr(`||`):
+		set(OR, 2)
+	case itr.IsNextStr(`&&`):
+		set(AND, 2)
+	case itr.IsNext('+'):
+		set(ADD, 1)
+	case itr.IsNext('-'):
+		set(SUBTRACT, 1)
+	case itr.IsNext('*'):
+		set(MULTIPLY, 1)
+	case itr.IsNext('/'):
+		set(DIVIDE, 1)
+	case itr.IsNext('%'):
+		set(MODULO, 1)
+	case itr.IsNext('('):
+		set(CIRCLE_BRACE_OPEN, 1)
+	case itr.IsNext(')'):
+		set(CIRCLE_BRACE_CLOSE, 1)
+	case itr.IsNext('['):
+		set(SQUARE_BRACE_OPEN, 1)
+	case itr.IsNext(']'):
+		set(SQUARE_BRACE_CLOSE, 1)
+	case itr.IsNext(','):
+		set(VALUE_SEPARATOR, 1)
+	case itr.IsNext(':'):
+		set(KEY_VALUE_SEPARATOR, 1)
+	case itr.IsNextStr(`..`):
+		set(RANGE, 2)
+	case itr.IsNext('_'):
+		set(VOID, 1)
 	default:
+		ru := itr.NextRune()
 		m := "I don't know what this symbol means '" + string(ru) + "'"
 		return Symbol{}, errors.New(m)
 	}
 
-	if hasTwoRunes {
-		r.Val = string(ru) + string(itr.Next())
-	} else {
-		r.Val = string(ru)
+	s, err := itr.NextStr(runeCount)
+	if err != nil {
+		return Symbol{}, err
 	}
 
-	r.End = itr.NextIndex()
+	r.Val = s
+	r.End = itr.Index()
+
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 

@@ -58,6 +58,44 @@ func TestRuneItr_NextRune(t *testing.T) {
 	assert.Equal(t, rune(-1), itr.NextRune())
 }
 
+func TestRuneItr_NextStr(t *testing.T) {
+	s := `abc語123`
+	var itr *RuneItr
+
+	testGood := func(i int, n int, exp string) {
+		itr = NewRuneItr(s)
+		itr.index = i
+		act, err := itr.NextStr(n)
+		if assert.Nil(t, err) {
+			assert.Equal(t, exp, act)
+		}
+	}
+
+	testBad := func(i int, n int) {
+		itr := NewRuneItr(s)
+		itr.index = i
+		_, err := itr.NextStr(n)
+		assert.NotNil(t, err)
+	}
+
+	testBad(0, 0)
+	testGood(0, 1, `a`)
+	testGood(0, 2, `ab`)
+	testGood(0, 3, `abc`)
+	testGood(0, 4, `abc語`)
+	testGood(0, 5, `abc語1`)
+	testGood(0, 6, `abc語12`)
+	testGood(0, 7, `abc語123`)
+	testBad(0, 8)
+
+	testBad(3, 0)
+	testGood(3, 1, `語`)
+	testGood(3, 2, `語1`)
+	testGood(3, 3, `語12`)
+	testGood(3, 4, `語123`)
+	testBad(3, 5)
+}
+
 func TestRuneItr_PeekRune(t *testing.T) {
 	s := `ab語`
 	itr := NewRuneItr(s)
