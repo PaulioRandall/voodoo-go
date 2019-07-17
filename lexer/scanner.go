@@ -298,8 +298,8 @@ func commentSym(sItr *StrItr, lineNum int) (Symbol, error) {
 
 	itr := sItr.toRuneItr() // TEMP REFACTORING
 
-	if !itr.IsNext('/') {
-		m := "Expected first rune to be `/`"
+	if !itr.IsNextStr(`//`) {
+		m := "Expected first two runes to be `//`"
 		return Symbol{}, errors.New(m)
 	}
 

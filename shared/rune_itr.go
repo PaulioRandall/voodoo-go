@@ -107,6 +107,17 @@ func (itr *RuneItr) IsNext(r rune) bool {
 	return false
 }
 
+// IsNextStr returns true if the input string matches the next
+// set of runes  to appears within the iterator.
+func (itr *RuneItr) IsNextStr(s string) bool {
+	for i, ru := range []rune(s) {
+		if itr.PeekRelRune(i) != ru {
+			return false
+		}
+	}
+	return true
+}
+
 // IsNextIn returns true if there is a next rune and the next
 // rune appears within the input string.
 func (itr *RuneItr) IsNextIn(s string) bool {

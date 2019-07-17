@@ -97,6 +97,34 @@ func TestRuneItr_IsNext(t *testing.T) {
 	assert.False(t, itr.IsNext('語'))
 }
 
+func TestRuneItr_IsNextStr(t *testing.T) {
+	s := `abc語123`
+	itr := NewRuneItr(s)
+
+	assert.True(t, itr.IsNextStr(``))
+	assert.True(t, itr.IsNextStr(`a`))
+	assert.True(t, itr.IsNextStr(`ab`))
+	assert.True(t, itr.IsNextStr(`abc`))
+	assert.True(t, itr.IsNextStr(`abc語`))
+	assert.True(t, itr.IsNextStr(`abc語1`))
+	assert.True(t, itr.IsNextStr(`abc語12`))
+	assert.True(t, itr.IsNextStr(`abc語123`))
+
+	assert.False(t, itr.IsNextStr(`bac語123`))
+	assert.False(t, itr.IsNextStr(`abc語1234`))
+
+	itr.index += 3
+	assert.True(t, itr.IsNextStr(`語1`))
+	assert.True(t, itr.IsNextStr(`語123`))
+	assert.False(t, itr.IsNextStr(`123`))
+	assert.False(t, itr.IsNextStr(` 語123`))
+
+	itr.index += 4
+	assert.True(t, itr.IsNextStr(``))
+	assert.False(t, itr.IsNextStr(`3`))
+	assert.False(t, itr.IsNextStr(` `))
+}
+
 func TestRuneItr_IsNextIn(t *testing.T) {
 	s := `ab語`
 	itr := NewRuneItr(s)
