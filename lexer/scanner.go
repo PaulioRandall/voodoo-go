@@ -19,7 +19,7 @@ func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 	itr := sh.NewRuneItr(line)
 
 	for itr.HasNext() {
-		var s Symbol
+		var s *Symbol
 
 		switch {
 		case itr.IsNextLetter():
@@ -44,7 +44,7 @@ func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 		}
 
 		s.Line = lineNum
-		r = append(r, s)
+		r = append(r, *s)
 	}
 
 	return
@@ -65,8 +65,8 @@ func emptyLineSyms(lineNum int) []Symbol {
 
 // initSym creates a new symbol with start index and line number
 // initialised.
-func initSym(start int) Symbol {
-	return Symbol{
+func initSym(start int) *Symbol {
+	return &Symbol{
 		Start: start,
 	}
 }
@@ -76,63 +76,63 @@ func initSym(start int) Symbol {
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(itr *sh.RuneItr) (Symbol, LexError) {
+func wordSym(itr *sh.RuneItr) (*Symbol, LexError) {
 
 	if !itr.IsNextLetter() {
 		m := "Expected first rune to be a letter"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	r := extractWord(itr)
+	s := extractWord(itr)
 
-	switch strings.ToLower(r.Val) {
+	switch strings.ToLower(s.Val) {
 	case `scroll`:
-		r.Type = KEYWORD_SCROLL
+		s.Type = KEYWORD_SCROLL
 	case `spell`:
-		r.Type = KEYWORD_SPELL
+		s.Type = KEYWORD_SPELL
 	case `loop`:
-		r.Type = KEYWORD_LOOP
+		s.Type = KEYWORD_LOOP
 	case `when`:
-		r.Type = KEYWORD_WHEN
+		s.Type = KEYWORD_WHEN
 	case `end`:
-		r.Type = KEYWORD_END
+		s.Type = KEYWORD_END
 	case `key`:
-		r.Type = KEYWORD_KEY
+		s.Type = KEYWORD_KEY
 	case `val`:
-		r.Type = KEYWORD_VAL
+		s.Type = KEYWORD_VAL
 	case `true`:
-		r.Type = BOOLEAN
+		s.Type = BOOLEAN
 	case `false`:
-		r.Type = BOOLEAN
+		s.Type = BOOLEAN
 	default:
-		r.Type = VARIABLE
+		s.Type = VARIABLE
 	}
 
-	return r, nil
+	return s, nil
 }
 
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
-func numSym(itr *sh.RuneItr) (Symbol, LexError) {
+func numSym(itr *sh.RuneItr) (*Symbol, LexError) {
 
 	if !itr.IsNextDigit() {
 		m := "Expected first rune to be a digit"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	r := initSym(itr.Index())
+	s := initSym(itr.Index())
 
-	s, err := extractNum(itr)
+	n, err := extractNum(itr)
 	if err != nil {
-		return Symbol{}, err
+		return nil, err
 	}
 
-	r.Val = s
-	r.End = itr.Index()
-	r.Type = NUMBER
+	s.Val = n
+	s.End = itr.Index()
+	s.Type = NUMBER
 
-	return r, nil
+	return s, nil
 }
 
 // extractNum extracts a number, as a string, from the supplied
@@ -166,14 +166,14 @@ func extractNum(itr *sh.RuneItr) (string, LexError) {
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *sh.RuneItr) (Symbol, LexError) {
+func spaceSym(itr *sh.RuneItr) (*Symbol, LexError) {
 
 	if !itr.IsNextSpace() {
 		m := "Expected first rune to be whitespace"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	r := initSym(itr.Index())
+	s := initSym(itr.Index())
 	sb := strings.Builder{}
 
 	for itr.HasNext() {
@@ -184,62 +184,62 @@ func spaceSym(itr *sh.RuneItr) (Symbol, LexError) {
 		}
 	}
 
-	r.Val = sb.String()
-	r.End = itr.Index()
-	r.Type = WHITESPACE
+	s.Val = sb.String()
+	s.End = itr.Index()
+	s.Type = WHITESPACE
 
-	return r, nil
+	return s, nil
 }
 
 // sourcerySym handles symbols that start with a at sign rune `@`.
 // Sourcery symbols may resolve into a:
 // - go function call
-func sourcerySym(itr *sh.RuneItr) (Symbol, LexError) {
+func sourcerySym(itr *sh.RuneItr) (*Symbol, LexError) {
 
 	if !itr.IsNext('@') {
 		m := "Expected first rune to be `@`"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
 	if !unicode.IsLetter(itr.PeekRelRune(1)) {
 		m := "Expected first rune after `@` to be a letter"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
 	start := itr.Index()
 	val := string(itr.NextRune())
-	r := extractWord(itr)
 
-	r.Start = start
-	r.Val = val + r.Val
-	r.Type = SOURCERY
+	s := extractWord(itr)
+	s.Start = start
+	s.Val = val + s.Val
+	s.Type = SOURCERY
 
-	return r, nil
+	return s, nil
 }
 
 // strSym handles symbols that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(itr *sh.RuneItr) (Symbol, LexError) {
+func strSym(itr *sh.RuneItr) (*Symbol, LexError) {
 
 	if !itr.IsNext('"') {
 		m := "Expected first rune to be `\"`"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	r := initSym(itr.Index())
-	isEscaped, s := extractStr(itr)
+	s := initSym(itr.Index())
+	isEscaped, str := extractStr(itr)
 
-	if isEscaped || len(s) < 2 || s[len(s)-1] != '"' {
+	if isEscaped || len(str) < 2 || str[len(str)-1] != '"' {
 		m := "Did someone forget to close a string literal?!"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	r.Val = s
-	r.End = itr.Index()
-	r.Type = STRING
+	s.Val = str
+	s.End = itr.Index()
+	s.Type = STRING
 
-	return r, nil
+	return s, nil
 }
 
 // extractStr extracts a string literal from a string iterator
@@ -270,19 +270,19 @@ func extractStr(itr *sh.RuneItr) (bool, string) {
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *sh.RuneItr) (Symbol, LexError) {
+func commentSym(itr *sh.RuneItr) (*Symbol, LexError) {
 
 	if !itr.IsNextStr(`//`) {
 		m := "Expected first two runes to be `//`"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	r := initSym(itr.Index())
-	r.Val = itr.RemainingStr()
-	r.End = itr.Index()
-	r.Type = COMMENT
+	s := initSym(itr.Index())
+	s.Val = itr.RemainingStr()
+	s.End = itr.Index()
+	s.Type = COMMENT
 
-	return r, nil
+	return s, nil
 }
 
 // otherSym handles any symbols that don't have a specific handling
@@ -292,18 +292,18 @@ func commentSym(itr *sh.RuneItr) (Symbol, LexError) {
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(itr *sh.RuneItr) (Symbol, LexError) {
+func otherSym(itr *sh.RuneItr) (*Symbol, LexError) {
 
 	if !itr.HasNext() {
 		m := "Expected an unfinished iterator"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	r := initSym(itr.Index())
+	s := initSym(itr.Index())
 
 	runeCount := 0
 	set := func(t SymbolType, runesInOperator int) {
-		r.Type = t
+		s.Type = t
 		runeCount = runesInOperator
 	}
 
@@ -359,24 +359,24 @@ func otherSym(itr *sh.RuneItr) (Symbol, LexError) {
 	default:
 		ru := itr.NextRune()
 		m := "I don't know what this symbol means '" + string(ru) + "'"
-		return Symbol{}, NewLexError(m, itr.Index())
+		return nil, NewLexError(m, itr.Index())
 	}
 
-	s, err := itr.NextStr(runeCount)
+	str, err := itr.NextStr(runeCount)
 	if err != nil {
 		lxErr := NewLexError(err.Error(), itr.Index())
-		return Symbol{}, lxErr
+		return nil, lxErr
 	}
 
-	r.Val = s
-	r.End = itr.Index()
+	s.Val = str
+	s.End = itr.Index()
 
-	return r, nil
+	return s, nil
 }
 
 // extractWord iterates a rune iterator until a single word has been
 // extracted returning it as a symbol.
-func extractWord(itr *sh.RuneItr) Symbol {
+func extractWord(itr *sh.RuneItr) *Symbol {
 	s := initSym(itr.Index())
 	s.Val = extractWordStr(itr)
 	s.End = itr.Index()
