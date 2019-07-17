@@ -43,8 +43,8 @@ func TestRuneItr_PeekRelRune(t *testing.T) {
 	assert.Equal(t, ' ', itr.PeekRelRune(1))
 	assert.Equal(t, 'r', itr.PeekRelRune(-1))
 
-	assert.Equal(t, int32(-1), itr.PeekRelRune(-3))
-	assert.Equal(t, int32(-1), itr.PeekRelRune(20))
+	assert.Equal(t, rune(-1), itr.PeekRelRune(-3))
+	assert.Equal(t, rune(-1), itr.PeekRelRune(20))
 }
 
 func TestRuneItr_NextRune(t *testing.T) {
@@ -54,8 +54,8 @@ func TestRuneItr_NextRune(t *testing.T) {
 	assert.Equal(t, 'a', itr.NextRune())
 	assert.Equal(t, 'b', itr.NextRune())
 	assert.Equal(t, '語', itr.NextRune())
-	assert.Equal(t, int32(-1), itr.NextRune())
-	assert.Equal(t, int32(-1), itr.NextRune())
+	assert.Equal(t, rune(-1), itr.NextRune())
+	assert.Equal(t, rune(-1), itr.NextRune())
 }
 
 func TestRuneItr_PeekRune(t *testing.T) {
@@ -64,7 +64,7 @@ func TestRuneItr_PeekRune(t *testing.T) {
 
 	assert.Equal(t, 'a', itr.PeekRune())
 	itr.index = 5
-	assert.Equal(t, int32(-1), itr.PeekRune())
+	assert.Equal(t, rune(-1), itr.PeekRune())
 }
 
 func TestRuneItr_HasNext(t *testing.T) {

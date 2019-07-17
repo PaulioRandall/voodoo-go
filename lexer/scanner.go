@@ -74,6 +74,18 @@ func initSym(start, lineNum int) Symbol {
 	}
 }
 
+// TODO: Delete after refactoring.
+func strItrToRuneItr(itr *StrItr) *sh.RuneItr {
+	r := sh.NewRuneItr(itr.str)
+	r.SetIndex(itr.NextIndex())
+	return r
+}
+
+// TODO: Delete after refactoring.
+func (itr *StrItr) SetIndex(i int) {
+	itr.index = i
+}
+
 // wordSym handles symbols that start with a unicode category L rune.
 // I.e. a letter from any alphabet, a word may resolve into a:
 // - variable name

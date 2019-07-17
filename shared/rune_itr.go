@@ -4,9 +4,6 @@ import (
 	"strings"
 )
 
-// Rune representing UTF-8/ASCII NUL (Decimal: 0)
-//const NUL_RUNE := 0
-
 // RuneItr represents an iterator of strings.
 type RuneItr struct {
 	index  int    // Index of the next rune
@@ -24,6 +21,11 @@ func NewRuneItr(str string) *RuneItr {
 		str:    str,
 		runes:  runes,
 	}
+}
+
+// TODO: Delete after refactoring.
+func (itr *RuneItr) SetIndex(i int) {
+	itr.index = i
 }
 
 // increment increments the iterators index.
