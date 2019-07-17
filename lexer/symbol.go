@@ -21,7 +21,7 @@ const (
 	KEYWORD_VAL    // value
 	VARIABLE
 	BOOLEAN  // true/false
-	NUMBER   // -##.###
+	NUMBER   // ##.###
 	STRING   // "blahblah"
 	COMMENT  // // blahblah
 	SOURCERY // @Blahblah
