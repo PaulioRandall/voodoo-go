@@ -219,27 +219,31 @@ func spaceSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 // sourcerySym handles symbols that start with a at sign rune `@`.
 // Sourcery symbols may resolve into a:
 // - go function call
-func sourcerySym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
+func sourcerySym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	if !itr.IsNext('@') {
 		m := "Expected first rune to be `@`"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
 	if !unicode.IsLetter(itr.PeekRelRune(1)) {
 		m := "Expected first rune after `@` to be a letter"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
 	start := itr.Index()
-	val := string(itr.NextRune())
+	firstLetter := string(itr.NextRune())
 
-	s := extractWord(itr)
-	s.Start = start
-	s.Val = val + s.Val
-	s.Type = sym.SOURCERY
+	s = &sym.Symbol{
+		Val:   firstLetter + extractWordStr(itr),
+		Start: start,
+		End:   itr.Index(),
+		Type:  sym.SOURCERY,
+	}
 
-	return s, nil
+	return
 }
 
 // strSym handles symbols that start with the double quote `"` rune.
