@@ -89,11 +89,12 @@ func (itr *StrItr) setIndex(i int) { // TEMP REFACTORING
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
+func wordSym(sItr *StrItr, lineNum int) (Symbol, error) {
 
-	ru := itr.Peek()
-	if !itr.HasNext() || !unicode.IsLetter(ru) {
-		m := "Can't call this function when the first rune is not letter"
+	itr := sItr.toRuneItr() // TEMP REFACTORING
+
+	if !itr.IsNextLetter() {
+		m := "Expected first rune to be a letter"
 		return Symbol{}, errors.New(m)
 	}
 
@@ -122,6 +123,7 @@ func wordSym(itr *StrItr, lineNum int) (Symbol, error) {
 		r.Type = VARIABLE
 	}
 
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
@@ -207,28 +209,29 @@ func spaceSym(itr *StrItr, lineNum int) (Symbol, error) {
 // sourcerySym handles symbols that start with a at sign rune `@`.
 // Sourcery symbols may resolve into a:
 // - go function call
-func sourcerySym(itr *StrItr, lineNum int) (Symbol, error) {
+func sourcerySym(sItr *StrItr, lineNum int) (Symbol, error) {
 
-	if !itr.HasNext() || itr.Peek() != '@' {
-		m := "Can't call this function when the first rune is not `@`"
-		sh.CompilerBug(lineNum, m)
+	itr := sItr.toRuneItr() // TEMP REFACTORING
+
+	if !itr.IsNext('@') {
+		m := "Expected first rune to be `@`"
+		return Symbol{}, errors.New(m)
 	}
 
-	switch {
-	case !itr.HasAsatte():
-		fallthrough
-	case !unicode.IsLetter(itr.PeekAsatte()):
-		m := "You can't call this function unless the iterators first rune is an `@`"
-		sh.SyntaxErr(lineNum, itr.NextIndex()+1, itr.Length(), m)
+	if !unicode.IsLetter(itr.PeekRelRune(1)) {
+		m := "Expected first rune after `@` to be a letter"
+		return Symbol{}, errors.New(m)
 	}
 
-	index := itr.NextIndex()
-	first := string(itr.Next())
+	start := itr.Index()
+	val := string(itr.NextRune())
 	r := extractWord(itr, lineNum)
-	r.Start = index
-	r.Val = first + r.Val
+
+	r.Start = start
+	r.Val = val + r.Val
 	r.Type = SOURCERY
 
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
@@ -403,14 +406,10 @@ func otherSym(itr *StrItr, lineNum int) (Symbol, error) {
 
 // extractWord iterates a rune iterator until a single word has been
 // extracted returning it as a symbol.
-func extractWord(sItr *StrItr, lineNum int) Symbol {
-	itr := sItr.toRuneItr() // TEMP REFACTORING
-
+func extractWord(itr *sh.RuneItr, lineNum int) Symbol {
 	r := initSym(itr.Index(), lineNum)
 	r.Val = extractWordStr(itr)
 	r.End = itr.Index()
-
-	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r
 }
 
