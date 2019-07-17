@@ -139,23 +139,41 @@ func numSym(itr *sh.RuneItr) (*Symbol, LexError) {
 // iterator.
 func extractNum(itr *sh.RuneItr) (string, LexError) {
 	sb := strings.Builder{}
-	hasPoint := false
 
 	for itr.HasNext() {
-		switch {
-		case hasPoint && itr.IsNext('.'):
+		if itr.IsNextStr(`..`) {
+			return sb.String(), nil
+		}
+
+		if itr.IsNext('.') {
+			sb.WriteRune(itr.NextRune())
+			return extractFractional(itr, &sb)
+		}
+
+		if itr.IsNextDigit() || itr.IsNext('_') {
+			sb.WriteRune(itr.NextRune())
+		} else {
+			break
+		}
+	}
+
+	return sb.String(), nil
+}
+
+// extractFractional extracts the fractional part of a number,
+// as a string, from the supplied iterator and returns the
+// number including the integer part.
+func extractFractional(itr *sh.RuneItr, sb *strings.Builder) (string, LexError) {
+	for itr.HasNext() {
+		if itr.IsNext('.') {
 			m := "Numbers can't have two fractional parts"
 			return "", NewLexError(m, itr.Index())
-		case itr.IsNext('.'):
-			if itr.PeekRelRune(1) == '.' {
-				return sb.String(), nil
-			}
-			hasPoint = true
-			fallthrough
-		case itr.IsNextDigit(), itr.IsNext('_'):
+		}
+
+		if itr.IsNextDigit() || itr.IsNext('_') {
 			sb.WriteRune(itr.NextRune())
-		default:
-			return sb.String(), nil
+		} else {
+			break
 		}
 	}
 
@@ -177,11 +195,11 @@ func spaceSym(itr *sh.RuneItr) (*Symbol, LexError) {
 	sb := strings.Builder{}
 
 	for itr.HasNext() {
-		if itr.IsNextSpace() {
-			sb.WriteRune(itr.NextRune())
-		} else {
+		if !itr.IsNextSpace() {
 			break
 		}
+
+		sb.WriteRune(itr.NextRune())
 	}
 
 	s.Val = sb.String()
