@@ -138,3 +138,20 @@ func TestRuneItr_IsNextDigit(t *testing.T) {
 	itr.index += 1
 	assert.False(t, itr.IsNextDigit())
 }
+
+func TestRuneItr_RemainingStr(t *testing.T) {
+	s := `abc語123`
+	var itr *RuneItr
+
+	itr = NewRuneItr(s)
+	assert.Equal(t, `abc語123`, itr.RemainingStr())
+	assert.Equal(t, ``, itr.RemainingStr())
+
+	itr = NewRuneItr(s)
+	itr.index += 3
+	assert.Equal(t, `語123`, itr.RemainingStr())
+
+	itr = NewRuneItr(s)
+	itr.index += 7
+	assert.Equal(t, ``, itr.RemainingStr())
+}

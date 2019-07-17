@@ -135,3 +135,14 @@ func (itr *RuneItr) IsNextDigit() bool {
 	}
 	return false
 }
+
+// RemainingStr returns all remaining runes as a string and sets
+// iterator index to the index after the last rune.
+func (itr *RuneItr) RemainingStr() string {
+	r := ``
+	if itr.HasNext() {
+		r = itr.str[itr.index:]
+	}
+	itr.index = itr.length
+	return r
+}

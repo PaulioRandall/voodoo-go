@@ -294,23 +294,21 @@ func isComment(itr *StrItr) bool {
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *StrItr, lineNum int) (Symbol, error) {
+func commentSym(sItr *StrItr, lineNum int) (Symbol, error) {
 
-	if !itr.HasNext() || itr.Peek() != '/' {
-		m := "Can't call this function when the first rune is not `/`"
-		sh.CompilerBug(lineNum, m)
+	itr := sItr.toRuneItr() // TEMP REFACTORING
+
+	if !itr.IsNext('/') {
+		m := "Expected first rune to be `/`"
+		return Symbol{}, errors.New(m)
 	}
 
-	r := initSym(itr.NextIndex(), lineNum)
-	sb := strings.Builder{}
-
-	for itr.HasNext() {
-		sb.WriteRune(itr.Next())
-	}
-
-	r.Val = sb.String()
-	r.End = itr.NextIndex()
+	r := initSym(itr.Index(), lineNum)
+	r.Val = itr.RemainingStr()
+	r.End = itr.Index()
 	r.Type = COMMENT
+
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
