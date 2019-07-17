@@ -130,49 +130,55 @@ func wordSym(sItr *StrItr, lineNum int) (Symbol, error) {
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
-func numSym(itr *StrItr, lineNum int) (Symbol, error) {
+func numSym(sItr *StrItr, lineNum int) (Symbol, error) {
 
-	if !itr.HasNext() || !unicode.IsDigit(itr.Peek()) {
-		m := "Can't call this function when the first rune is not digit"
+	itr := sItr.toRuneItr() // TEMP REFACTORING
+
+	if !itr.IsNextDigit() {
+		m := "Expected first rune to be a digit"
 		return Symbol{}, errors.New(m)
 	}
 
-	r := initSym(itr.NextIndex(), lineNum)
-	sb := strings.Builder{}
-	exit := false
-	hasPoint := false
+	r := initSym(itr.Index(), lineNum)
 
-	onFinish := func() {
-		r.Val = sb.String()
-		r.End = itr.NextIndex()
-		r.Type = NUMBER
+	s, err := extractNum(itr)
+	if err != nil {
+		return Symbol{}, err
 	}
 
-	for itr.HasNext() && !exit {
-		ru := itr.Peek()
+	r.Val = s
+	r.End = itr.Index()
+	r.Type = NUMBER
 
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
+	return r, nil
+}
+
+// extractNum extracts a number, as a string, from the supplied
+// iterator.
+func extractNum(itr *sh.RuneItr) (string, error) {
+	sb := strings.Builder{}
+	hasPoint := false
+
+	for itr.HasNext() {
 		switch {
-		case ru == '.':
-			if hasPoint {
-				m := "Numbers can't have two fractional parts"
-				return Symbol{}, errors.New(m)
-			} else if itr.PeekAsatte() == '.' {
-				onFinish()
-				return r, nil
+		case hasPoint && itr.IsNext('.'):
+			m := "Numbers can't have two fractional parts"
+			return "", errors.New(m)
+		case itr.IsNext('.'):
+			if itr.PeekRelRune(1) == '.' {
+				return sb.String(), nil
 			}
 			hasPoint = true
 			fallthrough
-		case unicode.IsDigit(ru):
-			fallthrough
-		case ru == '_':
-			sb.WriteRune(itr.Next())
+		case itr.IsNextDigit(), itr.IsNext('_'):
+			sb.WriteRune(itr.NextRune())
 		default:
-			exit = true
+			return sb.String(), nil
 		}
 	}
 
-	onFinish()
-	return r, nil
+	return sb.String(), nil
 }
 
 // spaceSym handles symbols that start with a rune with the
