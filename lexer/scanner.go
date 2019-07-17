@@ -20,7 +20,6 @@ func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 
 	for itr.HasNext() {
 		var s Symbol
-		var err error
 
 		switch {
 		case itr.IsNextLetter():
@@ -37,10 +36,6 @@ func ScanLine(line string, lineNum int) (r []Symbol, lxErr LexError) {
 			s, lxErr = commentSym(itr)
 		default:
 			s, lxErr = otherSym(itr)
-		}
-
-		if err != nil {
-			lxErr = NewLexError(err.Error(), -1)
 		}
 
 		if lxErr != nil {
