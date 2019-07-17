@@ -235,37 +235,41 @@ func sourcerySym(itr *StrItr, lineNum int) (Symbol, error) {
 // strSym handles symbols that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(itr *StrItr, lineNum int) (Symbol, error) {
+func strSym(sItr *StrItr, lineNum int) (Symbol, error) {
 
-	if !itr.HasNext() || itr.Peek() != '"' {
-		m := "Can't call this function when the first rune is not `\"`"
+	itr := sItr.toRuneItr() // TEMP REFACTORING
+
+	if !itr.IsNext('"') {
+		m := "Expected first rune to be `\"`"
 		return Symbol{}, errors.New(m)
 	}
 
-	r := initSym(itr.NextIndex(), lineNum)
+	r := initSym(itr.Index(), lineNum)
 	isEscaped, s := extractStr(itr)
 
-	if isEscaped || len(s) < 2 || itr.PeekPrev() != '"' {
+	if isEscaped || len(s) < 2 || s[len(s)-1] != '"' {
 		m := "Did someone forget to close a string literal?!"
 		return Symbol{}, errors.New(m)
 	}
 
 	r.Val = s
-	r.End = itr.NextIndex()
+	r.End = itr.Index()
 	r.Type = STRING
+
+	sItr.setIndex(itr.Index()) // TEMP REFACTORING
 	return r, nil
 }
 
 // extractStr extracts a string literal from a string iterator
 // returning true if the last rune was escaped.
-func extractStr(itr *StrItr) (bool, string) {
+func extractStr(itr *sh.RuneItr) (bool, string) {
 
 	sb := strings.Builder{}
-	sb.WriteRune(itr.Next())
+	sb.WriteRune(itr.NextRune())
 	isEscaped := false
 
 	for itr.HasNext() {
-		ru := itr.Next()
+		ru := itr.NextRune()
 		sb.WriteRune(ru)
 
 		switch {
@@ -282,11 +286,10 @@ func extractStr(itr *StrItr) (bool, string) {
 }
 
 // isComment return true if the rest of the string is a comment.
-func isComment(itr *StrItr) bool {
-	if itr.HasNext() && itr.HasAsatte() {
-		if itr.Peek() == '/' && itr.PeekAsatte() == '/' {
-			return true
-		}
+func isComment(sItr *StrItr) bool {
+	itr := sItr.toRuneItr() // TEMP REFACTORING
+	if itr.IsNextStr(`//`) {
+		return true
 	}
 	return false
 }
