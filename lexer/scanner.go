@@ -75,14 +75,14 @@ func initSym(start, lineNum int) Symbol {
 }
 
 // TODO: Delete after refactoring.
-func strItrToRuneItr(itr *StrItr) *sh.RuneItr {
+func (itr *StrItr) strItrToRuneItr() *sh.RuneItr {
 	r := sh.NewRuneItr(itr.str)
 	r.SetIndex(itr.NextIndex())
 	return r
 }
 
 // TODO: Delete after refactoring.
-func (itr *StrItr) SetIndex(i int) {
+func (itr *StrItr) setIndex(i int) {
 	itr.index = i
 }
 

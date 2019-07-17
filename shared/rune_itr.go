@@ -2,6 +2,7 @@ package shared
 
 import (
 	"strings"
+	"unicode"
 )
 
 // RuneItr represents an iterator of strings.
@@ -111,6 +112,16 @@ func (itr *RuneItr) IsNext(r rune) bool {
 func (itr *RuneItr) IsNextIn(s string) bool {
 	if itr.HasNext() {
 		return strings.ContainsRune(s, itr.PeekRune())
+	}
+	return false
+}
+
+// IsNextLetter returns true if the next rune is in the unicode
+// category 'L' for letter. False is also returned if no more
+// runes remain to iterate.
+func (itr *RuneItr) IsNextLetter() bool {
+	if itr.HasNext() {
+		return unicode.IsLetter(itr.PeekRune())
 	}
 	return false
 }

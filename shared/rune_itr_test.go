@@ -110,3 +110,16 @@ func TestRuneItr_IsNextIn(t *testing.T) {
 	itr.index += 1
 	assert.False(t, itr.IsNextIn("ab語"))
 }
+
+func TestRuneItr_IsNextLetter(t *testing.T) {
+	s := `a2語`
+	itr := NewRuneItr(s)
+
+	assert.True(t, itr.IsNextLetter())
+	itr.index += 1
+	assert.False(t, itr.IsNextLetter())
+	itr.index += 1
+	assert.True(t, itr.IsNextLetter())
+	itr.index += 1
+	assert.False(t, itr.IsNextLetter())
+}
