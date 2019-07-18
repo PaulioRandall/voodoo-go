@@ -14,16 +14,8 @@ func TestSpaceSym(t *testing.T) {
 		t.Log("spaceSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		s, err := spaceSym(itr)
-
-		if tc.ExpectErr {
-			assert.NotNil(t, err)
-		} else {
-			assert.Nil(t, err)
-			if assert.NotNil(t, s) {
-				assert.Equal(t, tc.Expects, *s)
-			}
-		}
+		s := spaceSym(itr)
+		assert.Equal(t, tc.Expects, *s)
 	}
 }
 

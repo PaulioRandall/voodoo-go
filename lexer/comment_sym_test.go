@@ -14,16 +14,8 @@ func TestCommentSym(t *testing.T) {
 		t.Log("commentSym() test case: " + strconv.Itoa(i+1))
 
 		itr := sh.NewRuneItr(tc.Input)
-		s, err := commentSym(itr)
-
-		if tc.ExpectErr {
-			assert.NotNil(t, err)
-		} else {
-			assert.Nil(t, err)
-			if assert.NotNil(t, s) {
-				assert.Equal(t, tc.Expects, *s)
-			}
-		}
+		s := commentSym(itr)
+		assert.Equal(t, tc.Expects, *s)
 	}
 }
 

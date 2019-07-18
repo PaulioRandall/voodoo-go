@@ -49,8 +49,8 @@ const (
 	DIVIDE   // /
 	MODULO   // %
 	// Brackets
-	CIRCLE_BRACE_OPEN  // (
-	CIRCLE_BRACE_CLOSE // )
+	CURVED_BRACE_OPEN  // (
+	CURVED_BRACE_CLOSE // )
 	SQUARE_BRACE_OPEN  // [
 	SQUARE_BRACE_CLOSE // ]
 	// Separators

@@ -99,11 +99,11 @@ func otherSymTests() []symTest {
 		},
 		symTest{
 			Input:   `(`,
-			Expects: sym.Symbol{`(`, 0, 1, 0, sym.CIRCLE_BRACE_OPEN},
+			Expects: sym.Symbol{`(`, 0, 1, 0, sym.CURVED_BRACE_OPEN},
 		},
 		symTest{
 			Input:   `)`,
-			Expects: sym.Symbol{`)`, 0, 1, 0, sym.CIRCLE_BRACE_CLOSE},
+			Expects: sym.Symbol{`)`, 0, 1, 0, sym.CURVED_BRACE_CLOSE},
 		},
 		symTest{
 			Input:   `[`,

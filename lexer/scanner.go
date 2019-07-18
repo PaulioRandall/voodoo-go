@@ -24,17 +24,17 @@ func ScanLine(line string, lineNum int) (r []sym.Symbol, lxErr LexError) {
 
 		switch {
 		case itr.IsNextLetter():
-			s, lxErr = wordSym(itr)
+			s = wordSym(itr)
 		case itr.IsNextDigit():
 			s, lxErr = numSym(itr)
 		case itr.IsNextSpace():
-			s, lxErr = spaceSym(itr)
+			s = spaceSym(itr)
 		case itr.IsNext('@'):
 			s, lxErr = sourcerySym(itr)
 		case itr.IsNext('"'):
 			s, lxErr = strSym(itr)
 		case itr.IsNextStr(`//`):
-			s, lxErr = commentSym(itr)
+			s = commentSym(itr)
 		default:
 			s, lxErr = otherSym(itr)
 		}
@@ -69,13 +69,7 @@ func emptyLineSyms(lineNum int) []sym.Symbol {
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
-
-	if !itr.IsNextLetter() {
-		m := "Expected first rune to be a letter"
-		err = NewLexError(m, itr.Index())
-		return
-	}
+func wordSym(itr *sh.RuneItr) *sym.Symbol {
 
 	start := itr.Index()
 	str := extractWordStr(itr)
@@ -104,26 +98,18 @@ func wordSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 		symType = sym.VARIABLE
 	}
 
-	s = &sym.Symbol{
+	return &sym.Symbol{
 		Val:   str,
 		Start: start,
 		End:   itr.Index(),
 		Type:  symType,
 	}
-
-	return
 }
 
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
 func numSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
-
-	if !itr.IsNextDigit() {
-		m := "Expected first rune to be a digit"
-		err = NewLexError(m, itr.Index())
-		return
-	}
 
 	start := itr.Index()
 	n, err := extractNum(itr)
@@ -190,13 +176,7 @@ func extractFractional(itr *sh.RuneItr, sb *strings.Builder) (string, LexError) 
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
-
-	if !itr.IsNextSpace() {
-		m := "Expected first rune to be whitespace"
-		err = NewLexError(m, itr.Index())
-		return
-	}
+func spaceSym(itr *sh.RuneItr) *sym.Symbol {
 
 	start := itr.Index()
 	sb := strings.Builder{}
@@ -208,26 +188,18 @@ func spaceSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 		sb.WriteRune(itr.NextRune())
 	}
 
-	s = &sym.Symbol{
+	return &sym.Symbol{
 		Val:   sb.String(),
 		Start: start,
 		End:   itr.Index(),
 		Type:  sym.WHITESPACE,
 	}
-
-	return
 }
 
 // sourcerySym handles symbols that start with a at sign rune `@`.
 // Sourcery symbols may resolve into a:
 // - go function call
 func sourcerySym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
-
-	if !itr.IsNext('@') {
-		m := "Expected first rune to be `@`"
-		err = NewLexError(m, itr.Index())
-		return
-	}
 
 	if !unicode.IsLetter(itr.PeekRelRune(1)) {
 		m := "Expected first rune after `@` to be a letter"
@@ -253,12 +225,6 @@ func sourcerySym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 // Quoted strings may resolve into a:
 // - string literal
 func strSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
-
-	if !itr.IsNext('"') {
-		m := "Expected first rune to be `\"`"
-		err = NewLexError(m, itr.Index())
-		return
-	}
 
 	start := itr.Index()
 	closed, str := extractStr(itr)
@@ -310,25 +276,17 @@ func extractStr(itr *sh.RuneItr) (closed bool, s string) {
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
-
-	if !itr.IsNextStr(`//`) {
-		m := "Expected first two runes to be `//`"
-		err = NewLexError(m, itr.Index())
-		return
-	}
+func commentSym(itr *sh.RuneItr) *sym.Symbol {
 
 	start := itr.Index()
 	str := itr.RemainingStr()
 
-	s = &sym.Symbol{
+	return &sym.Symbol{
 		Val:   str,
 		Start: start,
 		End:   itr.Index(),
 		Type:  sym.COMMENT,
 	}
-
-	return
 }
 
 // otherSym handles any symbols that don't have a specific handling
@@ -339,12 +297,6 @@ func commentSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
 func otherSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
-
-	if !itr.HasNext() {
-		m := "Expected an unfinished iterator"
-		err = NewLexError(m, itr.Index())
-		return
-	}
 
 	start := itr.Index()
 	symType := sym.UNDEFINED
@@ -389,9 +341,9 @@ func otherSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 	case itr.IsNext('%'):
 		set(sym.MODULO, 1)
 	case itr.IsNext('('):
-		set(sym.CIRCLE_BRACE_OPEN, 1)
+		set(sym.CURVED_BRACE_OPEN, 1)
 	case itr.IsNext(')'):
-		set(sym.CIRCLE_BRACE_CLOSE, 1)
+		set(sym.CURVED_BRACE_CLOSE, 1)
 	case itr.IsNext('['):
 		set(sym.SQUARE_BRACE_OPEN, 1)
 	case itr.IsNext(']'):
