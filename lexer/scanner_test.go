@@ -14,9 +14,14 @@ func TestScannerApi(t *testing.T) {
 		t.Log("Scanner test case: " + strconv.Itoa(i+1))
 		s, err := ScanLine(tc.Input, tc.Line)
 
-		if tc.ExpectErr {
-			require.NotNil(t, err)
-		} else {
+		if tc.ExpectErr != nil {
+			require.Nil(t, s)
+			assert.NotEmpty(t, err.Error())
+			assert.Equal(t, tc.ExpectErr.Line(), err.Line())
+			assert.Equal(t, tc.ExpectErr.Col(), err.Col())
+		}
+
+		if tc.ExpectSyms != nil {
 			require.Nil(t, err)
 			assert.Equal(t, tc.ExpectSyms, s)
 		}
@@ -34,14 +39,37 @@ type scanLineTest struct {
 	Line       int
 	Input      string
 	ExpectSyms []symbol.Symbol
-	ExpectErr  bool
+	ExpectErr  LexError
+}
+
+type expLexError struct {
+	line int // Line number
+	col  int // Column number
+}
+
+func (e expLexError) Error() string {
+	// Error messages should be semantically validated
+	// so this is not required for testing.
+	return ""
+}
+
+func (e expLexError) Line() int {
+	return e.line
+}
+
+func (e expLexError) Col() int {
+	return e.col
 }
 
 func apiTests() []scanLineTest {
 	return []scanLineTest{
 		scanLineTest{
 			Input:     `x # 1`,
-			ExpectErr: true,
+			ExpectErr: expLexError{0, 3},
+		},
+		scanLineTest{
+			Input:     `123.456.789`,
+			ExpectErr: expLexError{0, 7},
 		},
 		scanLineTest{
 			Input: `x <- 1`,

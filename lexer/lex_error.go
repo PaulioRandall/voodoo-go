@@ -6,8 +6,11 @@ package lexer
 type LexError interface {
 	error
 
-	// Line sets the line number.
-	Line(lineNum int) LexError
+	// Line returns the line number.
+	Line() int
+
+	// Col returns the column number where the error starts.
+	Col() int
 }
 
 // stdLexError is the standard implementation of LexError.
@@ -29,7 +32,21 @@ func (l stdLexError) Error() string {
 }
 
 // Line satisfies the LexError interface.
-func (l stdLexError) Line(lineNum int) LexError {
-	l.line = lineNum
-	return LexError(l)
+func (l stdLexError) Line() int {
+	return l.line
+}
+
+// Col satisfies the LexError interface.
+func (l stdLexError) Col() int {
+	return l.col
+}
+
+// ChangeLine creates a copy of the input LexError with a
+// different line number.
+func ChangeLine(err LexError, lineNum int) LexError {
+	return stdLexError{
+		err:  err.Error(),
+		line: lineNum,
+		col:  err.Col(),
+	}
 }

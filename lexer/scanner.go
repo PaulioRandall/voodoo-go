@@ -44,7 +44,7 @@ func ScanLine(line string, lineNum int) (r []symbol.Symbol, lxErr LexError) {
 		}
 
 		if lxErr != nil {
-			lxErr.Line(lineNum)
+			lxErr = ChangeLine(lxErr, lineNum)
 			r = nil
 			break
 		}
