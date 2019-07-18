@@ -259,9 +259,9 @@ func strSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 	}
 
 	start := itr.Index()
-	isEscaped, str := extractStr(itr)
+	closed, str := extractStr(itr)
 
-	if isEscaped || len(str) < 2 || str[len(str)-1] != '"' {
+	if !closed {
 		m := "Did someone forget to close a string literal?!"
 		err = NewLexError(m, itr.Index())
 		return
@@ -279,7 +279,7 @@ func strSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 // extractStr extracts a string literal from a string iterator
 // returning true if the last rune was escaped.
-func extractStr(itr *sh.RuneItr) (bool, string) {
+func extractStr(itr *sh.RuneItr) (closed bool, s string) {
 
 	sb := strings.Builder{}
 	sb.WriteRune(itr.NextRune())
@@ -289,35 +289,44 @@ func extractStr(itr *sh.RuneItr) (bool, string) {
 		ru := itr.NextRune()
 		sb.WriteRune(ru)
 
-		switch {
-		case !isEscaped && ru == '"':
-			return false, sb.String()
-		case ru == '\\':
+		if !isEscaped && ru == '"' {
+			closed = true
+			break
+		}
+
+		if ru == '\\' {
 			isEscaped = !isEscaped
-		case itr.HasNext():
+		} else {
 			isEscaped = false
 		}
 	}
 
-	return isEscaped, sb.String()
+	s = sb.String()
+	return
 }
 
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
+func commentSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	if !itr.IsNextStr(`//`) {
 		m := "Expected first two runes to be `//`"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	s := initSym(itr.Index())
-	s.Val = itr.RemainingStr()
-	s.End = itr.Index()
-	s.Type = sym.COMMENT
+	start := itr.Index()
+	str := itr.RemainingStr()
 
-	return s, nil
+	s = &sym.Symbol{
+		Val:   str,
+		Start: start,
+		End:   itr.Index(),
+		Type:  sym.COMMENT,
+	}
+
+	return
 }
 
 // otherSym handles any symbols that don't have a specific handling
