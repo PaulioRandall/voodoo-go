@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/shared"
+	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
@@ -13,7 +13,7 @@ func TestNumSym(t *testing.T) {
 	for i, tc := range numSymTests() {
 		t.Log("numSym() test case: " + strconv.Itoa(i+1))
 
-		itr := shared.NewRuneItr(tc.Input)
+		itr := runer.NewRuneItr(tc.Input)
 		s, err := numSym(itr)
 
 		if tc.ExpectErr {
