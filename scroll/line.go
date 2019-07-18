@@ -1,7 +1,7 @@
 package scroll
 
 import (
-	sh "github.com/PaulioRandall/voodoo-go/shared"
+	"github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // Line represents a line in a scroll.
@@ -18,5 +18,5 @@ func (line Line) String() string {
 
 // Print pretty prints the line.
 func (line Line) Println() {
-	sh.PrintlnWithLineNum(line.Index, line.Val)
+	shared.PrintlnWithLineNum(line.Index, line.Val)
 }
