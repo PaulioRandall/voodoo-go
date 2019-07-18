@@ -21,7 +21,7 @@ func TestStrSym(t *testing.T) {
 		} else {
 			assert.Nil(t, err)
 			if assert.NotNil(t, s) {
-				assert.Equal(t, tc.Expects, *s)
+				assert.Equal(t, tc.ExpectSym, *s)
 			}
 		}
 	}
@@ -30,20 +30,20 @@ func TestStrSym(t *testing.T) {
 func strSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Input:   `""`,
-			Expects: sym.Symbol{`""`, 0, 2, 0, sym.STRING},
+			Input:     `""`,
+			ExpectSym: sym.Symbol{`""`, 0, 2, 0, sym.STRING},
 		},
 		symTest{
-			Input:   `"From hell with love"`,
-			Expects: sym.Symbol{`"From hell with love"`, 0, 21, 0, sym.STRING},
+			Input:     `"From hell with love"`,
+			ExpectSym: sym.Symbol{`"From hell with love"`, 0, 21, 0, sym.STRING},
 		},
 		symTest{
-			Input:   `"Bam: \"Leaders eat last!\""`,
-			Expects: sym.Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, sym.STRING},
+			Input:     `"Bam: \"Leaders eat last!\""`,
+			ExpectSym: sym.Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, sym.STRING},
 		},
 		symTest{
-			Input:   `"\\\\\""`,
-			Expects: sym.Symbol{`"\\\\\""`, 0, 8, 0, sym.STRING},
+			Input:     `"\\\\\""`,
+			ExpectSym: sym.Symbol{`"\\\\\""`, 0, 8, 0, sym.STRING},
 		},
 		symTest{
 			Input:     ``,
@@ -58,8 +58,8 @@ func strSymTests() []symTest {
 			ExpectErr: true,
 		},
 		symTest{
-			Input:   `"a"x`,
-			Expects: sym.Symbol{`"a"`, 0, 3, 0, sym.STRING},
+			Input:     `"a"x`,
+			ExpectSym: sym.Symbol{`"a"`, 0, 3, 0, sym.STRING},
 		},
 		symTest{
 			Input:     `"escaped \"`,

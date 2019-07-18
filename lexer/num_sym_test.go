@@ -21,7 +21,7 @@ func TestNumSym(t *testing.T) {
 		} else {
 			assert.Nil(t, err)
 			if assert.NotNil(t, s) {
-				assert.Equal(t, tc.Expects, *s)
+				assert.Equal(t, tc.ExpectSym, *s)
 			}
 		}
 	}
@@ -30,32 +30,32 @@ func TestNumSym(t *testing.T) {
 func numSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Input:   `2`,
-			Expects: sym.Symbol{`2`, 0, 1, 0, sym.NUMBER},
+			Input:     `2`,
+			ExpectSym: sym.Symbol{`2`, 0, 1, 0, sym.NUMBER},
 		},
 		symTest{
-			Input:   `123`,
-			Expects: sym.Symbol{`123`, 0, 3, 0, sym.NUMBER},
+			Input:     `123`,
+			ExpectSym: sym.Symbol{`123`, 0, 3, 0, sym.NUMBER},
 		},
 		symTest{
-			Input:   `123_456`,
-			Expects: sym.Symbol{`123_456`, 0, 7, 0, sym.NUMBER},
+			Input:     `123_456`,
+			ExpectSym: sym.Symbol{`123_456`, 0, 7, 0, sym.NUMBER},
 		},
 		symTest{
-			Input:   `123.456`,
-			Expects: sym.Symbol{`123.456`, 0, 7, 0, sym.NUMBER},
+			Input:     `123.456`,
+			ExpectSym: sym.Symbol{`123.456`, 0, 7, 0, sym.NUMBER},
 		},
 		symTest{
-			Input:   `123.456_789`,
-			Expects: sym.Symbol{`123.456_789`, 0, 11, 0, sym.NUMBER},
+			Input:     `123.456_789`,
+			ExpectSym: sym.Symbol{`123.456_789`, 0, 11, 0, sym.NUMBER},
 		},
 		symTest{
-			Input:   `1__2__3__.__4__5__6__`,
-			Expects: sym.Symbol{`1__2__3__.__4__5__6__`, 0, 21, 0, sym.NUMBER},
+			Input:     `1__2__3__.__4__5__6__`,
+			ExpectSym: sym.Symbol{`1__2__3__.__4__5__6__`, 0, 21, 0, sym.NUMBER},
 		},
 		symTest{
-			Input:   `123..456`,
-			Expects: sym.Symbol{`123`, 0, 3, 0, sym.NUMBER},
+			Input:     `123..456`,
+			ExpectSym: sym.Symbol{`123`, 0, 3, 0, sym.NUMBER},
 		},
 		symTest{
 			Input:     `1_._2_._3`,

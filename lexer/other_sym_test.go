@@ -21,7 +21,7 @@ func TestOtherSym(t *testing.T) {
 		} else {
 			assert.Nil(t, err)
 			if assert.NotNil(t, s) {
-				assert.Equal(t, tc.Expects, *s)
+				assert.Equal(t, tc.ExpectSym, *s)
 			}
 		}
 	}
@@ -30,100 +30,100 @@ func TestOtherSym(t *testing.T) {
 func otherSymTests() []symTest {
 	return []symTest{
 		symTest{
-			Input:   `==`,
-			Expects: sym.Symbol{`==`, 0, 2, 0, sym.EQUAL},
+			Input:     `==`,
+			ExpectSym: sym.Symbol{`==`, 0, 2, 0, sym.EQUAL},
 		},
 		symTest{
-			Input:   `!=`,
-			Expects: sym.Symbol{`!=`, 0, 2, 0, sym.NOT_EQUAL},
+			Input:     `!=`,
+			ExpectSym: sym.Symbol{`!=`, 0, 2, 0, sym.NOT_EQUAL},
 		},
 		symTest{
-			Input:   `<`,
-			Expects: sym.Symbol{`<`, 0, 1, 0, sym.LESS_THAN},
+			Input:     `<`,
+			ExpectSym: sym.Symbol{`<`, 0, 1, 0, sym.LESS_THAN},
 		},
 		symTest{
-			Input:   `<=`,
-			Expects: sym.Symbol{`<=`, 0, 2, 0, sym.LESS_THAN_OR_EQUAL},
+			Input:     `<=`,
+			ExpectSym: sym.Symbol{`<=`, 0, 2, 0, sym.LESS_THAN_OR_EQUAL},
 		},
 		symTest{
-			Input:   `>`,
-			Expects: sym.Symbol{`>`, 0, 1, 0, sym.GREATER_THAN},
+			Input:     `>`,
+			ExpectSym: sym.Symbol{`>`, 0, 1, 0, sym.GREATER_THAN},
 		},
 		symTest{
-			Input:   `>=`,
-			Expects: sym.Symbol{`>=`, 0, 2, 0, sym.GREATER_THAN_OR_EQUAL},
+			Input:     `>=`,
+			ExpectSym: sym.Symbol{`>=`, 0, 2, 0, sym.GREATER_THAN_OR_EQUAL},
 		},
 		symTest{
-			Input:   `||`,
-			Expects: sym.Symbol{`||`, 0, 2, 0, sym.OR},
+			Input:     `||`,
+			ExpectSym: sym.Symbol{`||`, 0, 2, 0, sym.OR},
 		},
 		symTest{
-			Input:   `&&`,
-			Expects: sym.Symbol{`&&`, 0, 2, 0, sym.AND},
+			Input:     `&&`,
+			ExpectSym: sym.Symbol{`&&`, 0, 2, 0, sym.AND},
 		},
 		symTest{
-			Input:   `<-`,
-			Expects: sym.Symbol{`<-`, 0, 2, 0, sym.ASSIGNMENT},
+			Input:     `<-`,
+			ExpectSym: sym.Symbol{`<-`, 0, 2, 0, sym.ASSIGNMENT},
 		},
 		symTest{
-			Input:   `=>`,
-			Expects: sym.Symbol{`=>`, 0, 2, 0, sym.IF_TRUE_THEN},
+			Input:     `=>`,
+			ExpectSym: sym.Symbol{`=>`, 0, 2, 0, sym.IF_TRUE_THEN},
 		},
 		symTest{
-			Input:   `_`,
-			Expects: sym.Symbol{`_`, 0, 1, 0, sym.VOID},
+			Input:     `_`,
+			ExpectSym: sym.Symbol{`_`, 0, 1, 0, sym.VOID},
 		},
 		symTest{
-			Input:   `!`,
-			Expects: sym.Symbol{`!`, 0, 1, 0, sym.NEGATION},
+			Input:     `!`,
+			ExpectSym: sym.Symbol{`!`, 0, 1, 0, sym.NEGATION},
 		},
 		symTest{
-			Input:   `+`,
-			Expects: sym.Symbol{`+`, 0, 1, 0, sym.ADD},
+			Input:     `+`,
+			ExpectSym: sym.Symbol{`+`, 0, 1, 0, sym.ADD},
 		},
 		symTest{
-			Input:   `-`,
-			Expects: sym.Symbol{`-`, 0, 1, 0, sym.SUBTRACT},
+			Input:     `-`,
+			ExpectSym: sym.Symbol{`-`, 0, 1, 0, sym.SUBTRACT},
 		},
 		symTest{
-			Input:   `*`,
-			Expects: sym.Symbol{`*`, 0, 1, 0, sym.MULTIPLY},
+			Input:     `*`,
+			ExpectSym: sym.Symbol{`*`, 0, 1, 0, sym.MULTIPLY},
 		},
 		symTest{
-			Input:   `/`,
-			Expects: sym.Symbol{`/`, 0, 1, 0, sym.DIVIDE},
+			Input:     `/`,
+			ExpectSym: sym.Symbol{`/`, 0, 1, 0, sym.DIVIDE},
 		},
 		symTest{
-			Input:   `%`,
-			Expects: sym.Symbol{`%`, 0, 1, 0, sym.MODULO},
+			Input:     `%`,
+			ExpectSym: sym.Symbol{`%`, 0, 1, 0, sym.MODULO},
 		},
 		symTest{
-			Input:   `(`,
-			Expects: sym.Symbol{`(`, 0, 1, 0, sym.CURVED_BRACE_OPEN},
+			Input:     `(`,
+			ExpectSym: sym.Symbol{`(`, 0, 1, 0, sym.CURVED_BRACE_OPEN},
 		},
 		symTest{
-			Input:   `)`,
-			Expects: sym.Symbol{`)`, 0, 1, 0, sym.CURVED_BRACE_CLOSE},
+			Input:     `)`,
+			ExpectSym: sym.Symbol{`)`, 0, 1, 0, sym.CURVED_BRACE_CLOSE},
 		},
 		symTest{
-			Input:   `[`,
-			Expects: sym.Symbol{`[`, 0, 1, 0, sym.SQUARE_BRACE_OPEN},
+			Input:     `[`,
+			ExpectSym: sym.Symbol{`[`, 0, 1, 0, sym.SQUARE_BRACE_OPEN},
 		},
 		symTest{
-			Input:   `]`,
-			Expects: sym.Symbol{`]`, 0, 1, 0, sym.SQUARE_BRACE_CLOSE},
+			Input:     `]`,
+			ExpectSym: sym.Symbol{`]`, 0, 1, 0, sym.SQUARE_BRACE_CLOSE},
 		},
 		symTest{
-			Input:   `,`,
-			Expects: sym.Symbol{`,`, 0, 1, 0, sym.VALUE_SEPARATOR},
+			Input:     `,`,
+			ExpectSym: sym.Symbol{`,`, 0, 1, 0, sym.VALUE_SEPARATOR},
 		},
 		symTest{
-			Input:   `:`,
-			Expects: sym.Symbol{`:`, 0, 1, 0, sym.KEY_VALUE_SEPARATOR},
+			Input:     `:`,
+			ExpectSym: sym.Symbol{`:`, 0, 1, 0, sym.KEY_VALUE_SEPARATOR},
 		},
 		symTest{
-			Input:   `..`,
-			Expects: sym.Symbol{`..`, 0, 2, 0, sym.RANGE},
+			Input:     `..`,
+			ExpectSym: sym.Symbol{`..`, 0, 2, 0, sym.RANGE},
 		},
 		symTest{
 			Input:     `=`,

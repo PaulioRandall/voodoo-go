@@ -18,7 +18,7 @@ func TestScannerApi(t *testing.T) {
 			require.NotNil(t, err)
 		} else {
 			require.Nil(t, err)
-			assert.Equal(t, tc.Expects, s)
+			assert.Equal(t, tc.ExpectSyms, s)
 		}
 	}
 }
@@ -26,15 +26,15 @@ func TestScannerApi(t *testing.T) {
 type symTest struct {
 	Line      int
 	Input     string
-	Expects   sym.Symbol
+	ExpectSym sym.Symbol
 	ExpectErr bool
 }
 
 type symArrayTest struct {
-	Line      int
-	Input     string
-	Expects   []sym.Symbol
-	ExpectErr bool
+	Line       int
+	Input      string
+	ExpectSyms []sym.Symbol
+	ExpectErr  bool
 }
 
 func apiTests() []symArrayTest {
@@ -45,7 +45,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `x <- 1`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`x`, 0, 1, 0, sym.VARIABLE},
 				sym.Symbol{` `, 1, 2, 0, sym.WHITESPACE},
 				sym.Symbol{`<-`, 2, 4, 0, sym.ASSIGNMENT},
@@ -55,7 +55,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `y <- -1.1`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`y`, 0, 1, 0, sym.VARIABLE},
 				sym.Symbol{` `, 1, 2, 0, sym.WHITESPACE},
 				sym.Symbol{`<-`, 2, 4, 0, sym.ASSIGNMENT},
@@ -67,7 +67,7 @@ func apiTests() []symArrayTest {
 		symArrayTest{
 			Line:  123,
 			Input: `x <- true`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`x`, 0, 1, 123, sym.VARIABLE},
 				sym.Symbol{` `, 1, 2, 123, sym.WHITESPACE},
 				sym.Symbol{`<-`, 2, 4, 123, sym.ASSIGNMENT},
@@ -77,7 +77,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `@Println["Whelp"]`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`@Println`, 0, 8, 0, sym.SOURCERY},
 				sym.Symbol{`[`, 8, 9, 0, sym.SQUARE_BRACE_OPEN},
 				sym.Symbol{`"Whelp"`, 9, 16, 0, sym.STRING},
@@ -86,7 +86,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: "\tresult <- spell(a, b) r, err     ",
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{"\t", 0, 1, 0, sym.WHITESPACE},
 				sym.Symbol{`result`, 1, 7, 0, sym.VARIABLE},
 				sym.Symbol{` `, 7, 8, 0, sym.WHITESPACE},
@@ -109,7 +109,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `keyValue <- "pi": 3.1419`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`keyValue`, 0, 8, 0, sym.VARIABLE},
 				sym.Symbol{` `, 8, 9, 0, sym.WHITESPACE},
 				sym.Symbol{`<-`, 9, 11, 0, sym.ASSIGNMENT},
@@ -122,7 +122,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `alphabet <- ["a", "b", "c"]`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`alphabet`, 0, 8, 0, sym.VARIABLE},
 				sym.Symbol{` `, 8, 9, 0, sym.WHITESPACE},
 				sym.Symbol{`<-`, 9, 11, 0, sym.ASSIGNMENT},
@@ -140,7 +140,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `loop i <- 0..5`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`loop`, 0, 4, 0, sym.KEYWORD_LOOP},
 				sym.Symbol{` `, 4, 5, 0, sym.WHITESPACE},
 				sym.Symbol{`i`, 5, 6, 0, sym.VARIABLE},
@@ -154,7 +154,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `x<-2 // The value of x is now 2`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`x`, 0, 1, 0, sym.VARIABLE},
 				sym.Symbol{`<-`, 1, 3, 0, sym.ASSIGNMENT},
 				sym.Symbol{`2`, 3, 4, 0, sym.NUMBER},
@@ -164,7 +164,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `isLandscape<-length<height`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`isLandscape`, 0, 11, 0, sym.VARIABLE},
 				sym.Symbol{`<-`, 11, 13, 0, sym.ASSIGNMENT},
 				sym.Symbol{`length`, 13, 19, 0, sym.VARIABLE},
@@ -174,7 +174,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `x<-3.14*(1-2+3)`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`x`, 0, 1, 0, sym.VARIABLE},
 				sym.Symbol{`<-`, 1, 3, 0, sym.ASSIGNMENT},
 				sym.Symbol{`3.14`, 3, 7, 0, sym.NUMBER},
@@ -190,7 +190,7 @@ func apiTests() []symArrayTest {
 		},
 		symArrayTest{
 			Input: `!x => y <- _`,
-			Expects: []sym.Symbol{
+			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`!`, 0, 1, 0, sym.NEGATION},
 				sym.Symbol{`x`, 1, 2, 0, sym.VARIABLE},
 				sym.Symbol{` `, 2, 3, 0, sym.WHITESPACE},

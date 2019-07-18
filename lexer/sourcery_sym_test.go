@@ -21,7 +21,7 @@ func TestSourcerySym(t *testing.T) {
 		} else {
 			assert.Nil(t, err)
 			if assert.NotNil(t, s) {
-				assert.Equal(t, tc.Expects, *s)
+				assert.Equal(t, tc.ExpectSym, *s)
 			}
 		}
 	}
@@ -30,16 +30,16 @@ func TestSourcerySym(t *testing.T) {
 func sourcerySymTests() []symTest {
 	return []symTest{
 		symTest{
-			Input:   `@P`,
-			Expects: sym.Symbol{`@P`, 0, 2, 0, sym.SOURCERY},
+			Input:     `@P`,
+			ExpectSym: sym.Symbol{`@P`, 0, 2, 0, sym.SOURCERY},
 		},
 		symTest{
-			Input:   `@Println`,
-			Expects: sym.Symbol{`@Println`, 0, 8, 0, sym.SOURCERY},
+			Input:     `@Println`,
+			ExpectSym: sym.Symbol{`@Println`, 0, 8, 0, sym.SOURCERY},
 		},
 		symTest{
-			Input:   `@a__12__xy__`,
-			Expects: sym.Symbol{`@a__12__xy__`, 0, 12, 0, sym.SOURCERY},
+			Input:     `@a__12__xy__`,
+			ExpectSym: sym.Symbol{`@a__12__xy__`, 0, 12, 0, sym.SOURCERY},
 		},
 	}
 }
