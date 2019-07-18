@@ -30,20 +30,20 @@ type symTest struct {
 	ExpectErr bool
 }
 
-type scanLinesTest struct {
+type scanLineTest struct {
 	Line       int
 	Input      string
 	ExpectSyms []symbol.Symbol
 	ExpectErr  bool
 }
 
-func apiTests() []scanLinesTest {
-	return []scanLinesTest{
-		scanLinesTest{
+func apiTests() []scanLineTest {
+	return []scanLineTest{
+		scanLineTest{
 			Input:     `x # 1`,
 			ExpectErr: true,
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `x <- 1`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`x`, 0, 1, 0, symbol.VARIABLE},
@@ -53,7 +53,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`1`, 5, 6, 0, symbol.NUMBER},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `y <- -1.1`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`y`, 0, 1, 0, symbol.VARIABLE},
@@ -64,7 +64,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`1.1`, 6, 9, 0, symbol.NUMBER},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Line:  123,
 			Input: `x <- true`,
 			ExpectSyms: []symbol.Symbol{
@@ -75,7 +75,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`true`, 5, 9, 123, symbol.BOOLEAN},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `@Println["Whelp"]`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`@Println`, 0, 8, 0, symbol.SOURCERY},
@@ -84,7 +84,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`]`, 16, 17, 0, symbol.SQUARE_BRACE_CLOSE},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: "\tresult <- spell(a, b) r, err     ",
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{"\t", 0, 1, 0, symbol.WHITESPACE},
@@ -107,7 +107,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`     `, 29, 34, 0, symbol.WHITESPACE},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `keyValue <- "pi": 3.1419`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`keyValue`, 0, 8, 0, symbol.VARIABLE},
@@ -120,7 +120,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`3.1419`, 18, 24, 0, symbol.NUMBER},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `alphabet <- ["a", "b", "c"]`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`alphabet`, 0, 8, 0, symbol.VARIABLE},
@@ -138,7 +138,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`]`, 26, 27, 0, symbol.SQUARE_BRACE_CLOSE},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `loop i <- 0..5`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
@@ -152,7 +152,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`5`, 13, 14, 0, symbol.NUMBER},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `x<-2 // The value of x is now 2`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`x`, 0, 1, 0, symbol.VARIABLE},
@@ -162,7 +162,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`// The value of x is now 2`, 5, 31, 0, symbol.COMMENT},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `isLandscape<-length<height`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`isLandscape`, 0, 11, 0, symbol.VARIABLE},
@@ -172,7 +172,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`height`, 20, 26, 0, symbol.VARIABLE},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `x<-3.14*(1-2+3)`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`x`, 0, 1, 0, symbol.VARIABLE},
@@ -188,7 +188,7 @@ func apiTests() []scanLinesTest {
 				symbol.Symbol{`)`, 14, 15, 0, symbol.CURVED_BRACE_CLOSE},
 			},
 		},
-		scanLinesTest{
+		scanLineTest{
 			Input: `!x => y <- _`,
 			ExpectSyms: []symbol.Symbol{
 				symbol.Symbol{`!`, 0, 1, 0, symbol.NEGATION},
