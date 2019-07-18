@@ -1,22 +1,13 @@
 package lexer
 
 import (
-	"strconv"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestCommentSym(t *testing.T) {
-	for i, tc := range commentSymTests() {
-		t.Log("commentSym() test case: " + strconv.Itoa(i+1))
-
-		itr := runer.NewRuneItr(tc.Input)
-		s := commentSym(itr)
-		assert.Equal(t, tc.ExpectSym, *s)
-	}
+	symFuncTest(t, "commentSym", commentSym, commentSymTests())
 }
 
 func commentSymTests() []symTest {

@@ -1,22 +1,13 @@
 package lexer
 
 import (
-	"strconv"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestWordSym(t *testing.T) {
-	for i, tc := range wordSymTests() {
-		t.Log("wordSym() test case: " + strconv.Itoa(i+1))
-
-		itr := runer.NewRuneItr(tc.Input)
-		s := wordSym(itr)
-		assert.Equal(t, tc.ExpectSym, *s)
-	}
+	symFuncTest(t, "wordSym", wordSym, wordSymTests())
 }
 
 func wordSymTests() []symTest {

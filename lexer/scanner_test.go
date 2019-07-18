@@ -55,9 +55,12 @@ func symErrFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTes
 		itr := runer.NewRuneItr(tc.Input)
 		s, err := f(itr)
 
-		if tc.ExpectErr {
+		if tc.ExpectErr != nil {
 			assert.NotNil(t, err)
 			require.Nil(t, s)
+			assert.NotEmpty(t, err.Error())
+			assert.Equal(t, tc.ExpectErr.Line(), err.Line())
+			assert.Equal(t, tc.ExpectErr.Col(), err.Col())
 		} else {
 			assert.Nil(t, err)
 			require.NotNil(t, s)
@@ -70,7 +73,7 @@ type symTest struct {
 	Line      int
 	Input     string
 	ExpectSym symbol.Symbol
-	ExpectErr bool
+	ExpectErr LexError
 }
 
 type scanLineTest struct {

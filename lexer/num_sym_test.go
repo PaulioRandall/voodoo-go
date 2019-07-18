@@ -42,7 +42,7 @@ func numSymTests() []symTest {
 		},
 		symTest{
 			Input:     `1_._2_._3`,
-			ExpectErr: true,
+			ExpectErr: expLexError{0, 6},
 		},
 	}
 }

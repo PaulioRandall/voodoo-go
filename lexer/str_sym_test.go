@@ -29,16 +29,8 @@ func strSymTests() []symTest {
 			ExpectSym: symbol.Symbol{`"\\\\\""`, 0, 8, 0, symbol.STRING},
 		},
 		symTest{
-			Input:     ``,
-			ExpectErr: true,
-		},
-		symTest{
-			Input:     `:(`,
-			ExpectErr: true,
-		},
-		symTest{
 			Input:     `"`,
-			ExpectErr: true,
+			ExpectErr: expLexError{0, 1},
 		},
 		symTest{
 			Input:     `"a"x`,
@@ -46,7 +38,7 @@ func strSymTests() []symTest {
 		},
 		symTest{
 			Input:     `"escaped \"`,
-			ExpectErr: true,
+			ExpectErr: expLexError{0, 11},
 		},
 	}
 }

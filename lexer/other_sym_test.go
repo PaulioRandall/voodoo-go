@@ -110,7 +110,7 @@ func otherSymTests() []symTest {
 		},
 		symTest{
 			Input:     `=`,
-			ExpectErr: true,
+			ExpectErr: expLexError{0, 1},
 		},
 	}
 }

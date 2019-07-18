@@ -1,22 +1,13 @@
 package lexer
 
 import (
-	"strconv"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestSpaceSym(t *testing.T) {
-	for i, tc := range spaceSymTests() {
-		t.Log("spaceSym() test case: " + strconv.Itoa(i+1))
-
-		itr := runer.NewRuneItr(tc.Input)
-		s := spaceSym(itr)
-		assert.Equal(t, tc.ExpectSym, *s)
-	}
+	symFuncTest(t, "spaceSym", spaceSym, spaceSymTests())
 }
 
 func spaceSymTests() []symTest {
