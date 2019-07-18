@@ -1,30 +1,13 @@
 package lexer
 
 import (
-	"strconv"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNumSym(t *testing.T) {
-	for i, tc := range numSymTests() {
-		t.Log("numSym() test case: " + strconv.Itoa(i+1))
-
-		itr := runer.NewRuneItr(tc.Input)
-		s, err := numSym(itr)
-
-		if tc.ExpectErr {
-			assert.NotNil(t, err)
-		} else {
-			assert.Nil(t, err)
-			if assert.NotNil(t, s) {
-				assert.Equal(t, tc.ExpectSym, *s)
-			}
-		}
-	}
+	symFuncTest(t, "numSym", numSym, numSymTests())
 }
 
 func numSymTests() []symTest {

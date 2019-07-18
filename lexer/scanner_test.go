@@ -31,7 +31,7 @@ func TestScannerApi(t *testing.T) {
 
 type symScanErrFunc func(*runer.RuneItr) (*symbol.Symbol, LexError)
 
-func SymFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTest) {
+func symFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTest) {
 	for i, tc := range tests {
 		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
 
