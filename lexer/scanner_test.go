@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,6 +25,26 @@ func TestScannerApi(t *testing.T) {
 		if tc.ExpectSyms != nil {
 			require.Nil(t, err)
 			assert.Equal(t, tc.ExpectSyms, s)
+		}
+	}
+}
+
+type symScanErrFunc func(*runer.RuneItr) (*symbol.Symbol, LexError)
+
+func SymFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTest) {
+	for i, tc := range tests {
+		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
+
+		itr := runer.NewRuneItr(tc.Input)
+		s, err := f(itr)
+
+		if tc.ExpectErr {
+			assert.NotNil(t, err)
+			require.Nil(t, s)
+		} else {
+			assert.Nil(t, err)
+			require.NotNil(t, s)
+			assert.Equal(t, tc.ExpectSym, *s)
 		}
 	}
 }
