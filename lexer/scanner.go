@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode"
 
-	sh "github.com/PaulioRandall/voodoo-go/shared"
+	"github.com/PaulioRandall/voodoo-go/shared"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
@@ -21,7 +21,7 @@ func ScanLine(line string, lineNum int) (r []symbol.Symbol, lxErr LexError) {
 		return
 	}
 
-	itr := sh.NewRuneItr(line)
+	itr := shared.NewRuneItr(line)
 
 	for itr.HasNext() {
 		var s *symbol.Symbol
@@ -61,7 +61,7 @@ func ScanLine(line string, lineNum int) (r []symbol.Symbol, lxErr LexError) {
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(itr *sh.RuneItr) *symbol.Symbol {
+func wordSym(itr *shared.RuneItr) *symbol.Symbol {
 
 	start := itr.Index()
 	str := extractWordStr(itr)
@@ -101,7 +101,7 @@ func wordSym(itr *sh.RuneItr) *symbol.Symbol {
 // numSym handles symbols that start with a unicode category Nd rune.
 // I.e. any number from 0 to 9, a number may resolve into a:
 // - literal number
-func numSym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
+func numSym(itr *shared.RuneItr) (s *symbol.Symbol, err LexError) {
 
 	start := itr.Index()
 	n, err := extractNum(itr)
@@ -121,7 +121,7 @@ func numSym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
 
 // extractNum extracts a number, as a string, from the supplied
 // iterator.
-func extractNum(itr *sh.RuneItr) (string, LexError) {
+func extractNum(itr *shared.RuneItr) (string, LexError) {
 	sb := strings.Builder{}
 
 	for itr.HasNext() {
@@ -147,7 +147,7 @@ func extractNum(itr *sh.RuneItr) (string, LexError) {
 // extractFractional extracts the fractional part of a number,
 // as a string, from the supplied iterator and returns the
 // number including the integer part.
-func extractFractional(itr *sh.RuneItr, sb *strings.Builder) (string, LexError) {
+func extractFractional(itr *shared.RuneItr, sb *strings.Builder) (string, LexError) {
 	for itr.HasNext() {
 		if itr.IsNext('.') {
 			m := "Numbers can't have two fractional parts"
@@ -168,7 +168,7 @@ func extractFractional(itr *sh.RuneItr, sb *strings.Builder) (string, LexError) 
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
 // - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *sh.RuneItr) *symbol.Symbol {
+func spaceSym(itr *shared.RuneItr) *symbol.Symbol {
 
 	start := itr.Index()
 	sb := strings.Builder{}
@@ -191,7 +191,7 @@ func spaceSym(itr *sh.RuneItr) *symbol.Symbol {
 // sourcerySym handles symbols that start with a at sign rune `@`.
 // Sourcery symbols may resolve into a:
 // - go function call
-func sourcerySym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
+func sourcerySym(itr *shared.RuneItr) (s *symbol.Symbol, err LexError) {
 
 	if !unicode.IsLetter(itr.PeekRelRune(1)) {
 		m := "Expected first rune after `@` to be a letter"
@@ -216,7 +216,7 @@ func sourcerySym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
 // strSym handles symbols that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
+func strSym(itr *shared.RuneItr) (s *symbol.Symbol, err LexError) {
 
 	start := itr.Index()
 	closed, str := extractStr(itr)
@@ -239,7 +239,7 @@ func strSym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
 
 // extractStr extracts a string literal from a string iterator
 // returning true if the last rune was escaped.
-func extractStr(itr *sh.RuneItr) (closed bool, s string) {
+func extractStr(itr *shared.RuneItr) (closed bool, s string) {
 
 	sb := strings.Builder{}
 	sb.WriteRune(itr.NextRune())
@@ -268,7 +268,7 @@ func extractStr(itr *sh.RuneItr) (closed bool, s string) {
 // commentSym handles symbols that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *sh.RuneItr) *symbol.Symbol {
+func commentSym(itr *shared.RuneItr) *symbol.Symbol {
 
 	start := itr.Index()
 	str := itr.RemainingStr()
@@ -288,7 +288,7 @@ func commentSym(itr *sh.RuneItr) *symbol.Symbol {
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
+func otherSym(itr *shared.RuneItr) (s *symbol.Symbol, err LexError) {
 
 	start := itr.Index()
 	symType := symbol.UNDEFINED
@@ -373,7 +373,7 @@ func otherSym(itr *sh.RuneItr) (s *symbol.Symbol, err LexError) {
 
 // extractWordStr iterates a rune iterator until a single word has
 // been extracted retruning the string.
-func extractWordStr(itr *sh.RuneItr) string {
+func extractWordStr(itr *shared.RuneItr) string {
 	sb := strings.Builder{}
 
 	for itr.HasNext() {

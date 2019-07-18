@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	sh "github.com/PaulioRandall/voodoo-go/shared"
+	"github.com/PaulioRandall/voodoo-go/shared"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
@@ -13,7 +13,7 @@ func TestCommentSym(t *testing.T) {
 	for i, tc := range commentSymTests() {
 		t.Log("commentSym() test case: " + strconv.Itoa(i+1))
 
-		itr := sh.NewRuneItr(tc.Input)
+		itr := shared.NewRuneItr(tc.Input)
 		s := commentSym(itr)
 		assert.Equal(t, tc.ExpectSym, *s)
 	}
