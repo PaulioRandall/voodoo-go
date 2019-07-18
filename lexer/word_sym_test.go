@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
-	sym "github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,55 +23,55 @@ func wordSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:     `a`,
-			ExpectSym: sym.Symbol{`a`, 0, 1, 0, sym.VARIABLE},
+			ExpectSym: symbol.Symbol{`a`, 0, 1, 0, symbol.VARIABLE},
 		},
 		symTest{
 			Input:     `abc`,
-			ExpectSym: sym.Symbol{`abc`, 0, 3, 0, sym.VARIABLE},
+			ExpectSym: symbol.Symbol{`abc`, 0, 3, 0, symbol.VARIABLE},
 		},
 		symTest{
 			Input:     `abc_123`,
-			ExpectSym: sym.Symbol{`abc_123`, 0, 7, 0, sym.VARIABLE},
+			ExpectSym: symbol.Symbol{`abc_123`, 0, 7, 0, symbol.VARIABLE},
 		},
 		symTest{
 			Input:     `a__________123456789`,
-			ExpectSym: sym.Symbol{`a__________123456789`, 0, 20, 0, sym.VARIABLE},
+			ExpectSym: symbol.Symbol{`a__________123456789`, 0, 20, 0, symbol.VARIABLE},
 		},
 		symTest{
 			Input:     `SCROLL`,
-			ExpectSym: sym.Symbol{`SCROLL`, 0, 6, 0, sym.KEYWORD_SCROLL},
+			ExpectSym: symbol.Symbol{`SCROLL`, 0, 6, 0, symbol.KEYWORD_SCROLL},
 		},
 		symTest{
 			Input:     `sPeLL`,
-			ExpectSym: sym.Symbol{`sPeLL`, 0, 5, 0, sym.KEYWORD_SPELL},
+			ExpectSym: symbol.Symbol{`sPeLL`, 0, 5, 0, symbol.KEYWORD_SPELL},
 		},
 		symTest{
 			Input:     `loop`,
-			ExpectSym: sym.Symbol{`loop`, 0, 4, 0, sym.KEYWORD_LOOP},
+			ExpectSym: symbol.Symbol{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
 		},
 		symTest{
 			Input:     `when`,
-			ExpectSym: sym.Symbol{`when`, 0, 4, 0, sym.KEYWORD_WHEN},
+			ExpectSym: symbol.Symbol{`when`, 0, 4, 0, symbol.KEYWORD_WHEN},
 		},
 		symTest{
 			Input:     `end`,
-			ExpectSym: sym.Symbol{`end`, 0, 3, 0, sym.KEYWORD_END},
+			ExpectSym: symbol.Symbol{`end`, 0, 3, 0, symbol.KEYWORD_END},
 		},
 		symTest{
 			Input:     `key`,
-			ExpectSym: sym.Symbol{`key`, 0, 3, 0, sym.KEYWORD_KEY},
+			ExpectSym: symbol.Symbol{`key`, 0, 3, 0, symbol.KEYWORD_KEY},
 		},
 		symTest{
 			Input:     `val`,
-			ExpectSym: sym.Symbol{`val`, 0, 3, 0, sym.KEYWORD_VAL},
+			ExpectSym: symbol.Symbol{`val`, 0, 3, 0, symbol.KEYWORD_VAL},
 		},
 		symTest{
 			Input:     `true`,
-			ExpectSym: sym.Symbol{`true`, 0, 4, 0, sym.BOOLEAN},
+			ExpectSym: symbol.Symbol{`true`, 0, 4, 0, symbol.BOOLEAN},
 		},
 		symTest{
 			Input:     `false`,
-			ExpectSym: sym.Symbol{`false`, 0, 5, 0, sym.BOOLEAN},
+			ExpectSym: symbol.Symbol{`false`, 0, 5, 0, symbol.BOOLEAN},
 		},
 	}
 }

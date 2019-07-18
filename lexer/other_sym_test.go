@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sh "github.com/PaulioRandall/voodoo-go/shared"
-	sym "github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,99 +31,99 @@ func otherSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:     `==`,
-			ExpectSym: sym.Symbol{`==`, 0, 2, 0, sym.EQUAL},
+			ExpectSym: symbol.Symbol{`==`, 0, 2, 0, symbol.EQUAL},
 		},
 		symTest{
 			Input:     `!=`,
-			ExpectSym: sym.Symbol{`!=`, 0, 2, 0, sym.NOT_EQUAL},
+			ExpectSym: symbol.Symbol{`!=`, 0, 2, 0, symbol.NOT_EQUAL},
 		},
 		symTest{
 			Input:     `<`,
-			ExpectSym: sym.Symbol{`<`, 0, 1, 0, sym.LESS_THAN},
+			ExpectSym: symbol.Symbol{`<`, 0, 1, 0, symbol.LESS_THAN},
 		},
 		symTest{
 			Input:     `<=`,
-			ExpectSym: sym.Symbol{`<=`, 0, 2, 0, sym.LESS_THAN_OR_EQUAL},
+			ExpectSym: symbol.Symbol{`<=`, 0, 2, 0, symbol.LESS_THAN_OR_EQUAL},
 		},
 		symTest{
 			Input:     `>`,
-			ExpectSym: sym.Symbol{`>`, 0, 1, 0, sym.GREATER_THAN},
+			ExpectSym: symbol.Symbol{`>`, 0, 1, 0, symbol.GREATER_THAN},
 		},
 		symTest{
 			Input:     `>=`,
-			ExpectSym: sym.Symbol{`>=`, 0, 2, 0, sym.GREATER_THAN_OR_EQUAL},
+			ExpectSym: symbol.Symbol{`>=`, 0, 2, 0, symbol.GREATER_THAN_OR_EQUAL},
 		},
 		symTest{
 			Input:     `||`,
-			ExpectSym: sym.Symbol{`||`, 0, 2, 0, sym.OR},
+			ExpectSym: symbol.Symbol{`||`, 0, 2, 0, symbol.OR},
 		},
 		symTest{
 			Input:     `&&`,
-			ExpectSym: sym.Symbol{`&&`, 0, 2, 0, sym.AND},
+			ExpectSym: symbol.Symbol{`&&`, 0, 2, 0, symbol.AND},
 		},
 		symTest{
 			Input:     `<-`,
-			ExpectSym: sym.Symbol{`<-`, 0, 2, 0, sym.ASSIGNMENT},
+			ExpectSym: symbol.Symbol{`<-`, 0, 2, 0, symbol.ASSIGNMENT},
 		},
 		symTest{
 			Input:     `=>`,
-			ExpectSym: sym.Symbol{`=>`, 0, 2, 0, sym.IF_TRUE_THEN},
+			ExpectSym: symbol.Symbol{`=>`, 0, 2, 0, symbol.IF_TRUE_THEN},
 		},
 		symTest{
 			Input:     `_`,
-			ExpectSym: sym.Symbol{`_`, 0, 1, 0, sym.VOID},
+			ExpectSym: symbol.Symbol{`_`, 0, 1, 0, symbol.VOID},
 		},
 		symTest{
 			Input:     `!`,
-			ExpectSym: sym.Symbol{`!`, 0, 1, 0, sym.NEGATION},
+			ExpectSym: symbol.Symbol{`!`, 0, 1, 0, symbol.NEGATION},
 		},
 		symTest{
 			Input:     `+`,
-			ExpectSym: sym.Symbol{`+`, 0, 1, 0, sym.ADD},
+			ExpectSym: symbol.Symbol{`+`, 0, 1, 0, symbol.ADD},
 		},
 		symTest{
 			Input:     `-`,
-			ExpectSym: sym.Symbol{`-`, 0, 1, 0, sym.SUBTRACT},
+			ExpectSym: symbol.Symbol{`-`, 0, 1, 0, symbol.SUBTRACT},
 		},
 		symTest{
 			Input:     `*`,
-			ExpectSym: sym.Symbol{`*`, 0, 1, 0, sym.MULTIPLY},
+			ExpectSym: symbol.Symbol{`*`, 0, 1, 0, symbol.MULTIPLY},
 		},
 		symTest{
 			Input:     `/`,
-			ExpectSym: sym.Symbol{`/`, 0, 1, 0, sym.DIVIDE},
+			ExpectSym: symbol.Symbol{`/`, 0, 1, 0, symbol.DIVIDE},
 		},
 		symTest{
 			Input:     `%`,
-			ExpectSym: sym.Symbol{`%`, 0, 1, 0, sym.MODULO},
+			ExpectSym: symbol.Symbol{`%`, 0, 1, 0, symbol.MODULO},
 		},
 		symTest{
 			Input:     `(`,
-			ExpectSym: sym.Symbol{`(`, 0, 1, 0, sym.CURVED_BRACE_OPEN},
+			ExpectSym: symbol.Symbol{`(`, 0, 1, 0, symbol.CURVED_BRACE_OPEN},
 		},
 		symTest{
 			Input:     `)`,
-			ExpectSym: sym.Symbol{`)`, 0, 1, 0, sym.CURVED_BRACE_CLOSE},
+			ExpectSym: symbol.Symbol{`)`, 0, 1, 0, symbol.CURVED_BRACE_CLOSE},
 		},
 		symTest{
 			Input:     `[`,
-			ExpectSym: sym.Symbol{`[`, 0, 1, 0, sym.SQUARE_BRACE_OPEN},
+			ExpectSym: symbol.Symbol{`[`, 0, 1, 0, symbol.SQUARE_BRACE_OPEN},
 		},
 		symTest{
 			Input:     `]`,
-			ExpectSym: sym.Symbol{`]`, 0, 1, 0, sym.SQUARE_BRACE_CLOSE},
+			ExpectSym: symbol.Symbol{`]`, 0, 1, 0, symbol.SQUARE_BRACE_CLOSE},
 		},
 		symTest{
 			Input:     `,`,
-			ExpectSym: sym.Symbol{`,`, 0, 1, 0, sym.VALUE_SEPARATOR},
+			ExpectSym: symbol.Symbol{`,`, 0, 1, 0, symbol.VALUE_SEPARATOR},
 		},
 		symTest{
 			Input:     `:`,
-			ExpectSym: sym.Symbol{`:`, 0, 1, 0, sym.KEY_VALUE_SEPARATOR},
+			ExpectSym: symbol.Symbol{`:`, 0, 1, 0, symbol.KEY_VALUE_SEPARATOR},
 		},
 		symTest{
 			Input:     `..`,
-			ExpectSym: sym.Symbol{`..`, 0, 2, 0, sym.RANGE},
+			ExpectSym: symbol.Symbol{`..`, 0, 2, 0, symbol.RANGE},
 		},
 		symTest{
 			Input:     `=`,
