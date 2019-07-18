@@ -7,15 +7,15 @@ import (
 	"os"
 	"time"
 
-	in "github.com/PaulioRandall/voodoo-go/interpreter"
-	sc "github.com/PaulioRandall/voodoo-go/scroll"
-	sh "github.com/PaulioRandall/voodoo-go/shared"
+	"github.com/PaulioRandall/voodoo-go/interpreter"
+	"github.com/PaulioRandall/voodoo-go/scroll"
+	"github.com/PaulioRandall/voodoo-go/shared"
 )
 
 // main is the entry point for this script. It wraps the standard Go format,
 // build, test, run, and install operations specifically for this project.
 func main() {
-	stopWatch := sh.StopWatch{}
+	stopWatch := shared.StopWatch{}
 	stopWatch.Start()
 	fmt.Printf("Started\t%v\n\n", stopWatch.Started.UTC())
 
@@ -71,15 +71,15 @@ func badSyntax() {
 
 // exeScroll loads then executes the scroll supplied as a parameter.
 func exeScroll() {
-	scrollPath := getScrollPath()
-	scrollArgs := getScrollArgs()
+	scPath := getScrollPath()
+	scArgs := getScrollArgs()
 
-	scroll, err := sc.LoadScroll(scrollPath)
+	sc, err := scroll.LoadScroll(scPath)
 	if err != nil {
 		panic(err)
 	}
 
-	exitCode, err := in.Execute(scroll, scrollArgs)
+	exitCode, err := interpreter.Execute(sc, scArgs)
 	if err != nil {
 		// TODO: Handle when error returned.
 		panic(err)
