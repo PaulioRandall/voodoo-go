@@ -1,28 +1,28 @@
 package interpreter
 
 import (
-	lx "github.com/PaulioRandall/voodoo-go/lexer"
-	sc "github.com/PaulioRandall/voodoo-go/scroll"
-	sh "github.com/PaulioRandall/voodoo-go/shared"
-	sym "github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/lexer"
+	"github.com/PaulioRandall/voodoo-go/scroll"
+	"github.com/PaulioRandall/voodoo-go/shared"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 // Execute runs a Voodoo scroll.
-func Execute(scroll *sc.Scroll, scrollArgs []string) (sh.ExitCode, error) {
+func Execute(sc *scroll.Scroll, scArgs []string) (shared.ExitCode, error) {
 
-	line := scroll.Next(nil)
-	line = scroll.Next(line) // Ignoring first line, shebang
+	line := sc.Next(nil)
+	line = sc.Next(line) // Ignoring first line, shebang
 
 	for line != nil {
 
-		s, err := lx.ScanLine(line.Val, line.Num)
+		s, err := lexer.ScanLine(line.Val, line.Num)
 		if err != nil {
 			return 1, err
 		}
 
-		sym.PrintlnSymbols(s)
+		symbol.PrintlnSymbols(s)
 
-		line = scroll.Next(line)
+		line = sc.Next(line)
 	}
 
 	return 0, nil
