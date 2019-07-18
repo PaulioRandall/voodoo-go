@@ -64,52 +64,54 @@ func emptyLineSyms(lineNum int) []sym.Symbol {
 	}
 }
 
-// initSym creates a new symbol with start index and line number
-// initialised.
-func initSym(start int) *sym.Symbol {
-	return &sym.Symbol{
-		Start: start,
-	}
-}
-
 // wordSym handles symbols that start with a unicode category L rune.
 // I.e. a letter from any alphabet, a word may resolve into a:
 // - variable name
 // - keyword
 // - boolean value (`true` or `false`)
-func wordSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
+func wordSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	if !itr.IsNextLetter() {
 		m := "Expected first rune to be a letter"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	s := extractWord(itr)
+	start := itr.Index()
+	str := extractWordStr(itr)
+	symType := sym.UNDEFINED
 
-	switch strings.ToLower(s.Val) {
+	switch strings.ToLower(str) {
 	case `scroll`:
-		s.Type = sym.KEYWORD_SCROLL
+		symType = sym.KEYWORD_SCROLL
 	case `spell`:
-		s.Type = sym.KEYWORD_SPELL
+		symType = sym.KEYWORD_SPELL
 	case `loop`:
-		s.Type = sym.KEYWORD_LOOP
+		symType = sym.KEYWORD_LOOP
 	case `when`:
-		s.Type = sym.KEYWORD_WHEN
+		symType = sym.KEYWORD_WHEN
 	case `end`:
-		s.Type = sym.KEYWORD_END
+		symType = sym.KEYWORD_END
 	case `key`:
-		s.Type = sym.KEYWORD_KEY
+		symType = sym.KEYWORD_KEY
 	case `val`:
-		s.Type = sym.KEYWORD_VAL
+		symType = sym.KEYWORD_VAL
 	case `true`:
-		s.Type = sym.BOOLEAN
+		symType = sym.BOOLEAN
 	case `false`:
-		s.Type = sym.BOOLEAN
+		symType = sym.BOOLEAN
 	default:
-		s.Type = sym.VARIABLE
+		symType = sym.VARIABLE
 	}
 
-	return s, nil
+	s = &sym.Symbol{
+		Val:   str,
+		Start: start,
+		End:   itr.Index(),
+		Type:  symType,
+	}
+
+	return
 }
 
 // numSym handles symbols that start with a unicode category Nd rune.
@@ -336,19 +338,21 @@ func commentSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
+func otherSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	if !itr.HasNext() {
 		m := "Expected an unfinished iterator"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	s := initSym(itr.Index())
-
+	start := itr.Index()
+	symType := sym.UNDEFINED
 	runeCount := 0
-	set := func(t sym.SymbolType, runesInOperator int) {
-		s.Type = t
-		runeCount = runesInOperator
+
+	set := func(t sym.SymbolType, totalRunes int) {
+		symType = t
+		runeCount = totalRunes
 	}
 
 	switch {
@@ -403,28 +407,24 @@ func otherSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
 	default:
 		ru := itr.NextRune()
 		m := "I don't know what this symbol means '" + string(ru) + "'"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	str, err := itr.NextStr(runeCount)
-	if err != nil {
-		lxErr := NewLexError(err.Error(), itr.Index())
-		return nil, lxErr
+	str, e := itr.NextStr(runeCount)
+	if e != nil {
+		err = NewLexError(err.Error(), itr.Index())
+		return
 	}
 
-	s.Val = str
-	s.End = itr.Index()
+	s = &sym.Symbol{
+		Val:   str,
+		Start: start,
+		End:   itr.Index(),
+		Type:  symType,
+	}
 
-	return s, nil
-}
-
-// extractWord iterates a rune iterator until a single word has been
-// extracted returning it as a symbol.
-func extractWord(itr *sh.RuneItr) *sym.Symbol {
-	s := initSym(itr.Index())
-	s.Val = extractWordStr(itr)
-	s.End = itr.Index()
-	return s
+	return
 }
 
 // extractWordStr iterates a rune iterator until a single word has
