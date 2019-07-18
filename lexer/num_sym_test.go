@@ -7,7 +7,7 @@ import (
 )
 
 func TestNumSym(t *testing.T) {
-	symFuncTest(t, "numSym", numSym, numSymTests())
+	symErrFuncTest(t, "numSym", numSym, numSymTests())
 }
 
 func numSymTests() []symTest {

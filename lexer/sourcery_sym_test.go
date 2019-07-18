@@ -7,7 +7,7 @@ import (
 )
 
 func TestSourcerySym(t *testing.T) {
-	symFuncTest(t, "sourcerySym", sourcerySym, sourcerySymTests())
+	symErrFuncTest(t, "sourcerySym", sourcerySym, sourcerySymTests())
 }
 
 func sourcerySymTests() []symTest {

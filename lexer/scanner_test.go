@@ -29,9 +29,26 @@ func TestScannerApi(t *testing.T) {
 	}
 }
 
+type symScanFunc func(*runer.RuneItr) *symbol.Symbol
+
+func symFuncTest(t *testing.T, fName string, f symScanFunc, tests []symTest) {
+	for i, tc := range tests {
+		require.NotNil(t, tc.ExpectSym)
+		require.Nil(t, tc.ExpectErr)
+
+		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
+
+		itr := runer.NewRuneItr(tc.Input)
+		s := f(itr)
+
+		require.NotNil(t, s)
+		assert.Equal(t, tc.ExpectSym, *s)
+	}
+}
+
 type symScanErrFunc func(*runer.RuneItr) (*symbol.Symbol, LexError)
 
-func symFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTest) {
+func symErrFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTest) {
 	for i, tc := range tests {
 		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
 
