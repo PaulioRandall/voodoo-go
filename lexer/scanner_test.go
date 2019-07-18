@@ -6,6 +6,7 @@ import (
 
 	sym "github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestScannerApi(t *testing.T) {
@@ -14,9 +15,9 @@ func TestScannerApi(t *testing.T) {
 		s, err := ScanLine(tc.Input, tc.Line)
 
 		if tc.ExpectErr {
-			assert.NotNil(t, err)
+			require.NotNil(t, err)
 		} else {
-			assert.Nil(t, err)
+			require.Nil(t, err)
 			assert.Equal(t, tc.Expects, s)
 		}
 	}
@@ -38,6 +39,10 @@ type symArrayTest struct {
 
 func apiTests() []symArrayTest {
 	return []symArrayTest{
+		symArrayTest{
+			Input:     `x # 1`,
+			ExpectErr: true,
+		},
 		symArrayTest{
 			Input: `x <- 1`,
 			Expects: []sym.Symbol{
