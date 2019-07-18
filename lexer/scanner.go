@@ -235,9 +235,10 @@ func sourcerySym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	start := itr.Index()
 	firstLetter := string(itr.NextRune())
+	val := firstLetter + extractWordStr(itr)
 
 	s = &sym.Symbol{
-		Val:   firstLetter + extractWordStr(itr),
+		Val:   val,
 		Start: start,
 		End:   itr.Index(),
 		Type:  sym.SOURCERY,
@@ -249,26 +250,31 @@ func sourcerySym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 // strSym handles symbols that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(itr *sh.RuneItr) (*sym.Symbol, LexError) {
+func strSym(itr *sh.RuneItr) (s *sym.Symbol, err LexError) {
 
 	if !itr.IsNext('"') {
 		m := "Expected first rune to be `\"`"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	s := initSym(itr.Index())
+	start := itr.Index()
 	isEscaped, str := extractStr(itr)
 
 	if isEscaped || len(str) < 2 || str[len(str)-1] != '"' {
 		m := "Did someone forget to close a string literal?!"
-		return nil, NewLexError(m, itr.Index())
+		err = NewLexError(m, itr.Index())
+		return
 	}
 
-	s.Val = str
-	s.End = itr.Index()
-	s.Type = sym.STRING
+	s = &sym.Symbol{
+		Val:   str,
+		Start: start,
+		End:   itr.Index(),
+		Type:  sym.STRING,
+	}
 
-	return s, nil
+	return
 }
 
 // extractStr extracts a string literal from a string iterator
