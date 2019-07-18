@@ -30,20 +30,20 @@ type symTest struct {
 	ExpectErr bool
 }
 
-type symArrayTest struct {
+type scanLinesTest struct {
 	Line       int
 	Input      string
 	ExpectSyms []sym.Symbol
 	ExpectErr  bool
 }
 
-func apiTests() []symArrayTest {
-	return []symArrayTest{
-		symArrayTest{
+func apiTests() []scanLinesTest {
+	return []scanLinesTest{
+		scanLinesTest{
 			Input:     `x # 1`,
 			ExpectErr: true,
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `x <- 1`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`x`, 0, 1, 0, sym.VARIABLE},
@@ -53,7 +53,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`1`, 5, 6, 0, sym.NUMBER},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `y <- -1.1`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`y`, 0, 1, 0, sym.VARIABLE},
@@ -64,7 +64,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`1.1`, 6, 9, 0, sym.NUMBER},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Line:  123,
 			Input: `x <- true`,
 			ExpectSyms: []sym.Symbol{
@@ -75,7 +75,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`true`, 5, 9, 123, sym.BOOLEAN},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `@Println["Whelp"]`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`@Println`, 0, 8, 0, sym.SOURCERY},
@@ -84,7 +84,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`]`, 16, 17, 0, sym.SQUARE_BRACE_CLOSE},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: "\tresult <- spell(a, b) r, err     ",
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{"\t", 0, 1, 0, sym.WHITESPACE},
@@ -107,7 +107,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`     `, 29, 34, 0, sym.WHITESPACE},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `keyValue <- "pi": 3.1419`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`keyValue`, 0, 8, 0, sym.VARIABLE},
@@ -120,7 +120,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`3.1419`, 18, 24, 0, sym.NUMBER},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `alphabet <- ["a", "b", "c"]`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`alphabet`, 0, 8, 0, sym.VARIABLE},
@@ -138,7 +138,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`]`, 26, 27, 0, sym.SQUARE_BRACE_CLOSE},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `loop i <- 0..5`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`loop`, 0, 4, 0, sym.KEYWORD_LOOP},
@@ -152,7 +152,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`5`, 13, 14, 0, sym.NUMBER},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `x<-2 // The value of x is now 2`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`x`, 0, 1, 0, sym.VARIABLE},
@@ -162,7 +162,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`// The value of x is now 2`, 5, 31, 0, sym.COMMENT},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `isLandscape<-length<height`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`isLandscape`, 0, 11, 0, sym.VARIABLE},
@@ -172,7 +172,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`height`, 20, 26, 0, sym.VARIABLE},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `x<-3.14*(1-2+3)`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`x`, 0, 1, 0, sym.VARIABLE},
@@ -188,7 +188,7 @@ func apiTests() []symArrayTest {
 				sym.Symbol{`)`, 14, 15, 0, sym.CURVED_BRACE_CLOSE},
 			},
 		},
-		symArrayTest{
+		scanLinesTest{
 			Input: `!x => y <- _`,
 			ExpectSyms: []sym.Symbol{
 				sym.Symbol{`!`, 0, 1, 0, sym.NEGATION},
