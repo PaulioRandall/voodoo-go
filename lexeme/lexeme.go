@@ -19,7 +19,7 @@ const (
 	KEYWORD_END    // end
 	KEYWORD_KEY    // key
 	KEYWORD_VAL    // value
-	VARIABLE
+	IDENTIFIER
 	BOOLEAN  // true/false
 	NUMBER   // ##.###
 	STRING   // "blahblah"

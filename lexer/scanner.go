@@ -86,7 +86,7 @@ func wordLex(itr *runer.RuneItr) *lexeme.Lexeme {
 	case `false`:
 		t = lexeme.BOOLEAN
 	default:
-		t = lexeme.VARIABLE
+		t = lexeme.IDENTIFIER
 	}
 
 	return &lexeme.Lexeme{

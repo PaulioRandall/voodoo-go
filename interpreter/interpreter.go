@@ -24,7 +24,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 		lexeme.PrintlnLexemes(l)
 
-		// NEXT: Rename 'symbol' to 'lexeme'
+		// NEXT:
 
 		line = sc.Next(line)
 	}

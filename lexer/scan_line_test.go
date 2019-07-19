@@ -115,7 +115,7 @@ func apiTests() []scanLineTest {
 		scanLineTest{
 			Input: `x <- 1`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 1, 2, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
@@ -125,7 +125,7 @@ func apiTests() []scanLineTest {
 		scanLineTest{
 			Input: `y <- -1.1`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`y`, 0, 1, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`y`, 0, 1, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 1, 2, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
@@ -137,7 +137,7 @@ func apiTests() []scanLineTest {
 			Line:  123,
 			Input: `x <- true`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`x`, 0, 1, 123, lexeme.VARIABLE},
+				lexeme.Lexeme{`x`, 0, 1, 123, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 1, 2, 123, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 2, 4, 123, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 4, 5, 123, lexeme.WHITESPACE},
@@ -157,29 +157,29 @@ func apiTests() []scanLineTest {
 			Input: "\tresult <- spell(a, b) r, err     ",
 			ExpectLexs: []lexeme.Lexeme{
 				lexeme.Lexeme{"\t", 0, 1, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`result`, 1, 7, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`result`, 1, 7, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 7, 8, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 8, 10, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 10, 11, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`spell`, 11, 16, 0, lexeme.KEYWORD_SPELL},
 				lexeme.Lexeme{`(`, 16, 17, 0, lexeme.CURVED_BRACE_OPEN},
-				lexeme.Lexeme{`a`, 17, 18, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`a`, 17, 18, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`,`, 18, 19, 0, lexeme.VALUE_SEPARATOR},
 				lexeme.Lexeme{` `, 19, 20, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`b`, 20, 21, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`b`, 20, 21, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`)`, 21, 22, 0, lexeme.CURVED_BRACE_CLOSE},
 				lexeme.Lexeme{` `, 22, 23, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`r`, 23, 24, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`r`, 23, 24, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`,`, 24, 25, 0, lexeme.VALUE_SEPARATOR},
 				lexeme.Lexeme{` `, 25, 26, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`err`, 26, 29, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`err`, 26, 29, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`     `, 29, 34, 0, lexeme.WHITESPACE},
 			},
 		},
 		scanLineTest{
 			Input: `keyValue <- "pi": 3.1419`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`keyValue`, 0, 8, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`keyValue`, 0, 8, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 8, 9, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 9, 11, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 11, 12, 0, lexeme.WHITESPACE},
@@ -192,7 +192,7 @@ func apiTests() []scanLineTest {
 		scanLineTest{
 			Input: `alphabet <- ["a", "b", "c"]`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`alphabet`, 0, 8, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`alphabet`, 0, 8, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 8, 9, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 9, 11, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 11, 12, 0, lexeme.WHITESPACE},
@@ -212,7 +212,7 @@ func apiTests() []scanLineTest {
 			ExpectLexs: []lexeme.Lexeme{
 				lexeme.Lexeme{`loop`, 0, 4, 0, lexeme.KEYWORD_LOOP},
 				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`i`, 5, 6, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`i`, 5, 6, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 6, 7, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 7, 9, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 9, 10, 0, lexeme.WHITESPACE},
@@ -224,7 +224,7 @@ func apiTests() []scanLineTest {
 		scanLineTest{
 			Input: `x<-2 // The value of x is now 2`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`<-`, 1, 3, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{`2`, 3, 4, 0, lexeme.NUMBER},
 				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
@@ -234,17 +234,17 @@ func apiTests() []scanLineTest {
 		scanLineTest{
 			Input: `isLandscape<-length<height`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`isLandscape`, 0, 11, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`isLandscape`, 0, 11, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`<-`, 11, 13, 0, lexeme.ASSIGNMENT},
-				lexeme.Lexeme{`length`, 13, 19, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`length`, 13, 19, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`<`, 19, 20, 0, lexeme.LESS_THAN},
-				lexeme.Lexeme{`height`, 20, 26, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`height`, 20, 26, 0, lexeme.IDENTIFIER},
 			},
 		},
 		scanLineTest{
 			Input: `x<-3.14*(1-2+3)`,
 			ExpectLexs: []lexeme.Lexeme{
-				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{`<-`, 1, 3, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{`3.14`, 3, 7, 0, lexeme.NUMBER},
 				lexeme.Lexeme{`*`, 7, 8, 0, lexeme.MULTIPLY},
@@ -261,11 +261,11 @@ func apiTests() []scanLineTest {
 			Input: `!x => y <- _`,
 			ExpectLexs: []lexeme.Lexeme{
 				lexeme.Lexeme{`!`, 0, 1, 0, lexeme.NEGATION},
-				lexeme.Lexeme{`x`, 1, 2, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`x`, 1, 2, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 2, 3, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`=>`, 3, 5, 0, lexeme.IF_TRUE_THEN},
 				lexeme.Lexeme{` `, 5, 6, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`y`, 6, 7, 0, lexeme.VARIABLE},
+				lexeme.Lexeme{`y`, 6, 7, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 7, 8, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 8, 10, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 10, 11, 0, lexeme.WHITESPACE},

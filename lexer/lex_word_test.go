@@ -14,19 +14,19 @@ func wordLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `a`,
-			ExpectLex: lexeme.Lexeme{`a`, 0, 1, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`a`, 0, 1, 0, lexeme.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `abc`,
-			ExpectLex: lexeme.Lexeme{`abc`, 0, 3, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`abc`, 0, 3, 0, lexeme.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `abc_123`,
-			ExpectLex: lexeme.Lexeme{`abc_123`, 0, 7, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`abc_123`, 0, 7, 0, lexeme.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `a__________123456789`,
-			ExpectLex: lexeme.Lexeme{`a__________123456789`, 0, 20, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`a__________123456789`, 0, 20, 0, lexeme.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `SCROLL`,
