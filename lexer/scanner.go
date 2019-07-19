@@ -32,7 +32,7 @@ func ScanLine(line string, lineNum int) (ls []lexeme.Lexeme, lxErr LexError) {
 		case itr.IsNextDigit():
 			l, lxErr = numLex(itr)
 		case itr.IsNextSpace():
-			l = spaceSym(itr)
+			l = spaceLex(itr)
 		case itr.IsNext('@'):
 			l, lxErr = sourcerySym(itr)
 		case itr.IsNext('"'):
@@ -169,11 +169,11 @@ func extractFrac(itr *runer.RuneItr) (string, LexError) {
 	return sb.String(), nil
 }
 
-// spaceSym handles symbols that start with a rune with the
+// spaceLex handles lexemes that start with a rune with the
 // unicode whitespace property.
 // I.e. any whitespace rune, whitespace may resolve into a:
-// - meaningless symbol that can be ignored when parsing
-func spaceSym(itr *runer.RuneItr) *lexeme.Lexeme {
+// - maningless lexeme that can be ignored at the parsing stage
+func spaceLex(itr *runer.RuneItr) *lexeme.Lexeme {
 
 	start := itr.Index()
 	sb := strings.Builder{}

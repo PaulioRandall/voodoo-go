@@ -6,11 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
-func TestSpaceSym(t *testing.T) {
-	lexFuncTest(t, "spaceSym", spaceSym, spaceSymTests())
+func TestSpaceLex(t *testing.T) {
+	lexFuncTest(t, "spaceLex", spaceLex, spaceLexTests())
 }
 
-func spaceSymTests() []lexTest {
+func spaceLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     " ",
