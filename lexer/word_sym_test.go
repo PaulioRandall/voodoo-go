@@ -7,7 +7,7 @@ import (
 )
 
 func TestWordSym(t *testing.T) {
-	symFuncTest(t, "wordSym", wordSym, wordSymTests())
+	lexFuncTest(t, "wordSym", wordSym, wordSymTests())
 }
 
 func wordSymTests() []lexTest {

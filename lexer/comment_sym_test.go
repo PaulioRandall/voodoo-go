@@ -7,7 +7,7 @@ import (
 )
 
 func TestCommentSym(t *testing.T) {
-	symFuncTest(t, "commentSym", commentSym, commentSymTests())
+	lexFuncTest(t, "commentSym", commentSym, commentSymTests())
 }
 
 func commentSymTests() []lexTest {

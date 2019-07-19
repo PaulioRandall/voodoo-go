@@ -7,7 +7,7 @@ import (
 )
 
 func TestSourcerySym(t *testing.T) {
-	symErrFuncTest(t, "sourcerySym", sourcerySym, sourcerySymTests())
+	lexErrFuncTest(t, "sourcerySym", sourcerySym, sourcerySymTests())
 }
 
 func sourcerySymTests() []lexTest {

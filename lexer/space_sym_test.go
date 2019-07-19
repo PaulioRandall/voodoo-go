@@ -7,7 +7,7 @@ import (
 )
 
 func TestSpaceSym(t *testing.T) {
-	symFuncTest(t, "spaceSym", spaceSym, spaceSymTests())
+	lexFuncTest(t, "spaceSym", spaceSym, spaceSymTests())
 }
 
 func spaceSymTests() []lexTest {

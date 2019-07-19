@@ -12,11 +12,11 @@ import (
 
 func TestScannerApi(t *testing.T) {
 	for i, tc := range apiTests() {
-		t.Log("Scanner test case: " + strconv.Itoa(i+1))
-		s, err := ScanLine(tc.Input, tc.Line)
+		t.Log("ScanLine() test case: " + strconv.Itoa(i+1))
+		ls, err := ScanLine(tc.Input, tc.Line)
 
 		if tc.ExpectErr != nil {
-			require.Nil(t, s)
+			require.Nil(t, ls)
 			assert.NotEmpty(t, err.Error())
 			assert.Equal(t, tc.ExpectErr.Line(), err.Line())
 			assert.Equal(t, tc.ExpectErr.Col(), err.Col())
@@ -24,14 +24,14 @@ func TestScannerApi(t *testing.T) {
 
 		if tc.ExpectLexs != nil {
 			require.Nil(t, err)
-			assert.Equal(t, tc.ExpectLexs, s)
+			assert.Equal(t, tc.ExpectLexs, ls)
 		}
 	}
 }
 
-type symScanFunc func(*runer.RuneItr) *lexeme.Lexeme
+type lexScanFunc func(*runer.RuneItr) *lexeme.Lexeme
 
-func symFuncTest(t *testing.T, fName string, f symScanFunc, tests []lexTest) {
+func lexFuncTest(t *testing.T, fName string, f lexScanFunc, tests []lexTest) {
 	for i, tc := range tests {
 		require.NotNil(t, tc.ExpectLex)
 		require.Nil(t, tc.ExpectErr)
@@ -39,32 +39,32 @@ func symFuncTest(t *testing.T, fName string, f symScanFunc, tests []lexTest) {
 		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
 
 		itr := runer.NewRuneItr(tc.Input)
-		s := f(itr)
+		l := f(itr)
 
-		require.NotNil(t, s)
-		assert.Equal(t, tc.ExpectLex, *s)
+		require.NotNil(t, l)
+		assert.Equal(t, tc.ExpectLex, *l)
 	}
 }
 
-type symScanErrFunc func(*runer.RuneItr) (*lexeme.Lexeme, LexError)
+type lexScanErrFunc func(*runer.RuneItr) (*lexeme.Lexeme, LexError)
 
-func symErrFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []lexTest) {
+func lexErrFuncTest(t *testing.T, fName string, f lexScanErrFunc, tests []lexTest) {
 	for i, tc := range tests {
 		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
 
 		itr := runer.NewRuneItr(tc.Input)
-		s, err := f(itr)
+		l, err := f(itr)
 
 		if tc.ExpectErr != nil {
 			assert.NotNil(t, err)
-			require.Nil(t, s)
+			require.Nil(t, l)
 			assert.NotEmpty(t, err.Error())
 			assert.Equal(t, tc.ExpectErr.Line(), err.Line())
 			assert.Equal(t, tc.ExpectErr.Col(), err.Col())
 		} else {
 			assert.Nil(t, err)
-			require.NotNil(t, s)
-			assert.Equal(t, tc.ExpectLex, *s)
+			require.NotNil(t, l)
+			assert.Equal(t, tc.ExpectLex, *l)
 		}
 	}
 }
