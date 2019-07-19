@@ -38,7 +38,7 @@ func ScanLine(line string, lineNum int) (r []lexeme.Lexeme, lxErr LexError) {
 		case itr.IsNext('"'):
 			s, lxErr = strSym(itr)
 		case itr.IsNextStr(`//`):
-			s = commentSym(itr)
+			s = commentLex(itr)
 		default:
 			s, lxErr = otherSym(itr)
 		}
@@ -265,10 +265,10 @@ func extractStr(itr *runer.RuneItr) (closed bool, s string) {
 	return
 }
 
-// commentSym handles symbols that start with two forward slashes
+// commentLex handles lexemes that start with two forward slashes
 // `//`. Double forward slashes may resolve into a:
 // - comment
-func commentSym(itr *runer.RuneItr) *lexeme.Lexeme {
+func commentLex(itr *runer.RuneItr) *lexeme.Lexeme {
 
 	start := itr.Index()
 	str := itr.RemainingStr()

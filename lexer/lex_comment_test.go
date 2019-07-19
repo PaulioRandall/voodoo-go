@@ -6,11 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
-func TestCommentSym(t *testing.T) {
-	lexFuncTest(t, "commentSym", commentSym, commentSymTests())
+func TestCommentLex(t *testing.T) {
+	lexFuncTest(t, "commentLex", commentLex, commentLexTests())
 }
 
-func commentSymTests() []lexTest {
+func commentLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `//`,
