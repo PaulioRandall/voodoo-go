@@ -14,55 +14,55 @@ func wordSymTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `a`,
-			ExpectSym: lexeme.Lexeme{`a`, 0, 1, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`a`, 0, 1, 0, lexeme.VARIABLE},
 		},
 		lexTest{
 			Input:     `abc`,
-			ExpectSym: lexeme.Lexeme{`abc`, 0, 3, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`abc`, 0, 3, 0, lexeme.VARIABLE},
 		},
 		lexTest{
 			Input:     `abc_123`,
-			ExpectSym: lexeme.Lexeme{`abc_123`, 0, 7, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`abc_123`, 0, 7, 0, lexeme.VARIABLE},
 		},
 		lexTest{
 			Input:     `a__________123456789`,
-			ExpectSym: lexeme.Lexeme{`a__________123456789`, 0, 20, 0, lexeme.VARIABLE},
+			ExpectLex: lexeme.Lexeme{`a__________123456789`, 0, 20, 0, lexeme.VARIABLE},
 		},
 		lexTest{
 			Input:     `SCROLL`,
-			ExpectSym: lexeme.Lexeme{`SCROLL`, 0, 6, 0, lexeme.KEYWORD_SCROLL},
+			ExpectLex: lexeme.Lexeme{`SCROLL`, 0, 6, 0, lexeme.KEYWORD_SCROLL},
 		},
 		lexTest{
 			Input:     `sPeLL`,
-			ExpectSym: lexeme.Lexeme{`sPeLL`, 0, 5, 0, lexeme.KEYWORD_SPELL},
+			ExpectLex: lexeme.Lexeme{`sPeLL`, 0, 5, 0, lexeme.KEYWORD_SPELL},
 		},
 		lexTest{
 			Input:     `loop`,
-			ExpectSym: lexeme.Lexeme{`loop`, 0, 4, 0, lexeme.KEYWORD_LOOP},
+			ExpectLex: lexeme.Lexeme{`loop`, 0, 4, 0, lexeme.KEYWORD_LOOP},
 		},
 		lexTest{
 			Input:     `when`,
-			ExpectSym: lexeme.Lexeme{`when`, 0, 4, 0, lexeme.KEYWORD_WHEN},
+			ExpectLex: lexeme.Lexeme{`when`, 0, 4, 0, lexeme.KEYWORD_WHEN},
 		},
 		lexTest{
 			Input:     `end`,
-			ExpectSym: lexeme.Lexeme{`end`, 0, 3, 0, lexeme.KEYWORD_END},
+			ExpectLex: lexeme.Lexeme{`end`, 0, 3, 0, lexeme.KEYWORD_END},
 		},
 		lexTest{
 			Input:     `key`,
-			ExpectSym: lexeme.Lexeme{`key`, 0, 3, 0, lexeme.KEYWORD_KEY},
+			ExpectLex: lexeme.Lexeme{`key`, 0, 3, 0, lexeme.KEYWORD_KEY},
 		},
 		lexTest{
 			Input:     `val`,
-			ExpectSym: lexeme.Lexeme{`val`, 0, 3, 0, lexeme.KEYWORD_VAL},
+			ExpectLex: lexeme.Lexeme{`val`, 0, 3, 0, lexeme.KEYWORD_VAL},
 		},
 		lexTest{
 			Input:     `true`,
-			ExpectSym: lexeme.Lexeme{`true`, 0, 4, 0, lexeme.BOOLEAN},
+			ExpectLex: lexeme.Lexeme{`true`, 0, 4, 0, lexeme.BOOLEAN},
 		},
 		lexTest{
 			Input:     `false`,
-			ExpectSym: lexeme.Lexeme{`false`, 0, 5, 0, lexeme.BOOLEAN},
+			ExpectLex: lexeme.Lexeme{`false`, 0, 5, 0, lexeme.BOOLEAN},
 		},
 	}
 }

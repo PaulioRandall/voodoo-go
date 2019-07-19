@@ -14,99 +14,99 @@ func otherSymTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `==`,
-			ExpectSym: lexeme.Lexeme{`==`, 0, 2, 0, lexeme.EQUAL},
+			ExpectLex: lexeme.Lexeme{`==`, 0, 2, 0, lexeme.EQUAL},
 		},
 		lexTest{
 			Input:     `!=`,
-			ExpectSym: lexeme.Lexeme{`!=`, 0, 2, 0, lexeme.NOT_EQUAL},
+			ExpectLex: lexeme.Lexeme{`!=`, 0, 2, 0, lexeme.NOT_EQUAL},
 		},
 		lexTest{
 			Input:     `<`,
-			ExpectSym: lexeme.Lexeme{`<`, 0, 1, 0, lexeme.LESS_THAN},
+			ExpectLex: lexeme.Lexeme{`<`, 0, 1, 0, lexeme.LESS_THAN},
 		},
 		lexTest{
 			Input:     `<=`,
-			ExpectSym: lexeme.Lexeme{`<=`, 0, 2, 0, lexeme.LESS_THAN_OR_EQUAL},
+			ExpectLex: lexeme.Lexeme{`<=`, 0, 2, 0, lexeme.LESS_THAN_OR_EQUAL},
 		},
 		lexTest{
 			Input:     `>`,
-			ExpectSym: lexeme.Lexeme{`>`, 0, 1, 0, lexeme.GREATER_THAN},
+			ExpectLex: lexeme.Lexeme{`>`, 0, 1, 0, lexeme.GREATER_THAN},
 		},
 		lexTest{
 			Input:     `>=`,
-			ExpectSym: lexeme.Lexeme{`>=`, 0, 2, 0, lexeme.GREATER_THAN_OR_EQUAL},
+			ExpectLex: lexeme.Lexeme{`>=`, 0, 2, 0, lexeme.GREATER_THAN_OR_EQUAL},
 		},
 		lexTest{
 			Input:     `||`,
-			ExpectSym: lexeme.Lexeme{`||`, 0, 2, 0, lexeme.OR},
+			ExpectLex: lexeme.Lexeme{`||`, 0, 2, 0, lexeme.OR},
 		},
 		lexTest{
 			Input:     `&&`,
-			ExpectSym: lexeme.Lexeme{`&&`, 0, 2, 0, lexeme.AND},
+			ExpectLex: lexeme.Lexeme{`&&`, 0, 2, 0, lexeme.AND},
 		},
 		lexTest{
 			Input:     `<-`,
-			ExpectSym: lexeme.Lexeme{`<-`, 0, 2, 0, lexeme.ASSIGNMENT},
+			ExpectLex: lexeme.Lexeme{`<-`, 0, 2, 0, lexeme.ASSIGNMENT},
 		},
 		lexTest{
 			Input:     `=>`,
-			ExpectSym: lexeme.Lexeme{`=>`, 0, 2, 0, lexeme.IF_TRUE_THEN},
+			ExpectLex: lexeme.Lexeme{`=>`, 0, 2, 0, lexeme.IF_TRUE_THEN},
 		},
 		lexTest{
 			Input:     `_`,
-			ExpectSym: lexeme.Lexeme{`_`, 0, 1, 0, lexeme.VOID},
+			ExpectLex: lexeme.Lexeme{`_`, 0, 1, 0, lexeme.VOID},
 		},
 		lexTest{
 			Input:     `!`,
-			ExpectSym: lexeme.Lexeme{`!`, 0, 1, 0, lexeme.NEGATION},
+			ExpectLex: lexeme.Lexeme{`!`, 0, 1, 0, lexeme.NEGATION},
 		},
 		lexTest{
 			Input:     `+`,
-			ExpectSym: lexeme.Lexeme{`+`, 0, 1, 0, lexeme.ADD},
+			ExpectLex: lexeme.Lexeme{`+`, 0, 1, 0, lexeme.ADD},
 		},
 		lexTest{
 			Input:     `-`,
-			ExpectSym: lexeme.Lexeme{`-`, 0, 1, 0, lexeme.SUBTRACT},
+			ExpectLex: lexeme.Lexeme{`-`, 0, 1, 0, lexeme.SUBTRACT},
 		},
 		lexTest{
 			Input:     `*`,
-			ExpectSym: lexeme.Lexeme{`*`, 0, 1, 0, lexeme.MULTIPLY},
+			ExpectLex: lexeme.Lexeme{`*`, 0, 1, 0, lexeme.MULTIPLY},
 		},
 		lexTest{
 			Input:     `/`,
-			ExpectSym: lexeme.Lexeme{`/`, 0, 1, 0, lexeme.DIVIDE},
+			ExpectLex: lexeme.Lexeme{`/`, 0, 1, 0, lexeme.DIVIDE},
 		},
 		lexTest{
 			Input:     `%`,
-			ExpectSym: lexeme.Lexeme{`%`, 0, 1, 0, lexeme.MODULO},
+			ExpectLex: lexeme.Lexeme{`%`, 0, 1, 0, lexeme.MODULO},
 		},
 		lexTest{
 			Input:     `(`,
-			ExpectSym: lexeme.Lexeme{`(`, 0, 1, 0, lexeme.CURVED_BRACE_OPEN},
+			ExpectLex: lexeme.Lexeme{`(`, 0, 1, 0, lexeme.CURVED_BRACE_OPEN},
 		},
 		lexTest{
 			Input:     `)`,
-			ExpectSym: lexeme.Lexeme{`)`, 0, 1, 0, lexeme.CURVED_BRACE_CLOSE},
+			ExpectLex: lexeme.Lexeme{`)`, 0, 1, 0, lexeme.CURVED_BRACE_CLOSE},
 		},
 		lexTest{
 			Input:     `[`,
-			ExpectSym: lexeme.Lexeme{`[`, 0, 1, 0, lexeme.SQUARE_BRACE_OPEN},
+			ExpectLex: lexeme.Lexeme{`[`, 0, 1, 0, lexeme.SQUARE_BRACE_OPEN},
 		},
 		lexTest{
 			Input:     `]`,
-			ExpectSym: lexeme.Lexeme{`]`, 0, 1, 0, lexeme.SQUARE_BRACE_CLOSE},
+			ExpectLex: lexeme.Lexeme{`]`, 0, 1, 0, lexeme.SQUARE_BRACE_CLOSE},
 		},
 		lexTest{
 			Input:     `,`,
-			ExpectSym: lexeme.Lexeme{`,`, 0, 1, 0, lexeme.VALUE_SEPARATOR},
+			ExpectLex: lexeme.Lexeme{`,`, 0, 1, 0, lexeme.VALUE_SEPARATOR},
 		},
 		lexTest{
 			Input:     `:`,
-			ExpectSym: lexeme.Lexeme{`:`, 0, 1, 0, lexeme.KEY_VALUE_SEPARATOR},
+			ExpectLex: lexeme.Lexeme{`:`, 0, 1, 0, lexeme.KEY_VALUE_SEPARATOR},
 		},
 		lexTest{
 			Input:     `..`,
-			ExpectSym: lexeme.Lexeme{`..`, 0, 2, 0, lexeme.RANGE},
+			ExpectLex: lexeme.Lexeme{`..`, 0, 2, 0, lexeme.RANGE},
 		},
 		lexTest{
 			Input:     `=`,

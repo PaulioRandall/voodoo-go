@@ -14,31 +14,31 @@ func numSymTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `2`,
-			ExpectSym: lexeme.Lexeme{`2`, 0, 1, 0, lexeme.NUMBER},
+			ExpectLex: lexeme.Lexeme{`2`, 0, 1, 0, lexeme.NUMBER},
 		},
 		lexTest{
 			Input:     `123`,
-			ExpectSym: lexeme.Lexeme{`123`, 0, 3, 0, lexeme.NUMBER},
+			ExpectLex: lexeme.Lexeme{`123`, 0, 3, 0, lexeme.NUMBER},
 		},
 		lexTest{
 			Input:     `123_456`,
-			ExpectSym: lexeme.Lexeme{`123_456`, 0, 7, 0, lexeme.NUMBER},
+			ExpectLex: lexeme.Lexeme{`123_456`, 0, 7, 0, lexeme.NUMBER},
 		},
 		lexTest{
 			Input:     `123.456`,
-			ExpectSym: lexeme.Lexeme{`123.456`, 0, 7, 0, lexeme.NUMBER},
+			ExpectLex: lexeme.Lexeme{`123.456`, 0, 7, 0, lexeme.NUMBER},
 		},
 		lexTest{
 			Input:     `123.456_789`,
-			ExpectSym: lexeme.Lexeme{`123.456_789`, 0, 11, 0, lexeme.NUMBER},
+			ExpectLex: lexeme.Lexeme{`123.456_789`, 0, 11, 0, lexeme.NUMBER},
 		},
 		lexTest{
 			Input:     `1__2__3__.__4__5__6__`,
-			ExpectSym: lexeme.Lexeme{`1__2__3__.__4__5__6__`, 0, 21, 0, lexeme.NUMBER},
+			ExpectLex: lexeme.Lexeme{`1__2__3__.__4__5__6__`, 0, 21, 0, lexeme.NUMBER},
 		},
 		lexTest{
 			Input:     `123..456`,
-			ExpectSym: lexeme.Lexeme{`123`, 0, 3, 0, lexeme.NUMBER},
+			ExpectLex: lexeme.Lexeme{`123`, 0, 3, 0, lexeme.NUMBER},
 		},
 		lexTest{
 			Input:     `1_._2_._3`,
