@@ -6,11 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
-func TestNumSym(t *testing.T) {
-	lexErrFuncTest(t, "numSym", numSym, numSymTests())
+func TestNumLex(t *testing.T) {
+	lexErrFuncTest(t, "numLex", numLex, numLexTests())
 }
 
-func numSymTests() []lexTest {
+func numLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `2`,
