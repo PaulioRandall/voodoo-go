@@ -6,11 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
-func TestSourcerySym(t *testing.T) {
-	lexErrFuncTest(t, "sourcerySym", sourcerySym, sourcerySymTests())
+func TestSourceryLex(t *testing.T) {
+	lexErrFuncTest(t, "sourceryLex", sourceryLex, sourceryLexTests())
 }
 
-func sourcerySymTests() []lexTest {
+func sourceryLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `@P`,

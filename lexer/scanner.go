@@ -34,7 +34,7 @@ func ScanLine(line string, lineNum int) (ls []lexeme.Lexeme, lxErr LexError) {
 		case itr.IsNextSpace():
 			l = spaceLex(itr)
 		case itr.IsNext('@'):
-			l, lxErr = sourcerySym(itr)
+			l, lxErr = sourceryLex(itr)
 		case itr.IsNext('"'):
 			l, lxErr = strSym(itr)
 		case itr.IsNextStr(`//`):
@@ -193,10 +193,10 @@ func spaceLex(itr *runer.RuneItr) *lexeme.Lexeme {
 	}
 }
 
-// sourcerySym handles symbols that start with a at sign rune `@`.
-// Sourcery symbols may resolve into a:
+// sourceryLex handles lexemes that start with a at sign rune `@`.
+// Sourcery symbol may resolve into a:
 // - go function call
-func sourcerySym(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
+func sourceryLex(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
 
 	if !unicode.IsLetter(itr.PeekRelRune(1)) {
 		m := "Expected first rune after `@` to be a letter"
@@ -205,11 +205,11 @@ func sourcerySym(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
 	}
 
 	start := itr.Index()
-	firstLetter := string(itr.NextRune())
-	val := firstLetter + extractWordStr(itr)
+	h := string(itr.NextRune())
+	t := extractWordStr(itr)
 
 	s = &lexeme.Lexeme{
-		Val:   val,
+		Val:   h + t,
 		Start: start,
 		End:   itr.Index(),
 		Type:  lexeme.SOURCERY,

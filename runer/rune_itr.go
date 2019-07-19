@@ -154,6 +154,17 @@ func (itr *RuneItr) IsNextLetter() bool {
 	return false
 }
 
+// IsRelLetter returns true if the rune specified by the relative
+// index is in the unicode category 'L' for letter. The relative
+// index is calculated by offsetting the current index by the input.
+// The offset may be negative to check previous runes. If no rune
+// exists then the -1 will be returned. False is also returned if no
+// more runes remain to iterate.
+func (itr *RuneItr) IsRelLetter(offset int) bool {
+  ru := itr.PeekRelRune(offset)
+	return unicode.IsLetter(ru)
+}
+
 // IsNextDigit returns true if the next rune is in the unicode
 // category 'Nd' for decimal digit. False is also returned if no
 // more runes remain to iterate.
