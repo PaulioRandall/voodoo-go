@@ -10,105 +10,105 @@ func TestOtherSym(t *testing.T) {
 	symErrFuncTest(t, "otherSym", otherSym, otherSymTests())
 }
 
-func otherSymTests() []symTest {
-	return []symTest{
-		symTest{
+func otherSymTests() []lexTest {
+	return []lexTest{
+		lexTest{
 			Input:     `==`,
 			ExpectSym: lexeme.Lexeme{`==`, 0, 2, 0, lexeme.EQUAL},
 		},
-		symTest{
+		lexTest{
 			Input:     `!=`,
 			ExpectSym: lexeme.Lexeme{`!=`, 0, 2, 0, lexeme.NOT_EQUAL},
 		},
-		symTest{
+		lexTest{
 			Input:     `<`,
 			ExpectSym: lexeme.Lexeme{`<`, 0, 1, 0, lexeme.LESS_THAN},
 		},
-		symTest{
+		lexTest{
 			Input:     `<=`,
 			ExpectSym: lexeme.Lexeme{`<=`, 0, 2, 0, lexeme.LESS_THAN_OR_EQUAL},
 		},
-		symTest{
+		lexTest{
 			Input:     `>`,
 			ExpectSym: lexeme.Lexeme{`>`, 0, 1, 0, lexeme.GREATER_THAN},
 		},
-		symTest{
+		lexTest{
 			Input:     `>=`,
 			ExpectSym: lexeme.Lexeme{`>=`, 0, 2, 0, lexeme.GREATER_THAN_OR_EQUAL},
 		},
-		symTest{
+		lexTest{
 			Input:     `||`,
 			ExpectSym: lexeme.Lexeme{`||`, 0, 2, 0, lexeme.OR},
 		},
-		symTest{
+		lexTest{
 			Input:     `&&`,
 			ExpectSym: lexeme.Lexeme{`&&`, 0, 2, 0, lexeme.AND},
 		},
-		symTest{
+		lexTest{
 			Input:     `<-`,
 			ExpectSym: lexeme.Lexeme{`<-`, 0, 2, 0, lexeme.ASSIGNMENT},
 		},
-		symTest{
+		lexTest{
 			Input:     `=>`,
 			ExpectSym: lexeme.Lexeme{`=>`, 0, 2, 0, lexeme.IF_TRUE_THEN},
 		},
-		symTest{
+		lexTest{
 			Input:     `_`,
 			ExpectSym: lexeme.Lexeme{`_`, 0, 1, 0, lexeme.VOID},
 		},
-		symTest{
+		lexTest{
 			Input:     `!`,
 			ExpectSym: lexeme.Lexeme{`!`, 0, 1, 0, lexeme.NEGATION},
 		},
-		symTest{
+		lexTest{
 			Input:     `+`,
 			ExpectSym: lexeme.Lexeme{`+`, 0, 1, 0, lexeme.ADD},
 		},
-		symTest{
+		lexTest{
 			Input:     `-`,
 			ExpectSym: lexeme.Lexeme{`-`, 0, 1, 0, lexeme.SUBTRACT},
 		},
-		symTest{
+		lexTest{
 			Input:     `*`,
 			ExpectSym: lexeme.Lexeme{`*`, 0, 1, 0, lexeme.MULTIPLY},
 		},
-		symTest{
+		lexTest{
 			Input:     `/`,
 			ExpectSym: lexeme.Lexeme{`/`, 0, 1, 0, lexeme.DIVIDE},
 		},
-		symTest{
+		lexTest{
 			Input:     `%`,
 			ExpectSym: lexeme.Lexeme{`%`, 0, 1, 0, lexeme.MODULO},
 		},
-		symTest{
+		lexTest{
 			Input:     `(`,
 			ExpectSym: lexeme.Lexeme{`(`, 0, 1, 0, lexeme.CURVED_BRACE_OPEN},
 		},
-		symTest{
+		lexTest{
 			Input:     `)`,
 			ExpectSym: lexeme.Lexeme{`)`, 0, 1, 0, lexeme.CURVED_BRACE_CLOSE},
 		},
-		symTest{
+		lexTest{
 			Input:     `[`,
 			ExpectSym: lexeme.Lexeme{`[`, 0, 1, 0, lexeme.SQUARE_BRACE_OPEN},
 		},
-		symTest{
+		lexTest{
 			Input:     `]`,
 			ExpectSym: lexeme.Lexeme{`]`, 0, 1, 0, lexeme.SQUARE_BRACE_CLOSE},
 		},
-		symTest{
+		lexTest{
 			Input:     `,`,
 			ExpectSym: lexeme.Lexeme{`,`, 0, 1, 0, lexeme.VALUE_SEPARATOR},
 		},
-		symTest{
+		lexTest{
 			Input:     `:`,
 			ExpectSym: lexeme.Lexeme{`:`, 0, 1, 0, lexeme.KEY_VALUE_SEPARATOR},
 		},
-		symTest{
+		lexTest{
 			Input:     `..`,
 			ExpectSym: lexeme.Lexeme{`..`, 0, 2, 0, lexeme.RANGE},
 		},
-		symTest{
+		lexTest{
 			Input:     `=`,
 			ExpectErr: expLexError{0, 1},
 		},

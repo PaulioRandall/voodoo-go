@@ -10,33 +10,33 @@ func TestStrSym(t *testing.T) {
 	symErrFuncTest(t, "strSym", strSym, strSymTests())
 }
 
-func strSymTests() []symTest {
-	return []symTest{
-		symTest{
+func strSymTests() []lexTest {
+	return []lexTest{
+		lexTest{
 			Input:     `""`,
 			ExpectSym: lexeme.Lexeme{`""`, 0, 2, 0, lexeme.STRING},
 		},
-		symTest{
+		lexTest{
 			Input:     `"From hell with love"`,
 			ExpectSym: lexeme.Lexeme{`"From hell with love"`, 0, 21, 0, lexeme.STRING},
 		},
-		symTest{
+		lexTest{
 			Input:     `"Bam: \"Leaders eat last!\""`,
 			ExpectSym: lexeme.Lexeme{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, lexeme.STRING},
 		},
-		symTest{
+		lexTest{
 			Input:     `"\\\\\""`,
 			ExpectSym: lexeme.Lexeme{`"\\\\\""`, 0, 8, 0, lexeme.STRING},
 		},
-		symTest{
+		lexTest{
 			Input:     `"`,
 			ExpectErr: expLexError{0, 1},
 		},
-		symTest{
+		lexTest{
 			Input:     `"a"x`,
 			ExpectSym: lexeme.Lexeme{`"a"`, 0, 3, 0, lexeme.STRING},
 		},
-		symTest{
+		lexTest{
 			Input:     `"escaped \"`,
 			ExpectErr: expLexError{0, 11},
 		},

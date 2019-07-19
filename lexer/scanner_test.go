@@ -31,7 +31,7 @@ func TestScannerApi(t *testing.T) {
 
 type symScanFunc func(*runer.RuneItr) *lexeme.Lexeme
 
-func symFuncTest(t *testing.T, fName string, f symScanFunc, tests []symTest) {
+func symFuncTest(t *testing.T, fName string, f symScanFunc, tests []lexTest) {
 	for i, tc := range tests {
 		require.NotNil(t, tc.ExpectSym)
 		require.Nil(t, tc.ExpectErr)
@@ -48,7 +48,7 @@ func symFuncTest(t *testing.T, fName string, f symScanFunc, tests []symTest) {
 
 type symScanErrFunc func(*runer.RuneItr) (*lexeme.Lexeme, LexError)
 
-func symErrFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTest) {
+func symErrFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []lexTest) {
 	for i, tc := range tests {
 		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
 
@@ -69,7 +69,7 @@ func symErrFuncTest(t *testing.T, fName string, f symScanErrFunc, tests []symTes
 	}
 }
 
-type symTest struct {
+type lexTest struct {
 	Line      int
 	Input     string
 	ExpectSym lexeme.Lexeme
