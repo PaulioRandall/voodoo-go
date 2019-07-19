@@ -39,7 +39,7 @@ func ScanLine(line string, lineNum int) (ls []lexeme.Lexeme, lxErr LexError) {
 		case itr.IsNextStr(`//`):
 			l = commentLex(itr)
 		default:
-			l, lxErr = otherLex(itr)
+			l, lxErr = symbolLex(itr)
 		}
 
 		if lxErr != nil {
@@ -285,17 +285,18 @@ func commentLex(itr *runer.RuneItr) *lexeme.Lexeme {
 	}
 }
 
-// otherLex handles any lexemes that don't have a specific
-// handling function. These symbols may resolve into a:
+// symbolLex handles any lexemes that are symbols. These
+// symbols may resolve into a:
 // - operator, 1 or 2 runes including truthy and not
 // - code block start or end, i.e. bracket
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherLex(itr *runer.RuneItr) (l *lexeme.Lexeme, err LexError) {
+// - range generator
+func symbolLex(itr *runer.RuneItr) (l *lexeme.Lexeme, err LexError) {
 
 	start := itr.Index()
-	t := lexeme.UNDEFINED
+	var t lexeme.LexemeType
 	c := 0
 
 	set := func(lexType lexeme.LexemeType, runeCount int) {
