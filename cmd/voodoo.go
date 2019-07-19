@@ -12,15 +12,14 @@ import (
 	"github.com/PaulioRandall/voodoo-go/shared"
 )
 
-// main is the entry point for this script. It wraps the standard Go format,
-// build, test, run, and install operations specifically for this project.
+// main is the entry point.
 func main() {
 	stopWatch := shared.StopWatch{}
 	stopWatch.Start()
 	fmt.Printf("Started\t%v\n\n", stopWatch.Started.UTC())
 
-	// Don't abstract the build workflows! They are more readable and extendable
-	// this way.
+	// Don't abstract the build workflows!
+	// More readable this way.
 	option := getOption()
 	switch option {
 	case "run":
@@ -76,6 +75,7 @@ func exeScroll() {
 
 	sc, err := scroll.LoadScroll(scPath)
 	if err != nil {
+		// TODO: Handle when error returned.
 		panic(err)
 	}
 

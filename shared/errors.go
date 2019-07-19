@@ -6,9 +6,6 @@ import (
 	"strings"
 )
 
-// ExitCode represents a program exit code
-type ExitCode int
-
 // DEPRECATED
 //
 // CompilerBug writes a compiler bug to output then exits the program

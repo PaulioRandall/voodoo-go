@@ -3,15 +3,17 @@ package interpreter
 import (
 	"github.com/PaulioRandall/voodoo-go/lexer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
-	"github.com/PaulioRandall/voodoo-go/shared"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
+// ExitCode represents a program exit code
+type ExitCode int
+
 // Execute runs a Voodoo scroll.
-func Execute(sc *scroll.Scroll, scArgs []string) (shared.ExitCode, error) {
+func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 	line := sc.Next(nil)
-	line = sc.Next(line) // Ignoring first line, shebang
+	line = sc.Next(line) // Ignoring first line: shebang
 
 	for line != nil {
 
@@ -21,6 +23,8 @@ func Execute(sc *scroll.Scroll, scArgs []string) (shared.ExitCode, error) {
 		}
 
 		symbol.PrintlnSymbols(s)
+
+		// NEXT:
 
 		line = sc.Next(line)
 	}
