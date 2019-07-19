@@ -2,7 +2,6 @@ package lexer
 
 import (
 	"strings"
-	"unicode"
 
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 	"github.com/PaulioRandall/voodoo-go/runer"
@@ -40,7 +39,7 @@ func ScanLine(line string, lineNum int) (ls []lexeme.Lexeme, lxErr LexError) {
 		case itr.IsNextStr(`//`):
 			l = commentLex(itr)
 		default:
-			l, lxErr = otherSym(itr)
+			l, lxErr = otherLex(itr)
 		}
 
 		if lxErr != nil {
@@ -198,7 +197,7 @@ func spaceLex(itr *runer.RuneItr) *lexeme.Lexeme {
 // - go function call
 func sourceryLex(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
 
-	if !unicode.IsLetter(itr.PeekRelRune(1)) {
+	if !itr.IsRelLetter(1) {
 		m := "Expected first rune after `@` to be a letter"
 		err = NewLexError(m, itr.Index())
 		return
@@ -286,22 +285,22 @@ func commentLex(itr *runer.RuneItr) *lexeme.Lexeme {
 	}
 }
 
-// otherSym handles any symbols that don't have a specific handling
-// function. These symbols may resolve into a:
+// otherLex handles any lexemes that don't have a specific
+// handling function. These symbols may resolve into a:
 // - operator, 1 or 2 runes including truthy and not
 // - code block start or end, i.e. bracket
 // - value separator, i.e. comma
 // - key-value separator, i.e. colon
 // - void value, i.e. underscore
-func otherSym(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
+func otherLex(itr *runer.RuneItr) (l *lexeme.Lexeme, err LexError) {
 
 	start := itr.Index()
-	symType := lexeme.UNDEFINED
-	runeCount := 0
+	t := lexeme.UNDEFINED
+	c := 0
 
-	set := func(t lexeme.LexemeType, totalRunes int) {
-		symType = t
-		runeCount = totalRunes
+	set := func(lexType lexeme.LexemeType, runeCount int) {
+		t = lexType
+		c = runeCount
 	}
 
 	switch {
@@ -360,17 +359,17 @@ func otherSym(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
 		return
 	}
 
-	str, e := itr.NextStr(runeCount)
+	s, e := itr.NextStr(c)
 	if e != nil {
 		err = NewLexError(err.Error(), itr.Index())
 		return
 	}
 
-	s = &lexeme.Lexeme{
-		Val:   str,
+	l = &lexeme.Lexeme{
+		Val:   s,
 		Start: start,
 		End:   itr.Index(),
-		Type:  symType,
+		Type:  t,
 	}
 
 	return
