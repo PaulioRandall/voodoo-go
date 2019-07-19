@@ -3,7 +3,7 @@ package lexer
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
 func TestStrSym(t *testing.T) {
@@ -14,19 +14,19 @@ func strSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:     `""`,
-			ExpectSym: symbol.Symbol{`""`, 0, 2, 0, symbol.STRING},
+			ExpectSym: lexeme.Symbol{`""`, 0, 2, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"From hell with love"`,
-			ExpectSym: symbol.Symbol{`"From hell with love"`, 0, 21, 0, symbol.STRING},
+			ExpectSym: lexeme.Symbol{`"From hell with love"`, 0, 21, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"Bam: \"Leaders eat last!\""`,
-			ExpectSym: symbol.Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, symbol.STRING},
+			ExpectSym: lexeme.Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"\\\\\""`,
-			ExpectSym: symbol.Symbol{`"\\\\\""`, 0, 8, 0, symbol.STRING},
+			ExpectSym: lexeme.Symbol{`"\\\\\""`, 0, 8, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"`,
@@ -34,7 +34,7 @@ func strSymTests() []symTest {
 		},
 		symTest{
 			Input:     `"a"x`,
-			ExpectSym: symbol.Symbol{`"a"`, 0, 3, 0, symbol.STRING},
+			ExpectSym: lexeme.Symbol{`"a"`, 0, 3, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"escaped \"`,

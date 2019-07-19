@@ -1,9 +1,9 @@
 package interpreter
 
 import (
+	"github.com/PaulioRandall/voodoo-go/lexeme"
 	"github.com/PaulioRandall/voodoo-go/lexer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
-	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 // ExitCode represents a program exit code
@@ -17,14 +17,14 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 	for line != nil {
 
-		s, err := lexer.ScanLine(line.Val, line.Num)
+		lex, err := lexer.ScanLine(line.Val, line.Num)
 		if err != nil {
 			return 1, err
 		}
 
-		symbol.PrintlnSymbols(s)
+		lexeme.PrintlnSymbols(lex)
 
-		// NEXT:
+		// NEXT: Rename 'symbol' to 'lexeme'
 
 		line = sc.Next(line)
 	}

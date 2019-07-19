@@ -1,4 +1,4 @@
-package symbol
+package lexeme
 
 // SymItr provides a way to iterate symbol arrays.
 type SymItr struct {

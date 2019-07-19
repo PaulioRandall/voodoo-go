@@ -1,4 +1,4 @@
-package symbol
+package lexeme
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// SymbolType represents the type of the symbol.
+// SymbolType represents the type of the lexeme.
 type SymbolType int
 
 const (
