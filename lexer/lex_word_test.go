@@ -6,11 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
-func TestWordSym(t *testing.T) {
-	lexFuncTest(t, "wordSym", wordSym, wordSymTests())
+func TestWordLex(t *testing.T) {
+	lexFuncTest(t, "wordLex", wordLex, wordLexTests())
 }
 
-func wordSymTests() []lexTest {
+func wordLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `a`,
