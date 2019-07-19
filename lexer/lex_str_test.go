@@ -6,11 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
-func TestStrSym(t *testing.T) {
-	lexErrFuncTest(t, "strSym", strSym, strSymTests())
+func TestStrLex(t *testing.T) {
+	lexErrFuncTest(t, "strLex", strLex, strLexTests())
 }
 
-func strSymTests() []lexTest {
+func strLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `""`,
@@ -21,8 +21,8 @@ func strSymTests() []lexTest {
 			ExpectLex: lexeme.Lexeme{`"From hell with love"`, 0, 21, 0, lexeme.STRING},
 		},
 		lexTest{
-			Input:     `"Bam: \"Leaders eat last!\""`,
-			ExpectLex: lexeme.Lexeme{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, lexeme.STRING},
+			Input:     `"Simon: \"Leaders eat last!\""`,
+			ExpectLex: lexeme.Lexeme{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, lexeme.STRING},
 		},
 		lexTest{
 			Input:     `"\\\\\""`,

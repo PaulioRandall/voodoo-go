@@ -35,7 +35,7 @@ func ScanLine(line string, lineNum int) (ls []lexeme.Lexeme, lxErr LexError) {
 		case itr.IsNext('@'):
 			l, lxErr = sourceryLex(itr)
 		case itr.IsNext('"'):
-			l, lxErr = strSym(itr)
+			l, lxErr = strLex(itr)
 		case itr.IsNextStr(`//`):
 			l = commentLex(itr)
 		default:
@@ -217,13 +217,13 @@ func sourceryLex(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
 	return
 }
 
-// strSym handles symbols that start with the double quote `"` rune.
+// strLex handles lexemes that start with the double quote `"` rune.
 // Quoted strings may resolve into a:
 // - string literal
-func strSym(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
+func strLex(itr *runer.RuneItr) (l *lexeme.Lexeme, err LexError) {
 
 	start := itr.Index()
-	closed, str := extractStr(itr)
+	closed, s := extractStr(itr)
 
 	if !closed {
 		m := "Did someone forget to close a string literal?!"
@@ -231,8 +231,8 @@ func strSym(itr *runer.RuneItr) (s *lexeme.Lexeme, err LexError) {
 		return
 	}
 
-	s = &lexeme.Lexeme{
-		Val:   str,
+	l = &lexeme.Lexeme{
+		Val:   s,
 		Start: start,
 		End:   itr.Index(),
 		Type:  lexeme.STRING,
