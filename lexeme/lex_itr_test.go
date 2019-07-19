@@ -6,27 +6,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func dummySymArray(s ...string) []Symbol {
-	r := []Symbol{}
-	for _, v := range s {
-		sym := Symbol{
-			Val: v,
+func dummyLexArray(ss ...string) []Lexeme {
+	r := []Lexeme{}
+	for _, s := range ss {
+		l := Lexeme{
+			Val: s,
 		}
-		r = append(r, sym)
+		r = append(r, l)
 	}
 	return r
 }
 
-func TestSymItr_Length(t *testing.T) {
-	s := dummySymArray(`a`, `b`, `c`)
-	itr := NewSymItr(s)
-	exp := len(s)
+func TestLexItr_Length(t *testing.T) {
+	ls := dummyLexArray(`a`, `b`, `c`)
+	itr := NewLexItr(ls)
+	exp := len(ls)
 	assert.Equal(t, exp, itr.Length())
 }
 
-func TestSymItr_HasNext(t *testing.T) {
-	s := dummySymArray(`a`, `b`, `c`)
-	itr := NewSymItr(s)
+func TestLexItr_HasNext(t *testing.T) {
+	ls := dummyLexArray(`a`, `b`, `c`)
+	itr := NewLexItr(ls)
 
 	assert.True(t, itr.HasNext())
 	itr.index += 1

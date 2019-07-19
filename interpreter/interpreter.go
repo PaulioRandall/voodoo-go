@@ -17,12 +17,12 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 	for line != nil {
 
-		lex, err := lexer.ScanLine(line.Val, line.Num)
+		l, err := lexer.ScanLine(line.Val, line.Num)
 		if err != nil {
 			return 1, err
 		}
 
-		lexeme.PrintlnSymbols(lex)
+		lexeme.PrintlnLexemes(l)
 
 		// NEXT: Rename 'symbol' to 'lexeme'
 

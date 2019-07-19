@@ -14,19 +14,19 @@ func strSymTests() []symTest {
 	return []symTest{
 		symTest{
 			Input:     `""`,
-			ExpectSym: lexeme.Symbol{`""`, 0, 2, 0, lexeme.STRING},
+			ExpectSym: lexeme.Lexeme{`""`, 0, 2, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"From hell with love"`,
-			ExpectSym: lexeme.Symbol{`"From hell with love"`, 0, 21, 0, lexeme.STRING},
+			ExpectSym: lexeme.Lexeme{`"From hell with love"`, 0, 21, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"Bam: \"Leaders eat last!\""`,
-			ExpectSym: lexeme.Symbol{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, lexeme.STRING},
+			ExpectSym: lexeme.Lexeme{`"Bam: \"Leaders eat last!\""`, 0, 28, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"\\\\\""`,
-			ExpectSym: lexeme.Symbol{`"\\\\\""`, 0, 8, 0, lexeme.STRING},
+			ExpectSym: lexeme.Lexeme{`"\\\\\""`, 0, 8, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"`,
@@ -34,7 +34,7 @@ func strSymTests() []symTest {
 		},
 		symTest{
 			Input:     `"a"x`,
-			ExpectSym: lexeme.Symbol{`"a"`, 0, 3, 0, lexeme.STRING},
+			ExpectSym: lexeme.Lexeme{`"a"`, 0, 3, 0, lexeme.STRING},
 		},
 		symTest{
 			Input:     `"escaped \"`,
