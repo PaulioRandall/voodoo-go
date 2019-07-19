@@ -20,3 +20,11 @@ func (itr *SymItr) Length() int {
 	return itr.length
 }
 
+// HasNext returns true if there are any symbols yet to be
+// iterated.
+func (itr *SymItr) HasNext() bool {
+	if itr.index < itr.length {
+		return true
+	}
+	return false
+}
