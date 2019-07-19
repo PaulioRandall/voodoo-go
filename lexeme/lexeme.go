@@ -11,7 +11,7 @@ type LexemeType int
 
 const (
 	UNDEFINED LexemeType = iota
-	// Composite
+	// Fully or partly alphanumeric
 	KEYWORD_SCROLL // scroll
 	KEYWORD_SPELL  // spell
 	KEYWORD_LOOP   // loop
@@ -25,37 +25,38 @@ const (
 	STRING   // "blahblah"
 	COMMENT  // // blahblah
 	SOURCERY // @Blahblah
-	// Misc
-	WHITESPACE
-	ASSIGNMENT // <-
-	VOID       // _
-	RANGE      // ..
-	// Conditional
-	IF_TRUE_THEN // =>
-	NEGATION     // !
-	// Boolean operators
+	// Comparison operators
 	EQUAL                 // ==
 	NOT_EQUAL             // !=
 	LESS_THAN             // <
 	LESS_THAN_OR_EQUAL    // <=
 	GREATER_THAN          // >
 	GREATER_THAN_OR_EQUAL // >=
+  // Logical operators
 	OR                    // ||
 	AND                   // &&
+  NEGATION     // !
+  IF_TRUE_THEN // =>
 	// Arithmetic operators
 	ADD      // +
 	SUBTRACT // -
 	MULTIPLY // *
 	DIVIDE   // /
 	MODULO   // %
-	// Brackets
+	// Context boundries
 	CURVED_BRACE_OPEN  // (
 	CURVED_BRACE_CLOSE // )
 	SQUARE_BRACE_OPEN  // [
 	SQUARE_BRACE_CLOSE // ]
-	// Separators
+  // Punctuation
+  ASSIGNMENT // <-
 	VALUE_SEPARATOR     // ,
 	KEY_VALUE_SEPARATOR // :
+  RANGE // ..
+  // Whitespace
+	WHITESPACE
+  // Ignoramuses
+	VOID // _
 )
 
 // Lexeme represents a rune or string within the code
