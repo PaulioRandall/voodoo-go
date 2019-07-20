@@ -71,6 +71,12 @@ func strimTests() []strimTest {
 		},
 		strimTest{
 			Input: []lexeme.Lexeme{
+				lexeme.Lexeme{`// 'There's a snake in my boot'`, 0, 31, 0, lexeme.COMMENT},
+			},
+			ExpectToks: []Token{},
+		},
+		strimTest{
+			Input: []lexeme.Lexeme{
 				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 1, 2, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
@@ -87,22 +93,26 @@ func strimTests() []strimTest {
 		},
 		strimTest{
 			Input: []lexeme.Lexeme{
-				lexeme.Lexeme{`// 'There's a snake in my boot'`, 0, 31, 0, lexeme.COMMENT},
-			},
-			ExpectToks: []Token{},
-		},
-		strimTest{
-			Input: []lexeme.Lexeme{
-				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
-				lexeme.Lexeme{` `, 1, 2, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
-				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`"Howdy partner"`, 5, 20, 0, lexeme.STRING},
 			},
 			ExpectToks: []Token{
-				Token{`x`, 0, 1, 0, lexeme.IDENTIFIER},
-				Token{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
 				Token{`Howdy partner`, 5, 20, 0, lexeme.STRING},
+			},
+		},
+		strimTest{
+			Input: []lexeme.Lexeme{
+				lexeme.Lexeme{`123_456`, 0, 7, 0, lexeme.NUMBER},
+			},
+			ExpectToks: []Token{
+				Token{`123456`, 0, 7, 0, lexeme.NUMBER},
+			},
+		},
+		strimTest{
+			Input: []lexeme.Lexeme{
+				lexeme.Lexeme{`1__2__3__.__4__5__6__`, 0, 21, 0, lexeme.NUMBER},
+			},
+			ExpectToks: []Token{
+				Token{`123.456`, 0, 21, 0, lexeme.NUMBER},
 			},
 		},
 	}

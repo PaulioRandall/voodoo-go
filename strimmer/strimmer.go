@@ -1,6 +1,8 @@
 package strimmer
 
 import (
+	"strings"
+
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
@@ -15,6 +17,7 @@ import (
 // -> Removing underscores from numbers
 // -> Merging any explicit number sign with it's number
 // -> Converting all letters to lowercase (Except string literals)
+// -> Merging the numbers with their sign (if one has been declared)
 func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
 
 	ts := []Token{}
@@ -28,8 +31,8 @@ func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
 		case l.Type == lexeme.STRING:
 			penultimate := len(l.Val) - 1
 			l.Val = l.Val[1:penultimate]
-
-			// NEXT: Remove quotes from string literals... write test as well
+		case l.Type == lexeme.NUMBER:
+			l.Val = strings.ReplaceAll(l.Val, `_`, ``)
 		}
 
 		t := Token(l)
