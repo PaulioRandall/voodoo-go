@@ -49,10 +49,8 @@ func TestLexItr_NextLex(t *testing.T) {
   
 	assert.Equal(t, &ls[0], itr.NextLex())
   assert.Equal(t, 1, itr.index)
-  
 	assert.Equal(t, &ls[1], itr.NextLex())
   assert.Equal(t, 2, itr.index)
-  
 	assert.Equal(t, &ls[2], itr.NextLex())
   assert.Equal(t, 3, itr.index)
   

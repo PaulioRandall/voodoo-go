@@ -63,13 +63,11 @@ func strimTests() []strimTest {
 				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`1`, 5, 6, 0, lexeme.NUMBER},
       },
-/*
       ExpectToks: []Token{
         Token{`x`, 0, 1, 0, lexeme.IDENTIFIER},
 				Token{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
 				Token{`1`, 5, 6, 0, lexeme.NUMBER},
       },
-*/
 		},
   }
 }

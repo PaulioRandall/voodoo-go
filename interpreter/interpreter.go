@@ -24,12 +24,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 		lexeme.PrintlnLexemes(l)
 
-		// NEXT: Strimmer -> Normalises lexemes by:
-		//                  => Removing whitespace lexemes
-		//                  => Removing comment lexemes
-		//                  => Removing quote marks from string literals
-		//                  => Removing underscores from numbers
-		//                  => Converting all letters to lowercase
+		// NEXT: Strimmer
 		// NEXT: Syntax Analyser
 
 		line = sc.Next(line)
