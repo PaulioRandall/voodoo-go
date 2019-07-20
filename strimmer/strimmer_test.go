@@ -115,5 +115,19 @@ func strimTests() []strimTest {
 				Token{`123.456`, 0, 21, 0, lexeme.NUMBER},
 			},
 		},
+		strimTest{
+			Input: []lexeme.Lexeme{
+				lexeme.Lexeme{`scroll`, 0, 6, 0, lexeme.KEYWORD_SCROLL},
+				lexeme.Lexeme{` `, 6, 7, 0, lexeme.WHITESPACE},
+				lexeme.Lexeme{`END`, 7, 10, 0, lexeme.KEYWORD_END},
+				lexeme.Lexeme{` `, 10, 11, 0, lexeme.WHITESPACE},
+				lexeme.Lexeme{`@PrInTlN`, 11, 19, 0, lexeme.SOURCERY},
+			},
+			ExpectToks: []Token{
+				Token{`scroll`, 0, 6, 0, lexeme.KEYWORD_SCROLL},
+				Token{`end`, 7, 10, 0, lexeme.KEYWORD_END},
+				Token{`@println`, 11, 19, 0, lexeme.SOURCERY},
+			},
+		},
 	}
 }

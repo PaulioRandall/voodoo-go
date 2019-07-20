@@ -15,7 +15,6 @@ import (
 // -> Removing comment lexemes
 // -> Removing quote marks from string literals
 // -> Removing underscores from numbers
-// -> Merging any explicit number sign with it's number
 // -> Converting all letters to lowercase (Except string literals)
 // -> Merging the numbers with their sign (if one has been declared)
 func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
@@ -33,6 +32,8 @@ func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
 			l.Val = l.Val[1:penultimate]
 		case l.Type == lexeme.NUMBER:
 			l.Val = strings.ReplaceAll(l.Val, `_`, ``)
+		case l.Type > lexeme.ALPHABETIC_START && l.Type < lexeme.ALPHABETIC_END:
+			l.Val = strings.ToLower(l.Val)
 		}
 
 		t := Token(l)

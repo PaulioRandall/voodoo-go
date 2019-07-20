@@ -11,7 +11,8 @@ type LexemeType int
 
 const (
 	UNDEFINED LexemeType = iota
-	// Fully or partly alphanumeric
+	// Fully or partly alphabetic
+	ALPHABETIC_START
 	KEYWORD_SCROLL // scroll
 	KEYWORD_SPELL  // spell
 	KEYWORD_LOOP   // loop
@@ -22,10 +23,14 @@ const (
 	IDENTIFIER
 	BOOLEAN_TRUE  // true
 	BOOLEAN_FALSE // false
-	NUMBER        // ##.###
-	STRING        // "blahblah"
-	COMMENT       // // blahblah
 	SOURCERY      // @Blahblah
+	ALPHABETIC_END
+	// Fully or partly alphabetic but representation must reamin
+	// as the user defined
+	STRING  // "blahblah"
+	COMMENT // // blahblah
+	// Numeric
+	NUMBER // ##.###
 	// Comparison operators
 	EQUAL                 // ==
 	NOT_EQUAL             // !=
