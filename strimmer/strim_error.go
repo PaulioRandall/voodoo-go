@@ -1,5 +1,10 @@
 package strimmer
 
-type StrimError interface {
+import (
+  "github.com/PaulioRandall/voodoo-go/lexer"
+)
 
-}
+// StrimError represents an error returned by the strimmer
+// and contains additional error information such as the
+// line and column number.
+type StrimError lexer.LexError
