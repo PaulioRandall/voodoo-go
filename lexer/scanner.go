@@ -85,9 +85,9 @@ func wordLex(itr *runer.RuneItr) *lexeme.Lexeme {
 	case `val`:
 		t = lexeme.KEYWORD_VAL
 	case `true`:
-		t = lexeme.BOOLEAN
+		t = lexeme.BOOLEAN_TRUE
 	case `false`:
-		t = lexeme.BOOLEAN
+		t = lexeme.BOOLEAN_FALSE
 	default:
 		t = lexeme.IDENTIFIER
 	}

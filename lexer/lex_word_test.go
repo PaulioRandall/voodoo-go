@@ -58,11 +58,11 @@ func wordLexTests() []lexTest {
 		},
 		lexTest{
 			Input:     `true`,
-			ExpectLex: lexeme.Lexeme{`true`, 0, 4, 0, lexeme.BOOLEAN},
+			ExpectLex: lexeme.Lexeme{`true`, 0, 4, 0, lexeme.BOOLEAN_TRUE},
 		},
 		lexTest{
 			Input:     `false`,
-			ExpectLex: lexeme.Lexeme{`false`, 0, 5, 0, lexeme.BOOLEAN},
+			ExpectLex: lexeme.Lexeme{`false`, 0, 5, 0, lexeme.BOOLEAN_FALSE},
 		},
 	}
 }

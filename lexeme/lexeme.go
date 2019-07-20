@@ -20,7 +20,8 @@ const (
 	KEYWORD_KEY    // key
 	KEYWORD_VAL    // value
 	IDENTIFIER
-	BOOLEAN  // true/false
+	BOOLEAN_TRUE  // true
+  BOOLEAN_FALSE  // false
 	NUMBER   // ##.###
 	STRING   // "blahblah"
 	COMMENT  // // blahblah

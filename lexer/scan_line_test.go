@@ -141,7 +141,7 @@ func apiTests() []scanLineTest {
 				lexeme.Lexeme{` `, 1, 2, 123, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 2, 4, 123, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 4, 5, 123, lexeme.WHITESPACE},
-				lexeme.Lexeme{`true`, 5, 9, 123, lexeme.BOOLEAN},
+				lexeme.Lexeme{`true`, 5, 9, 123, lexeme.BOOLEAN_TRUE},
 			},
 		},
 		scanLineTest{
