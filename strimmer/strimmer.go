@@ -5,7 +5,7 @@ import (
 )
 
 // Strim normalises an array of lexemes and converts them to tokens
-// ready for a syntax analyser. 
+// ready for the syntax analyser. 
 //
 // Normalising involves:
 // -> Removing whitespace lexemes
@@ -15,5 +15,8 @@ import (
 // -> Merging any explicit number sign with it's number
 // -> Converting all letters to lowercase (Except string literals)
 func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
+
+  
+
   return nil, nil
 }
