@@ -1,4 +1,4 @@
- package lexeme
+package lexeme
 
 // LexItr provides a way to iterate lexeme arrays.
 type LexItr struct {
@@ -10,14 +10,14 @@ type LexItr struct {
 // increment adds one to the iterators array index
 // counter.
 func (itr *LexItr) increment() {
-  itr.index += 1
+	itr.index += 1
 }
 
 // NewLexItr creates a new Lexeme iterator.
 func NewLexItr(ls []Lexeme) *LexItr {
 	return &LexItr{
 		length: len(ls),
-		array:   ls,
+		array:  ls,
 	}
 }
 
@@ -38,9 +38,9 @@ func (itr *LexItr) HasNext() bool {
 // NextLex returns the next lexeme in the array and increments
 // the iterators array counter.
 func (itr *LexItr) NextLex() *Lexeme {
-  if itr.HasNext() {
-    defer itr.increment()
-    return &itr.array[itr.index]
-  }
-  return nil
-} 
+	if itr.HasNext() {
+		defer itr.increment()
+		return &itr.array[itr.index]
+	}
+	return nil
+}

@@ -2,7 +2,7 @@ package lexeme
 
 import (
 	"testing"
-	
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,15 +45,15 @@ func TestLexItr_NextLex(t *testing.T) {
 	ls := dummyLexArray(`a`, `b`, `語`)
 	itr := NewLexItr(ls)
 
-  assert.Equal(t, 0, itr.index)
-  
+	assert.Equal(t, 0, itr.index)
+
 	assert.Equal(t, &ls[0], itr.NextLex())
-  assert.Equal(t, 1, itr.index)
+	assert.Equal(t, 1, itr.index)
 	assert.Equal(t, &ls[1], itr.NextLex())
-  assert.Equal(t, 2, itr.index)
+	assert.Equal(t, 2, itr.index)
 	assert.Equal(t, &ls[2], itr.NextLex())
-  assert.Equal(t, 3, itr.index)
-  
+	assert.Equal(t, 3, itr.index)
+
 	assert.Equal(t, NIL_LEX, itr.NextLex())
-  assert.Equal(t, itr.length, itr.index)
+	assert.Equal(t, itr.length, itr.index)
 }

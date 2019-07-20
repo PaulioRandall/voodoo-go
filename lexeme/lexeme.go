@@ -21,11 +21,11 @@ const (
 	KEYWORD_VAL    // value
 	IDENTIFIER
 	BOOLEAN_TRUE  // true
-  BOOLEAN_FALSE  // false
-	NUMBER   // ##.###
-	STRING   // "blahblah"
-	COMMENT  // // blahblah
-	SOURCERY // @Blahblah
+	BOOLEAN_FALSE // false
+	NUMBER        // ##.###
+	STRING        // "blahblah"
+	COMMENT       // // blahblah
+	SOURCERY      // @Blahblah
 	// Comparison operators
 	EQUAL                 // ==
 	NOT_EQUAL             // !=
@@ -33,11 +33,11 @@ const (
 	LESS_THAN_OR_EQUAL    // <=
 	GREATER_THAN          // >
 	GREATER_THAN_OR_EQUAL // >=
-  // Logical operators
-	OR                    // ||
-	AND                   // &&
-  NEGATION     // !
-  IF_TRUE_THEN // =>
+	// Logical operators
+	OR           // ||
+	AND          // &&
+	NEGATION     // !
+	IF_TRUE_THEN // =>
 	// Arithmetic operators
 	ADD      // +
 	SUBTRACT // -
@@ -49,14 +49,14 @@ const (
 	CURVED_BRACE_CLOSE // )
 	SQUARE_BRACE_OPEN  // [
 	SQUARE_BRACE_CLOSE // ]
-  // Punctuation
-  ASSIGNMENT // <-
+	// Punctuation
+	ASSIGNMENT          // <-
 	VALUE_SEPARATOR     // ,
 	KEY_VALUE_SEPARATOR // :
-  RANGE // ..
-  // Whitespace
+	RANGE               // ..
+	// Whitespace
 	WHITESPACE
-  // Ignoramuses
+	// Ignoramuses
 	VOID // _
 )
 

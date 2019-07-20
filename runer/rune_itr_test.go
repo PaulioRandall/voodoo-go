@@ -194,18 +194,18 @@ func TestRuneItr_IsRelLetter(t *testing.T) {
 	s := `a2語`
 	itr := NewRuneItr(s)
 
-  assert.False(t, itr.IsRelLetter(-1))
+	assert.False(t, itr.IsRelLetter(-1))
 	assert.True(t, itr.IsRelLetter(0))
-  assert.False(t, itr.IsRelLetter(1))
-  assert.True(t, itr.IsRelLetter(2))
-  assert.False(t, itr.IsRelLetter(3))
+	assert.False(t, itr.IsRelLetter(1))
+	assert.True(t, itr.IsRelLetter(2))
+	assert.False(t, itr.IsRelLetter(3))
 	itr.index += 1
-  itr.index += 1
-  assert.False(t, itr.IsRelLetter(-3))
+	itr.index += 1
+	assert.False(t, itr.IsRelLetter(-3))
 	assert.True(t, itr.IsRelLetter(-2))
-  assert.False(t, itr.IsRelLetter(-1))
-  assert.True(t, itr.IsRelLetter(0))
-  assert.False(t, itr.IsRelLetter(1))
+	assert.False(t, itr.IsRelLetter(-1))
+	assert.True(t, itr.IsRelLetter(0))
+	assert.False(t, itr.IsRelLetter(1))
 }
 
 func TestRuneItr_IsNextDigit(t *testing.T) {

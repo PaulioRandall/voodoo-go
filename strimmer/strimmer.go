@@ -1,7 +1,7 @@
 package strimmer
 
 import (
-  "github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
 // Strim normalises an array of lexemes and converts them to tokens
@@ -18,15 +18,19 @@ func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
 
 	ts := []Token{}
 
-  for _, l := range ls {
-    switch {
-    case l.Type == lexeme.WHITESPACE:
-      continue
-    }
-    
-    t := Token(l)
-    ts = append(ts, t)
-  }
+	for _, l := range ls {
+		switch {
+		case l.Type == lexeme.WHITESPACE:
+			continue
+		case l.Type == lexeme.COMMENT:
+			continue
 
-  return ts, nil
+			// NEXT: Comments... write test as well
+		}
+
+		t := Token(l)
+		ts = append(ts, t)
+	}
+
+	return ts, nil
 }

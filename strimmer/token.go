@@ -1,7 +1,7 @@
 package strimmer
 
 import (
-  "github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/PaulioRandall/voodoo-go/lexeme"
 )
 
 // Token represents a lexeme that is useable by a

@@ -1,11 +1,11 @@
 package strimmer
 
 import (
-  "testing"
-  "strconv"
+	"strconv"
+	"testing"
 
-  "github.com/PaulioRandall/voodoo-go/lexeme"
-  "github.com/stretchr/testify/assert"
+	"github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -57,17 +57,39 @@ func strimTests() []strimTest {
 	return []strimTest{
 		strimTest{
 			Input: []lexeme.Lexeme{
-        lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
+				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 1, 2, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
 				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`1`, 5, 6, 0, lexeme.NUMBER},
-      },
-      ExpectToks: []Token{
-        Token{`x`, 0, 1, 0, lexeme.IDENTIFIER},
+			},
+			ExpectToks: []Token{
+				Token{`x`, 0, 1, 0, lexeme.IDENTIFIER},
 				Token{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
 				Token{`1`, 5, 6, 0, lexeme.NUMBER},
-      },
+			},
 		},
-  }
+		strimTest{
+			Input: []lexeme.Lexeme{
+				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
+				lexeme.Lexeme{` `, 1, 2, 0, lexeme.WHITESPACE},
+				lexeme.Lexeme{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
+				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
+				lexeme.Lexeme{`2`, 5, 6, 0, lexeme.NUMBER},
+				lexeme.Lexeme{` `, 6, 7, 0, lexeme.WHITESPACE},
+				lexeme.Lexeme{`// 'There's a snake in my boot'`, 7, 38, 0, lexeme.COMMENT},
+			},
+			ExpectToks: []Token{
+				Token{`x`, 0, 1, 0, lexeme.IDENTIFIER},
+				Token{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
+				Token{`2`, 5, 6, 0, lexeme.NUMBER},
+			},
+		},
+		strimTest{
+			Input: []lexeme.Lexeme{
+				lexeme.Lexeme{`// 'There's a snake in my boot'`, 0, 31, 0, lexeme.COMMENT},
+			},
+			ExpectToks: []Token{},
+		},
+	}
 }

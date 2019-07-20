@@ -161,7 +161,7 @@ func (itr *RuneItr) IsNextLetter() bool {
 // exists then the -1 will be returned. False is also returned if no
 // more runes remain to iterate.
 func (itr *RuneItr) IsRelLetter(offset int) bool {
-  ru := itr.PeekRelRune(offset)
+	ru := itr.PeekRelRune(offset)
 	return unicode.IsLetter(ru)
 }
 

@@ -1,7 +1,7 @@
 package strimmer
 
 import (
-  "github.com/PaulioRandall/voodoo-go/lexer"
+	"github.com/PaulioRandall/voodoo-go/lexer"
 )
 
 // TODO: Remove dependency on lexer
