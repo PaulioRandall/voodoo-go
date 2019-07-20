@@ -91,5 +91,19 @@ func strimTests() []strimTest {
 			},
 			ExpectToks: []Token{},
 		},
+		strimTest{
+			Input: []lexeme.Lexeme{
+				lexeme.Lexeme{`x`, 0, 1, 0, lexeme.IDENTIFIER},
+				lexeme.Lexeme{` `, 1, 2, 0, lexeme.WHITESPACE},
+				lexeme.Lexeme{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
+				lexeme.Lexeme{` `, 4, 5, 0, lexeme.WHITESPACE},
+				lexeme.Lexeme{`"Howdy partner"`, 5, 20, 0, lexeme.STRING},
+			},
+			ExpectToks: []Token{
+				Token{`x`, 0, 1, 0, lexeme.IDENTIFIER},
+				Token{`<-`, 2, 4, 0, lexeme.ASSIGNMENT},
+				Token{`Howdy partner`, 5, 20, 0, lexeme.STRING},
+			},
+		},
 	}
 }

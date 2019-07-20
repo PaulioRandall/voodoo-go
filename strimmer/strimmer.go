@@ -5,7 +5,8 @@ import (
 )
 
 // Strim normalises an array of lexemes and converts them to tokens
-// ready for the syntax analyser.
+// ready for the syntax analyser. It assumes each lexeme is correct
+// and valid even if together they do not form a valid statement.
 //
 // Normalising involves:
 // -> Removing whitespace lexemes
@@ -24,8 +25,11 @@ func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
 			continue
 		case l.Type == lexeme.COMMENT:
 			continue
+		case l.Type == lexeme.STRING:
+			penultimate := len(l.Val) - 1
+			l.Val = l.Val[1:penultimate]
 
-			// NEXT: Comments... write test as well
+			// NEXT: Remove quotes from string literals... write test as well
 		}
 
 		t := Token(l)
