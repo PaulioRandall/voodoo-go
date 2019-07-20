@@ -16,10 +16,9 @@ import (
 // -> Removing quote marks from string literals
 // -> Removing underscores from numbers
 // -> Converting all letters to lowercase (Except string literals)
-// -> Merging the numbers with their sign (if one has been declared)
-func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
+func Strim(ls []lexeme.Lexeme) []lexeme.Token {
 
-	ts := []Token{}
+	ts := []lexeme.Token{}
 
 	for _, l := range ls {
 		switch {
@@ -36,9 +35,9 @@ func Strim(ls []lexeme.Lexeme) ([]Token, StrimError) {
 			l.Val = strings.ToLower(l.Val)
 		}
 
-		t := Token(l)
+		t := lexeme.Token(l)
 		ts = append(ts, t)
 	}
 
-	return ts, nil
+	return ts
 }

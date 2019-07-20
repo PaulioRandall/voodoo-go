@@ -24,7 +24,8 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 		lexeme.PrintlnLexemes(l)
 
-		// NEXT: Strimmer
+		// NEXT: Create token printer
+    // NEXT: Rename lexeme pkg to symbol
 		// NEXT: Syntax Analyser
 
 		line = sc.Next(line)
