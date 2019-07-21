@@ -92,11 +92,13 @@ func strimTests() []strimTest {
 				lexeme.Lexeme{`END`, 7, 10, 0, lexeme.KEYWORD_END},
 				lexeme.Lexeme{` `, 10, 11, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`@PrInTlN`, 11, 19, 0, lexeme.SOURCERY},
+				lexeme.Lexeme{`語`, 19, 20, 0, lexeme.IDENTIFIER},
 			},
 			ExpectToks: []lexeme.Token{
 				lexeme.Token{`scroll`, 0, 6, 0, lexeme.KEYWORD_SCROLL},
 				lexeme.Token{`end`, 7, 10, 0, lexeme.KEYWORD_END},
 				lexeme.Token{`@println`, 11, 19, 0, lexeme.SOURCERY},
+				lexeme.Token{`語`, 19, 20, 0, lexeme.IDENTIFIER},
 			},
 		},
 	}

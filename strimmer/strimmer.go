@@ -8,7 +8,8 @@ import (
 
 // Strim normalises an array of lexemes and converts them to tokens
 // ready for the syntax analyser. It assumes each lexeme is correct
-// and valid even if together they do not form a valid statement.
+// and valid even if together they do not form a valid statement;
+// validation will happen later.
 //
 // Normalising involves:
 // -> Removing whitespace lexemes

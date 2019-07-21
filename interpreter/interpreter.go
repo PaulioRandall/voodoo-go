@@ -4,6 +4,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexeme"
 	"github.com/PaulioRandall/voodoo-go/lexer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
+	"github.com/PaulioRandall/voodoo-go/strimmer"
 )
 
 // ExitCode represents a program exit code
@@ -17,15 +18,15 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 	for line != nil {
 
-		l, err := lexer.ScanLine(line.Val, line.Num)
+		lexemes, err := lexer.ScanLine(line.Val, line.Num)
 		if err != nil {
 			return 1, err
 		}
 
-		lexeme.PrintlnLexemes(l)
+		tokens := strimmer.Strim(lexemes)
+		lexeme.PrintlnTokenTypes(tokens)
 
-		// NEXT: Create token printer
-    // NEXT: Rename lexeme pkg to symbol
+		// NEXT: Rename lexeme pkg to symbol
 		// NEXT: Syntax Analyser
 
 		line = sc.Next(line)
