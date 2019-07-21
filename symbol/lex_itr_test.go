@@ -1,4 +1,4 @@
-package lexeme
+package symbol
 
 import (
 	"testing"

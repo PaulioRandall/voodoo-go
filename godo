@@ -47,7 +47,7 @@ if [[ $? == 1 ]]; then
 	echo Formatting...
 	go fmt ./cmd
 	go fmt ./interpreter
-  go fmt ./lexeme
+  go fmt ./symbol
 	go fmt ./lexer
   go fmt ./runer
 	go fmt ./scroll

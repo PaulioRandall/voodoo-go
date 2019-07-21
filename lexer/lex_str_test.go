@@ -3,7 +3,7 @@ package lexer
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 func TestStrLex(t *testing.T) {
@@ -14,19 +14,19 @@ func strLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `""`,
-			ExpectLex: lexeme.Lexeme{`""`, 0, 2, 0, lexeme.STRING},
+			ExpectLex: symbol.Lexeme{`""`, 0, 2, 0, symbol.STRING},
 		},
 		lexTest{
 			Input:     `"From hell with love"`,
-			ExpectLex: lexeme.Lexeme{`"From hell with love"`, 0, 21, 0, lexeme.STRING},
+			ExpectLex: symbol.Lexeme{`"From hell with love"`, 0, 21, 0, symbol.STRING},
 		},
 		lexTest{
 			Input:     `"Simon: \"Leaders eat last!\""`,
-			ExpectLex: lexeme.Lexeme{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, lexeme.STRING},
+			ExpectLex: symbol.Lexeme{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, symbol.STRING},
 		},
 		lexTest{
 			Input:     `"\\\\\""`,
-			ExpectLex: lexeme.Lexeme{`"\\\\\""`, 0, 8, 0, lexeme.STRING},
+			ExpectLex: symbol.Lexeme{`"\\\\\""`, 0, 8, 0, symbol.STRING},
 		},
 		lexTest{
 			Input:     `"`,
@@ -34,7 +34,7 @@ func strLexTests() []lexTest {
 		},
 		lexTest{
 			Input:     `"a"x`,
-			ExpectLex: lexeme.Lexeme{`"a"`, 0, 3, 0, lexeme.STRING},
+			ExpectLex: symbol.Lexeme{`"a"`, 0, 3, 0, symbol.STRING},
 		},
 		lexTest{
 			Input:     `"escaped \"`,

@@ -1,10 +1,12 @@
 package interpreter
 
 import (
-	"github.com/PaulioRandall/voodoo-go/lexeme"
+	"fmt"
+
 	"github.com/PaulioRandall/voodoo-go/lexer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
 	"github.com/PaulioRandall/voodoo-go/strimmer"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 // ExitCode represents a program exit code
@@ -24,9 +26,10 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 		}
 
 		tokens := strimmer.Strim(lexemes)
-		lexeme.PrintlnTokenTypes(tokens)
+		symbol.PrintlnTokenValues(tokens)
+		symbol.PrintlnTokenTypes(tokens)
+		fmt.Println()
 
-		// NEXT: IF_TRUE_THEN should be IF_MATCH_THEN
 		// NEXT: Rename lexeme pkg to symbol
 		// NEXT: Syntax Analyser
 

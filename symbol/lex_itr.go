@@ -1,4 +1,4 @@
-package lexeme
+package symbol
 
 // LexItr provides a way to iterate lexeme arrays.
 type LexItr struct {

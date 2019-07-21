@@ -3,7 +3,7 @@ package lexer
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 func TestSymbolLex(t *testing.T) {
@@ -14,99 +14,99 @@ func symbolLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `==`,
-			ExpectLex: lexeme.Lexeme{`==`, 0, 2, 0, lexeme.EQUAL},
+			ExpectLex: symbol.Lexeme{`==`, 0, 2, 0, symbol.EQUAL},
 		},
 		lexTest{
 			Input:     `!=`,
-			ExpectLex: lexeme.Lexeme{`!=`, 0, 2, 0, lexeme.NOT_EQUAL},
+			ExpectLex: symbol.Lexeme{`!=`, 0, 2, 0, symbol.NOT_EQUAL},
 		},
 		lexTest{
 			Input:     `<`,
-			ExpectLex: lexeme.Lexeme{`<`, 0, 1, 0, lexeme.LESS_THAN},
+			ExpectLex: symbol.Lexeme{`<`, 0, 1, 0, symbol.LESS_THAN},
 		},
 		lexTest{
 			Input:     `<=`,
-			ExpectLex: lexeme.Lexeme{`<=`, 0, 2, 0, lexeme.LESS_THAN_OR_EQUAL},
+			ExpectLex: symbol.Lexeme{`<=`, 0, 2, 0, symbol.LESS_THAN_OR_EQUAL},
 		},
 		lexTest{
 			Input:     `>`,
-			ExpectLex: lexeme.Lexeme{`>`, 0, 1, 0, lexeme.GREATER_THAN},
+			ExpectLex: symbol.Lexeme{`>`, 0, 1, 0, symbol.GREATER_THAN},
 		},
 		lexTest{
 			Input:     `>=`,
-			ExpectLex: lexeme.Lexeme{`>=`, 0, 2, 0, lexeme.GREATER_THAN_OR_EQUAL},
+			ExpectLex: symbol.Lexeme{`>=`, 0, 2, 0, symbol.GREATER_THAN_OR_EQUAL},
 		},
 		lexTest{
 			Input:     `||`,
-			ExpectLex: lexeme.Lexeme{`||`, 0, 2, 0, lexeme.OR},
+			ExpectLex: symbol.Lexeme{`||`, 0, 2, 0, symbol.OR},
 		},
 		lexTest{
 			Input:     `&&`,
-			ExpectLex: lexeme.Lexeme{`&&`, 0, 2, 0, lexeme.AND},
+			ExpectLex: symbol.Lexeme{`&&`, 0, 2, 0, symbol.AND},
 		},
 		lexTest{
 			Input:     `<-`,
-			ExpectLex: lexeme.Lexeme{`<-`, 0, 2, 0, lexeme.ASSIGNMENT},
+			ExpectLex: symbol.Lexeme{`<-`, 0, 2, 0, symbol.ASSIGNMENT},
 		},
 		lexTest{
 			Input:     `=>`,
-			ExpectLex: lexeme.Lexeme{`=>`, 0, 2, 0, lexeme.IF_MATCH_THEN},
+			ExpectLex: symbol.Lexeme{`=>`, 0, 2, 0, symbol.IF_MATCH_THEN},
 		},
 		lexTest{
 			Input:     `_`,
-			ExpectLex: lexeme.Lexeme{`_`, 0, 1, 0, lexeme.VOID},
+			ExpectLex: symbol.Lexeme{`_`, 0, 1, 0, symbol.VOID},
 		},
 		lexTest{
 			Input:     `!`,
-			ExpectLex: lexeme.Lexeme{`!`, 0, 1, 0, lexeme.NEGATION},
+			ExpectLex: symbol.Lexeme{`!`, 0, 1, 0, symbol.NEGATION},
 		},
 		lexTest{
 			Input:     `+`,
-			ExpectLex: lexeme.Lexeme{`+`, 0, 1, 0, lexeme.ADD},
+			ExpectLex: symbol.Lexeme{`+`, 0, 1, 0, symbol.ADD},
 		},
 		lexTest{
 			Input:     `-`,
-			ExpectLex: lexeme.Lexeme{`-`, 0, 1, 0, lexeme.SUBTRACT},
+			ExpectLex: symbol.Lexeme{`-`, 0, 1, 0, symbol.SUBTRACT},
 		},
 		lexTest{
 			Input:     `*`,
-			ExpectLex: lexeme.Lexeme{`*`, 0, 1, 0, lexeme.MULTIPLY},
+			ExpectLex: symbol.Lexeme{`*`, 0, 1, 0, symbol.MULTIPLY},
 		},
 		lexTest{
 			Input:     `/`,
-			ExpectLex: lexeme.Lexeme{`/`, 0, 1, 0, lexeme.DIVIDE},
+			ExpectLex: symbol.Lexeme{`/`, 0, 1, 0, symbol.DIVIDE},
 		},
 		lexTest{
 			Input:     `%`,
-			ExpectLex: lexeme.Lexeme{`%`, 0, 1, 0, lexeme.MODULO},
+			ExpectLex: symbol.Lexeme{`%`, 0, 1, 0, symbol.MODULO},
 		},
 		lexTest{
 			Input:     `(`,
-			ExpectLex: lexeme.Lexeme{`(`, 0, 1, 0, lexeme.CURVED_BRACE_OPEN},
+			ExpectLex: symbol.Lexeme{`(`, 0, 1, 0, symbol.CURVED_BRACE_OPEN},
 		},
 		lexTest{
 			Input:     `)`,
-			ExpectLex: lexeme.Lexeme{`)`, 0, 1, 0, lexeme.CURVED_BRACE_CLOSE},
+			ExpectLex: symbol.Lexeme{`)`, 0, 1, 0, symbol.CURVED_BRACE_CLOSE},
 		},
 		lexTest{
 			Input:     `[`,
-			ExpectLex: lexeme.Lexeme{`[`, 0, 1, 0, lexeme.SQUARE_BRACE_OPEN},
+			ExpectLex: symbol.Lexeme{`[`, 0, 1, 0, symbol.SQUARE_BRACE_OPEN},
 		},
 		lexTest{
 			Input:     `]`,
-			ExpectLex: lexeme.Lexeme{`]`, 0, 1, 0, lexeme.SQUARE_BRACE_CLOSE},
+			ExpectLex: symbol.Lexeme{`]`, 0, 1, 0, symbol.SQUARE_BRACE_CLOSE},
 		},
 		lexTest{
 			Input:     `,`,
-			ExpectLex: lexeme.Lexeme{`,`, 0, 1, 0, lexeme.VALUE_SEPARATOR},
+			ExpectLex: symbol.Lexeme{`,`, 0, 1, 0, symbol.VALUE_SEPARATOR},
 		},
 		lexTest{
 			Input:     `:`,
-			ExpectLex: lexeme.Lexeme{`:`, 0, 1, 0, lexeme.KEY_VALUE_SEPARATOR},
+			ExpectLex: symbol.Lexeme{`:`, 0, 1, 0, symbol.KEY_VALUE_SEPARATOR},
 		},
 		lexTest{
 			Input:     `..`,
-			ExpectLex: lexeme.Lexeme{`..`, 0, 2, 0, lexeme.RANGE},
+			ExpectLex: symbol.Lexeme{`..`, 0, 2, 0, symbol.RANGE},
 		},
 		lexTest{
 			Input:     `=`,

@@ -3,7 +3,7 @@ package strimmer
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 // Strim normalises an array of lexemes and converts them to tokens
@@ -17,26 +17,26 @@ import (
 // -> Removing quote marks from string literals
 // -> Removing underscores from numbers
 // -> Converting all letters to lowercase (Except string literals)
-func Strim(ls []lexeme.Lexeme) []lexeme.Token {
+func Strim(ls []symbol.Lexeme) []symbol.Token {
 
-	ts := []lexeme.Token{}
+	ts := []symbol.Token{}
 
 	for _, l := range ls {
 		switch {
-		case l.Type == lexeme.WHITESPACE:
+		case l.Type == symbol.WHITESPACE:
 			continue
-		case l.Type == lexeme.COMMENT:
+		case l.Type == symbol.COMMENT:
 			continue
-		case l.Type == lexeme.STRING:
+		case l.Type == symbol.STRING:
 			penultimate := len(l.Val) - 1
 			l.Val = l.Val[1:penultimate]
-		case l.Type == lexeme.NUMBER:
+		case l.Type == symbol.NUMBER:
 			l.Val = strings.ReplaceAll(l.Val, `_`, ``)
-		case l.Type > lexeme.ALPHABETIC_START && l.Type < lexeme.ALPHABETIC_END:
+		case l.Type > symbol.ALPHABETIC_START && l.Type < symbol.ALPHABETIC_END:
 			l.Val = strings.ToLower(l.Val)
 		}
 
-		t := lexeme.Token(l)
+		t := symbol.Token(l)
 		ts = append(ts, t)
 	}
 

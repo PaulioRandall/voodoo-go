@@ -3,7 +3,7 @@ package lexer
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 func TestSourceryLex(t *testing.T) {
@@ -14,15 +14,15 @@ func sourceryLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `@P`,
-			ExpectLex: lexeme.Lexeme{`@P`, 0, 2, 0, lexeme.SOURCERY},
+			ExpectLex: symbol.Lexeme{`@P`, 0, 2, 0, symbol.SOURCERY},
 		},
 		lexTest{
 			Input:     `@Println`,
-			ExpectLex: lexeme.Lexeme{`@Println`, 0, 8, 0, lexeme.SOURCERY},
+			ExpectLex: symbol.Lexeme{`@Println`, 0, 8, 0, symbol.SOURCERY},
 		},
 		lexTest{
 			Input:     `@a__12__xy__`,
-			ExpectLex: lexeme.Lexeme{`@a__12__xy__`, 0, 12, 0, lexeme.SOURCERY},
+			ExpectLex: symbol.Lexeme{`@a__12__xy__`, 0, 12, 0, symbol.SOURCERY},
 		},
 	}
 }

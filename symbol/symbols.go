@@ -1,4 +1,4 @@
-package lexeme
+package symbol
 
 import (
 	"fmt"
@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-// LexemeType represents the type of the lexeme.
-type LexemeType int
+// SymbolType represents the type of the symbol.
+type SymbolType int
 
 const (
-	UNDEFINED LexemeType = iota
+	UNDEFINED SymbolType = iota
 	// Fully or partly alphabetic
 	ALPHABETIC_START
 	KEYWORD_SCROLL // scroll
@@ -65,8 +65,8 @@ const (
 	VOID // _
 )
 
-// nameOfType returns the name of the lexeme type.
-func nameOfType(t LexemeType) string {
+// nameOfType returns the name of the symbol type.
+func nameOfType(t SymbolType) string {
 	switch t {
 	case KEYWORD_SCROLL:
 		return `KEYWORD_SCROLL`
@@ -151,52 +151,35 @@ func nameOfType(t LexemeType) string {
 	return `UNDEFINED`
 }
 
-// Lexeme represents a rune or string within the code
-// that equates to a meaningful item within the grammer
-// rules.
-type Lexeme struct {
-	Val   string     // Lexeme value
+// Symbol represents a meaningful unit within the code.
+// I.e. identifier, operator, punctionation, etc.
+type Symbol struct {
+	Val   string     // Symbol value
 	Start int        // Index of first rune
 	End   int        // Index after last rune
 	Line  int        // Line number from scroll
-	Type  LexemeType // Type of lexeme
+	Type  SymbolType // Type of symbol
 }
 
-// String creates a string representation of the lexeme.
-func (lex Lexeme) String() string {
-	start := strconv.Itoa(lex.Start)
+// String creates a string representation of the symbol.
+func (s Symbol) String() string {
+	start := strconv.Itoa(s.Start)
 	start = strings.Repeat(` `, 3-len(start)) + start
-	return fmt.Sprintf("Line %-3d [%s->%-3d] `%s`", lex.Line, start, lex.End, lex.Val)
+	return fmt.Sprintf("Line %-3d [%s->%-3d] `%s`", s.Line, start, s.End, s.Val)
 }
 
-// PrintlnLexemes prints an array of lexemes.
-func PrintlnLexemes(ls []Lexeme) {
-	f := func(l Lexeme) string {
-		return l.Val
-	}
-	printlnLexemesArray(ls, f)
-}
-
-// PrintlnLexemeTypes prints the types of an array of lexemes.
-func PrintlnLexemeTypes(ls []Lexeme) {
-	f := func(l Lexeme) string {
-		return nameOfType(l.Type)
-	}
-	printlnLexemesArray(ls, f)
-}
-
-// printlnLexemesArray prints an array of lexemes where the
-// value to print for each lexeme is obtained via a the
+// printlnSymbols prints an array of symbols where the
+// value to print for each symbol is obtained via the
 // supplied function.
-func printlnLexemesArray(ls []Lexeme, f func(l Lexeme) string) {
-	l := len(ls)
+func printlnSymbols(ss []Symbol, f func(Symbol) string) {
+	l := len(ss)
 	if l == 0 {
 		fmt.Println(`[]`)
 		return
 	}
 
 	fmt.Print(`[`)
-	for i, v := range ls {
+	for i, v := range ss {
 		s := f(v)
 		fmt.Print(s)
 		if i < l-1 {

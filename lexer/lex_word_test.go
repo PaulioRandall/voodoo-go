@@ -3,7 +3,7 @@ package lexer
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/lexeme"
+	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 func TestWordLex(t *testing.T) {
@@ -14,55 +14,55 @@ func wordLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			Input:     `a`,
-			ExpectLex: lexeme.Lexeme{`a`, 0, 1, 0, lexeme.IDENTIFIER},
+			ExpectLex: symbol.Lexeme{`a`, 0, 1, 0, symbol.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `abc`,
-			ExpectLex: lexeme.Lexeme{`abc`, 0, 3, 0, lexeme.IDENTIFIER},
+			ExpectLex: symbol.Lexeme{`abc`, 0, 3, 0, symbol.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `abc_123`,
-			ExpectLex: lexeme.Lexeme{`abc_123`, 0, 7, 0, lexeme.IDENTIFIER},
+			ExpectLex: symbol.Lexeme{`abc_123`, 0, 7, 0, symbol.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `a__________123456789`,
-			ExpectLex: lexeme.Lexeme{`a__________123456789`, 0, 20, 0, lexeme.IDENTIFIER},
+			ExpectLex: symbol.Lexeme{`a__________123456789`, 0, 20, 0, symbol.IDENTIFIER},
 		},
 		lexTest{
 			Input:     `SCROLL`,
-			ExpectLex: lexeme.Lexeme{`SCROLL`, 0, 6, 0, lexeme.KEYWORD_SCROLL},
+			ExpectLex: symbol.Lexeme{`SCROLL`, 0, 6, 0, symbol.KEYWORD_SCROLL},
 		},
 		lexTest{
 			Input:     `sPeLL`,
-			ExpectLex: lexeme.Lexeme{`sPeLL`, 0, 5, 0, lexeme.KEYWORD_SPELL},
+			ExpectLex: symbol.Lexeme{`sPeLL`, 0, 5, 0, symbol.KEYWORD_SPELL},
 		},
 		lexTest{
 			Input:     `loop`,
-			ExpectLex: lexeme.Lexeme{`loop`, 0, 4, 0, lexeme.KEYWORD_LOOP},
+			ExpectLex: symbol.Lexeme{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
 		},
 		lexTest{
 			Input:     `when`,
-			ExpectLex: lexeme.Lexeme{`when`, 0, 4, 0, lexeme.KEYWORD_WHEN},
+			ExpectLex: symbol.Lexeme{`when`, 0, 4, 0, symbol.KEYWORD_WHEN},
 		},
 		lexTest{
 			Input:     `end`,
-			ExpectLex: lexeme.Lexeme{`end`, 0, 3, 0, lexeme.KEYWORD_END},
+			ExpectLex: symbol.Lexeme{`end`, 0, 3, 0, symbol.KEYWORD_END},
 		},
 		lexTest{
 			Input:     `key`,
-			ExpectLex: lexeme.Lexeme{`key`, 0, 3, 0, lexeme.KEYWORD_KEY},
+			ExpectLex: symbol.Lexeme{`key`, 0, 3, 0, symbol.KEYWORD_KEY},
 		},
 		lexTest{
 			Input:     `val`,
-			ExpectLex: lexeme.Lexeme{`val`, 0, 3, 0, lexeme.KEYWORD_VAL},
+			ExpectLex: symbol.Lexeme{`val`, 0, 3, 0, symbol.KEYWORD_VAL},
 		},
 		lexTest{
 			Input:     `true`,
-			ExpectLex: lexeme.Lexeme{`true`, 0, 4, 0, lexeme.BOOLEAN_TRUE},
+			ExpectLex: symbol.Lexeme{`true`, 0, 4, 0, symbol.BOOLEAN_TRUE},
 		},
 		lexTest{
 			Input:     `false`,
-			ExpectLex: lexeme.Lexeme{`false`, 0, 5, 0, lexeme.BOOLEAN_FALSE},
+			ExpectLex: symbol.Lexeme{`false`, 0, 5, 0, symbol.BOOLEAN_FALSE},
 		},
 	}
 }

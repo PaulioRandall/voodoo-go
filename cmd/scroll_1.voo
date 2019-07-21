@@ -7,3 +7,7 @@ when b == 0
 	true => err <- "Can't divide by zero"
 	false => c <- a / b
 end
+
+loop i <- 0..5
+  @Println(i)
+end
