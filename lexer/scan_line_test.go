@@ -263,7 +263,7 @@ func apiTests() []scanLineTest {
 				lexeme.Lexeme{`!`, 0, 1, 0, lexeme.NEGATION},
 				lexeme.Lexeme{`x`, 1, 2, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 2, 3, 0, lexeme.WHITESPACE},
-				lexeme.Lexeme{`=>`, 3, 5, 0, lexeme.IF_TRUE_THEN},
+				lexeme.Lexeme{`=>`, 3, 5, 0, lexeme.IF_MATCH_THEN},
 				lexeme.Lexeme{` `, 5, 6, 0, lexeme.WHITESPACE},
 				lexeme.Lexeme{`y`, 6, 7, 0, lexeme.IDENTIFIER},
 				lexeme.Lexeme{` `, 7, 8, 0, lexeme.WHITESPACE},

@@ -321,7 +321,7 @@ func symbolLex(itr *runer.RuneItr) (l *lexeme.Lexeme, err LexError) {
 	case itr.IsNextStr(`==`):
 		set(lexeme.EQUAL, 2)
 	case itr.IsNextStr(`=>`):
-		set(lexeme.IF_TRUE_THEN, 2)
+		set(lexeme.IF_MATCH_THEN, 2)
 	case itr.IsNextStr(`!=`):
 		set(lexeme.NOT_EQUAL, 2)
 	case itr.IsNext('!'):

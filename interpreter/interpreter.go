@@ -26,6 +26,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 		tokens := strimmer.Strim(lexemes)
 		lexeme.PrintlnTokenTypes(tokens)
 
+		// NEXT: IF_TRUE_THEN should be IF_MATCH_THEN
 		// NEXT: Rename lexeme pkg to symbol
 		// NEXT: Syntax Analyser
 

@@ -39,10 +39,10 @@ const (
 	GREATER_THAN          // >
 	GREATER_THAN_OR_EQUAL // >=
 	// Logical operators
-	OR           // ||
-	AND          // &&
-	NEGATION     // !
-	IF_TRUE_THEN // =>
+	OR            // ||
+	AND           // &&
+	NEGATION      // !
+	IF_MATCH_THEN // =>
 	// Arithmetic operators
 	ADD      // +
 	SUBTRACT // -
@@ -114,8 +114,8 @@ func nameOfType(t LexemeType) string {
 		return `AND`
 	case NEGATION:
 		return `NEGATION`
-	case IF_TRUE_THEN:
-		return `IF_TRUE_THEN`
+	case IF_MATCH_THEN:
+		return `IF_MATCH_THEN`
 	case ADD:
 		return `ADD`
 	case SUBTRACT:

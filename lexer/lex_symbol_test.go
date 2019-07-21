@@ -50,7 +50,7 @@ func symbolLexTests() []lexTest {
 		},
 		lexTest{
 			Input:     `=>`,
-			ExpectLex: lexeme.Lexeme{`=>`, 0, 2, 0, lexeme.IF_TRUE_THEN},
+			ExpectLex: lexeme.Lexeme{`=>`, 0, 2, 0, lexeme.IF_MATCH_THEN},
 		},
 		lexTest{
 			Input:     `_`,
