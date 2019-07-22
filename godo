@@ -54,7 +54,7 @@ if [[ $? == 1 ]]; then
 	go fmt ./shared
   go fmt ./strimmer
   go fmt ./operation
-  go fmt ./syntax
+  go fmt ./analyser
 fi
 
 exitIfNotZero $?

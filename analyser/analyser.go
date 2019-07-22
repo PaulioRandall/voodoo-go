@@ -1,4 +1,4 @@
-package syntax
+package analyser
 
 import (
 	"github.com/PaulioRandall/voodoo-go/operation"
@@ -8,14 +8,14 @@ import (
 // Analyse parses an array of tokens into a set of instructions.
 // Analysis involves:
 // 1: Scanning the token array for precedence brackets, the
-//    the curvy ones, and splitting the token array into
+//    the curvy ones, then splitting the token array into
 //    smaller ones until no brackets are left, an error is
 //    returned if a brace doesn't have an opposing partner.
 //    Braces are removed along the way with temporary variables
 //    being created and inserted where needed.
 //    E.g...
 //    Input:
-//      #0 = [x, <-, (, a, +, 12.3, -, (, c, *, d, ), )] = 13 tokens
+//      #0 = [x, <-, (, a, +, 12.3, -, (, c, *, d, ), )]
 //    Turns into:
 //      #0 = [x, <-, #1]
 //      #1 = [a, +, 12.3, -, (, c, *, d, )]
@@ -23,7 +23,7 @@ import (
 //      #0 = [x, <-, #1]
 //      #1 = [a, +, 12.3, -, #2]
 //      #2 = [c, *, d]
-//    Ordering is reversed:
+//    Ordering is always reversed:
 //      [#2, #1, #0]
 // 2: Each token array is then split into even smaller ones such
 //    that each contains exactly one instruction, error checking
@@ -69,6 +69,7 @@ import (
 //          As: x,
 //        },
 //      }
-func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.InsError) {
+func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.OpError) {
+
 	return nil, nil
 }

@@ -12,5 +12,5 @@ type Instruction interface {
 
 	// Exe executes the instruction within the given context
 	// returning true if the context has changed.
-	Exe(Context) (bool, InsError)
+	Exe(Context) (bool, OpError)
 }
