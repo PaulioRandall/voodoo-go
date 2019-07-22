@@ -1,8 +1,8 @@
 package syntax
 
 import (
+	"github.com/PaulioRandall/voodoo-go/operation"
 	"github.com/PaulioRandall/voodoo-go/symbol"
-	instruct "github.com/PaulioRandall/voodoo-go/instruction"
 )
 
 // Analyse parses an array of tokens into a set of instructions.
@@ -28,7 +28,7 @@ import (
 // 2: Each token array is then split into even smaller ones such
 //    that each contains exactly one instruction, error checking
 //    where possible.
-//    E.g... 
+//    E.g...
 //    Input:
 //      #2 = [c, *, d]
 //      #1 = [a, +, 12.3, -, #2]
@@ -57,18 +57,18 @@ import (
 //        Add{
 //          Left: a,
 //          Right: 12.3,
-//          As: #1.2,        
+//          As: #1.2,
 //        },
 //        Subtract{
 //          Left: #1.2,
 //          Right: #2.1,
-//          As: #1.1,        
+//          As: #1.1,
 //        },
 //        Assign{
 //          Val: #2.1,
-//          As: x,        
+//          As: x,
 //        },
 //      }
-func Analyse(ts []symbol.Token) (instruct.InstructionSet, instruct.InsError) {
+func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.InsError) {
 	return nil, nil
 }

@@ -1,5 +1,4 @@
-
-package instruction
+package operation
 
 // Instruction is a unit of activity within this
 // implementation. Instructions are executed within a given

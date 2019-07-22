@@ -53,6 +53,8 @@ if [[ $? == 1 ]]; then
 	go fmt ./scroll
 	go fmt ./shared
   go fmt ./strimmer
+  go fmt ./operation
+  go fmt ./syntax
 fi
 
 exitIfNotZero $?

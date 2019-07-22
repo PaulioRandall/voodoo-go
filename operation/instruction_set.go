@@ -1,5 +1,4 @@
-
-package instruction
+package operation
 
 // InstructionSet represents a statement or series of
 // operations from a scroll. It is a set of ordered

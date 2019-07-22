@@ -1,4 +1,4 @@
-package instruction
+package operation
 
 // TODO: Just wanted to get the idea down somewhere.
 // TODO: Do we need a Moment?
@@ -20,5 +20,4 @@ package instruction
 // as indivisable units of activity, I can reason about
 // the behaviour of it all in a manner that fits in my head.
 type Moment interface {
-	
 }

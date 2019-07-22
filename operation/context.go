@@ -1,5 +1,4 @@
-
-package instruction
+package operation
 
 // Context represents the state of an executing code block
 // such as a scroll, spell, loop, or when block.

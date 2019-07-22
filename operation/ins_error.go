@@ -1,11 +1,10 @@
-
-package instruction
+package operation
 
 // InsError represents an error while attempting to
 // perform an instruction.
 type InsError interface {
 	error
-	
+
 	// Returns the line number of the error.
 	Line() int
 }
