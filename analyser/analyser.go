@@ -7,24 +7,8 @@ import (
 
 // Analyse parses an array of tokens into a set of instructions.
 // Analysis involves:
-// 1: Scanning the token array for precedence brackets, the
-//    the curvy ones, then splitting the token array into
-//    smaller ones until no brackets are left, an error is
-//    returned if a brace doesn't have an opposing partner.
-//    Braces are removed along the way with temporary variables
-//    being created and inserted where needed.
-//    E.g...
-//    Input:
-//      #0 = [x, <-, (, a, +, 12.3, -, (, c, *, d, ), )]
-//    Turns into:
-//      #0 = [x, <-, #1]
-//      #1 = [a, +, 12.3, -, (, c, *, d, )]
-//    Turns into:
-//      #0 = [x, <-, #1]
-//      #1 = [a, +, 12.3, -, #2]
-//      #2 = [c, *, d]
-//    Ordering is always reversed:
-//      [#2, #1, #0]
+// 1: Expanding precedence brackets out and placing them at the
+//    front of the array of tokens so they are executed first.
 // 2: Each token array is then split into even smaller ones such
 //    that each contains exactly one instruction, error checking
 //    where possible.
@@ -72,4 +56,33 @@ import (
 func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.OpError) {
 
 	return nil, nil
+}
+
+// expandBrackets scans the token array for precedence brackets,
+// the curvy ones, then splitting the token array into smaller
+// ones until no brackets are left, an error is returned if a
+// brace doesn't have an opposing partner. Braces are removed
+// along the way with temporary variables being created and
+// inserted where needed. E.g...
+//   Input:
+//     #0 = [x, <-, (, a, +, 12.3, -, (, c, *, d, ), )]
+//   Turns into:
+//     #0 = [x, <-, #1]
+//     #1 = [a, +, 12.3, -, (, c, *, d, )]
+//   Turns into:
+//     #0 = [x, <-, #1]
+//     #1 = [a, +, 12.3, -, #2]
+//     #2 = [c, *, d]
+//   Ordering is always reversed:
+//     [#2, #1, #0]
+func expandBrackets(ts []symbol.Token) ([][]symbol.Token, operation.OpError) {
+	r := [][]symbol.Token{}
+	/*
+	  c := []symbol.Token{}
+
+	  for i, t := range ts {
+	    if t.Type ==
+	  }
+	*/
+	return r, nil
 }

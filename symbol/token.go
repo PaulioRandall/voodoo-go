@@ -2,7 +2,7 @@ package symbol
 
 // Token represents a lexeme that is useable by a
 // syntax analyser.
-type Token Lexeme
+type Token Symbol
 
 // String creates a string representation of the token.
 func (tok Token) String() string {
