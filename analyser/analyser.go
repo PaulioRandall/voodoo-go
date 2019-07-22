@@ -78,11 +78,12 @@ func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.OpError) {
 func expandBrackets(ts []symbol.Token) ([][]symbol.Token, operation.OpError) {
 	r := [][]symbol.Token{}
 	/*
-	  c := []symbol.Token{}
+		    itr := symbol.NewTokItr()
+			  c := []symbol.Token{}
 
-	  for i, t := range ts {
-	    if t.Type ==
-	  }
+			  for itr.HasNext() {
+			    if t.Type ==
+			  }
 	*/
 	return r, nil
 }
