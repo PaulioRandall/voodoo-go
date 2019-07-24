@@ -8,6 +8,13 @@ import (
 
 var NIL_TOK *Token = nil
 
+func dummyTok(s string, t SymbolType) Token {
+	return Token{
+		Val:  s,
+		Type: t,
+	}
+}
+
 func dummyTokArray(ss ...string) []Token {
 	r := []Token{}
 	for _, s := range ss {
@@ -56,4 +63,19 @@ func TestTokItr_NextTok(t *testing.T) {
 
 	assert.Equal(t, NIL_TOK, itr.NextTok())
 	assert.Equal(t, itr.length, itr.index)
+}
+
+func TestTokItr_IndexOf(t *testing.T) {
+	ls := []Token{
+		dummyTok(`a`, IDENTIFIER),
+		dummyTok(`(`, CURVED_BRACE_OPEN),
+		dummyTok(`語`, IDENTIFIER),
+		dummyTok(`)`, CURVED_BRACE_CLOSE),
+	}
+	itr := NewTokItr(ls)
+
+	assert.Equal(t, 0, itr.IndexOf(IDENTIFIER))
+	assert.Equal(t, 1, itr.IndexOf(CURVED_BRACE_OPEN))
+	assert.Equal(t, 3, itr.IndexOf(CURVED_BRACE_CLOSE))
+	assert.Equal(t, -1, itr.IndexOf(STRING))
 }

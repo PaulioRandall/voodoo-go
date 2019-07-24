@@ -41,3 +41,15 @@ func (itr *TokItr) NextTok() *Token {
 	}
 	return nil
 }
+
+// IndexOf returns the first index of the token with the
+// specified within the remaining, uniterated, token array.
+// -1 is returned if no match could be found.
+func (itr *TokItr) IndexOf(t SymbolType) int {
+	for i := itr.index; i < itr.length; i++ {
+		if itr.array[i].Type == t {
+			return i
+		}
+	}
+	return -1
+}

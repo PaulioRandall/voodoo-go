@@ -77,13 +77,19 @@ func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.OpError) {
 //     [#2, #1, #0]
 func expandBrackets(ts []symbol.Token) ([][]symbol.Token, operation.OpError) {
 	r := [][]symbol.Token{}
-	/*
-		    itr := symbol.NewTokItr()
-			  c := []symbol.Token{}
+	itr := symbol.NewTokItr(ts)
+	//c := []symbol.Token{}
 
-			  for itr.HasNext() {
-			    itr.Next()
-			  }
-	*/
+	for itr.HasNext() {
+		itr.NextTok()
+	}
+
 	return r, nil
+}
+
+// firstCurvedOpenBrace returns the index of the first curved
+// open brace encountered. -1 is returned if none were
+// encountered.
+func findFirstCurvedBrace(itr *symbol.TokItr) int {
+	return -1
 }
