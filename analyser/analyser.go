@@ -82,7 +82,7 @@ func expandBrackets(ts []symbol.Token) ([][]symbol.Token, operation.OpError) {
 			  c := []symbol.Token{}
 
 			  for itr.HasNext() {
-			    if t.Type ==
+			    itr.Next()
 			  }
 	*/
 	return r, nil

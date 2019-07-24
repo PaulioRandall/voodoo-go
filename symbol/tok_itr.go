@@ -25,3 +25,19 @@ func NewTokItr(ts []Token) *TokItr {
 func (itr *TokItr) Length() int {
 	return itr.length
 }
+
+// HasNext returns true if there are items remaining to be
+// iterated.
+func (itr *TokItr) HasNext() bool {
+	return itr.index < itr.length
+}
+
+// NextTok returns the next token if there is one else it
+// returns nil.
+func (itr *TokItr) NextTok() *Token {
+	if itr.HasNext() {
+		defer itr.increment()
+		return &itr.array[itr.index]
+	}
+	return nil
+}
