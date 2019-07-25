@@ -53,7 +53,7 @@ import (
 //          As: x,
 //        },
 //      }
-func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.OpError) {
+func Analyse(ts []symbol.Token) (operation.InstructionSet, AnaError) {
 
 	return nil, nil
 }
@@ -75,26 +75,37 @@ func Analyse(ts []symbol.Token) (operation.InstructionSet, operation.OpError) {
 //     #2 = [c, *, d]
 //   Ordering is always reversed:
 //     [#2, #1, #0]
-func expandBrackets(ts []symbol.Token) ([][]symbol.Token, operation.OpError) {
+func expandBrackets(ts []symbol.Token) ([][]symbol.Token, AnaError) {
 	r := [][]symbol.Token{}
 	itr := symbol.NewTokItr(ts)
-	//c := []symbol.Token{}
 
 	for itr.HasNext() {
-		a := itr.IndexOf(symbol.CURVED_BRACE_OPEN)
-		// NEXT: This won't work because of multiple non-nested brackets!
-		b := itr.RIndexOf(symbol.CURVED_BRACE_CLOSE)
+		o, c := findBracketPair(itr)
 
-		if a != -1 && b == -1 {
+		switch {
+		case o == -1 && c == -1:
+			break
+
+		case o != -1 && c == -1:
 			m := "Missing closing brace to corresponding opening one"
-			err := NewAnaError(m, a)
+			err := NewAnaError(m, o)
 			return nil, err
 
-		} else if a == -1 && b != -1 {
+		case o == -1 && c != -1:
 			m := "Didn't expect to find a closing brace without a corresponding opening one"
-			err := NewAnaError(m, a)
+			err := NewAnaError(m, c)
 			return nil, err
+
+		default:
+			tks := itr.Slice(o+1, c)
+			tksArray, err := expandBrackets(tks)
+			if err != nil {
+				return nil, err
+			}
+			r = append(r, tksArray...)
 		}
+
+		itr.MoveTo(c + 1)
 	}
 
 	return r, nil

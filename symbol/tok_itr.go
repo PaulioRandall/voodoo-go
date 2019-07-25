@@ -40,6 +40,11 @@ func (itr *TokItr) Copy() *TokItr {
 	}
 }
 
+// Slice returns a slice of the token array.
+func (itr *TokItr) Slice(a, b int) []Token {
+	return itr.array[a:b]
+}
+
 // HasNext returns true if there are items remaining to be
 // iterated.
 func (itr *TokItr) HasNext() bool {

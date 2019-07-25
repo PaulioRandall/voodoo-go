@@ -47,6 +47,27 @@ func TestTokItr_Copy(t *testing.T) {
 	assert.Equal(t, &TokItr{2, 4, ls}, itr.Copy())
 }
 
+func TestTokItr_Slice(t *testing.T) {
+	ls := []Token{
+		dummyTok(`a`, IDENTIFIER),
+		dummyTok(`(`, CURVED_BRACE_OPEN),
+		dummyTok(`語`, IDENTIFIER),
+		dummyTok(`)`, CURVED_BRACE_CLOSE),
+	}
+	itr := NewTokItr(ls)
+
+	exp := []Token{
+		dummyTok(`a`, IDENTIFIER),
+		dummyTok(`(`, CURVED_BRACE_OPEN),
+	}
+	assert.Equal(t, exp, itr.Slice(0, 2))
+
+	exp = []Token{
+		dummyTok(`語`, IDENTIFIER),
+	}
+	assert.Equal(t, exp, itr.Slice(2, 3))
+}
+
 func TestTokItr_HasNext(t *testing.T) {
 	a := dummyTokArray(`a`, `b`, `語`)
 	itr := NewTokItr(a)
