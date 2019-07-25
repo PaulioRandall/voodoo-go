@@ -33,6 +33,20 @@ func TestTokItr_Length(t *testing.T) {
 	assert.Equal(t, exp, itr.Length())
 }
 
+func TestTokItr_Copy(t *testing.T) {
+	ls := []Token{
+		dummyTok(`a`, IDENTIFIER),
+		dummyTok(`(`, CURVED_BRACE_OPEN),
+		dummyTok(`語`, IDENTIFIER),
+		dummyTok(`)`, CURVED_BRACE_CLOSE),
+	}
+	itr := NewTokItr(ls)
+
+	assert.Equal(t, &TokItr{0, 4, ls}, itr.Copy())
+	itr.index += 2
+	assert.Equal(t, &TokItr{2, 4, ls}, itr.Copy())
+}
+
 func TestTokItr_HasNext(t *testing.T) {
 	a := dummyTokArray(`a`, `b`, `語`)
 	itr := NewTokItr(a)
@@ -93,4 +107,23 @@ func TestTokItr_RIndexOf(t *testing.T) {
 	assert.Equal(t, 2, itr.RIndexOf(IDENTIFIER))
 	assert.Equal(t, 1, itr.RIndexOf(CURVED_BRACE_OPEN))
 	assert.Equal(t, -1, itr.RIndexOf(STRING))
+}
+
+func TestTokItr_MoveTo(t *testing.T) {
+	ls := []Token{
+		dummyTok(`a`, IDENTIFIER),
+		dummyTok(`(`, CURVED_BRACE_OPEN),
+		dummyTok(`語`, IDENTIFIER),
+		dummyTok(`)`, CURVED_BRACE_CLOSE),
+	}
+	itr := NewTokItr(ls)
+
+	assert.Equal(t, 0, itr.index)
+	itr.MoveTo(2)
+	assert.Equal(t, 2, itr.index)
+	itr.MoveTo(5)
+	assert.Equal(t, 5, itr.index)
+	itr.MoveTo(0)
+	assert.Equal(t, 0, itr.index)
+
 }

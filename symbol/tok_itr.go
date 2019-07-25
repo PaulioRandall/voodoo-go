@@ -21,9 +21,23 @@ func NewTokItr(ts []Token) *TokItr {
 	}
 }
 
+// Index returns the iterators current counter value.
+func (itr *TokItr) Index() int {
+	return itr.index
+}
+
 // Length returns the total length of the iterators array.
 func (itr *TokItr) Length() int {
 	return itr.length
+}
+
+// Copy returns a copy of the token iterator.
+func (itr *TokItr) Copy() *TokItr {
+	return &TokItr{
+		index:  itr.index,
+		length: itr.length,
+		array:  itr.array,
+	}
 }
 
 // HasNext returns true if there are items remaining to be
@@ -66,4 +80,9 @@ func (itr *TokItr) RIndexOf(t SymbolType) int {
 		}
 	}
 	return -1
+}
+
+// MoveTo moves the iterators counter to the specified index.
+func (itr *TokItr) MoveTo(i int) {
+	itr.index = i
 }
