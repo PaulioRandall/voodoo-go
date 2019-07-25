@@ -81,7 +81,8 @@ func expandBrackets(ts []symbol.Token) ([][]symbol.Token, operation.OpError) {
 	//c := []symbol.Token{}
 
 	for itr.HasNext() {
-		itr.NextTok()
+		//a := itr.IndexOf(symbol.CURVED_BRACE_OPEN)
+
 	}
 
 	return r, nil

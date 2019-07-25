@@ -79,3 +79,18 @@ func TestTokItr_IndexOf(t *testing.T) {
 	assert.Equal(t, 3, itr.IndexOf(CURVED_BRACE_CLOSE))
 	assert.Equal(t, -1, itr.IndexOf(STRING))
 }
+
+func TestTokItr_RIndexOf(t *testing.T) {
+	ls := []Token{
+		dummyTok(`a`, IDENTIFIER),
+		dummyTok(`(`, CURVED_BRACE_OPEN),
+		dummyTok(`語`, IDENTIFIER),
+		dummyTok(`)`, CURVED_BRACE_CLOSE),
+	}
+	itr := NewTokItr(ls)
+
+	assert.Equal(t, 3, itr.RIndexOf(CURVED_BRACE_CLOSE))
+	assert.Equal(t, 2, itr.RIndexOf(IDENTIFIER))
+	assert.Equal(t, 1, itr.RIndexOf(CURVED_BRACE_OPEN))
+	assert.Equal(t, -1, itr.RIndexOf(STRING))
+}

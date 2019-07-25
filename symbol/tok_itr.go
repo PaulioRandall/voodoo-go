@@ -42,11 +42,25 @@ func (itr *TokItr) NextTok() *Token {
 	return nil
 }
 
-// IndexOf returns the first index of the token with the
-// specified within the remaining, uniterated, token array.
+// IndexOf returns the index of the last token with the
+// specified type within the remaining, uniterated, token array.
 // -1 is returned if no match could be found.
 func (itr *TokItr) IndexOf(t SymbolType) int {
 	for i := itr.index; i < itr.length; i++ {
+		if itr.array[i].Type == t {
+			return i
+		}
+	}
+	return -1
+}
+
+// RIndexOf returns the index of the last token with the
+// specified type within the remaining, uniterated, token array.
+// -1 is returned if no match could be found.
+func (itr *TokItr) RIndexOf(t SymbolType) int {
+	i := itr.length
+	for i > itr.index {
+		i--
 		if itr.array[i].Type == t {
 			return i
 		}
