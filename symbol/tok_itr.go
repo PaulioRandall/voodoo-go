@@ -61,6 +61,15 @@ func (itr *TokItr) NextTok() *Token {
 	return nil
 }
 
+// PeekTok returns the next token if there is one else it
+// returns nil. Does not increment the counter.
+func (itr *TokItr) PeekTok() *Token {
+	if itr.HasNext() {
+		return &itr.array[itr.index]
+	}
+	return nil
+}
+
 // IndexOf returns the index of the last token with the
 // specified type within the remaining, uniterated, token array.
 // -1 is returned if no match could be found.

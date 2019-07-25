@@ -100,6 +100,18 @@ func TestTokItr_NextTok(t *testing.T) {
 	assert.Equal(t, itr.length, itr.index)
 }
 
+func TestTokItr_PeekTok(t *testing.T) {
+	ls := dummyTokArray(`a`, `b`, `語`)
+	itr := NewTokItr(ls)
+
+	assert.Equal(t, &ls[0], itr.PeekTok())
+	assert.Equal(t, &ls[0], itr.PeekTok())
+	itr.index += 2
+	assert.Equal(t, &ls[2], itr.PeekTok())
+	itr.index += 2
+	assert.Equal(t, NIL_TOK, itr.PeekTok())
+}
+
 func TestTokItr_IndexOf(t *testing.T) {
 	ls := []Token{
 		dummyTok(`a`, IDENTIFIER),
