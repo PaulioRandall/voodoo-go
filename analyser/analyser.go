@@ -81,16 +81,21 @@ func expandBrackets(ts []symbol.Token) ([][]symbol.Token, operation.OpError) {
 	//c := []symbol.Token{}
 
 	for itr.HasNext() {
-		//a := itr.IndexOf(symbol.CURVED_BRACE_OPEN)
+		a := itr.IndexOf(symbol.CURVED_BRACE_OPEN)
+		// NEXT: This won't work because of multiple non-nested brackets!
+		b := itr.RIndexOf(symbol.CURVED_BRACE_CLOSE)
 
+		if a != -1 && b == -1 {
+			m := "Missing closing brace to corresponding opening one"
+			err := NewAnaError(m, a)
+			return nil, err
+
+		} else if a == -1 && b != -1 {
+			m := "Didn't expect to find a closing brace without a corresponding opening one"
+			err := NewAnaError(m, a)
+			return nil, err
+		}
 	}
 
 	return r, nil
-}
-
-// firstCurvedOpenBrace returns the index of the first curved
-// open brace encountered. -1 is returned if none were
-// encountered.
-func findFirstCurvedBrace(itr *symbol.TokItr) int {
-	return -1
 }
