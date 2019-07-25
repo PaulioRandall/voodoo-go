@@ -21,9 +21,10 @@ const (
 	KEYWORD_KEY    // key
 	KEYWORD_VAL    // value
 	IDENTIFIER
-	BOOLEAN_TRUE  // true
-	BOOLEAN_FALSE // false
-	SOURCERY      // @Blahblah
+	BOOLEAN_TRUE    // true
+	BOOLEAN_FALSE   // false
+	SOURCERY        // @Blahblah
+	TEMP_IDENTIFIER // #blahblah
 	ALPHABETIC_END
 	// Fully or partly alphabetic but representation must reamin
 	// as the user defined

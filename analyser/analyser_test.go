@@ -30,7 +30,23 @@ func TestIndexOf(t *testing.T) {
 	assert.Equal(t, -1, indexOf(in, 2, symbol.CURVED_BRACE_OPEN))
 }
 
-func O_TestExpandBrackets(t *testing.T) {
+func TestRIndexOf(t *testing.T) {
+	in := []symbol.Token{
+		dummyTok(`a`, symbol.IDENTIFIER),
+		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
+		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
+	}
+	last := len(in) - 1
+
+	assert.Equal(t, 2, rIndexOf(in, last, symbol.IDENTIFIER))
+	assert.Equal(t, 1, rIndexOf(in, last, symbol.CURVED_BRACE_OPEN))
+	assert.Equal(t, 2, rIndexOf(in, 2, symbol.IDENTIFIER))
+	assert.Equal(t, 0, rIndexOf(in, 1, symbol.IDENTIFIER))
+	assert.Equal(t, -1, rIndexOf(in, last, symbol.STRING))
+}
+
+func TestExpandBrackets(t *testing.T) {
 	for i, tc := range expBracketsTests() {
 		t.Log("expandBrackets() test case: " + strconv.Itoa(i+1))
 		out, err := expandBrackets(tc.Input)

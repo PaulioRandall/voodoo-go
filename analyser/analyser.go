@@ -1,6 +1,9 @@
 package analyser
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/PaulioRandall/voodoo-go/operation"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
@@ -75,29 +78,53 @@ func Analyse(ts []symbol.Token) (operation.InstructionSet, AnaError) {
 //     #2 = [c, *, d]
 //   Ordering is always reversed:
 //     [#2, #1, #0]
-func expandBrackets(ts []symbol.Token) ([][]symbol.Token, AnaError) {
+func expandBrackets(a []symbol.Token) ([][]symbol.Token, AnaError) {
 	r := [][]symbol.Token{}
+	tempIds := 0
 
-loop:
-	for i := 0; i < len(ts); i++ {
-		o := indexOf(ts, i, symbol.CURVED_BRACE_OPEN)
-		c := 1
+	for len(a) > 0 {
+		if len(a) == 1 && a[0].Type == symbol.TEMP_IDENTIFIER {
+			break
+		}
 
-		switch {
-		case o == -1 && c == -1:
-			break loop
+		l := len(a) - 1
 
-		case o != -1 && c == -1:
-			m := "Missing closing brace to corresponding opening one"
-			err := NewAnaError(m, o)
-			return nil, err
+		o := rIndexOf(a, l, symbol.CURVED_BRACE_OPEN)
+		if o == -1 {
+			c := indexOf(a, 0, symbol.CURVED_BRACE_CLOSE)
 
-		case o == -1 && c != -1:
+			if c == -1 {
+				r = append(r, a)
+				break
+			} else {
+				m := "Missing closing brace to corresponding opening one"
+				err := NewAnaError(m, c)
+				return nil, err
+			}
+		}
+
+		c := indexOf(a, o, symbol.CURVED_BRACE_CLOSE)
+		if c == -1 {
 			m := "Didn't expect to find a closing brace without a corresponding opening one"
 			err := NewAnaError(m, c)
 			return nil, err
 		}
 
+		s := a[o+1 : c]
+		r = append(r, s)
+
+		start := a[:o]
+		tempIds++
+		mid := symbol.Token{
+			Val:  `#` + strconv.Itoa(tempIds),
+			Type: symbol.TEMP_IDENTIFIER,
+		}
+		end := a[c+1:]
+
+		a = append(start, mid)
+		a = append(a, end...)
+
+		fmt.Println(a)
 	}
 
 	return r, nil
@@ -106,12 +133,26 @@ loop:
 // indexOf returns the next index of the symbol with the specified type
 // of -1 if no matching token is found.
 func indexOf(a []symbol.Token, start int, t symbol.SymbolType) int {
-	for i, tk := range a {
+	l := len(a)
+	for i := start; i < l; i++ {
 		if i < start {
 			continue
 		}
 
-		if tk.Type == t {
+		if a[i].Type == t {
+			return i
+		}
+	}
+
+	return -1
+}
+
+// rIndexOf returns the index of the last token with the specified type
+// of -1 if no matching token is found. 'start' determines where to start
+// searching back from, anything after will not be searched.
+func rIndexOf(a []symbol.Token, start int, t symbol.SymbolType) int {
+	for i := start; i > -1; i-- {
+		if a[i].Type == t {
 			return i
 		}
 	}
