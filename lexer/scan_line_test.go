@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
@@ -11,20 +12,21 @@ import (
 )
 
 func TestScannerApi(t *testing.T) {
-	for i, tc := range apiTests() {
-		t.Log("ScanLine() test case: " + strconv.Itoa(i+1))
-		ls, err := ScanLine(tc.Input, tc.Line)
+	for _, tc := range apiTests() {
+		testLine := strconv.Itoa(tc.TestLine)
+		t.Log("-> scan_line_test.go : " + testLine)
+		act, err := ScanLine(tc.Input, tc.Line)
 
 		if tc.ExpectErr != nil {
-			require.Nil(t, ls)
+			assert.Nil(t, act)
+			require.NotNil(t, err)
 			assert.NotEmpty(t, err.Error())
-			assert.Equal(t, tc.ExpectErr.Line(), err.Line())
-			assert.Equal(t, tc.ExpectErr.Col(), err.Col())
+			fault.Assert(t, tc.ExpectErr, err)
 		}
 
-		if tc.ExpectLexs != nil {
+		if tc.Expect != nil {
 			require.Nil(t, err)
-			assert.Equal(t, tc.ExpectLexs, ls)
+			assert.Equal(t, tc.Expect, act)
 		}
 	}
 }
@@ -32,89 +34,78 @@ func TestScannerApi(t *testing.T) {
 type lexScanFunc func(*runer.RuneItr) *symbol.Lexeme
 
 func lexFuncTest(t *testing.T, fName string, f lexScanFunc, tests []lexTest) {
-	for i, tc := range tests {
-		require.NotNil(t, tc.ExpectLex)
+	for _, tc := range tests {
+		require.NotNil(t, tc.Expect)
 		require.Nil(t, tc.ExpectErr)
 
-		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
+		testLine := strconv.Itoa(tc.TestLine)
+		t.Log("-> " + fName + " : " + testLine)
 
 		itr := runer.NewRuneItr(tc.Input)
-		l := f(itr)
+		act := f(itr)
 
-		require.NotNil(t, l)
-		assert.Equal(t, tc.ExpectLex, *l)
+		require.NotNil(t, act)
+		assert.Equal(t, tc.Expect, *act)
 	}
 }
 
-type lexScanErrFunc func(*runer.RuneItr) (*symbol.Lexeme, LexError)
+type lexScanErrFunc func(*runer.RuneItr) (*symbol.Lexeme, fault.Fault)
 
 func lexErrFuncTest(t *testing.T, fName string, f lexScanErrFunc, tests []lexTest) {
-	for i, tc := range tests {
-		t.Log(fName + "() test case: " + strconv.Itoa(i+1))
+	for _, tc := range tests {
+
+		testLine := strconv.Itoa(tc.TestLine)
+		t.Log("-> " + fName + " : " + testLine)
 
 		itr := runer.NewRuneItr(tc.Input)
-		l, err := f(itr)
+		act, err := f(itr)
 
 		if tc.ExpectErr != nil {
-			assert.NotNil(t, err)
-			require.Nil(t, l)
+			assert.Nil(t, act)
+			require.NotNil(t, err)
 			assert.NotEmpty(t, err.Error())
-			assert.Equal(t, tc.ExpectErr.Line(), err.Line())
-			assert.Equal(t, tc.ExpectErr.Col(), err.Col())
+			fault.Assert(t, tc.ExpectErr, err)
+
 		} else {
 			assert.Nil(t, err)
-			require.NotNil(t, l)
-			assert.Equal(t, tc.ExpectLex, *l)
+			require.NotNil(t, act)
+			assert.Equal(t, tc.Expect, *act)
 		}
 	}
 }
 
 type lexTest struct {
+	TestLine  int
 	Line      int
 	Input     string
-	ExpectLex symbol.Lexeme
-	ExpectErr LexError
+	Expect    symbol.Lexeme
+	ExpectErr fault.Fault
 }
 
 type scanLineTest struct {
-	Line       int
-	Input      string
-	ExpectLexs []symbol.Lexeme
-	ExpectErr  LexError
-}
-
-type expLexError struct {
-	line int // Line number
-	col  int // Column number
-}
-
-func (e expLexError) Error() string {
-	// Error messages should be semantically validated
-	// so this is not required for testing.
-	return ""
-}
-
-func (e expLexError) Line() int {
-	return e.line
-}
-
-func (e expLexError) Col() int {
-	return e.col
+	TestLine  int
+	Line      int
+	Input     string
+	Expect    []symbol.Lexeme
+	ExpectErr fault.Fault
 }
 
 func apiTests() []scanLineTest {
 	return []scanLineTest{
 		scanLineTest{
+			TestLine:  fault.CurrLine(),
 			Input:     `x # 1`,
-			ExpectErr: expLexError{0, 3},
+			ExpectErr: fault.Dummy(fault.Symbol).Line(0).From(2).To(3),
 		},
 		scanLineTest{
+			TestLine:  fault.CurrLine(),
 			Input:     `123.456.789`,
-			ExpectErr: expLexError{0, 7},
+			ExpectErr: fault.Dummy(fault.Number).Line(0).From(7),
 		},
 		scanLineTest{
-			Input: `x <- 1`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `x <- 1`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
@@ -123,8 +114,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `y <- -1.1`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `y <- -1.1`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`y`, 0, 1, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
@@ -134,9 +126,10 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Line:  123,
-			Input: `x <- true`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Line:     123,
+			Input:    `x <- true`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`x`, 0, 1, 123, symbol.IDENTIFIER},
 				symbol.Lexeme{` `, 1, 2, 123, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 2, 4, 123, symbol.ASSIGNMENT},
@@ -145,8 +138,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `@Println["Whelp"]`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `@Println["Whelp"]`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`@Println`, 0, 8, 0, symbol.SOURCERY},
 				symbol.Lexeme{`[`, 8, 9, 0, symbol.SQUARE_BRACE_OPEN},
 				symbol.Lexeme{`"Whelp"`, 9, 16, 0, symbol.STRING},
@@ -154,8 +148,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: "\tresult <- spell(a, b) r, err     ",
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    "\tresult <- spell(a, b) r, err     ",
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{"\t", 0, 1, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`result`, 1, 7, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{` `, 7, 8, 0, symbol.WHITESPACE},
@@ -177,8 +172,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `keyValue <- "pi": 3.1419`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `keyValue <- "pi": 3.1419`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`keyValue`, 0, 8, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{` `, 8, 9, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
@@ -190,8 +186,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `alphabet <- ["a", "b", "c"]`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `alphabet <- ["a", "b", "c"]`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`alphabet`, 0, 8, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{` `, 8, 9, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
@@ -208,8 +205,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `loop i <- 0..5`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `loop i <- 0..5`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
 				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`i`, 5, 6, 0, symbol.IDENTIFIER},
@@ -222,8 +220,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `x<-2 // The value of x is now 2`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `x<-2 // The value of x is now 2`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{`2`, 3, 4, 0, symbol.NUMBER},
@@ -232,8 +231,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `isLandscape<-length<height`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `isLandscape<-length<height`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`isLandscape`, 0, 11, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{`<-`, 11, 13, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{`length`, 13, 19, 0, symbol.IDENTIFIER},
@@ -242,8 +242,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `x<-3.14*(1-2+3)`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `x<-3.14*(1-2+3)`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{`3.14`, 3, 7, 0, symbol.NUMBER},
@@ -258,8 +259,9 @@ func apiTests() []scanLineTest {
 			},
 		},
 		scanLineTest{
-			Input: `!x => y <- _`,
-			ExpectLexs: []symbol.Lexeme{
+			TestLine: fault.CurrLine(),
+			Input:    `!x => y <- _`,
+			Expect: []symbol.Lexeme{
 				symbol.Lexeme{`!`, 0, 1, 0, symbol.NEGATION},
 				symbol.Lexeme{`x`, 1, 2, 0, symbol.IDENTIFIER},
 				symbol.Lexeme{` `, 2, 3, 0, symbol.WHITESPACE},

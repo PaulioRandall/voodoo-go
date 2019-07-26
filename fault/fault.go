@@ -14,25 +14,19 @@ type Fault interface {
   
   // To sets the exclusive column index where the error ends.
   To(i int) Fault
+  
+  // Type returns the type of the fault.
+  Type() FaultType
 }
 
-// faultType represents the type of Fault
-type faultType int
-
-const (
-  std faultType = iota + 1
-  bug
-  paren
-)
-
 // stdFault is the standard implementation of the
-// VooError interface.
+// Fault interface.
 type stdFault struct {
   msg string
   line int
   from int
   to int    // Exclusive
-  errType faultType
+  errType FaultType
 }
 
 // Error satisfies the error interface.
@@ -58,20 +52,7 @@ func (err stdFault) To(i int) Fault {
   return err
 }
 
-// Bug returns a new Fault with a message formatted
-// to present a bug with this program.
-func Bug(m string) Fault {
-  return stdFault{
-    msg: m,
-    errType: bug,
-  }
-}
-
-// Paren returns a new Fault with a message formatted
-// to present an error with parenthesis within a scroll.
-func Paren(m string) Fault {
-  return stdFault{
-    msg: m,
-    errType: paren,
-  }
+// Type satisfies the Fault interface.
+func (err stdFault) Type() FaultType {
+  return err.errType
 }

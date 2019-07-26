@@ -3,42 +3,50 @@ package lexer
 import (
 	"testing"
 
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
 func TestStrLex(t *testing.T) {
-	lexErrFuncTest(t, "strLex", strLex, strLexTests())
+	lexErrFuncTest(t, "lex_str_test.go", strLex, strLexTests())
 }
 
 func strLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
-			Input:     `""`,
-			ExpectLex: symbol.Lexeme{`""`, 0, 2, 0, symbol.STRING},
+			TestLine: fault.CurrLine(),
+			Input:    `""`,
+			Expect:   symbol.Lexeme{`""`, 0, 2, 0, symbol.STRING},
 		},
 		lexTest{
-			Input:     `"From hell with love"`,
-			ExpectLex: symbol.Lexeme{`"From hell with love"`, 0, 21, 0, symbol.STRING},
+			TestLine: fault.CurrLine(),
+			Input:    `"From hell with love"`,
+			Expect:   symbol.Lexeme{`"From hell with love"`, 0, 21, 0, symbol.STRING},
 		},
 		lexTest{
-			Input:     `"Simon: \"Leaders eat last!\""`,
-			ExpectLex: symbol.Lexeme{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, symbol.STRING},
+			TestLine: fault.CurrLine(),
+			Input:    `"Simon: \"Leaders eat last!\""`,
+			Expect:   symbol.Lexeme{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, symbol.STRING},
 		},
 		lexTest{
-			Input:     `"\\\\\""`,
-			ExpectLex: symbol.Lexeme{`"\\\\\""`, 0, 8, 0, symbol.STRING},
+			TestLine: fault.CurrLine(),
+			Input:    `"\\\\\""`,
+			Expect:   symbol.Lexeme{`"\\\\\""`, 0, 8, 0, symbol.STRING},
 		},
 		lexTest{
+			TestLine:  fault.CurrLine(),
 			Input:     `"`,
-			ExpectErr: expLexError{0, 1},
+			ExpectErr: fault.Dummy(fault.String).Line(0).From(0).To(1),
 		},
 		lexTest{
-			Input:     `"a"x`,
-			ExpectLex: symbol.Lexeme{`"a"`, 0, 3, 0, symbol.STRING},
+			TestLine: fault.CurrLine(),
+			Input:    `"a"x`,
+			Expect:   symbol.Lexeme{`"a"`, 0, 3, 0, symbol.STRING},
 		},
 		lexTest{
+			TestLine:  fault.CurrLine(),
 			Input:     `"escaped \"`,
-			ExpectErr: expLexError{0, 11},
+			ExpectErr: fault.Dummy(fault.String).Line(0).From(0).To(11),
 		},
 	}
 }
