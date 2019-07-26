@@ -237,7 +237,7 @@ func strLex(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),
-		Type:  symbol.STRING,
+		Type:  symbol.LITERAL_STRING,
 	}
 
 	return

@@ -43,7 +43,7 @@ func TestRIndexOf(t *testing.T) {
 	assert.Equal(t, 1, rIndexOf(in, last, symbol.CURVED_BRACE_OPEN))
 	assert.Equal(t, 2, rIndexOf(in, 2, symbol.IDENTIFIER_EXPLICIT))
 	assert.Equal(t, 0, rIndexOf(in, 1, symbol.IDENTIFIER_EXPLICIT))
-	assert.Equal(t, -1, rIndexOf(in, last, symbol.STRING))
+	assert.Equal(t, -1, rIndexOf(in, last, symbol.LITERAL_STRING))
 }
 
 func TestContainsType(t *testing.T) {

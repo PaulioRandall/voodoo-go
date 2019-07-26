@@ -27,7 +27,7 @@ func Strim(in []symbol.Lexeme) []symbol.Token {
 			continue
 		case l.Type == symbol.COMMENT:
 			continue
-		case l.Type == symbol.STRING:
+		case l.Type == symbol.LITERAL_STRING:
 			penultimate := len(l.Val) - 1
 			l.Val = l.Val[1:penultimate]
 		case l.Type == symbol.NUMBER:

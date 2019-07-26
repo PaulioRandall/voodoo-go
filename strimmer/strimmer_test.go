@@ -63,10 +63,10 @@ func strimTests() []strimTest {
 		},
 		strimTest{
 			Input: []symbol.Lexeme{
-				symbol.Lexeme{`"Howdy partner"`, 5, 20, 0, symbol.STRING},
+				symbol.Lexeme{`"Howdy partner"`, 5, 20, 0, symbol.LITERAL_STRING},
 			},
 			ExpectToks: []symbol.Token{
-				symbol.Token{`Howdy partner`, 5, 20, 0, symbol.STRING},
+				symbol.Token{`Howdy partner`, 5, 20, 0, symbol.LITERAL_STRING},
 			},
 		},
 		strimTest{

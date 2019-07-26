@@ -27,8 +27,8 @@ const (
 	ALPHABETIC_END
 	// Fully or partly alphabetic but representation must reamin
 	// as the user defined
-	STRING  // "blahblah"
-	COMMENT // // blahblah
+	LITERAL_STRING // "blahblah"
+	COMMENT        // // blahblah
 	// Numeric
 	NUMBER // ##.###
 	// Comparison operators
@@ -90,8 +90,8 @@ func SymbolName(t SymbolType) string {
 		return `BOOLEAN_FALSE`
 	case SOURCERY:
 		return `SOURCERY`
-	case STRING:
-		return `STRING`
+	case LITERAL_STRING:
+		return `LITERAL_STRING`
 	case COMMENT:
 		return `COMMENT`
 	case NUMBER:
