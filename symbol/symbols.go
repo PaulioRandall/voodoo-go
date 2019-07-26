@@ -13,17 +13,19 @@ const (
 	UNDEFINED SymbolType = iota
 	// Fully or partly alphabetic
 	ALPHABETIC_START
-	KEYWORD_SPELL       // spell
-	KEYWORD_LOOP        // loop
-	KEYWORD_WHEN        // when
-	KEYWORD_END         // end
-	KEYWORD_KEY         // key
-	KEYWORD_VAL         // value
+	KEYWORD_SPELL // spell
+	KEYWORD_LOOP  // loop
+	KEYWORD_WHEN  // when
+	KEYWORD_END   // end
+	KEYWORD_KEY   // key
+	KEYWORD_VALUE // value
+	// Identifiers
 	IDENTIFIER_EXPLICIT // Declared by the coder
 	IDENTIFIER_IMPLICIT // Inserted during syntax analysis
-	BOOLEAN_TRUE        // true
-	BOOLEAN_FALSE       // false
-	SOURCERY            // @Blahblah
+	// Booleans
+	BOOLEAN_TRUE  // true
+	BOOLEAN_FALSE // false
+	SOURCERY      // @Blahblah
 	ALPHABETIC_END
 	// Literals
 	LITERAL_NUMBER // ##.###
@@ -76,8 +78,8 @@ func SymbolName(t SymbolType) string {
 		return `KEYWORD_END`
 	case KEYWORD_KEY:
 		return `KEYWORD_KEY`
-	case KEYWORD_VAL:
-		return `KEYWORD_VAL`
+	case KEYWORD_VALUE:
+		return `KEYWORD_VALUE`
 	case IDENTIFIER_EXPLICIT:
 		return `IDENTIFIER_EXPLICIT`
 	case IDENTIFIER_IMPLICIT:

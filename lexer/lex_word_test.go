@@ -61,7 +61,7 @@ func wordLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `val`,
-			Expect:   symbol.Lexeme{`val`, 0, 3, 0, symbol.KEYWORD_VAL},
+			Expect:   symbol.Lexeme{`val`, 0, 3, 0, symbol.KEYWORD_VALUE},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),

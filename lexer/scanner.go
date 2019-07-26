@@ -82,7 +82,7 @@ func wordLex(itr *runer.RuneItr) *symbol.Lexeme {
 	case `key`:
 		t = symbol.KEYWORD_KEY
 	case `val`:
-		t = symbol.KEYWORD_VAL
+		t = symbol.KEYWORD_VALUE
 	case `true`:
 		t = symbol.BOOLEAN_TRUE
 	case `false`:
