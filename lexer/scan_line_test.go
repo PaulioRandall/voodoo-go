@@ -237,7 +237,7 @@ func apiTests() []scanLineTest {
 				symbol.Lexeme{`isLandscape`, 0, 11, 0, symbol.IDENTIFIER_EXPLICIT},
 				symbol.Lexeme{`<-`, 11, 13, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{`length`, 13, 19, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`<`, 19, 20, 0, symbol.LESS_THAN},
+				symbol.Lexeme{`<`, 19, 20, 0, symbol.CMP_LESS_THAN},
 				symbol.Lexeme{`height`, 20, 26, 0, symbol.IDENTIFIER_EXPLICIT},
 			},
 		},

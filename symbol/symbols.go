@@ -25,19 +25,17 @@ const (
 	BOOLEAN_FALSE       // false
 	SOURCERY            // @Blahblah
 	ALPHABETIC_END
-	// Fully or partly alphabetic but representation must reamin
-	// as the user defined
+	// Literals
+	LITERAL_NUMBER // ##.###
 	LITERAL_STRING // "blahblah"
 	COMMENT        // // blahblah
-	// Numeric
-	LITERAL_NUMBER // ##.###
 	// Comparison operators
-	EQUAL                 // ==
-	NOT_EQUAL             // !=
-	LESS_THAN             // <
-	LESS_THAN_OR_EQUAL    // <=
-	GREATER_THAN          // >
-	GREATER_THAN_OR_EQUAL // >=
+	CMP_EQUAL                 // ==
+	CMP_NOT_EQUAL             // !=
+	CMP_LESS_THAN             // <
+	CMP_LESS_THAN_OR_EQUAL    // <=
+	CMP_GREATER_THAN          // >
+	CMP_GREATER_THAN_OR_EQUAL // >=
 	// Logical operators
 	OR            // ||
 	AND           // &&
@@ -90,24 +88,24 @@ func SymbolName(t SymbolType) string {
 		return `BOOLEAN_FALSE`
 	case SOURCERY:
 		return `SOURCERY`
+	case LITERAL_NUMBER:
+		return `LITERAL_NUMBER`
 	case LITERAL_STRING:
 		return `LITERAL_STRING`
 	case COMMENT:
 		return `COMMENT`
-	case LITERAL_NUMBER:
-		return `LITERAL_NUMBER`
-	case EQUAL:
-		return `EQUAL`
-	case NOT_EQUAL:
-		return `NOT_EQUAL`
-	case LESS_THAN:
-		return `LESS_THAN`
-	case LESS_THAN_OR_EQUAL:
-		return `LESS_THAN_OR_EQUAL`
-	case GREATER_THAN:
-		return `GREATER_THAN`
-	case GREATER_THAN_OR_EQUAL:
-		return `GREATER_THAN_OR_EQUAL`
+	case CMP_EQUAL:
+		return `CMP_EQUAL`
+	case CMP_NOT_EQUAL:
+		return `CMP_NOT_EQUAL`
+	case CMP_LESS_THAN:
+		return `CMP_LESS_THAN`
+	case CMP_LESS_THAN_OR_EQUAL:
+		return `CMP_LESS_THAN_OR_EQUAL`
+	case CMP_GREATER_THAN:
+		return `CMP_GREATER_THAN`
+	case CMP_GREATER_THAN_OR_EQUAL:
+		return `CMP_GREATER_THAN_OR_EQUAL`
 	case OR:
 		return `OR`
 	case AND:

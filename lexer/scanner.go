@@ -310,19 +310,19 @@ func symbolLex(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 	case itr.IsNextStr(`<-`):
 		set(symbol.ASSIGNMENT, 2)
 	case itr.IsNextStr(`<=`):
-		set(symbol.LESS_THAN_OR_EQUAL, 2)
+		set(symbol.CMP_LESS_THAN_OR_EQUAL, 2)
 	case itr.IsNext('<'):
-		set(symbol.LESS_THAN, 1)
+		set(symbol.CMP_LESS_THAN, 1)
 	case itr.IsNextStr(`>=`):
-		set(symbol.GREATER_THAN_OR_EQUAL, 2)
+		set(symbol.CMP_GREATER_THAN_OR_EQUAL, 2)
 	case itr.IsNext('>'):
-		set(symbol.GREATER_THAN, 1)
+		set(symbol.CMP_GREATER_THAN, 1)
 	case itr.IsNextStr(`==`):
-		set(symbol.EQUAL, 2)
+		set(symbol.CMP_EQUAL, 2)
 	case itr.IsNextStr(`=>`):
 		set(symbol.IF_MATCH_THEN, 2)
 	case itr.IsNextStr(`!=`):
-		set(symbol.NOT_EQUAL, 2)
+		set(symbol.CMP_NOT_EQUAL, 2)
 	case itr.IsNext('!'):
 		set(symbol.NEGATION, 1)
 	case itr.IsNextStr(`||`):

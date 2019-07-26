@@ -16,32 +16,32 @@ func symbolLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `==`,
-			Expect:   symbol.Lexeme{`==`, 0, 2, 0, symbol.EQUAL},
+			Expect:   symbol.Lexeme{`==`, 0, 2, 0, symbol.CMP_EQUAL},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `!=`,
-			Expect:   symbol.Lexeme{`!=`, 0, 2, 0, symbol.NOT_EQUAL},
+			Expect:   symbol.Lexeme{`!=`, 0, 2, 0, symbol.CMP_NOT_EQUAL},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `<`,
-			Expect:   symbol.Lexeme{`<`, 0, 1, 0, symbol.LESS_THAN},
+			Expect:   symbol.Lexeme{`<`, 0, 1, 0, symbol.CMP_LESS_THAN},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `<=`,
-			Expect:   symbol.Lexeme{`<=`, 0, 2, 0, symbol.LESS_THAN_OR_EQUAL},
+			Expect:   symbol.Lexeme{`<=`, 0, 2, 0, symbol.CMP_LESS_THAN_OR_EQUAL},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `>`,
-			Expect:   symbol.Lexeme{`>`, 0, 1, 0, symbol.GREATER_THAN},
+			Expect:   symbol.Lexeme{`>`, 0, 1, 0, symbol.CMP_GREATER_THAN},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `>=`,
-			Expect:   symbol.Lexeme{`>=`, 0, 2, 0, symbol.GREATER_THAN_OR_EQUAL},
+			Expect:   symbol.Lexeme{`>=`, 0, 2, 0, symbol.CMP_GREATER_THAN_OR_EQUAL},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
