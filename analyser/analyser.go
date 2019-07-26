@@ -81,6 +81,8 @@ func Analyse(ts []symbol.Token) (operation.InstructionSet, AnaError) {
 func expandBrackets(a []symbol.Token) ([][]symbol.Token, AnaError) {
 	r := [][]symbol.Token{}
 	tempIds := 0
+  
+  // NEXT: Write some more tests
 
 	for len(a) > 0 {
 		if len(a) == 1 && a[0].Type == symbol.TEMP_IDENTIFIER {
