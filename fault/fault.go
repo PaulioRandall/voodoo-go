@@ -1,4 +1,4 @@
-package err
+package fault
 
 // Fault represents an error produced by this program
 // rather than a library. The error could be due to a bug
@@ -22,6 +22,7 @@ type faultType int
 const (
   std faultType = iota + 1
   bug
+  paren
 )
 
 // stdFault is the standard implementation of the
@@ -63,5 +64,14 @@ func Bug(m string) Fault {
   return stdFault{
     msg: m,
     errType: bug,
+  }
+}
+
+// Paren returns a new Fault with a message formatted
+// to present an error with parenthesis within a scroll.
+func Paren(m string) Fault {
+  return stdFault{
+    msg: m,
+    errType: paren,
   }
 }

@@ -3,6 +3,7 @@ package analyser
 import (
 	"strconv"
 
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/operation"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
@@ -54,7 +55,7 @@ import (
 //          As: x,
 //        },
 //      }
-func Analyse(in []symbol.Token) (operation.InstructionSet, AnaError) {
+func Analyse(in []symbol.Token) (operation.InstructionSet, fault.Fault) {
 	_, err := expandExprs(in)
 	if err != nil {
 		return nil, err
@@ -65,10 +66,10 @@ func Analyse(in []symbol.Token) (operation.InstructionSet, AnaError) {
 
 // expandExprs expands all parenthesis into separate assignment statements.
 // These are then compiled into a correctly ordered set of token arrays.
-func expandExprs(outer []symbol.Token) ([][]symbol.Token, AnaError) {
+func expandExprs(outer []symbol.Token) ([][]symbol.Token, fault.Fault) {
 	r := [][]symbol.Token{}
 	var inner []symbol.Token
-	var err AnaError
+	var err fault.Fault
 
 	for id := 1; outer != nil; id++ {
 		outer, inner, err = expandExpr(outer, id)
@@ -95,7 +96,7 @@ func expandExprs(outer []symbol.Token) ([][]symbol.Token, AnaError) {
 // plugging the `outer` value back into the function the expression can be
 // broken up further until `outer` is nil. At which point there are no
 // parenthesis pairs left to expand.
-func expandExpr(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
+func expandExpr(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner []symbol.Token, err fault.Fault) {
 
 	a, z := findParenPair(in)
 	if a == -1 && z == -1 {
@@ -132,13 +133,13 @@ func sliceOutExpr(in []symbol.Token, a, z, nextTempId int) (outer []symbol.Token
 
 // checkParenIndexes checks the results of findParenPair() and returns
 // a non-nil error if they are invalid.
-func checkParenIndexes(in []symbol.Token, a, z int) (err AnaError) {
+func checkParenIndexes(in []symbol.Token, a, z int) (err fault.Fault) {
 	if a == -1 {
 		m := "Didn't expect to find a closing parenthesis without a corresponding opening one"
-		err = NewAnaError(m, in[z].Start)
+		err = fault.Paren(m).To(in[z].Start)
 	} else if z == -1 {
 		m := "Didn't expect to find an opening parenthesis without a corresponding closing one"
-		err = NewAnaError(m, in[a].Start)
+		err = fault.Paren(m).From(in[a].Start)
 	}
 
 	return
