@@ -91,6 +91,8 @@ func nameOfType(t SymbolType) string {
 		return `BOOLEAN_FALSE`
 	case SOURCERY:
 		return `SOURCERY`
+	case TEMP_IDENTIFIER:
+		return `TEMP_IDENTIFIER`
 	case STRING:
 		return `STRING`
 	case COMMENT:

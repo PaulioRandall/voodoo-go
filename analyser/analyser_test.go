@@ -164,6 +164,33 @@ func TestExpandExpr_1(t *testing.T) {
 	assert.Equal(t, exp_inner, inner)
 }
 
+func TestExpandExpr_2(t *testing.T) {
+	in := []symbol.Token{
+		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
+		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
+		dummyTok(`語`, symbol.IDENTIFIER),
+	}
+
+	outer, inner, err := expandExpr(in)
+	assert.Nil(t, outer)
+	assert.Nil(t, inner)
+	assert.NotNil(t, err)
+}
+
+func TestExpandExpr_3(t *testing.T) {
+	in := []symbol.Token{
+		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
+		dummyTok(`語`, symbol.IDENTIFIER),
+	}
+
+	outer, inner, err := expandExpr(in)
+	assert.Nil(t, outer)
+	assert.Nil(t, inner)
+	assert.NotNil(t, err)
+}
+
 /*
 func TestExpandBrackets(t *testing.T) {
 	for i, tc := range expBracketsTests() {

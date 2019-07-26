@@ -88,8 +88,13 @@ func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
 // assignment operation to the identifier. The outer is returned as the
 // first result, inner second.
 func expandExpr(in []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
+
 	a, z := findParenPair(in)
-	// NEXT: Check for bad results, (n, -1) etc
+	err = checkParenIndexes(in, a, z)
+	if err != nil {
+		return
+	}
+
 	id := newTempIdToken()
 
 	inner = []symbol.Token{
@@ -101,6 +106,24 @@ func expandExpr(in []symbol.Token) (outer []symbol.Token, inner []symbol.Token, 
 	outer = in[:a]
 	outer = append(outer, id)
 	outer = append(outer, in[z+1:]...)
+
+	return
+}
+
+// checkParenIndexes checks the results of findParenPair() and returns
+// a non-nil error if they are invalid.
+func checkParenIndexes(in []symbol.Token, a, b int) (err AnaError) {
+	switch {
+	case a == -1 && b == -1:
+		m := "[BUG] This function may only be called if parenthesis are present within the input"
+		err = NewAnaError(m, -1)
+	case a == -1:
+		m := "Didn't expect to find a closing parenthesis without a corresponding opening one"
+		err = NewAnaError(m, in[b].Start)
+	case b == -1:
+		m := "Didn't expect to find an opening parenthesis without a corresponding closing one"
+		err = NewAnaError(m, in[a].Start)
+	}
 
 	return
 }
