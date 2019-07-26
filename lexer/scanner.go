@@ -114,7 +114,7 @@ func numLex(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),
-		Type:  symbol.NUMBER,
+		Type:  symbol.LITERAL_NUMBER,
 	}
 
 	return

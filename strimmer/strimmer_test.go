@@ -31,12 +31,12 @@ func strimTests() []strimTest {
 				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`1`, 5, 6, 0, symbol.NUMBER},
+				symbol.Lexeme{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
 				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{`1`, 5, 6, 0, symbol.NUMBER},
+				symbol.Token{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
 			},
 		},
 		strimTest{
@@ -51,14 +51,14 @@ func strimTests() []strimTest {
 				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`2`, 5, 6, 0, symbol.NUMBER},
+				symbol.Lexeme{`2`, 5, 6, 0, symbol.LITERAL_NUMBER},
 				symbol.Lexeme{` `, 6, 7, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`// 'There's a snake in my boot'`, 7, 38, 0, symbol.COMMENT},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
 				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{`2`, 5, 6, 0, symbol.NUMBER},
+				symbol.Token{`2`, 5, 6, 0, symbol.LITERAL_NUMBER},
 			},
 		},
 		strimTest{
@@ -71,18 +71,18 @@ func strimTests() []strimTest {
 		},
 		strimTest{
 			Input: []symbol.Lexeme{
-				symbol.Lexeme{`123_456`, 0, 7, 0, symbol.NUMBER},
+				symbol.Lexeme{`123_456`, 0, 7, 0, symbol.LITERAL_NUMBER},
 			},
 			ExpectToks: []symbol.Token{
-				symbol.Token{`123456`, 0, 7, 0, symbol.NUMBER},
+				symbol.Token{`123456`, 0, 7, 0, symbol.LITERAL_NUMBER},
 			},
 		},
 		strimTest{
 			Input: []symbol.Lexeme{
-				symbol.Lexeme{`1__2__3__.__4__5__6__`, 0, 21, 0, symbol.NUMBER},
+				symbol.Lexeme{`1__2__3__.__4__5__6__`, 0, 21, 0, symbol.LITERAL_NUMBER},
 			},
 			ExpectToks: []symbol.Token{
-				symbol.Token{`123.456`, 0, 21, 0, symbol.NUMBER},
+				symbol.Token{`123.456`, 0, 21, 0, symbol.LITERAL_NUMBER},
 			},
 		},
 		strimTest{

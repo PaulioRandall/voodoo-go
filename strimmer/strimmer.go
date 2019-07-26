@@ -30,7 +30,7 @@ func Strim(in []symbol.Lexeme) []symbol.Token {
 		case l.Type == symbol.LITERAL_STRING:
 			penultimate := len(l.Val) - 1
 			l.Val = l.Val[1:penultimate]
-		case l.Type == symbol.NUMBER:
+		case l.Type == symbol.LITERAL_NUMBER:
 			l.Val = strings.ReplaceAll(l.Val, `_`, ``)
 		case l.Type > symbol.ALPHABETIC_START && l.Type < symbol.ALPHABETIC_END:
 			l.Val = strings.ToLower(l.Val)

@@ -30,7 +30,7 @@ const (
 	LITERAL_STRING // "blahblah"
 	COMMENT        // // blahblah
 	// Numeric
-	NUMBER // ##.###
+	LITERAL_NUMBER // ##.###
 	// Comparison operators
 	EQUAL                 // ==
 	NOT_EQUAL             // !=
@@ -94,8 +94,8 @@ func SymbolName(t SymbolType) string {
 		return `LITERAL_STRING`
 	case COMMENT:
 		return `COMMENT`
-	case NUMBER:
-		return `NUMBER`
+	case LITERAL_NUMBER:
+		return `LITERAL_NUMBER`
 	case EQUAL:
 		return `EQUAL`
 	case NOT_EQUAL:
