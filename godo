@@ -55,6 +55,7 @@ if [[ $? == 1 ]]; then
   go fmt ./strimmer
   go fmt ./operation
   go fmt ./analyser
+  go fmt ./expander
 fi
 
 exitIfNotZero $?
