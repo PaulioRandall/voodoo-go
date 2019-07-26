@@ -17,11 +17,11 @@ import (
 // -> Removing quote marks from string literals
 // -> Removing underscores from numbers
 // -> Converting all letters to lowercase (Except string literals)
-func Strim(ls []symbol.Lexeme) []symbol.Token {
+func Strim(in []symbol.Lexeme) []symbol.Token {
 
-	ts := []symbol.Token{}
+	out := []symbol.Token{}
 
-	for _, l := range ls {
+	for _, l := range in {
 		switch {
 		case l.Type == symbol.WHITESPACE:
 			continue
@@ -37,8 +37,8 @@ func Strim(ls []symbol.Lexeme) []symbol.Token {
 		}
 
 		t := symbol.Token(l)
-		ts = append(ts, t)
+		out = append(out, t)
 	}
 
-	return ts
+	return out
 }
