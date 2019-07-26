@@ -89,7 +89,19 @@ func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
 // first result, inner second.
 func expandExpr(a []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
 	return nil, nil, nil
+}
 
+// findParenPair finds a pair of matching parenthesis that do not contain
+// parenthesis themselves.
+func findParenPair(in []symbol.Token) (a int, z int) {
+	l := len(in) - 1
+	a = rIndexOf(in, l, symbol.CURVED_BRACE_OPEN)
+	if a == -1 {
+		z = indexOf(in, 0, symbol.CURVED_BRACE_CLOSE)
+	} else {
+		z = indexOf(in, a, symbol.CURVED_BRACE_CLOSE)
+	}
+	return
 }
 
 // containsType returns true if the token array contains a token with
