@@ -85,16 +85,34 @@ func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
 // themselves and extracts it, removing the parenthesis. An identifier is
 // inserted into the original (outer) token array to represent the result
 // of the extracted expression (inner). The inner is prefixed with an
-// assignment operation to the identifier. The outer is returned as the
-// first result, inner second.
+// assignment operation to the identifier.
+//
+// This function essential breaks up a large expression into two smaller
+// ones as defined by the coder. Blocks of parenthesis `()` are used by the
+// coder determine how the larger expression should be broken up. By
+// plugging the `outer` value back into the function the expression can be
+// broken up further until `inner` is nil. At which point there are no
+// parenthesis pairs left to expand.
 func expandExpr(in []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
 
 	a, z := findParenPair(in)
+	if a == -1 && z == -1 {
+		outer = in
+		return
+	}
+
 	err = checkParenIndexes(in, a, z)
 	if err != nil {
 		return
 	}
 
+	outer, inner = sliceOutExpr(in, a, z)
+	return
+}
+
+// sliceOutExpr slices out the inner expr from the outer leaving a new identifier
+// in its place. The inner is prefixed with an assignment to the identifier.
+func sliceOutExpr(in []symbol.Token, a, z int) (outer []symbol.Token, inner []symbol.Token) {
 	id := newTempIdToken()
 
 	inner = []symbol.Token{
@@ -112,15 +130,11 @@ func expandExpr(in []symbol.Token) (outer []symbol.Token, inner []symbol.Token, 
 
 // checkParenIndexes checks the results of findParenPair() and returns
 // a non-nil error if they are invalid.
-func checkParenIndexes(in []symbol.Token, a, b int) (err AnaError) {
-	switch {
-	case a == -1 && b == -1:
-		m := "[BUG] This function may only be called if parenthesis are present within the input"
-		err = NewAnaError(m, -1)
-	case a == -1:
+func checkParenIndexes(in []symbol.Token, a, z int) (err AnaError) {
+	if a == -1 {
 		m := "Didn't expect to find a closing parenthesis without a corresponding opening one"
-		err = NewAnaError(m, in[b].Start)
-	case b == -1:
+		err = NewAnaError(m, in[z].Start)
+	} else if z == -1 {
 		m := "Didn't expect to find an opening parenthesis without a corresponding closing one"
 		err = NewAnaError(m, in[a].Start)
 	}
