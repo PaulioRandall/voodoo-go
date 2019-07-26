@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// SymbolType represents the type of the symbol.
+// SymbolType represents the type of a symbol.
 type SymbolType int
 
 const (
@@ -66,8 +66,8 @@ const (
 	VOID // _
 )
 
-// nameOfType returns the name of the symbol type.
-func nameOfType(t SymbolType) string {
+// SymbolName returns the name of the symbol type.
+func SymbolName(t SymbolType) string {
 	switch t {
 	case KEYWORD_SCROLL:
 		return `KEYWORD_SCROLL`
@@ -154,7 +154,7 @@ func nameOfType(t SymbolType) string {
 	return `UNDEFINED`
 }
 
-// Symbol represents a meaningful unit within the code.
+// Symbol represents  a terminal or non-terminal symbol.
 // I.e. identifier, operator, punctionation, etc.
 type Symbol struct {
 	Val   string     // Symbol value
@@ -174,17 +174,18 @@ func (s Symbol) String() string {
 // printlnSymbols prints an array of symbols where the
 // value to print for each symbol is obtained via the
 // supplied function.
-func printlnSymbols(ss []Symbol, f func(Symbol) string) {
-	l := len(ss)
+func printlnSymbols(syms []Symbol, f func(Symbol) string) {
+	l := len(syms)
 	if l == 0 {
 		fmt.Println(`[]`)
 		return
 	}
 
 	fmt.Print(`[`)
-	for i, v := range ss {
+	for i, v := range syms {
 		s := f(v)
 		fmt.Print(s)
+
 		if i < l-1 {
 			fmt.Print(`, `)
 		}

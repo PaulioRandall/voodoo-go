@@ -1,37 +1,36 @@
 package symbol
 
-// Token represents a lexeme that is useable by a
-// syntax analyser.
+// Token represents a symbol that is ready for syntax parsing.
 type Token Symbol
 
 // String creates a string representation of the token.
-func (tok Token) String() string {
-	return Symbol(tok).String()
+func (tk Token) String() string {
+	return Symbol(tk).String()
 }
 
 // PrintlnTokenValues prints the value of an array of tokens.
-func PrintlnTokenValues(ts []Token) {
-	ss := tokensToSymbols(ts)
-	f := func(s Symbol) string {
-		return s.Val
+func PrintlnTokenValues(tks []Token) {
+	f := func(sym Symbol) string {
+		return sym.Val
 	}
-	printlnSymbols(ss, f)
+	s := tokensToSymbols(tks)
+	printlnSymbols(s, f)
 }
 
 // PrintlnTokenTypes prints the types of an array of tokens.
-func PrintlnTokenTypes(ts []Token) {
-	ss := tokensToSymbols(ts)
-	f := func(s Symbol) string {
-		return nameOfType(s.Type)
+func PrintlnTokenTypes(tks []Token) {
+	f := func(sym Symbol) string {
+		return SymbolName(sym.Type)
 	}
-	printlnSymbols(ss, f)
+	s := tokensToSymbols(tks)
+	printlnSymbols(s, f)
 }
 
 // tokensToSymbols converts a token array to a symbol array.
-func tokensToSymbols(ts []Token) []Symbol {
-	ss := []Symbol{}
-	for _, v := range ts {
-		ss = append(ss, Symbol(v))
+func tokensToSymbols(tks []Token) []Symbol {
+	s := make([]Symbol, len(tks))
+	for i, v := range tks {
+		s[i] = Symbol(v)
 	}
-	return ss
+	return s
 }
