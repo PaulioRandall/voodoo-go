@@ -53,13 +53,13 @@ func TestContainsType(t *testing.T) {
 	assert.True(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
 
 	in = []symbol.Token{}
-	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_SPELL))
+	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_FUNC))
 	in = append(in, dummyTok(`)`, symbol.PAREN_CURVY_CLOSE))
-	in = append(in, dummyTok(`spell`, symbol.KEYWORD_SPELL))
+	in = append(in, dummyTok(`func`, symbol.KEYWORD_FUNC))
 	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
-	assert.True(t, containsType(in, symbol.KEYWORD_SPELL))
+	assert.True(t, containsType(in, symbol.KEYWORD_FUNC))
 	in = append(in, dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT))
-	assert.True(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_SPELL))
+	assert.True(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_FUNC))
 	assert.False(t, containsType(in, symbol.PAREN_CURVY_OPEN))
 }
 

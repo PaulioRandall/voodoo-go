@@ -87,7 +87,7 @@ func strimTests() []strimTest {
 		},
 		strimTest{
 			Input: []symbol.Lexeme{
-				symbol.Lexeme{`spell`, 0, 6, 0, symbol.KEYWORD_SPELL},
+				symbol.Lexeme{`func`, 0, 6, 0, symbol.KEYWORD_FUNC},
 				symbol.Lexeme{` `, 6, 7, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`END`, 7, 10, 0, symbol.KEYWORD_END},
 				symbol.Lexeme{` `, 10, 11, 0, symbol.WHITESPACE},
@@ -95,7 +95,7 @@ func strimTests() []strimTest {
 				symbol.Lexeme{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
 			},
 			ExpectToks: []symbol.Token{
-				symbol.Token{`spell`, 0, 6, 0, symbol.KEYWORD_SPELL},
+				symbol.Token{`func`, 0, 6, 0, symbol.KEYWORD_FUNC},
 				symbol.Token{`end`, 7, 10, 0, symbol.KEYWORD_END},
 				symbol.Token{`@println`, 11, 19, 0, symbol.SOURCERY},
 				symbol.Token{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
