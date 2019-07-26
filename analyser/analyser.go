@@ -57,8 +57,39 @@ import (
 //        },
 //      }
 func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
+	for {
+		var b []symbol.Token
+		var err AnaError
 
+		if !containsType(a, symbol.CURVED_BRACE_OPEN, symbol.CURVED_BRACE_CLOSE) {
+			break
+		}
+
+		a, b, err := expandExpr(a)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if a == nil || b == nil { // REMOVE
+			return nil, nil
+		}
+		// ... add b to the end of the instruction set
+	}
+
+	// ... add remaining to the end of the instruction set
 	return nil, nil
+}
+
+// expandExpr finds one set of parenthesis that do not contain parenthesis
+// themselves and extracts it, removing the parenthesis. An identifier is
+// inserted into the original (outer) token array to represent the result
+// of the extracted expression (inner). The inner is prefixed with an
+// assignment operation to the identifier. The outer is returned as the
+// first result, inner second.
+func expandExpr(a []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
+	return nil, nil, nil
+
 }
 
 // containsType returns true if the token array contains a token with
