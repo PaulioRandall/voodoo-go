@@ -121,12 +121,12 @@ func symbolLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `,`,
-			Expect:   symbol.Lexeme{`,`, 0, 1, 0, symbol.VALUE_SEPARATOR},
+			Expect:   symbol.Lexeme{`,`, 0, 1, 0, symbol.SEPARATOR_VALUE},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `:`,
-			Expect:   symbol.Lexeme{`:`, 0, 1, 0, symbol.KEY_VALUE_SEPARATOR},
+			Expect:   symbol.Lexeme{`:`, 0, 1, 0, symbol.SEPARATOR_KEY_VALUE},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),

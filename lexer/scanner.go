@@ -348,9 +348,9 @@ func symbolLex(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 	case itr.IsNext(']'):
 		set(symbol.PAREN_SQUARE_CLOSE, 1)
 	case itr.IsNext(','):
-		set(symbol.VALUE_SEPARATOR, 1)
+		set(symbol.SEPARATOR_VALUE, 1)
 	case itr.IsNext(':'):
-		set(symbol.KEY_VALUE_SEPARATOR, 1)
+		set(symbol.SEPARATOR_KEY_VALUE, 1)
 	case itr.IsNextStr(`..`):
 		set(symbol.RANGE, 2)
 	case itr.IsNext('_'):

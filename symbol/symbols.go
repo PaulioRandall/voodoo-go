@@ -54,8 +54,8 @@ const (
 	PAREN_SQUARE_CLOSE // ]
 	// Punctuation
 	ASSIGNMENT          // <-
-	VALUE_SEPARATOR     // ,
-	KEY_VALUE_SEPARATOR // :
+	SEPARATOR_VALUE     // ,
+	SEPARATOR_KEY_VALUE // :
 	RANGE               // ..
 	// Whitespace
 	WHITESPACE
@@ -134,10 +134,10 @@ func SymbolName(t SymbolType) string {
 		return `PAREN_SQUARE_CLOSE`
 	case ASSIGNMENT:
 		return `ASSIGNMENT`
-	case VALUE_SEPARATOR:
-		return `VALUE_SEPARATOR`
-	case KEY_VALUE_SEPARATOR:
-		return `KEY_VALUE_SEPARATOR`
+	case SEPARATOR_VALUE:
+		return `SEPARATOR_VALUE`
+	case SEPARATOR_KEY_VALUE:
+		return `SEPARATOR_KEY_VALUE`
 	case RANGE:
 		return `RANGE`
 	case WHITESPACE:
