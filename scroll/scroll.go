@@ -60,7 +60,7 @@ func (sc *Scroll) getLine(i int) *Line {
 // reached.
 func (sc *Scroll) IsEndOfScroll(index int) bool {
 	if index < 0 {
-		shared.CompilerBug(index+1, "How can a line index be negative?!")
+		panic("How can a line index be negative?!")
 	} else if index >= sc.Length {
 		return true
 	}
@@ -72,7 +72,7 @@ func (sc *Scroll) PrintlnLines(from int, to int) {
 	switch {
 	case from < 0, from > to, to > sc.Length:
 		e := fmt.Sprintf("Invalid line range: from %d to %d", from, to)
-		shared.CompilerBug(-1, e)
+		panic(e)
 	}
 
 	lines := sc.Lines[from:to]
