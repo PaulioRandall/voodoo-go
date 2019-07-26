@@ -46,12 +46,12 @@ func symbolLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `||`,
-			Expect:   symbol.Lexeme{`||`, 0, 2, 0, symbol.OR},
+			Expect:   symbol.Lexeme{`||`, 0, 2, 0, symbol.LOGICAL_OR},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `&&`,
-			Expect:   symbol.Lexeme{`&&`, 0, 2, 0, symbol.AND},
+			Expect:   symbol.Lexeme{`&&`, 0, 2, 0, symbol.LOGICAL_AND},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
@@ -61,7 +61,7 @@ func symbolLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `=>`,
-			Expect:   symbol.Lexeme{`=>`, 0, 2, 0, symbol.IF_MATCH_THEN},
+			Expect:   symbol.Lexeme{`=>`, 0, 2, 0, symbol.LOGICAL_MATCH},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
@@ -71,7 +71,7 @@ func symbolLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `!`,
-			Expect:   symbol.Lexeme{`!`, 0, 1, 0, symbol.NEGATION},
+			Expect:   symbol.Lexeme{`!`, 0, 1, 0, symbol.LOGICAL_NOT},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),

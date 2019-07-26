@@ -37,10 +37,10 @@ const (
 	CMP_GREATER_THAN          // >
 	CMP_GREATER_THAN_OR_EQUAL // >=
 	// Logical operators
-	OR            // ||
-	AND           // &&
-	NEGATION      // !
-	IF_MATCH_THEN // =>
+	LOGICAL_OR    // ||
+	LOGICAL_AND   // &&
+	LOGICAL_NOT   // !
+	LOGICAL_MATCH // =>
 	// Arithmetic operators
 	ADD      // +
 	SUBTRACT // -
@@ -106,14 +106,14 @@ func SymbolName(t SymbolType) string {
 		return `CMP_GREATER_THAN`
 	case CMP_GREATER_THAN_OR_EQUAL:
 		return `CMP_GREATER_THAN_OR_EQUAL`
-	case OR:
+	case LOGICAL_OR:
 		return `OR`
-	case AND:
+	case LOGICAL_AND:
 		return `AND`
-	case NEGATION:
-		return `NEGATION`
-	case IF_MATCH_THEN:
-		return `IF_MATCH_THEN`
+	case LOGICAL_NOT:
+		return `NOT`
+	case LOGICAL_MATCH:
+		return `LOGICAL_MATCH`
 	case ADD:
 		return `ADD`
 	case SUBTRACT:

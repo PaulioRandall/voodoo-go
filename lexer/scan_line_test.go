@@ -262,10 +262,10 @@ func apiTests() []scanLineTest {
 			TestLine: fault.CurrLine(),
 			Input:    `!x => y <- _`,
 			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`!`, 0, 1, 0, symbol.NEGATION},
+				symbol.Lexeme{`!`, 0, 1, 0, symbol.LOGICAL_NOT},
 				symbol.Lexeme{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
 				symbol.Lexeme{` `, 2, 3, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`=>`, 3, 5, 0, symbol.IF_MATCH_THEN},
+				symbol.Lexeme{`=>`, 3, 5, 0, symbol.LOGICAL_MATCH},
 				symbol.Lexeme{` `, 5, 6, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`y`, 6, 7, 0, symbol.IDENTIFIER_EXPLICIT},
 				symbol.Lexeme{` `, 7, 8, 0, symbol.WHITESPACE},
