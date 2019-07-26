@@ -56,7 +56,7 @@ import (
 //        },
 //      }
 func Analyse(in []symbol.Token) (operation.InstructionSet, fault.Fault) {
-	_, err := expandExprs(in)
+	_, err := expandParens(in)
 	if err != nil {
 		return nil, err
 	}
@@ -64,15 +64,16 @@ func Analyse(in []symbol.Token) (operation.InstructionSet, fault.Fault) {
 	return nil, nil
 }
 
-// expandExprs expands all parenthesis into separate assignment statements.
-// These are then compiled into a correctly ordered set of token arrays.
-func expandExprs(outer []symbol.Token) ([][]symbol.Token, fault.Fault) {
+// expandParens expands all expression parentheses into separate assignment
+// statements. These are then compiled into a correctly ordered set of token
+// arrays.
+func expandParens(outer []symbol.Token) ([][]symbol.Token, fault.Fault) {
 	r := [][]symbol.Token{}
 	var inner []symbol.Token
 	var err fault.Fault
 
 	for id := 1; outer != nil; id++ {
-		outer, inner, err = expandExpr(outer, id)
+		outer, inner, err = expandParen(outer, id)
 
 		if err != nil {
 			return nil, err
@@ -84,21 +85,21 @@ func expandExprs(outer []symbol.Token) ([][]symbol.Token, fault.Fault) {
 	return r, nil
 }
 
-// expandExpr finds one set of parenthesis that do not contain parenthesis
-// themselves and extracts it, removing the parenthesis. An identifier is
-// inserted into the original (outer) token array to represent the result
-// of the extracted expression (inner). The inner is prefixed with an
-// assignment operation to the identifier.
+// expandParen finds one set of parenthesss that do not contain parenthesss
+// themselves and extracts it, removing the parenthesss. An implicit
+// identifier is inserted into the original (outer) token array to represent
+// the result of the extracted expression (inner). The inner is prefixed with
+// two tokens that assign to the implicit identifier.
 //
-// This function essential breaks up a large expression into two smaller
-// ones as defined by the coder. Blocks of parenthesis `()` are used by the
+// This function essential breaks up a large expressions into two smaller
+// ones as defined by the coder. Blocks of parentheses `()` are used by the
 // coder determine how the larger expression should be broken up. By
 // plugging the `outer` value back into the function the expression can be
 // broken up further until `outer` is nil. At which point there are no
-// parenthesis pairs left to expand.
-func expandExpr(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner []symbol.Token, err fault.Fault) {
+// parentheses left to expand.
+func expandParen(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner []symbol.Token, err fault.Fault) {
 
-	a, z := findParenPair(in)
+	a, z := findParen(in)
 	if a == -1 && z == -1 {
 		inner = in
 		return
@@ -109,14 +110,15 @@ func expandExpr(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner 
 		return
 	}
 
-	outer, inner = sliceOutExpr(in, a, z, nextTempId)
+	outer, inner = sliceOutParen(in, a, z, nextTempId)
 	return
 }
 
-// sliceOutExpr slices out the inner expr from the outer leaving a new identifier
-// in its place. The inner is prefixed with an assignment to the identifier.
-func sliceOutExpr(in []symbol.Token, a, z, nextTempId int) (outer []symbol.Token, inner []symbol.Token) {
-	id := newTempIdToken(nextTempId)
+// sliceOutParen slices out the inner expression from the outer leaving an implicit
+// identifier in its place. The inner is prefixed with two tokens that assign the
+// the implicit identifier with the value of the inner expression.
+func sliceOutParen(in []symbol.Token, a, z, nextTempId int) (outer []symbol.Token, inner []symbol.Token) {
+	id := newImplicitIdToken(nextTempId)
 
 	inner = []symbol.Token{
 		id,
@@ -145,8 +147,8 @@ func checkParenIndexes(in []symbol.Token, a, z int) (err fault.Fault) {
 	return
 }
 
-// newTempIdToken returns a new and unique temporary identifier token.
-func newTempIdToken(id int) symbol.Token {
+// newImplicitIdToken returns a new and unique implicit identifier token.
+func newImplicitIdToken(id int) symbol.Token {
 	return symbol.Token{
 		Val:  `#` + strconv.Itoa(id),
 		Type: symbol.IDENTIFIER_IMPLICIT,
@@ -161,9 +163,9 @@ func newAssignToken() symbol.Token {
 	}
 }
 
-// findParenPair finds a pair of matching parenthesis that do not contain
-// parenthesis themselves.
-func findParenPair(in []symbol.Token) (a int, z int) {
+// findParen finds a pair of matching parenthesis that do not contain
+// parentheses themselves.
+func findParen(in []symbol.Token) (a int, z int) {
 	l := len(in) - 1
 	a = rIndexOf(in, l, symbol.CURVED_BRACE_OPEN)
 	if a == -1 {

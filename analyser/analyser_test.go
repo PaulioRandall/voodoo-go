@@ -63,13 +63,13 @@ func TestContainsType(t *testing.T) {
 	assert.False(t, containsType(in, symbol.CURVED_BRACE_OPEN))
 }
 
-func TestFindParenPair_1(t *testing.T) {
+func TestFindParen_1(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
-	a, z := findParenPair(in)
+	a, z := findParen(in)
 	assert.Equal(t, 0, a)
 	assert.Equal(t, 2, z)
 
@@ -78,7 +78,7 @@ func TestFindParenPair_1(t *testing.T) {
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
-	a, z = findParenPair(in)
+	a, z = findParen(in)
 	assert.Equal(t, 1, a)
 	assert.Equal(t, 2, z)
 
@@ -89,7 +89,7 @@ func TestFindParenPair_1(t *testing.T) {
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
-	a, z = findParenPair(in)
+	a, z = findParen(in)
 	assert.Equal(t, 3, a)
 	assert.Equal(t, 4, z)
 
@@ -104,17 +104,17 @@ func TestFindParenPair_1(t *testing.T) {
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
-	a, z = findParenPair(in)
+	a, z = findParen(in)
 	assert.Equal(t, 3, a)
 	assert.Equal(t, 5, z)
 }
 
-func TestFindParenPair_2(t *testing.T) {
+func TestFindParen_2(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
-	a, z := findParenPair(in)
+	a, z := findParen(in)
 	assert.Equal(t, 0, a)
 	assert.Equal(t, -1, z)
 
@@ -122,7 +122,7 @@ func TestFindParenPair_2(t *testing.T) {
 		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
-	a, z = findParenPair(in)
+	a, z = findParen(in)
 	assert.Equal(t, -1, a)
 	assert.Equal(t, 1, z)
 
@@ -132,12 +132,12 @@ func TestFindParenPair_2(t *testing.T) {
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
-	a, z = findParenPair(in)
+	a, z = findParen(in)
 	assert.Equal(t, 2, a)
 	assert.Equal(t, 3, z)
 }
 
-func TestExpandExpr_1(t *testing.T) {
+func TestExpandParen_1(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
@@ -158,13 +158,13 @@ func TestExpandExpr_1(t *testing.T) {
 		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
 
-	outer, inner, err := expandExpr(in, 1)
+	outer, inner, err := expandParen(in, 1)
 	require.Nil(t, err)
 	assert.Equal(t, exp_outer, outer)
 	assert.Equal(t, exp_inner, inner)
 }
 
-func TestExpandExpr_2(t *testing.T) {
+func TestExpandParen_2(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
@@ -172,13 +172,13 @@ func TestExpandExpr_2(t *testing.T) {
 		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
 
-	outer, inner, err := expandExpr(in, 1)
+	outer, inner, err := expandParen(in, 1)
 	assert.Nil(t, outer)
 	assert.Nil(t, inner)
 	assert.NotNil(t, err)
 }
 
-func TestExpandExprs(t *testing.T) {
+func TestExpandParens(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
@@ -215,7 +215,7 @@ func TestExpandExprs(t *testing.T) {
 		},
 	}
 
-	act, err := expandExprs(in)
+	act, err := expandParens(in)
 	require.Nil(t, err)
 	assert.Equal(t, exp, act)
 }
