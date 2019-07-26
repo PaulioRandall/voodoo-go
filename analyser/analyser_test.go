@@ -63,7 +63,7 @@ func TestContainsType(t *testing.T) {
 	assert.False(t, containsType(in, symbol.CURVED_BRACE_OPEN))
 }
 
-func TestFindParenPair(t *testing.T) {
+func TestFindParenPair_1(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`語`, symbol.IDENTIFIER),
@@ -107,6 +107,34 @@ func TestFindParenPair(t *testing.T) {
 	a, z = findParenPair(in)
 	assert.Equal(t, 3, a)
 	assert.Equal(t, 5, z)
+}
+
+func TestFindParenPair_2(t *testing.T) {
+	in := []symbol.Token{
+		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
+		dummyTok(`語`, symbol.IDENTIFIER),
+	}
+	a, z := findParenPair(in)
+	assert.Equal(t, 0, a)
+	assert.Equal(t, -1, z)
+
+	in = []symbol.Token{
+		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
+	}
+	a, z = findParenPair(in)
+	assert.Equal(t, -1, a)
+	assert.Equal(t, 1, z)
+
+	in = []symbol.Token{
+		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
+		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
+		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
+	}
+	a, z = findParenPair(in)
+	assert.Equal(t, 2, a)
+	assert.Equal(t, 3, z)
 }
 
 func TestExpandExpr_1(t *testing.T) {
