@@ -87,8 +87,38 @@ func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
 // of the extracted expression (inner). The inner is prefixed with an
 // assignment operation to the identifier. The outer is returned as the
 // first result, inner second.
-func expandExpr(a []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
-	return nil, nil, nil
+func expandExpr(in []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
+	a, z := findParenPair(in)
+	// NEXT: Check for bad results, (n, -1) etc
+	id := newTempIdToken()
+
+	inner = []symbol.Token{
+		id,
+		newAssignToken(),
+	}
+	inner = append(inner, in[a+1:z]...)
+
+	outer = in[:a]
+	outer = append(outer, id)
+	outer = append(outer, in[z+1:]...)
+
+	return
+}
+
+// newTempIdToken returns a new and unique temporary identifier token.
+func newTempIdToken() symbol.Token {
+	return symbol.Token{
+		Val:  `#1`,
+		Type: symbol.TEMP_IDENTIFIER,
+	}
+}
+
+// newAssignToken returns a new assignment token.
+func newAssignToken() symbol.Token {
+	return symbol.Token{
+		Val:  `<-`,
+		Type: symbol.ASSIGNMENT,
+	}
 }
 
 // findParenPair finds a pair of matching parenthesis that do not contain

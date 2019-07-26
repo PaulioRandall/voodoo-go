@@ -6,7 +6,7 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
-	//"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/require"
 )
 
 func dummyTok(s string, t symbol.SymbolType) symbol.Token {
@@ -109,28 +109,33 @@ func TestFindParenPair(t *testing.T) {
 	assert.Equal(t, 5, z)
 }
 
-/*
 func TestExpandExpr_1(t *testing.T) {
 	in := []symbol.Token{
+		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`語`, symbol.IDENTIFIER),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
 
-	exp_a := []symbol.Token{
+	exp_outer := []symbol.Token{
+		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
 		dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
 	}
 
-	exp_b := []symbol.Token{
+	exp_inner := []symbol.Token{
+		dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
 		dummyTok(`語`, symbol.IDENTIFIER),
 	}
 
-	a, b, err := expandExpr(in)
+	outer, inner, err := expandExpr(in)
 	require.Nil(t, err)
-	assert.Equal(t, exp_a, a)
-	assert.Equal(t, exp_b, b)
+	assert.Equal(t, exp_outer, outer)
+	assert.Equal(t, exp_inner, inner)
 }
-*/
+
 /*
 func TestExpandBrackets(t *testing.T) {
 	for i, tc := range expBracketsTests() {
