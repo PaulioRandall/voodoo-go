@@ -1,8 +1,8 @@
 package analyser
 
 import (
-	"fmt"
-	"strconv"
+	//"fmt"
+	//"strconv"
 
 	"github.com/PaulioRandall/voodoo-go/operation"
 	"github.com/PaulioRandall/voodoo-go/symbol"
@@ -56,33 +56,49 @@ import (
 //          As: x,
 //        },
 //      }
-func Analyse(ts []symbol.Token) (operation.InstructionSet, AnaError) {
+func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
 
 	return nil, nil
 }
 
-// expandBrackets scans the token array for precedence brackets,
-// the curvy ones, then splitting the token array into smaller
-// ones until no brackets are left, an error is returned if a
-// brace doesn't have an opposing partner. Braces are removed
-// along the way with temporary variables being created and
-// inserted where needed. E.g...
-//   Input:
-//     #0 = [x, <-, (, a, +, 12.3, -, (, c, *, d, ), )]
-//   Turns into:
-//     #0 = [x, <-, #1]
-//     #1 = [a, +, 12.3, -, (, c, *, d, )]
-//   Turns into:
-//     #0 = [x, <-, #1]
-//     #1 = [a, +, 12.3, -, #2]
-//     #2 = [c, *, d]
-//   Ordering is always reversed:
-//     [#2, #1, #0]
-func expandBrackets(a []symbol.Token) ([][]symbol.Token, AnaError) {
-	r := [][]symbol.Token{}
+// containsType returns true if the token array contains a token with
+// one of the specified symbol types.
+func containsType(a []symbol.Token, t ...symbol.SymbolType) bool {
+	for _, v := range a {
+		for _, ty := range t {
+			if v.Type == ty {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// expandExpr finds one set of parenthesis that do not contain parenthesis
+// themselves and extracts it, removing the parenthesis. An identifier is
+// inserted into the original (outer) token array to represent the result
+// of the extracted expression (inner). The inner is prefixed with an
+// assignment operation to the identifier. The outer is returned as the
+// first result, inner second.
+/*
+func expandParen(a []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
 	tempIds := 0
-  
-  // NEXT: Write some more tests
+
+	o := rIndexOf(a, l, symbol.CURVED_BRACE_OPEN)
+	if o == -1 {
+			c := indexOf(a, 0, symbol.CURVED_BRACE_CLOSE)
+
+			if c == -1 {
+				r = append(r, a)
+				break
+			} else {
+				m := "Missing closing brace to corresponding opening one"
+				err := NewAnaError(m, c)
+				return nil, err
+			}
+		}
+
+		c := indexOf(a, o, symbol.CURVED_BRACE_CLOSE)
 
 	for len(a) > 0 {
 		if len(a) == 1 && a[0].Type == symbol.TEMP_IDENTIFIER {
@@ -131,6 +147,7 @@ func expandBrackets(a []symbol.Token) ([][]symbol.Token, AnaError) {
 
 	return r, nil
 }
+*/
 
 // indexOf returns the next index of the symbol with the specified type
 // of -1 if no matching token is found.
