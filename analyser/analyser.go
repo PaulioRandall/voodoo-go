@@ -167,11 +167,11 @@ func newAssignToken() symbol.Token {
 // parentheses themselves.
 func findParen(in []symbol.Token) (a int, z int) {
 	l := len(in) - 1
-	a = rIndexOf(in, l, symbol.CURVED_BRACE_OPEN)
+	a = rIndexOf(in, l, symbol.PAREN_CURVY_OPEN)
 	if a == -1 {
-		z = indexOf(in, 0, symbol.CURVED_BRACE_CLOSE)
+		z = indexOf(in, 0, symbol.PAREN_CURVY_CLOSE)
 	} else {
-		z = indexOf(in, a, symbol.CURVED_BRACE_CLOSE)
+		z = indexOf(in, a, symbol.PAREN_CURVY_CLOSE)
 	}
 	return
 }

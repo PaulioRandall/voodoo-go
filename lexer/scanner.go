@@ -340,13 +340,13 @@ func symbolLex(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 	case itr.IsNext('%'):
 		set(symbol.CALC_MODULO, 1)
 	case itr.IsNext('('):
-		set(symbol.CURVED_BRACE_OPEN, 1)
+		set(symbol.PAREN_CURVY_OPEN, 1)
 	case itr.IsNext(')'):
-		set(symbol.CURVED_BRACE_CLOSE, 1)
+		set(symbol.PAREN_CURVY_CLOSE, 1)
 	case itr.IsNext('['):
-		set(symbol.SQUARE_BRACE_OPEN, 1)
+		set(symbol.PAREN_SQUARE_OPEN, 1)
 	case itr.IsNext(']'):
-		set(symbol.SQUARE_BRACE_CLOSE, 1)
+		set(symbol.PAREN_SQUARE_CLOSE, 1)
 	case itr.IsNext(','):
 		set(symbol.VALUE_SEPARATOR, 1)
 	case itr.IsNext(':'):

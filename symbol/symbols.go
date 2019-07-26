@@ -48,10 +48,10 @@ const (
 	CALC_DIVIDE   // /
 	CALC_MODULO   // %
 	// Context boundries
-	CURVED_BRACE_OPEN  // (
-	CURVED_BRACE_CLOSE // )
-	SQUARE_BRACE_OPEN  // [
-	SQUARE_BRACE_CLOSE // ]
+	PAREN_CURVY_OPEN   // (
+	PAREN_CURVY_CLOSE  // )
+	PAREN_SQUARE_OPEN  // [
+	PAREN_SQUARE_CLOSE // ]
 	// Punctuation
 	ASSIGNMENT          // <-
 	VALUE_SEPARATOR     // ,
@@ -124,14 +124,14 @@ func SymbolName(t SymbolType) string {
 		return `CALC_DIVIDE`
 	case CALC_MODULO:
 		return `CALC_MODULO`
-	case CURVED_BRACE_OPEN:
-		return `CURVED_BRACE_OPEN`
-	case CURVED_BRACE_CLOSE:
-		return `CURVED_BRACE_CLOSE`
-	case SQUARE_BRACE_OPEN:
-		return `SQUARE_BRACE_OPEN`
-	case SQUARE_BRACE_CLOSE:
-		return `SQUARE_BRACE_CLOSE`
+	case PAREN_CURVY_OPEN:
+		return `PAREN_CURVY_OPEN`
+	case PAREN_CURVY_CLOSE:
+		return `PAREN_CURVY_CLOSE`
+	case PAREN_SQUARE_OPEN:
+		return `PAREN_SQUARE_OPEN`
+	case PAREN_SQUARE_CLOSE:
+		return `PAREN_SQUARE_CLOSE`
 	case ASSIGNMENT:
 		return `ASSIGNMENT`
 	case VALUE_SEPARATOR:

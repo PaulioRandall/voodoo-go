@@ -101,22 +101,22 @@ func symbolLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `(`,
-			Expect:   symbol.Lexeme{`(`, 0, 1, 0, symbol.CURVED_BRACE_OPEN},
+			Expect:   symbol.Lexeme{`(`, 0, 1, 0, symbol.PAREN_CURVY_OPEN},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `)`,
-			Expect:   symbol.Lexeme{`)`, 0, 1, 0, symbol.CURVED_BRACE_CLOSE},
+			Expect:   symbol.Lexeme{`)`, 0, 1, 0, symbol.PAREN_CURVY_CLOSE},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `[`,
-			Expect:   symbol.Lexeme{`[`, 0, 1, 0, symbol.SQUARE_BRACE_OPEN},
+			Expect:   symbol.Lexeme{`[`, 0, 1, 0, symbol.PAREN_SQUARE_OPEN},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `]`,
-			Expect:   symbol.Lexeme{`]`, 0, 1, 0, symbol.SQUARE_BRACE_CLOSE},
+			Expect:   symbol.Lexeme{`]`, 0, 1, 0, symbol.PAREN_SQUARE_CLOSE},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
