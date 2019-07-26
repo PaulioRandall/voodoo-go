@@ -9,8 +9,7 @@ import (
 
 // Analyse parses an array of tokens into a set of instructions.
 // Analysis involves:
-// 1: Expanding precedence brackets out and placing them at the
-//    front of the array of tokens so they are executed first.
+// 1: Expanding parenthesis out adding new identifiers as needed.
 // 2: Each token array is then split into even smaller ones such
 //    that each contains exactly one instruction, error checking
 //    where possible.
@@ -55,26 +54,33 @@ import (
 //          As: x,
 //        },
 //      }
-func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
-	for i := 1; true; i++ {
-		var inner []symbol.Token
-		var err AnaError
+func Analyse(in []symbol.Token) (operation.InstructionSet, AnaError) {
+	_, err := expandExprs(in)
+	if err != nil {
+		return nil, err
+	}
 
-		a, inner, err = expandExpr(a, i)
+	return nil, nil
+}
+
+// expandExprs expands all parenthesis into separate assignment statements.
+// These are then compiled into a correctly ordered set of token arrays.
+func expandExprs(outer []symbol.Token) ([][]symbol.Token, AnaError) {
+	r := [][]symbol.Token{}
+	var inner []symbol.Token
+	var err AnaError
+
+	for id := 1; outer != nil; id++ {
+		outer, inner, err = expandExpr(outer, id)
 
 		if err != nil {
 			return nil, err
 		}
 
-		if inner == nil {
-			break
-		}
-
-		// ... add inner to the end of the instruction set
+		r = append(r, inner)
 	}
 
-	// ... add remaining to the end of the instruction set
-	return nil, nil
+	return r, nil
 }
 
 // expandExpr finds one set of parenthesis that do not contain parenthesis
@@ -87,13 +93,13 @@ func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
 // ones as defined by the coder. Blocks of parenthesis `()` are used by the
 // coder determine how the larger expression should be broken up. By
 // plugging the `outer` value back into the function the expression can be
-// broken up further until `inner` is nil. At which point there are no
+// broken up further until `outer` is nil. At which point there are no
 // parenthesis pairs left to expand.
 func expandExpr(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
 
 	a, z := findParenPair(in)
 	if a == -1 && z == -1 {
-		outer = in
+		inner = in
 		return
 	}
 
