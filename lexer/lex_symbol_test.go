@@ -76,27 +76,27 @@ func symbolLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `+`,
-			Expect:   symbol.Lexeme{`+`, 0, 1, 0, symbol.ADD},
+			Expect:   symbol.Lexeme{`+`, 0, 1, 0, symbol.CALC_ADD},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `-`,
-			Expect:   symbol.Lexeme{`-`, 0, 1, 0, symbol.SUBTRACT},
+			Expect:   symbol.Lexeme{`-`, 0, 1, 0, symbol.CALC_SUBTRACT},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `*`,
-			Expect:   symbol.Lexeme{`*`, 0, 1, 0, symbol.MULTIPLY},
+			Expect:   symbol.Lexeme{`*`, 0, 1, 0, symbol.CALC_MULTIPLY},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `/`,
-			Expect:   symbol.Lexeme{`/`, 0, 1, 0, symbol.DIVIDE},
+			Expect:   symbol.Lexeme{`/`, 0, 1, 0, symbol.CALC_DIVIDE},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `%`,
-			Expect:   symbol.Lexeme{`%`, 0, 1, 0, symbol.MODULO},
+			Expect:   symbol.Lexeme{`%`, 0, 1, 0, symbol.CALC_MODULO},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),

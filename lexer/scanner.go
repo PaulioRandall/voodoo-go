@@ -330,15 +330,15 @@ func symbolLex(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 	case itr.IsNextStr(`&&`):
 		set(symbol.LOGICAL_AND, 2)
 	case itr.IsNext('+'):
-		set(symbol.ADD, 1)
+		set(symbol.CALC_ADD, 1)
 	case itr.IsNext('-'):
-		set(symbol.SUBTRACT, 1)
+		set(symbol.CALC_SUBTRACT, 1)
 	case itr.IsNext('*'):
-		set(symbol.MULTIPLY, 1)
+		set(symbol.CALC_MULTIPLY, 1)
 	case itr.IsNext('/'):
-		set(symbol.DIVIDE, 1)
+		set(symbol.CALC_DIVIDE, 1)
 	case itr.IsNext('%'):
-		set(symbol.MODULO, 1)
+		set(symbol.CALC_MODULO, 1)
 	case itr.IsNext('('):
 		set(symbol.CURVED_BRACE_OPEN, 1)
 	case itr.IsNext(')'):

@@ -42,11 +42,11 @@ const (
 	LOGICAL_NOT   // !
 	LOGICAL_MATCH // =>
 	// Arithmetic operators
-	ADD      // +
-	SUBTRACT // -
-	MULTIPLY // *
-	DIVIDE   // /
-	MODULO   // %
+	CALC_ADD      // +
+	CALC_SUBTRACT // -
+	CALC_MULTIPLY // *
+	CALC_DIVIDE   // /
+	CALC_MODULO   // %
 	// Context boundries
 	CURVED_BRACE_OPEN  // (
 	CURVED_BRACE_CLOSE // )
@@ -114,16 +114,16 @@ func SymbolName(t SymbolType) string {
 		return `NOT`
 	case LOGICAL_MATCH:
 		return `LOGICAL_MATCH`
-	case ADD:
-		return `ADD`
-	case SUBTRACT:
-		return `SUBTRACT`
-	case MULTIPLY:
-		return `MULTIPLY`
-	case DIVIDE:
-		return `DIVIDE`
-	case MODULO:
-		return `MODULO`
+	case CALC_ADD:
+		return `CALC_ADD`
+	case CALC_SUBTRACT:
+		return `CALC_SUBTRACT`
+	case CALC_MULTIPLY:
+		return `CALC_MULTIPLY`
+	case CALC_DIVIDE:
+		return `CALC_DIVIDE`
+	case CALC_MODULO:
+		return `CALC_MODULO`
 	case CURVED_BRACE_OPEN:
 		return `CURVED_BRACE_OPEN`
 	case CURVED_BRACE_CLOSE:
