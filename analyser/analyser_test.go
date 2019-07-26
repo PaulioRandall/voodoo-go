@@ -158,7 +158,7 @@ func TestExpandExpr_1(t *testing.T) {
 		dummyTok(`語`, symbol.IDENTIFIER),
 	}
 
-	outer, inner, err := expandExpr(in)
+	outer, inner, err := expandExpr(in, 1)
 	require.Nil(t, err)
 	assert.Equal(t, exp_outer, outer)
 	assert.Equal(t, exp_inner, inner)
@@ -172,10 +172,57 @@ func TestExpandExpr_2(t *testing.T) {
 		dummyTok(`語`, symbol.IDENTIFIER),
 	}
 
-	outer, inner, err := expandExpr(in)
+	outer, inner, err := expandExpr(in, 1)
 	assert.Nil(t, outer)
 	assert.Nil(t, inner)
 	assert.NotNil(t, err)
+}
+
+func TestExpandExpr_3(t *testing.T) {
+	in := []symbol.Token{
+		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
+		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
+		dummyTok(`a`, symbol.IDENTIFIER),
+		dummyTok(`*`, symbol.MULTIPLY),
+		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
+		dummyTok(`b`, symbol.IDENTIFIER),
+		dummyTok(`+`, symbol.ADD),
+		dummyTok(`c`, symbol.IDENTIFIER),
+		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
+		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
+	}
+
+	exp_outer := []symbol.Token{
+		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
+		dummyTok(`#2`, symbol.TEMP_IDENTIFIER),
+	}
+
+	exp_temp_1 := []symbol.Token{
+		dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
+		dummyTok(`b`, symbol.IDENTIFIER),
+		dummyTok(`+`, symbol.ADD),
+		dummyTok(`c`, symbol.IDENTIFIER),
+	}
+
+	exp_temp_2 := []symbol.Token{
+		dummyTok(`#2`, symbol.TEMP_IDENTIFIER),
+		dummyTok(`<-`, symbol.ASSIGNMENT),
+		dummyTok(`a`, symbol.IDENTIFIER),
+		dummyTok(`*`, symbol.MULTIPLY),
+		dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
+	}
+
+	outer, temp_1, err := expandExpr(in, 1)
+	require.Nil(t, err)
+	outer, temp_2, err := expandExpr(outer, 2)
+	require.Nil(t, err)
+
+	assert.Equal(t, exp_temp_1, temp_1)
+	assert.Equal(t, exp_temp_2, temp_2)
+	assert.Equal(t, exp_outer, outer)
 }
 
 /*

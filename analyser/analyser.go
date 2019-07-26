@@ -1,8 +1,7 @@
 package analyser
 
 import (
-	//"fmt"
-	//"strconv"
+	"strconv"
 
 	"github.com/PaulioRandall/voodoo-go/operation"
 	"github.com/PaulioRandall/voodoo-go/symbol"
@@ -57,24 +56,21 @@ import (
 //        },
 //      }
 func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
-	for {
-		var b []symbol.Token
+	for i := 1; true; i++ {
+		var inner []symbol.Token
 		var err AnaError
 
-		if !containsType(a, symbol.CURVED_BRACE_OPEN, symbol.CURVED_BRACE_CLOSE) {
-			break
-		}
-
-		a, b, err := expandExpr(a)
+		a, inner, err = expandExpr(a, i)
 
 		if err != nil {
 			return nil, err
 		}
 
-		if a == nil || b == nil { // REMOVE
-			return nil, nil
+		if inner == nil {
+			break
 		}
-		// ... add b to the end of the instruction set
+
+		// ... add inner to the end of the instruction set
 	}
 
 	// ... add remaining to the end of the instruction set
@@ -93,7 +89,7 @@ func Analyse(a []symbol.Token) (operation.InstructionSet, AnaError) {
 // plugging the `outer` value back into the function the expression can be
 // broken up further until `inner` is nil. At which point there are no
 // parenthesis pairs left to expand.
-func expandExpr(in []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
+func expandExpr(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
 
 	a, z := findParenPair(in)
 	if a == -1 && z == -1 {
@@ -106,14 +102,14 @@ func expandExpr(in []symbol.Token) (outer []symbol.Token, inner []symbol.Token, 
 		return
 	}
 
-	outer, inner = sliceOutExpr(in, a, z)
+	outer, inner = sliceOutExpr(in, a, z, nextTempId)
 	return
 }
 
 // sliceOutExpr slices out the inner expr from the outer leaving a new identifier
 // in its place. The inner is prefixed with an assignment to the identifier.
-func sliceOutExpr(in []symbol.Token, a, z int) (outer []symbol.Token, inner []symbol.Token) {
-	id := newTempIdToken()
+func sliceOutExpr(in []symbol.Token, a, z, nextTempId int) (outer []symbol.Token, inner []symbol.Token) {
+	id := newTempIdToken(nextTempId)
 
 	inner = []symbol.Token{
 		id,
@@ -143,9 +139,9 @@ func checkParenIndexes(in []symbol.Token, a, z int) (err AnaError) {
 }
 
 // newTempIdToken returns a new and unique temporary identifier token.
-func newTempIdToken() symbol.Token {
+func newTempIdToken(id int) symbol.Token {
 	return symbol.Token{
-		Val:  `#1`,
+		Val:  `#` + strconv.Itoa(id),
 		Type: symbol.TEMP_IDENTIFIER,
 	}
 }
@@ -183,81 +179,6 @@ func containsType(a []symbol.Token, t ...symbol.SymbolType) bool {
 	}
 	return false
 }
-
-// expandExpr finds one set of parenthesis that do not contain parenthesis
-// themselves and extracts it, removing the parenthesis. An identifier is
-// inserted into the original (outer) token array to represent the result
-// of the extracted expression (inner). The inner is prefixed with an
-// assignment operation to the identifier. The outer is returned as the
-// first result, inner second.
-/*
-func expandParen(a []symbol.Token) (outer []symbol.Token, inner []symbol.Token, err AnaError) {
-	tempIds := 0
-
-	o := rIndexOf(a, l, symbol.CURVED_BRACE_OPEN)
-	if o == -1 {
-			c := indexOf(a, 0, symbol.CURVED_BRACE_CLOSE)
-
-			if c == -1 {
-				r = append(r, a)
-				break
-			} else {
-				m := "Missing closing brace to corresponding opening one"
-				err := NewAnaError(m, c)
-				return nil, err
-			}
-		}
-
-		c := indexOf(a, o, symbol.CURVED_BRACE_CLOSE)
-
-	for len(a) > 0 {
-		if len(a) == 1 && a[0].Type == symbol.TEMP_IDENTIFIER {
-			break
-		}
-
-		l := len(a) - 1
-
-		o := rIndexOf(a, l, symbol.CURVED_BRACE_OPEN)
-		if o == -1 {
-			c := indexOf(a, 0, symbol.CURVED_BRACE_CLOSE)
-
-			if c == -1 {
-				r = append(r, a)
-				break
-			} else {
-				m := "Missing closing brace to corresponding opening one"
-				err := NewAnaError(m, c)
-				return nil, err
-			}
-		}
-
-		c := indexOf(a, o, symbol.CURVED_BRACE_CLOSE)
-		if c == -1 {
-			m := "Didn't expect to find a closing brace without a corresponding opening one"
-			err := NewAnaError(m, c)
-			return nil, err
-		}
-
-		s := a[o+1 : c]
-		r = append(r, s)
-
-		start := a[:o]
-		tempIds++
-		mid := symbol.Token{
-			Val:  `#` + strconv.Itoa(tempIds),
-			Type: symbol.TEMP_IDENTIFIER,
-		}
-		end := a[c+1:]
-
-		a = append(start, mid)
-		a = append(a, end...)
-
-		fmt.Println(a)
-	}
-
-	return r, nil
-}
-*/
 
 // indexOf returns the next index of the symbol with the specified type
 // of -1 if no matching token is found.
