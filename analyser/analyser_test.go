@@ -18,55 +18,55 @@ func dummyTok(s string, t symbol.SymbolType) symbol.Token {
 
 func TestIndexOf(t *testing.T) {
 	in := []symbol.Token{
-		dummyTok(`a`, symbol.IDENTIFIER),
+		dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
 
-	assert.Equal(t, 0, indexOf(in, 0, symbol.IDENTIFIER))
+	assert.Equal(t, 0, indexOf(in, 0, symbol.IDENTIFIER_EXPLICIT))
 	assert.Equal(t, 1, indexOf(in, 0, symbol.CURVED_BRACE_OPEN))
-	assert.Equal(t, 2, indexOf(in, 1, symbol.IDENTIFIER))
+	assert.Equal(t, 2, indexOf(in, 1, symbol.IDENTIFIER_EXPLICIT))
 	assert.Equal(t, -1, indexOf(in, 2, symbol.CURVED_BRACE_OPEN))
 }
 
 func TestRIndexOf(t *testing.T) {
 	in := []symbol.Token{
-		dummyTok(`a`, symbol.IDENTIFIER),
+		dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
 	last := len(in) - 1
 
-	assert.Equal(t, 2, rIndexOf(in, last, symbol.IDENTIFIER))
+	assert.Equal(t, 2, rIndexOf(in, last, symbol.IDENTIFIER_EXPLICIT))
 	assert.Equal(t, 1, rIndexOf(in, last, symbol.CURVED_BRACE_OPEN))
-	assert.Equal(t, 2, rIndexOf(in, 2, symbol.IDENTIFIER))
-	assert.Equal(t, 0, rIndexOf(in, 1, symbol.IDENTIFIER))
+	assert.Equal(t, 2, rIndexOf(in, 2, symbol.IDENTIFIER_EXPLICIT))
+	assert.Equal(t, 0, rIndexOf(in, 1, symbol.IDENTIFIER_EXPLICIT))
 	assert.Equal(t, -1, rIndexOf(in, last, symbol.STRING))
 }
 
 func TestContainsType(t *testing.T) {
 	in := []symbol.Token{}
-	assert.False(t, containsType(in, symbol.IDENTIFIER))
-	in = append(in, dummyTok(`(`, symbol.IDENTIFIER))
-	assert.True(t, containsType(in, symbol.IDENTIFIER))
+	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
+	in = append(in, dummyTok(`(`, symbol.IDENTIFIER_EXPLICIT))
+	assert.True(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
 
 	in = []symbol.Token{}
-	assert.False(t, containsType(in, symbol.IDENTIFIER, symbol.KEYWORD_SPELL))
+	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_SPELL))
 	in = append(in, dummyTok(`)`, symbol.CURVED_BRACE_CLOSE))
 	in = append(in, dummyTok(`spell`, symbol.KEYWORD_SPELL))
-	assert.False(t, containsType(in, symbol.IDENTIFIER))
+	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
 	assert.True(t, containsType(in, symbol.KEYWORD_SPELL))
-	in = append(in, dummyTok(`語`, symbol.IDENTIFIER))
-	assert.True(t, containsType(in, symbol.IDENTIFIER, symbol.KEYWORD_SPELL))
+	in = append(in, dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT))
+	assert.True(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_SPELL))
 	assert.False(t, containsType(in, symbol.CURVED_BRACE_OPEN))
 }
 
 func TestFindParenPair_1(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
 	a, z := findParenPair(in)
@@ -74,7 +74,7 @@ func TestFindParenPair_1(t *testing.T) {
 	assert.Equal(t, 2, z)
 
 	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
@@ -83,7 +83,7 @@ func TestFindParenPair_1(t *testing.T) {
 	assert.Equal(t, 2, z)
 
 	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
@@ -94,15 +94,15 @@ func TestFindParenPair_1(t *testing.T) {
 	assert.Equal(t, 4, z)
 
 	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
 	a, z = findParenPair(in)
 	assert.Equal(t, 3, a)
@@ -112,14 +112,14 @@ func TestFindParenPair_1(t *testing.T) {
 func TestFindParenPair_2(t *testing.T) {
 	in := []symbol.Token{
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
 	a, z := findParenPair(in)
 	assert.Equal(t, 0, a)
 	assert.Equal(t, -1, z)
 
 	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
 	a, z = findParenPair(in)
@@ -127,7 +127,7 @@ func TestFindParenPair_2(t *testing.T) {
 	assert.Equal(t, 1, z)
 
 	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
@@ -139,23 +139,23 @@ func TestFindParenPair_2(t *testing.T) {
 
 func TestExpandExpr_1(t *testing.T) {
 	in := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
 
 	exp_outer := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
-		dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
+		dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
 	}
 
 	exp_inner := []symbol.Token{
-		dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
+		dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
 
 	outer, inner, err := expandExpr(in, 1)
@@ -166,10 +166,10 @@ func TestExpandExpr_1(t *testing.T) {
 
 func TestExpandExpr_2(t *testing.T) {
 	in := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER),
+		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
 	}
 
 	outer, inner, err := expandExpr(in, 1)
@@ -180,38 +180,38 @@ func TestExpandExpr_2(t *testing.T) {
 
 func TestExpandExprs(t *testing.T) {
 	in := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER),
+		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`<-`, symbol.ASSIGNMENT),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`a`, symbol.IDENTIFIER),
+		dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`*`, symbol.MULTIPLY),
 		dummyTok(`(`, symbol.CURVED_BRACE_OPEN),
-		dummyTok(`b`, symbol.IDENTIFIER),
+		dummyTok(`b`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`+`, symbol.ADD),
-		dummyTok(`c`, symbol.IDENTIFIER),
+		dummyTok(`c`, symbol.IDENTIFIER_EXPLICIT),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 		dummyTok(`)`, symbol.CURVED_BRACE_CLOSE),
 	}
 
 	exp := [][]symbol.Token{
 		[]symbol.Token{
-			dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
+			dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
 			dummyTok(`<-`, symbol.ASSIGNMENT),
-			dummyTok(`b`, symbol.IDENTIFIER),
+			dummyTok(`b`, symbol.IDENTIFIER_EXPLICIT),
 			dummyTok(`+`, symbol.ADD),
-			dummyTok(`c`, symbol.IDENTIFIER),
+			dummyTok(`c`, symbol.IDENTIFIER_EXPLICIT),
 		},
 		[]symbol.Token{
-			dummyTok(`#2`, symbol.TEMP_IDENTIFIER),
+			dummyTok(`#2`, symbol.IDENTIFIER_IMPLICIT),
 			dummyTok(`<-`, symbol.ASSIGNMENT),
-			dummyTok(`a`, symbol.IDENTIFIER),
+			dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
 			dummyTok(`*`, symbol.MULTIPLY),
-			dummyTok(`#1`, symbol.TEMP_IDENTIFIER),
+			dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
 		},
 		[]symbol.Token{
-			dummyTok(`x`, symbol.IDENTIFIER),
+			dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
 			dummyTok(`<-`, symbol.ASSIGNMENT),
-			dummyTok(`#2`, symbol.TEMP_IDENTIFIER),
+			dummyTok(`#2`, symbol.IDENTIFIER_IMPLICIT),
 		},
 	}
 
@@ -251,29 +251,29 @@ func expBracketsTests() []expBracketsTest {
 		expBracketsTest{
 			Input: []symbol.Token{
 				symbol.Token{`(`, 0, 1, 0, symbol.CURVED_BRACE_OPEN},
-				symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER},
+				symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
 				symbol.Token{`)`, 2, 3, 0, symbol.CURVED_BRACE_CLOSE},
 			},
 			Expect: [][]symbol.Token{
 				[]symbol.Token{
-					symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER},
+					symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
 				},
 			},
 		},
 
 			expBracketsTest{
 				Input: []symbol.Token{
-					symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER},
+					symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
 					symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
 					symbol.Token{`(`, 3, 4, 0, symbol.CURVED_BRACE_OPEN},
-					symbol.Token{`y`, 4, 5, 0, symbol.IDENTIFIER},
+					symbol.Token{`y`, 4, 5, 0, symbol.IDENTIFIER_EXPLICIT},
 					symbol.Token{`)`, 5, 6, 0, symbol.CURVED_BRACE_CLOSE},
 				},
 				Expect: [][]symbol.Token{
 					[]symbol.Token{
-						symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER},
+						symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
 						symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
-						symbol.Token{`y`, 4, 5, 0, symbol.IDENTIFIER},
+						symbol.Token{`y`, 4, 5, 0, symbol.IDENTIFIER_EXPLICIT},
 					},
 				},
 			},

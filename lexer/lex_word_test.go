@@ -16,22 +16,22 @@ func wordLexTests() []lexTest {
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `a`,
-			Expect:   symbol.Lexeme{`a`, 0, 1, 0, symbol.IDENTIFIER},
+			Expect:   symbol.Lexeme{`a`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `abc`,
-			Expect:   symbol.Lexeme{`abc`, 0, 3, 0, symbol.IDENTIFIER},
+			Expect:   symbol.Lexeme{`abc`, 0, 3, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `abc_123`,
-			Expect:   symbol.Lexeme{`abc_123`, 0, 7, 0, symbol.IDENTIFIER},
+			Expect:   symbol.Lexeme{`abc_123`, 0, 7, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
 			Input:    `a__________123456789`,
-			Expect:   symbol.Lexeme{`a__________123456789`, 0, 20, 0, symbol.IDENTIFIER},
+			Expect:   symbol.Lexeme{`a__________123456789`, 0, 20, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),

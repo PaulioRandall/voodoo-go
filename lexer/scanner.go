@@ -88,7 +88,7 @@ func wordLex(itr *runer.RuneItr) *symbol.Lexeme {
 	case `false`:
 		t = symbol.BOOLEAN_FALSE
 	default:
-		t = symbol.IDENTIFIER
+		t = symbol.IDENTIFIER_EXPLICIT
 	}
 
 	return &symbol.Lexeme{

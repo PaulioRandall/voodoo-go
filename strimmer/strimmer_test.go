@@ -27,14 +27,14 @@ func strimTests() []strimTest {
 	return []strimTest{
 		strimTest{
 			Input: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER},
+				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
 				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`1`, 5, 6, 0, symbol.NUMBER},
 			},
 			ExpectToks: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER},
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
 				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
 				symbol.Token{`1`, 5, 6, 0, symbol.NUMBER},
 			},
@@ -47,7 +47,7 @@ func strimTests() []strimTest {
 		},
 		strimTest{
 			Input: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER},
+				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
 				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
 				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
@@ -56,7 +56,7 @@ func strimTests() []strimTest {
 				symbol.Lexeme{`// 'There's a snake in my boot'`, 7, 38, 0, symbol.COMMENT},
 			},
 			ExpectToks: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER},
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
 				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
 				symbol.Token{`2`, 5, 6, 0, symbol.NUMBER},
 			},
@@ -92,13 +92,13 @@ func strimTests() []strimTest {
 				symbol.Lexeme{`END`, 7, 10, 0, symbol.KEYWORD_END},
 				symbol.Lexeme{` `, 10, 11, 0, symbol.WHITESPACE},
 				symbol.Lexeme{`@PrInTlN`, 11, 19, 0, symbol.SOURCERY},
-				symbol.Lexeme{`語`, 19, 20, 0, symbol.IDENTIFIER},
+				symbol.Lexeme{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`spell`, 0, 6, 0, symbol.KEYWORD_SPELL},
 				symbol.Token{`end`, 7, 10, 0, symbol.KEYWORD_END},
 				symbol.Token{`@println`, 11, 19, 0, symbol.SOURCERY},
-				symbol.Token{`語`, 19, 20, 0, symbol.IDENTIFIER},
+				symbol.Token{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
 			},
 		},
 	}

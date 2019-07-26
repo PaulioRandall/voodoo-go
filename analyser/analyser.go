@@ -149,7 +149,7 @@ func checkParenIndexes(in []symbol.Token, a, z int) (err fault.Fault) {
 func newTempIdToken(id int) symbol.Token {
 	return symbol.Token{
 		Val:  `#` + strconv.Itoa(id),
-		Type: symbol.TEMP_IDENTIFIER,
+		Type: symbol.IDENTIFIER_IMPLICIT,
 	}
 }
 
