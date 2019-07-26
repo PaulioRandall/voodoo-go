@@ -71,8 +71,6 @@ func wordLex(itr *runer.RuneItr) *symbol.Lexeme {
 	t := symbol.UNDEFINED
 
 	switch strings.ToLower(s) {
-	case `scroll`:
-		t = symbol.KEYWORD_SCROLL
 	case `spell`:
 		t = symbol.KEYWORD_SPELL
 	case `loop`:

@@ -35,11 +35,6 @@ func wordLexTests() []lexTest {
 		},
 		lexTest{
 			TestLine: fault.CurrLine(),
-			Input:    `SCROLL`,
-			Expect:   symbol.Lexeme{`SCROLL`, 0, 6, 0, symbol.KEYWORD_SCROLL},
-		},
-		lexTest{
-			TestLine: fault.CurrLine(),
 			Input:    `sPeLL`,
 			Expect:   symbol.Lexeme{`sPeLL`, 0, 5, 0, symbol.KEYWORD_SPELL},
 		},

@@ -13,13 +13,12 @@ const (
 	UNDEFINED SymbolType = iota
 	// Fully or partly alphabetic
 	ALPHABETIC_START
-	KEYWORD_SCROLL // scroll
-	KEYWORD_SPELL  // spell
-	KEYWORD_LOOP   // loop
-	KEYWORD_WHEN   // when
-	KEYWORD_END    // end
-	KEYWORD_KEY    // key
-	KEYWORD_VAL    // value
+	KEYWORD_SPELL // spell
+	KEYWORD_LOOP  // loop
+	KEYWORD_WHEN  // when
+	KEYWORD_END   // end
+	KEYWORD_KEY   // key
+	KEYWORD_VAL   // value
 	IDENTIFIER
 	BOOLEAN_TRUE    // true
 	BOOLEAN_FALSE   // false
@@ -69,8 +68,6 @@ const (
 // SymbolName returns the name of the symbol type.
 func SymbolName(t SymbolType) string {
 	switch t {
-	case KEYWORD_SCROLL:
-		return `KEYWORD_SCROLL`
 	case KEYWORD_SPELL:
 		return `KEYWORD_SPELL`
 	case KEYWORD_LOOP:
