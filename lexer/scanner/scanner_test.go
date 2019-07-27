@@ -15,7 +15,7 @@ func TestScannerApi(t *testing.T) {
 	for _, tc := range apiTests() {
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> scanner_test.go : " + testLine)
-		act, err := Scan(tc.Input, tc.Line)
+		act, err := Scan(tc.Input)
 
 		if tc.ExpectErr != nil {
 			assert.Nil(t, act)
@@ -84,7 +84,6 @@ type lexTest struct {
 
 type scanLineTest struct {
 	TestLine  int
-	Line      int
 	Input     string
 	Expect    []symbol.Lexeme
 	ExpectErr fault.Fault
@@ -127,14 +126,13 @@ func apiTests() []scanLineTest {
 		},
 		scanLineTest{
 			TestLine: fault.CurrLine(),
-			Line:     123,
 			Input:    `x <- true`,
 			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 123, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 1, 2, 123, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 2, 4, 123, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 4, 5, 123, symbol.WHITESPACE},
-				symbol.Lexeme{`true`, 5, 9, 123, symbol.BOOLEAN_TRUE},
+				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
+				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
+				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Lexeme{`true`, 5, 9, 0, symbol.BOOLEAN_TRUE},
 			},
 		},
 		scanLineTest{

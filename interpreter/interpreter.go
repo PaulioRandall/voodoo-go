@@ -20,8 +20,9 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 	for line != nil {
 
-		lexemes, err := scanner.Scan(line.Val, line.Num)
+		lexemes, err := scanner.Scan(line.Val)
 		if err != nil {
+			err = err.Line(line.Num)
 			return 1, err
 		}
 
