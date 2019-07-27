@@ -3,9 +3,9 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/PaulioRandall/voodoo-go/lexer"
+	"github.com/PaulioRandall/voodoo-go/lexer/scanner"
+	"github.com/PaulioRandall/voodoo-go/lexer/strimmer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
-	"github.com/PaulioRandall/voodoo-go/strimmer"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
@@ -20,7 +20,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 	for line != nil {
 
-		lexemes, err := lexer.ScanLine(line.Val, line.Num)
+		lexemes, err := scanner.ScanLine(line.Val, line.Num)
 		if err != nil {
 			return 1, err
 		}
