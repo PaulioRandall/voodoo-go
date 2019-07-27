@@ -45,17 +45,7 @@ exitIfNotZero "$?"
 contains "$1" "build" "test" "run"
 if [[ $? == 1 ]]; then
 	echo Formatting...
-	go fmt ./cmd
-	go fmt ./interpreter
-  go fmt ./symbol
-	go fmt ./lexer
-  go fmt ./runer
-	go fmt ./scroll
-	go fmt ./shared
-  go fmt ./strimmer
-  go fmt ./operation
-  go fmt ./analyser
-  go fmt ./expander
+	go fmt ./...
 fi
 
 exitIfNotZero $?

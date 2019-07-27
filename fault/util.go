@@ -1,9 +1,8 @@
-
 package fault
 
 import (
 	"runtime"
- )
+)
 
 func CurrLine() int {
 	_, _, line, ok := runtime.Caller(1)
