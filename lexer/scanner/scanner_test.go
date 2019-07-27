@@ -14,8 +14,8 @@ import (
 func TestScannerApi(t *testing.T) {
 	for _, tc := range apiTests() {
 		testLine := strconv.Itoa(tc.TestLine)
-		t.Log("-> scan_line_test.go : " + testLine)
-		act, err := ScanLine(tc.Input, tc.Line)
+		t.Log("-> scanner_test.go : " + testLine)
+		act, err := Scan(tc.Input, tc.Line)
 
 		if tc.ExpectErr != nil {
 			assert.Nil(t, act)
