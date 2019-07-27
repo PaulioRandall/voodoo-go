@@ -7,8 +7,8 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-func TestSymbolLex(t *testing.T) {
-	lexErrFuncTest(t, "lex_symbol_test.go", symbolLex, symbolLexTests())
+func TestSymbol(t *testing.T) {
+	lexErrFuncTest(t, "symbol_test.go", symbolLex, symbolLexTests())
 }
 
 func symbolLexTests() []lexTest {

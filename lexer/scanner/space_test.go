@@ -7,8 +7,8 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-func TestSpaceLex(t *testing.T) {
-	lexFuncTest(t, "lex_space_test.go", spaceLex, spaceLexTests())
+func TestSpace(t *testing.T) {
+	lexFuncTest(t, "space_test.go", spaceLex, spaceLexTests())
 }
 
 func spaceLexTests() []lexTest {

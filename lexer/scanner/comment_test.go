@@ -7,8 +7,8 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-func TestCommentLex(t *testing.T) {
-	lexFuncTest(t, "lex_comment_test.go", commentLex, commentLexTests())
+func TestComment(t *testing.T) {
+	lexFuncTest(t, "comment_test.go", commentLex, commentLexTests())
 }
 
 func commentLexTests() []lexTest {

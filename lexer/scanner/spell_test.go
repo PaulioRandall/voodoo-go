@@ -7,11 +7,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-func TestSourceryLex(t *testing.T) {
-	lexErrFuncTest(t, "lex_sourcery_test.go", sourceryLex, sourceryLexTests())
+func TestSpellLex(t *testing.T) {
+	lexErrFuncTest(t, "spell_test.go", sourceryLex, spellLexTests())
 }
 
-func sourceryLexTests() []lexTest {
+func spellLexTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			TestLine: fault.CurrLine(),
