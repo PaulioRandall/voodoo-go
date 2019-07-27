@@ -28,7 +28,7 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 
 		switch {
 		case itr.IsNextLetter():
-			l = wordLex(itr)
+			l = scanWord(itr)
 		case itr.IsNextDigit():
 			l, err = numLex(itr)
 		case itr.IsNextSpace():
@@ -52,46 +52,6 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 	}
 
 	return
-}
-
-// wordLex handles lexemes that start with a unicode category L rune.
-// I.e. a letter from any alphabet, a word may resolve into a:
-// - variable name
-// - keyword
-// - boolean value (`true` or `false`)
-func wordLex(itr *runer.RuneItr) *symbol.Lexeme {
-
-	start := itr.Index()
-	s := extractWordStr(itr)
-	t := symbol.UNDEFINED
-
-	switch strings.ToLower(s) {
-	case `func`:
-		t = symbol.KEYWORD_FUNC
-	case `loop`:
-		t = symbol.KEYWORD_LOOP
-	case `when`:
-		t = symbol.KEYWORD_WHEN
-	case `end`:
-		t = symbol.KEYWORD_END
-	case `key`:
-		t = symbol.KEYWORD_KEY
-	case `val`:
-		t = symbol.KEYWORD_VALUE
-	case `true`:
-		t = symbol.BOOLEAN_TRUE
-	case `false`:
-		t = symbol.BOOLEAN_FALSE
-	default:
-		t = symbol.IDENTIFIER_EXPLICIT
-	}
-
-	return &symbol.Lexeme{
-		Val:   s,
-		Start: start,
-		End:   itr.Index(),
-		Type:  t,
-	}
 }
 
 // numLex handles symbols that start with a unicode category Nd rune.
@@ -202,7 +162,7 @@ func sourceryLex(itr *runer.RuneItr) (s *symbol.Lexeme, err fault.Fault) {
 
 	start := itr.Index()
 	h := string(itr.NextRune())
-	t := extractWordStr(itr)
+	t := scanWordStr(itr)
 
 	s = &symbol.Lexeme{
 		Val:   h + t,
@@ -371,25 +331,4 @@ func symbolLex(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 	}
 
 	return
-}
-
-// extractWordStr iterates a rune iterator until a single word has
-// been extracted retruning the string.
-func extractWordStr(itr *runer.RuneItr) string {
-	sb := strings.Builder{}
-
-	for itr.HasNext() {
-		switch {
-		case itr.IsNextLetter():
-			fallthrough
-		case itr.IsNextDigit():
-			fallthrough
-		case itr.IsNext('_'):
-			sb.WriteRune(itr.NextRune())
-		default:
-			return sb.String()
-		}
-	}
-
-	return sb.String()
 }
