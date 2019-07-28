@@ -7,12 +7,12 @@ import (
 
 // scanComment scans symbols that start with a two consecutive
 // forward slashes `//` returning a comment.
-func scanComment(itr *runer.RuneItr) *symbol.Lexeme {
+func scanComment(itr *runer.RuneItr) *symbol.Token {
 
 	start := itr.Index()
 	str := itr.RemainingStr()
 
-	return &symbol.Lexeme{
+	return &symbol.Token{
 		Val:   str,
 		Start: start,
 		End:   itr.Index(),

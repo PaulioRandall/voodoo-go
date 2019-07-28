@@ -53,7 +53,8 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 			tk, err = scanString(itr)
 			l = tokenToLexeme(tk)
 		case itr.IsNextStr(`//`):
-			l = scanComment(itr)
+			tk = scanComment(itr)
+			l = tokenToLexeme(tk)
 		default:
 			l, err = scanSymbol(itr)
 		}

@@ -8,25 +8,25 @@ import (
 )
 
 func TestScanComment(t *testing.T) {
-	lexFuncTest(t, "comment_test.go", scanComment, scanCommentTests())
+	runScanTest(t, "comment_test.go", scanComment, scanCommentTests())
 }
 
-func scanCommentTests() []lexTest {
-	return []lexTest{
-		lexTest{
+func scanCommentTests() []scanFuncTest {
+	return []scanFuncTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `//`,
-			Expect:   symbol.Lexeme{`//`, 0, 2, 0, symbol.COMMENT},
+			Expect:   symbol.Token{`//`, 0, 2, 0, symbol.COMMENT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `// A comment`,
-			Expect:   symbol.Lexeme{`// A comment`, 0, 12, 0, symbol.COMMENT},
+			Expect:   symbol.Token{`// A comment`, 0, 12, 0, symbol.COMMENT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `// Abc // 123 // xyz`,
-			Expect:   symbol.Lexeme{`// Abc // 123 // xyz`, 0, 20, 0, symbol.COMMENT},
+			Expect:   symbol.Token{`// Abc // 123 // xyz`, 0, 20, 0, symbol.COMMENT},
 		},
 	}
 }
