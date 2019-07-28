@@ -10,6 +10,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type strimTest struct {
+	TestLine   int
+	Input      []symbol.Token
+	ExpectToks []symbol.Token
+}
+
 func TestStrim(t *testing.T) {
 	for _, tc := range strimTests() {
 		testLine := strconv.Itoa(tc.TestLine)
@@ -19,12 +25,6 @@ func TestStrim(t *testing.T) {
 		require.NotNil(t, ts)
 		assert.Equal(t, tc.ExpectToks, ts)
 	}
-}
-
-type strimTest struct {
-	TestLine   int
-	Input      []symbol.Token
-	ExpectToks []symbol.Token
 }
 
 func strimTests() []strimTest {
