@@ -14,7 +14,8 @@ import (
 // Note that there is an intention to switch to stream based
 // scanning. When this change happens newline runes will
 // become the one exception to the rule as they will become
-// a token all by themselves.
+// a token all by themselves used to delimit statements
+// and the bodies of different context.
 func scanSpace(itr *runer.RuneItr) *symbol.Lexeme {
 
 	start := itr.Index()

@@ -8,10 +8,10 @@ import (
 )
 
 func TestSpellLex(t *testing.T) {
-	lexErrFuncTest(t, "spell_test.go", sourceryLex, spellLexTests())
+	lexErrFuncTest(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 
-func spellLexTests() []lexTest {
+func scanSpellTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			TestLine: fault.CurrLine(),

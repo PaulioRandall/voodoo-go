@@ -34,7 +34,7 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 		case itr.IsNextSpace():
 			l = scanSpace(itr)
 		case itr.IsNext('@'):
-			l, err = sourceryLex(itr)
+			l, err = scanSpell(itr)
 		case itr.IsNext('"'):
 			l, err = strLex(itr)
 		case itr.IsNextStr(`//`):
@@ -49,31 +49,6 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 		}
 
 		out = append(out, *l)
-	}
-
-	return
-}
-
-// sourceryLex handles lexemes that start with a at sign rune `@`.
-// Sourcery symbol may resolve into a:
-// - go function call
-func sourceryLex(itr *runer.RuneItr) (s *symbol.Lexeme, err fault.Fault) {
-
-	if !itr.IsRelLetter(1) {
-		m := "Expected first rune after `@` to be a letter"
-		err = fault.Func(m).From(itr.Index())
-		return
-	}
-
-	start := itr.Index()
-	h := string(itr.NextRune())
-	t := scanWordStr(itr)
-
-	s = &symbol.Lexeme{
-		Val:   h + t,
-		Start: start,
-		End:   itr.Index(),
-		Type:  symbol.SOURCERY,
 	}
 
 	return
