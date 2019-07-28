@@ -16,7 +16,7 @@ import (
 // become the one exception to the rule as they will become
 // a token all by themselves used to delimit statements
 // and the bodies of different context.
-func scanSpace(itr *runer.RuneItr) *symbol.Lexeme {
+func scanSpace(itr *runer.RuneItr) *symbol.Token {
 
 	start := itr.Index()
 	sb := strings.Builder{}
@@ -28,7 +28,7 @@ func scanSpace(itr *runer.RuneItr) *symbol.Lexeme {
 		sb.WriteRune(itr.NextRune())
 	}
 
-	return &symbol.Lexeme{
+	return &symbol.Token{
 		Val:   sb.String(),
 		Start: start,
 		End:   itr.Index(),
