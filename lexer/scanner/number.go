@@ -10,7 +10,7 @@ import (
 
 // scanNumber scans symbols that start with a unicode category Nd
 // rune returning a literal number; all numbers are floats.
-func scanNumber(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
+func scanNumber(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
 
 	start := itr.Index()
 	s, err := extractNum(itr)
@@ -18,7 +18,7 @@ func scanNumber(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 		return
 	}
 
-	l = &symbol.Lexeme{
+	tk = &symbol.Token{
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),

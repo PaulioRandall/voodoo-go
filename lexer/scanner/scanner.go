@@ -8,6 +8,10 @@ import (
 
 // TODO: Delete me
 func tokenToLexeme(tk *symbol.Token) *symbol.Lexeme {
+	if tk == nil {
+		return nil
+	}
+
 	s := symbol.Symbol(*tk)
 	l := symbol.Lexeme(s)
 	return &l
@@ -30,13 +34,15 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 
 	for itr.HasNext() {
 		var l *symbol.Lexeme
+		var tk *symbol.Token
 
 		switch {
 		case itr.IsNextLetter():
-			tk := scanWord(itr)
+			tk = scanWord(itr)
 			l = tokenToLexeme(tk)
 		case itr.IsNextDigit():
-			l, err = scanNumber(itr)
+			tk, err = scanNumber(itr)
+			l = tokenToLexeme(tk)
 		case itr.IsNextSpace():
 			l = scanSpace(itr)
 		case itr.IsNext('@'):

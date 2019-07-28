@@ -41,6 +41,34 @@ func runScanTest(
 	}
 }
 
+func runFailableScanTest(
+	t *testing.T,
+	fileName string,
+	f func(*runer.RuneItr) (*symbol.Token, fault.Fault),
+	tests []scanFuncTest) {
+
+	for _, tc := range tests {
+
+		testLine := strconv.Itoa(tc.TestLine)
+		t.Log("-> " + fileName + " : " + testLine)
+
+		itr := runer.NewRuneItr(tc.Input)
+		act, err := f(itr)
+
+		if tc.ExpectErr != nil {
+			assert.Nil(t, act)
+			require.NotNil(t, err)
+			assert.NotEmpty(t, err.Error())
+			fault.Assert(t, tc.ExpectErr, err)
+
+		} else {
+			assert.Nil(t, err)
+			require.NotNil(t, act)
+			assert.Equal(t, tc.Expect, *act)
+		}
+	}
+}
+
 // ***********************************************
 
 func TestScannerApi(t *testing.T) {
