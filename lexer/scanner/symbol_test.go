@@ -7,11 +7,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-func TestSymbol(t *testing.T) {
-	lexErrFuncTest(t, "symbol_test.go", symbolLex, symbolLexTests())
+func TestScanSymbol(t *testing.T) {
+	lexErrFuncTest(t, "symbol_test.go", scanSymbol, scanSymbolTests())
 }
 
-func symbolLexTests() []lexTest {
+func scanSymbolTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			TestLine: fault.CurrLine(),
