@@ -20,6 +20,8 @@ type scanFuncTest struct {
 	ExpectErr fault.Fault
 }
 
+// runScanTest runs the input test cases on the input
+// function.
 func runScanTest(
 	t *testing.T,
 	fileName string,
@@ -41,6 +43,8 @@ func runScanTest(
 	}
 }
 
+// runFailableScanTest runs the input test cases on the
+// input function.
 func runFailableScanTest(
 	t *testing.T,
 	fileName string,
@@ -69,10 +73,18 @@ func runFailableScanTest(
 	}
 }
 
-// ***********************************************
+// scanTest represents a test case for the Scan()
+// function.
+type scanTest struct {
+	TestLine  int
+	Input     string
+	Expect    []symbol.Token
+	ExpectErr fault.Fault
+}
 
-func TestScannerApi(t *testing.T) {
-	for _, tc := range apiTests() {
+// TestScan runs the test cases for the Scan() function.
+func TestScan(t *testing.T) {
+	for _, tc := range scanTests() {
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> scanner_test.go : " + testLine)
 		act, err := Scan(tc.Input)
@@ -91,245 +103,188 @@ func TestScannerApi(t *testing.T) {
 	}
 }
 
-type lexScanFunc func(*runer.RuneItr) *symbol.Lexeme
-
-func lexFuncTest(t *testing.T, fName string, f lexScanFunc, tests []lexTest) {
-	for _, tc := range tests {
-		require.NotNil(t, tc.Expect)
-		require.Nil(t, tc.ExpectErr)
-
-		testLine := strconv.Itoa(tc.TestLine)
-		t.Log("-> " + fName + " : " + testLine)
-
-		itr := runer.NewRuneItr(tc.Input)
-		act := f(itr)
-
-		require.NotNil(t, act)
-		assert.Equal(t, tc.Expect, *act)
-	}
-}
-
-type lexScanErrFunc func(*runer.RuneItr) (*symbol.Lexeme, fault.Fault)
-
-func lexErrFuncTest(t *testing.T, fName string, f lexScanErrFunc, tests []lexTest) {
-	for _, tc := range tests {
-
-		testLine := strconv.Itoa(tc.TestLine)
-		t.Log("-> " + fName + " : " + testLine)
-
-		itr := runer.NewRuneItr(tc.Input)
-		act, err := f(itr)
-
-		if tc.ExpectErr != nil {
-			assert.Nil(t, act)
-			require.NotNil(t, err)
-			assert.NotEmpty(t, err.Error())
-			fault.Assert(t, tc.ExpectErr, err)
-
-		} else {
-			assert.Nil(t, err)
-			require.NotNil(t, act)
-			assert.Equal(t, tc.Expect, *act)
-		}
-	}
-}
-
-type lexTest struct {
-	TestLine  int
-	Line      int
-	Input     string
-	Expect    symbol.Lexeme
-	ExpectErr fault.Fault
-}
-
-type scanLineTest struct {
-	TestLine  int
-	Input     string
-	Expect    []symbol.Lexeme
-	ExpectErr fault.Fault
-}
-
-func apiTests() []scanLineTest {
-	return []scanLineTest{
-		scanLineTest{
+// scanTests creates a list of Scan() function tests.
+func scanTests() []scanTest {
+	return []scanTest{
+		scanTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `x # 1`,
 			ExpectErr: fault.Dummy(fault.Symbol).Line(0).From(2).To(3),
 		},
-		scanLineTest{
+		scanTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `123.456.789`,
 			ExpectErr: fault.Dummy(fault.Number).Line(0).From(7),
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x <- 1`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
+			Expect: []symbol.Token{
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Token{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `y <- -1.1`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`y`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`-`, 5, 6, 0, symbol.CALC_SUBTRACT},
-				symbol.Lexeme{`1.1`, 6, 9, 0, symbol.LITERAL_NUMBER},
+			Expect: []symbol.Token{
+				symbol.Token{`y`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Token{`-`, 5, 6, 0, symbol.CALC_SUBTRACT},
+				symbol.Token{`1.1`, 6, 9, 0, symbol.LITERAL_NUMBER},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x <- true`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`true`, 5, 9, 0, symbol.BOOLEAN_TRUE},
+			Expect: []symbol.Token{
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Token{`true`, 5, 9, 0, symbol.BOOLEAN_TRUE},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `@Println["Whelp"]`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`@Println`, 0, 8, 0, symbol.SOURCERY},
-				symbol.Lexeme{`[`, 8, 9, 0, symbol.PAREN_SQUARE_OPEN},
-				symbol.Lexeme{`"Whelp"`, 9, 16, 0, symbol.LITERAL_STRING},
-				symbol.Lexeme{`]`, 16, 17, 0, symbol.PAREN_SQUARE_CLOSE},
+			Expect: []symbol.Token{
+				symbol.Token{`@Println`, 0, 8, 0, symbol.SOURCERY},
+				symbol.Token{`[`, 8, 9, 0, symbol.PAREN_SQUARE_OPEN},
+				symbol.Token{`"Whelp"`, 9, 16, 0, symbol.LITERAL_STRING},
+				symbol.Token{`]`, 16, 17, 0, symbol.PAREN_SQUARE_CLOSE},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    "\tresult <- func(a, b) r, err     ",
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{"\t", 0, 1, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`result`, 1, 7, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 7, 8, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 8, 10, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 10, 11, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`func`, 11, 15, 0, symbol.KEYWORD_FUNC},
-				symbol.Lexeme{`(`, 15, 16, 0, symbol.PAREN_CURVY_OPEN},
-				symbol.Lexeme{`a`, 16, 17, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`,`, 17, 18, 0, symbol.SEPARATOR_VALUE},
-				symbol.Lexeme{` `, 18, 19, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`b`, 19, 20, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`)`, 20, 21, 0, symbol.PAREN_CURVY_CLOSE},
-				symbol.Lexeme{` `, 21, 22, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`r`, 22, 23, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`,`, 23, 24, 0, symbol.SEPARATOR_VALUE},
-				symbol.Lexeme{` `, 24, 25, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`err`, 25, 28, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`     `, 28, 33, 0, symbol.WHITESPACE},
+			Expect: []symbol.Token{
+				symbol.Token{"\t", 0, 1, 0, symbol.WHITESPACE},
+				symbol.Token{`result`, 1, 7, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 7, 8, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 8, 10, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 10, 11, 0, symbol.WHITESPACE},
+				symbol.Token{`func`, 11, 15, 0, symbol.KEYWORD_FUNC},
+				symbol.Token{`(`, 15, 16, 0, symbol.PAREN_CURVY_OPEN},
+				symbol.Token{`a`, 16, 17, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`,`, 17, 18, 0, symbol.SEPARATOR_VALUE},
+				symbol.Token{` `, 18, 19, 0, symbol.WHITESPACE},
+				symbol.Token{`b`, 19, 20, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`)`, 20, 21, 0, symbol.PAREN_CURVY_CLOSE},
+				symbol.Token{` `, 21, 22, 0, symbol.WHITESPACE},
+				symbol.Token{`r`, 22, 23, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`,`, 23, 24, 0, symbol.SEPARATOR_VALUE},
+				symbol.Token{` `, 24, 25, 0, symbol.WHITESPACE},
+				symbol.Token{`err`, 25, 28, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`     `, 28, 33, 0, symbol.WHITESPACE},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `keyValue <- "pi": 3.1419`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`keyValue`, 0, 8, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 8, 9, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 11, 12, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`"pi"`, 12, 16, 0, symbol.LITERAL_STRING},
-				symbol.Lexeme{`:`, 16, 17, 0, symbol.SEPARATOR_KEY_VALUE},
-				symbol.Lexeme{` `, 17, 18, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`3.1419`, 18, 24, 0, symbol.LITERAL_NUMBER},
+			Expect: []symbol.Token{
+				symbol.Token{`keyValue`, 0, 8, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 8, 9, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 11, 12, 0, symbol.WHITESPACE},
+				symbol.Token{`"pi"`, 12, 16, 0, symbol.LITERAL_STRING},
+				symbol.Token{`:`, 16, 17, 0, symbol.SEPARATOR_KEY_VALUE},
+				symbol.Token{` `, 17, 18, 0, symbol.WHITESPACE},
+				symbol.Token{`3.1419`, 18, 24, 0, symbol.LITERAL_NUMBER},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `alphabet <- ["a", "b", "c"]`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`alphabet`, 0, 8, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 8, 9, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 11, 12, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`[`, 12, 13, 0, symbol.PAREN_SQUARE_OPEN},
-				symbol.Lexeme{`"a"`, 13, 16, 0, symbol.LITERAL_STRING},
-				symbol.Lexeme{`,`, 16, 17, 0, symbol.SEPARATOR_VALUE},
-				symbol.Lexeme{` `, 17, 18, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`"b"`, 18, 21, 0, symbol.LITERAL_STRING},
-				symbol.Lexeme{`,`, 21, 22, 0, symbol.SEPARATOR_VALUE},
-				symbol.Lexeme{` `, 22, 23, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`"c"`, 23, 26, 0, symbol.LITERAL_STRING},
-				symbol.Lexeme{`]`, 26, 27, 0, symbol.PAREN_SQUARE_CLOSE},
+			Expect: []symbol.Token{
+				symbol.Token{`alphabet`, 0, 8, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 8, 9, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 11, 12, 0, symbol.WHITESPACE},
+				symbol.Token{`[`, 12, 13, 0, symbol.PAREN_SQUARE_OPEN},
+				symbol.Token{`"a"`, 13, 16, 0, symbol.LITERAL_STRING},
+				symbol.Token{`,`, 16, 17, 0, symbol.SEPARATOR_VALUE},
+				symbol.Token{` `, 17, 18, 0, symbol.WHITESPACE},
+				symbol.Token{`"b"`, 18, 21, 0, symbol.LITERAL_STRING},
+				symbol.Token{`,`, 21, 22, 0, symbol.SEPARATOR_VALUE},
+				symbol.Token{` `, 22, 23, 0, symbol.WHITESPACE},
+				symbol.Token{`"c"`, 23, 26, 0, symbol.LITERAL_STRING},
+				symbol.Token{`]`, 26, 27, 0, symbol.PAREN_SQUARE_CLOSE},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `loop i <- 0..5`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
-				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`i`, 5, 6, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 6, 7, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 7, 9, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 9, 10, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`0`, 10, 11, 0, symbol.LITERAL_NUMBER},
-				symbol.Lexeme{`..`, 11, 13, 0, symbol.RANGE},
-				symbol.Lexeme{`5`, 13, 14, 0, symbol.LITERAL_NUMBER},
+			Expect: []symbol.Token{
+				symbol.Token{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
+				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Token{`i`, 5, 6, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 6, 7, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 7, 9, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 9, 10, 0, symbol.WHITESPACE},
+				symbol.Token{`0`, 10, 11, 0, symbol.LITERAL_NUMBER},
+				symbol.Token{`..`, 11, 13, 0, symbol.RANGE},
+				symbol.Token{`5`, 13, 14, 0, symbol.LITERAL_NUMBER},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x<-2 // The value of x is now 2`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{`2`, 3, 4, 0, symbol.LITERAL_NUMBER},
-				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`// The value of x is now 2`, 5, 31, 0, symbol.COMMENT},
+			Expect: []symbol.Token{
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
+				symbol.Token{`2`, 3, 4, 0, symbol.LITERAL_NUMBER},
+				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Token{`// The value of x is now 2`, 5, 31, 0, symbol.COMMENT},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `isLandscape<-length<height`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`isLandscape`, 0, 11, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`<-`, 11, 13, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{`length`, 13, 19, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`<`, 19, 20, 0, symbol.CMP_LESS_THAN},
-				symbol.Lexeme{`height`, 20, 26, 0, symbol.IDENTIFIER_EXPLICIT},
+			Expect: []symbol.Token{
+				symbol.Token{`isLandscape`, 0, 11, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`<-`, 11, 13, 0, symbol.ASSIGNMENT},
+				symbol.Token{`length`, 13, 19, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`<`, 19, 20, 0, symbol.CMP_LESS_THAN},
+				symbol.Token{`height`, 20, 26, 0, symbol.IDENTIFIER_EXPLICIT},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x<-3.14*(1-2+3)`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{`3.14`, 3, 7, 0, symbol.LITERAL_NUMBER},
-				symbol.Lexeme{`*`, 7, 8, 0, symbol.CALC_MULTIPLY},
-				symbol.Lexeme{`(`, 8, 9, 0, symbol.PAREN_CURVY_OPEN},
-				symbol.Lexeme{`1`, 9, 10, 0, symbol.LITERAL_NUMBER},
-				symbol.Lexeme{`-`, 10, 11, 0, symbol.CALC_SUBTRACT},
-				symbol.Lexeme{`2`, 11, 12, 0, symbol.LITERAL_NUMBER},
-				symbol.Lexeme{`+`, 12, 13, 0, symbol.CALC_ADD},
-				symbol.Lexeme{`3`, 13, 14, 0, symbol.LITERAL_NUMBER},
-				symbol.Lexeme{`)`, 14, 15, 0, symbol.PAREN_CURVY_CLOSE},
+			Expect: []symbol.Token{
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
+				symbol.Token{`3.14`, 3, 7, 0, symbol.LITERAL_NUMBER},
+				symbol.Token{`*`, 7, 8, 0, symbol.CALC_MULTIPLY},
+				symbol.Token{`(`, 8, 9, 0, symbol.PAREN_CURVY_OPEN},
+				symbol.Token{`1`, 9, 10, 0, symbol.LITERAL_NUMBER},
+				symbol.Token{`-`, 10, 11, 0, symbol.CALC_SUBTRACT},
+				symbol.Token{`2`, 11, 12, 0, symbol.LITERAL_NUMBER},
+				symbol.Token{`+`, 12, 13, 0, symbol.CALC_ADD},
+				symbol.Token{`3`, 13, 14, 0, symbol.LITERAL_NUMBER},
+				symbol.Token{`)`, 14, 15, 0, symbol.PAREN_CURVY_CLOSE},
 			},
 		},
-		scanLineTest{
+		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `!x => y <- _`,
-			Expect: []symbol.Lexeme{
-				symbol.Lexeme{`!`, 0, 1, 0, symbol.LOGICAL_NOT},
-				symbol.Lexeme{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 2, 3, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`=>`, 3, 5, 0, symbol.LOGICAL_MATCH},
-				symbol.Lexeme{` `, 5, 6, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`y`, 6, 7, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Lexeme{` `, 7, 8, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 8, 10, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 10, 11, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`_`, 11, 12, 0, symbol.VOID},
+			Expect: []symbol.Token{
+				symbol.Token{`!`, 0, 1, 0, symbol.LOGICAL_NOT},
+				symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 2, 3, 0, symbol.WHITESPACE},
+				symbol.Token{`=>`, 3, 5, 0, symbol.LOGICAL_MATCH},
+				symbol.Token{` `, 5, 6, 0, symbol.WHITESPACE},
+				symbol.Token{`y`, 6, 7, 0, symbol.IDENTIFIER_EXPLICIT},
+				symbol.Token{` `, 7, 8, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 8, 10, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 10, 11, 0, symbol.WHITESPACE},
+				symbol.Token{`_`, 11, 12, 0, symbol.VOID},
 			},
 		},
 	}

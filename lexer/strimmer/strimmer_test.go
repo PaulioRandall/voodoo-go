@@ -4,14 +4,17 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/symbol"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestStrim(t *testing.T) {
-	for i, tc := range strimTests() {
-		t.Log("Strim() test case: " + strconv.Itoa(i+1))
+	for _, tc := range strimTests() {
+		testLine := strconv.Itoa(tc.TestLine)
+		t.Log("-> strimmer_test.go : " + testLine)
+
 		ts := Strim(tc.Input)
 		require.NotNil(t, ts)
 		assert.Equal(t, tc.ExpectToks, ts)
@@ -19,19 +22,21 @@ func TestStrim(t *testing.T) {
 }
 
 type strimTest struct {
-	Input      []symbol.Lexeme
+	TestLine   int
+	Input      []symbol.Token
 	ExpectToks []symbol.Token
 }
 
 func strimTests() []strimTest {
 	return []strimTest{
 		strimTest{
-			Input: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
-				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
+			TestLine: fault.CurrLine(),
+			Input: []symbol.Token{
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
+				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Token{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
@@ -40,20 +45,22 @@ func strimTests() []strimTest {
 			},
 		},
 		strimTest{
-			Input: []symbol.Lexeme{
-				symbol.Lexeme{`// 'There's a snake in my boot'`, 0, 31, 0, symbol.COMMENT},
+			TestLine: fault.CurrLine(),
+			Input: []symbol.Token{
+				symbol.Token{`// 'There's a snake in my boot'`, 0, 31, 0, symbol.COMMENT},
 			},
 			ExpectToks: []symbol.Token{},
 		},
 		strimTest{
-			Input: []symbol.Lexeme{
-				symbol.Lexeme{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
-				symbol.Lexeme{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Lexeme{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`2`, 5, 6, 0, symbol.LITERAL_NUMBER},
-				symbol.Lexeme{` `, 6, 7, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`// 'There's a snake in my boot'`, 7, 38, 0, symbol.COMMENT},
+			TestLine: fault.CurrLine(),
+			Input: []symbol.Token{
+				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
+				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
+				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
+				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
+				symbol.Token{`2`, 5, 6, 0, symbol.LITERAL_NUMBER},
+				symbol.Token{` `, 6, 7, 0, symbol.WHITESPACE},
+				symbol.Token{`// 'There's a snake in my boot'`, 7, 38, 0, symbol.COMMENT},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
@@ -62,37 +69,41 @@ func strimTests() []strimTest {
 			},
 		},
 		strimTest{
-			Input: []symbol.Lexeme{
-				symbol.Lexeme{`"Howdy partner"`, 5, 20, 0, symbol.LITERAL_STRING},
+			TestLine: fault.CurrLine(),
+			Input: []symbol.Token{
+				symbol.Token{`"Howdy partner"`, 5, 20, 0, symbol.LITERAL_STRING},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`Howdy partner`, 5, 20, 0, symbol.LITERAL_STRING},
 			},
 		},
 		strimTest{
-			Input: []symbol.Lexeme{
-				symbol.Lexeme{`123_456`, 0, 7, 0, symbol.LITERAL_NUMBER},
+			TestLine: fault.CurrLine(),
+			Input: []symbol.Token{
+				symbol.Token{`123_456`, 0, 7, 0, symbol.LITERAL_NUMBER},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`123456`, 0, 7, 0, symbol.LITERAL_NUMBER},
 			},
 		},
 		strimTest{
-			Input: []symbol.Lexeme{
-				symbol.Lexeme{`1__2__3__.__4__5__6__`, 0, 21, 0, symbol.LITERAL_NUMBER},
+			TestLine: fault.CurrLine(),
+			Input: []symbol.Token{
+				symbol.Token{`1__2__3__.__4__5__6__`, 0, 21, 0, symbol.LITERAL_NUMBER},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`123.456`, 0, 21, 0, symbol.LITERAL_NUMBER},
 			},
 		},
 		strimTest{
-			Input: []symbol.Lexeme{
-				symbol.Lexeme{`func`, 0, 6, 0, symbol.KEYWORD_FUNC},
-				symbol.Lexeme{` `, 6, 7, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`END`, 7, 10, 0, symbol.KEYWORD_END},
-				symbol.Lexeme{` `, 10, 11, 0, symbol.WHITESPACE},
-				symbol.Lexeme{`@PrInTlN`, 11, 19, 0, symbol.SOURCERY},
-				symbol.Lexeme{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
+			TestLine: fault.CurrLine(),
+			Input: []symbol.Token{
+				symbol.Token{`func`, 0, 6, 0, symbol.KEYWORD_FUNC},
+				symbol.Token{` `, 6, 7, 0, symbol.WHITESPACE},
+				symbol.Token{`END`, 7, 10, 0, symbol.KEYWORD_END},
+				symbol.Token{` `, 10, 11, 0, symbol.WHITESPACE},
+				symbol.Token{`@PrInTlN`, 11, 19, 0, symbol.SOURCERY},
+				symbol.Token{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
 			},
 			ExpectToks: []symbol.Token{
 				symbol.Token{`func`, 0, 6, 0, symbol.KEYWORD_FUNC},

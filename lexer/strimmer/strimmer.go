@@ -6,38 +6,34 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-// Strim normalises an array of lexemes and converts them to tokens
-// ready for the syntax analyser. It assumes each lexeme is correct
-// and valid even if together they do not form a valid statement;
-// validation will happen later.
-//
-// Normalising involves:
-// -> Removing whitespace lexemes
-// -> Removing comment lexemes
+// Strim normalises an array of tokens ready for the
+// the token parsing, this involves:
+// -> Removing whitespace tokens
+// -> Removing comment tokens
 // -> Removing quote marks from string literals
 // -> Removing underscores from numbers
+// -> Removing now redundant punctuation
 // -> Converting all letters to lowercase (Except string literals)
-func Strim(in []symbol.Lexeme) []symbol.Token {
+func Strim(in []symbol.Token) []symbol.Token {
 
 	out := []symbol.Token{}
 
-	for _, l := range in {
+	for _, tk := range in {
 		switch {
-		case l.Type == symbol.WHITESPACE:
+		case tk.Type == symbol.WHITESPACE:
 			continue
-		case l.Type == symbol.COMMENT:
+		case tk.Type == symbol.COMMENT:
 			continue
-		case l.Type == symbol.LITERAL_STRING:
-			penultimate := len(l.Val) - 1
-			l.Val = l.Val[1:penultimate]
-		case l.Type == symbol.LITERAL_NUMBER:
-			l.Val = strings.ReplaceAll(l.Val, `_`, ``)
-		case l.Type > symbol.ALPHABETIC_START && l.Type < symbol.ALPHABETIC_END:
-			l.Val = strings.ToLower(l.Val)
+		case tk.Type == symbol.LITERAL_STRING:
+			penultimate := len(tk.Val) - 1
+			tk.Val = tk.Val[1:penultimate]
+		case tk.Type == symbol.LITERAL_NUMBER:
+			tk.Val = strings.ReplaceAll(tk.Val, `_`, ``)
+		case tk.Type > symbol.ALPHABETIC_START && tk.Type < symbol.ALPHABETIC_END:
+			tk.Val = strings.ToLower(tk.Val)
 		}
 
-		t := symbol.Token(l)
-		out = append(out, t)
+		out = append(out, tk)
 	}
 
 	return out
