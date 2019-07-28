@@ -10,7 +10,7 @@ import (
 // scanWord scans symbols that start with a unicode category L
 // rune returning a keyword or identifier. Note that anything
 // not a literal within voodoo is NOT case sensitive.
-func scanWord(itr *runer.RuneItr) *symbol.Lexeme {
+func scanWord(itr *runer.RuneItr) *symbol.Token {
 
 	start := itr.Index()
 	s := scanWordStr(itr)
@@ -37,7 +37,7 @@ func scanWord(itr *runer.RuneItr) *symbol.Lexeme {
 		t = symbol.IDENTIFIER_EXPLICIT
 	}
 
-	return &symbol.Lexeme{
+	return &symbol.Token{
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),

@@ -8,70 +8,70 @@ import (
 )
 
 func TestScanWord(t *testing.T) {
-	lexFuncTest(t, "word_test.go", scanWord, scanWordTests())
+	runScanTest(t, "word_test.go", scanWord, scanWordTests())
 }
 
-func scanWordTests() []lexTest {
-	return []lexTest{
-		lexTest{
+func scanWordTests() []scanFuncTest {
+	return []scanFuncTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `a`,
-			Expect:   symbol.Lexeme{`a`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
+			Expect:   symbol.Token{`a`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `abc`,
-			Expect:   symbol.Lexeme{`abc`, 0, 3, 0, symbol.IDENTIFIER_EXPLICIT},
+			Expect:   symbol.Token{`abc`, 0, 3, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `abc_123`,
-			Expect:   symbol.Lexeme{`abc_123`, 0, 7, 0, symbol.IDENTIFIER_EXPLICIT},
+			Expect:   symbol.Token{`abc_123`, 0, 7, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `a__________123456789`,
-			Expect:   symbol.Lexeme{`a__________123456789`, 0, 20, 0, symbol.IDENTIFIER_EXPLICIT},
+			Expect:   symbol.Token{`a__________123456789`, 0, 20, 0, symbol.IDENTIFIER_EXPLICIT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `fUnC`,
-			Expect:   symbol.Lexeme{`fUnC`, 0, 4, 0, symbol.KEYWORD_FUNC},
+			Expect:   symbol.Token{`fUnC`, 0, 4, 0, symbol.KEYWORD_FUNC},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `loop`,
-			Expect:   symbol.Lexeme{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
+			Expect:   symbol.Token{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `when`,
-			Expect:   symbol.Lexeme{`when`, 0, 4, 0, symbol.KEYWORD_WHEN},
+			Expect:   symbol.Token{`when`, 0, 4, 0, symbol.KEYWORD_WHEN},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `end`,
-			Expect:   symbol.Lexeme{`end`, 0, 3, 0, symbol.KEYWORD_END},
+			Expect:   symbol.Token{`end`, 0, 3, 0, symbol.KEYWORD_END},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `key`,
-			Expect:   symbol.Lexeme{`key`, 0, 3, 0, symbol.KEYWORD_KEY},
+			Expect:   symbol.Token{`key`, 0, 3, 0, symbol.KEYWORD_KEY},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `val`,
-			Expect:   symbol.Lexeme{`val`, 0, 3, 0, symbol.KEYWORD_VALUE},
+			Expect:   symbol.Token{`val`, 0, 3, 0, symbol.KEYWORD_VALUE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `true`,
-			Expect:   symbol.Lexeme{`true`, 0, 4, 0, symbol.BOOLEAN_TRUE},
+			Expect:   symbol.Token{`true`, 0, 4, 0, symbol.BOOLEAN_TRUE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `false`,
-			Expect:   symbol.Lexeme{`false`, 0, 5, 0, symbol.BOOLEAN_FALSE},
+			Expect:   symbol.Token{`false`, 0, 5, 0, symbol.BOOLEAN_FALSE},
 		},
 	}
 }

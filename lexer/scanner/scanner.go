@@ -7,12 +7,10 @@ import (
 )
 
 // TODO: Delete me
-func tokensToLexemes(tks []symbol.Token) []symbol.Lexeme {
-	s := make([]symbol.Lexeme, len(tks))
-	for i, v := range tks {
-		s[i] = symbol.Lexeme(v)
-	}
-	return s
+func tokenToLexeme(tk *symbol.Token) *symbol.Lexeme {
+	s := symbol.Symbol(*tk)
+	l := symbol.Lexeme(s)
+	return &l
 }
 
 // Scan scans a line and creates an array of lexemes based on
@@ -35,7 +33,8 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 
 		switch {
 		case itr.IsNextLetter():
-			l = scanWord(itr)
+			tk := scanWord(itr)
+			l = tokenToLexeme(tk)
 		case itr.IsNextDigit():
 			l, err = scanNumber(itr)
 		case itr.IsNextSpace():

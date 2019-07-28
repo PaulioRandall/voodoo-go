@@ -11,6 +11,38 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// scanFuncTest represents a test case for any of the
+// delegate scanning functions.
+type scanFuncTest struct {
+	TestLine  int
+	Input     string
+	Expect    symbol.Token
+	ExpectErr fault.Fault
+}
+
+func runScanTest(
+	t *testing.T,
+	fileName string,
+	f func(*runer.RuneItr) *symbol.Token,
+	tests []scanFuncTest) {
+
+	for _, tc := range tests {
+		require.NotNil(t, tc.Expect)
+		require.Nil(t, tc.ExpectErr)
+
+		testLine := strconv.Itoa(tc.TestLine)
+		t.Log("-> " + fileName + " : " + testLine)
+
+		itr := runer.NewRuneItr(tc.Input)
+		act := f(itr)
+
+		require.NotNil(t, act)
+		assert.Equal(t, tc.Expect, *act)
+	}
+}
+
+// ***********************************************
+
 func TestScannerApi(t *testing.T) {
 	for _, tc := range apiTests() {
 		testLine := strconv.Itoa(tc.TestLine)
