@@ -8,10 +8,10 @@ import (
 )
 
 func TestNumber(t *testing.T) {
-	lexErrFuncTest(t, "number_test.go", numLex, numLexTests())
+	lexErrFuncTest(t, "number_test.go", scanNumber, scanNumberTests())
 }
 
-func numLexTests() []lexTest {
+func scanNumberTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			TestLine: fault.CurrLine(),

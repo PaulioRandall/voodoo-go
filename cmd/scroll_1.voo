@@ -1,13 +1,57 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
-a <- 8
-b <- 0
+calc <- do[a,b,c] r
+  r <- (a + (b * c))
+done
 
-when b == 0
-	true => err <- "Can't divide by zero"
-	false => c <- a / b
-end
+safeDivide <- do[a,b] c, err when
+	b == 0 => err <- "Can't divide by zero"
+	_      => c <- a / b
+done
 
-loop i <- 0..5
-  @Println(i)
-end
+onErr <- do[err] when
+  err? => @Println[err]
+          @Exit[1]
+done
+
+sumSeries <- do[n] sum loop _, v, _ <- @Range[1, n]
+  // I wonder if there's a more efficient way to do this... ^^
+  sum == _ => sum <- 0
+  sum <- sum + v
+done
+
+printList <- do[list,delim] loop _, v, more <- list
+  @Print["["]
+  when
+    more => @Print["${v} ${delim}"]
+    _    => @Print["${v}"]
+  done
+  @Println["]"]
+done
+
+do
+  x, y, z <- 9, 3, 0
+  
+  r <- calc[x,y,z]
+  when
+    r == 2 => @Println[":("]
+    r == 9 => @Println[":)"]
+    _ => @Break[do]
+  done
+  
+  x, y, z <- _, _, _
+  
+  _, err <- safeDivide[2, 0]
+  onErr[err]
+  
+  str <- "abc123"
+  list <- []
+  loop
+    i == _ => i <- 0
+    r <- str[i]
+    @Append[list, r]
+    @Break[loop]
+  done
+    
+  printList[list, ","]
+done
