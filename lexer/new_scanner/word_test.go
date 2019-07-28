@@ -15,63 +15,92 @@ func scanWordTests() []scanFuncTest {
 	return []scanFuncTest{
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `a`,
-			Expect:   token.Token{`a`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+			Input:    []rune(`a`),
+			Expect: token.Token{
+				Val:  `a`,
+				Type: token.IDENTIFIER_EXPLICIT,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `abc`,
-			Expect:   token.Token{`abc`, 0, 3, 0, token.IDENTIFIER_EXPLICIT},
+			Input:    []rune(`abc`),
+			Expect: token.Token{
+				Val:  `abc`,
+				Type: token.IDENTIFIER_EXPLICIT,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `abc_123`,
-			Expect:   token.Token{`abc_123`, 0, 7, 0, token.IDENTIFIER_EXPLICIT},
+			Input:    []rune(`abc_123`),
+			Expect: token.Token{
+				Val:  `abc_123`,
+				Type: token.IDENTIFIER_EXPLICIT,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `a__________123456789`,
-			Expect:   token.Token{`a__________123456789`, 0, 20, 0, token.IDENTIFIER_EXPLICIT},
+			Input:    []rune(`a__________123456789`),
+			Expect: token.Token{
+				Val:  `a__________123456789`,
+				Type: token.IDENTIFIER_EXPLICIT,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `fUnC`,
-			Expect:   token.Token{`fUnC`, 0, 4, 0, token.KEYWORD_FUNC},
+			Input:    []rune(`abc efg`),
+			Output:   []rune(` efg`),
+			Expect: token.Token{
+				Val:  `abc`,
+				Type: token.IDENTIFIER_EXPLICIT,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `loop`,
-			Expect:   token.Token{`loop`, 0, 4, 0, token.KEYWORD_LOOP},
+			Input:    []rune(`DO`),
+			Expect: token.Token{
+				Val:  `DO`,
+				Type: token.KEYWORD_FUNC,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `when`,
-			Expect:   token.Token{`when`, 0, 4, 0, token.KEYWORD_WHEN},
+			Input:    []rune(`loop`),
+			Expect: token.Token{
+				Val:  `loop`,
+				Type: token.KEYWORD_LOOP,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `end`,
-			Expect:   token.Token{`end`, 0, 3, 0, token.KEYWORD_END},
+			Input:    []rune(`when`),
+			Expect: token.Token{
+				Val:  `when`,
+				Type: token.KEYWORD_WHEN,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `key`,
-			Expect:   token.Token{`key`, 0, 3, 0, token.KEYWORD_KEY},
+			Input:    []rune(`done`),
+			Expect: token.Token{
+				Val:  `done`,
+				Type: token.KEYWORD_END,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `val`,
-			Expect:   token.Token{`val`, 0, 3, 0, token.KEYWORD_VALUE},
+			Input:    []rune(`true`),
+			Expect: token.Token{
+				Val:  `true`,
+				Type: token.BOOLEAN_TRUE,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `true`,
-			Expect:   token.Token{`true`, 0, 4, 0, token.BOOLEAN_TRUE},
-		},
-		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    `false`,
-			Expect:   token.Token{`false`, 0, 5, 0, token.BOOLEAN_FALSE},
+			Input:    []rune(`false`),
+			Expect: token.Token{
+				Val:  `false`,
+				Type: token.BOOLEAN_FALSE,
+			},
 		},
 	}
 }

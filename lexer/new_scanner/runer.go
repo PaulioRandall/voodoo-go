@@ -13,7 +13,7 @@ func scanInt(in []rune) (string, []rune) {
 	sb := strings.Builder{}
 
 	for i, r := range in {
-		if IsDigit(r) || IsUnderscore(r) {
+		if isDigit(r) || isUnderscore(r) {
 			sb.WriteRune(r)
 			continue
 		}
@@ -32,7 +32,7 @@ func scanWordStr(in []rune) (string, []rune) {
 	sb := strings.Builder{}
 
 	for i, r := range in {
-		if IsLetter(r) || IsDigit(r) || IsUnderscore(r) {
+		if isLetter(r) || isDigit(r) || isUnderscore(r) {
 			sb.WriteRune(r)
 			continue
 		}
@@ -43,25 +43,25 @@ func scanWordStr(in []rune) (string, []rune) {
 	return sb.String(), nil
 }
 
-// IsSpace returns true if the language considers the rune
+// isSpace returns true if the language considers the rune
 // to be whitespace.
-func IsSpace(r rune) bool {
+func isSpace(r rune) bool {
 	return unicode.IsSpace(r)
 }
 
-// IsLetter returns true if the language considers the rune
+// isLetter returns true if the language considers the rune
 // to be a letter.
-func IsLetter(r rune) bool {
+func isLetter(r rune) bool {
 	return unicode.IsLetter(r)
 }
 
-// IsDigit returns true if the language considers the rune
+// isDigit returns true if the language considers the rune
 // to be a digit.
-func IsDigit(r rune) bool {
+func isDigit(r rune) bool {
 	return unicode.IsDigit(r)
 }
 
-// IsUnderscore returns true if the rune is an underscore.
-func IsUnderscore(r rune) bool {
+// isUnderscore returns true if the rune is an underscore.
+func isUnderscore(r rune) bool {
 	return r == '_'
 }

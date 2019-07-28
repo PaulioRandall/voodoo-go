@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -15,7 +14,8 @@ import (
 // delegate scanning functions.
 type scanFuncTest struct {
 	TestLine  int
-	Input     string
+	Input     []rune
+	Output    []rune
 	Expect    token.Token
 	ExpectErr fault.Fault
 }
@@ -25,7 +25,7 @@ type scanFuncTest struct {
 func runScanTest(
 	t *testing.T,
 	fileName string,
-	f func(*runer.RuneItr) *token.Token,
+	f func([]rune) (*token.Token, []rune),
 	tests []scanFuncTest) {
 
 	for _, tc := range tests {
@@ -35,11 +35,11 @@ func runScanTest(
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> " + fileName + " : " + testLine)
 
-		itr := runer.NewRuneItr(tc.Input)
-		act := f(itr)
+		tk, out := f(tc.Input)
 
-		require.NotNil(t, act)
-		assert.Equal(t, tc.Expect, *act)
+		require.NotNil(t, tk)
+		assert.Equal(t, tc.Output, out)
+		assert.Equal(t, tc.Expect, *tk)
 	}
 }
 
@@ -48,7 +48,7 @@ func runScanTest(
 func runFailableScanTest(
 	t *testing.T,
 	fileName string,
-	f func(*runer.RuneItr) (*token.Token, fault.Fault),
+	f func([]rune) (*token.Token, []rune, fault.Fault),
 	tests []scanFuncTest) {
 
 	for _, tc := range tests {
@@ -56,19 +56,19 @@ func runFailableScanTest(
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> " + fileName + " : " + testLine)
 
-		itr := runer.NewRuneItr(tc.Input)
-		act, err := f(itr)
+		tk, out, err := f(tc.Input)
 
 		if tc.ExpectErr != nil {
-			assert.Nil(t, act)
+			assert.Nil(t, tk)
 			require.NotNil(t, err)
 			assert.NotEmpty(t, err.Error())
 			fault.Assert(t, tc.ExpectErr, err)
 
 		} else {
 			assert.Nil(t, err)
-			require.NotNil(t, act)
-			assert.Equal(t, tc.Expect, *act)
+			require.NotNil(t, tk)
+			assert.Equal(t, tc.Output, out)
+			assert.Equal(t, tc.Expect, *tk)
 		}
 	}
 }
