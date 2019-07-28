@@ -47,7 +47,8 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 			tk = scanSpace(itr)
 			l = tokenToLexeme(tk)
 		case itr.IsNext('@'):
-			l, err = scanSpell(itr)
+			tk, err = scanSpell(itr)
+			l = tokenToLexeme(tk)
 		case itr.IsNext('"'):
 			l, err = scanString(itr)
 		case itr.IsNextStr(`//`):

@@ -8,7 +8,7 @@ import (
 
 // scanSpell scans symbols that start with a the '@' rune
 // returning a spell identifier. Spells are inbuilt functions.
-func scanSpell(itr *runer.RuneItr) (s *symbol.Lexeme, err fault.Fault) {
+func scanSpell(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
 
 	if !itr.IsRelLetter(1) {
 		m := "Expected first rune after `@` to be a letter"
@@ -20,7 +20,7 @@ func scanSpell(itr *runer.RuneItr) (s *symbol.Lexeme, err fault.Fault) {
 	h := string(itr.NextRune())
 	t := scanWordStr(itr)
 
-	s = &symbol.Lexeme{
+	tk = &symbol.Token{
 		Val:   h + t,
 		Start: start,
 		End:   itr.Index(),
