@@ -14,7 +14,7 @@ import (
 // - value or key-value separator
 // - void identifier
 // - number range generator
-func scanSymbol(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
+func scanSymbol(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
 
 	start := itr.Index()
 	var t symbol.SymbolType
@@ -87,7 +87,7 @@ func scanSymbol(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 		return
 	}
 
-	l = &symbol.Lexeme{
+	tk = &symbol.Token{
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),

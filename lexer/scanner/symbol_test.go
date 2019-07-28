@@ -8,132 +8,132 @@ import (
 )
 
 func TestScanSymbol(t *testing.T) {
-	lexErrFuncTest(t, "symbol_test.go", scanSymbol, scanSymbolTests())
+	runFailableScanTest(t, "symbol_test.go", scanSymbol, scanSymbolTests())
 }
 
-func scanSymbolTests() []lexTest {
-	return []lexTest{
-		lexTest{
+func scanSymbolTests() []scanFuncTest {
+	return []scanFuncTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `==`,
-			Expect:   symbol.Lexeme{`==`, 0, 2, 0, symbol.CMP_EQUAL},
+			Expect:   symbol.Token{`==`, 0, 2, 0, symbol.CMP_EQUAL},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `!=`,
-			Expect:   symbol.Lexeme{`!=`, 0, 2, 0, symbol.CMP_NOT_EQUAL},
+			Expect:   symbol.Token{`!=`, 0, 2, 0, symbol.CMP_NOT_EQUAL},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `<`,
-			Expect:   symbol.Lexeme{`<`, 0, 1, 0, symbol.CMP_LESS_THAN},
+			Expect:   symbol.Token{`<`, 0, 1, 0, symbol.CMP_LESS_THAN},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `<=`,
-			Expect:   symbol.Lexeme{`<=`, 0, 2, 0, symbol.CMP_LESS_THAN_OR_EQUAL},
+			Expect:   symbol.Token{`<=`, 0, 2, 0, symbol.CMP_LESS_THAN_OR_EQUAL},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `>`,
-			Expect:   symbol.Lexeme{`>`, 0, 1, 0, symbol.CMP_GREATER_THAN},
+			Expect:   symbol.Token{`>`, 0, 1, 0, symbol.CMP_GREATER_THAN},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `>=`,
-			Expect:   symbol.Lexeme{`>=`, 0, 2, 0, symbol.CMP_GREATER_THAN_OR_EQUAL},
+			Expect:   symbol.Token{`>=`, 0, 2, 0, symbol.CMP_GREATER_THAN_OR_EQUAL},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `||`,
-			Expect:   symbol.Lexeme{`||`, 0, 2, 0, symbol.LOGICAL_OR},
+			Expect:   symbol.Token{`||`, 0, 2, 0, symbol.LOGICAL_OR},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `&&`,
-			Expect:   symbol.Lexeme{`&&`, 0, 2, 0, symbol.LOGICAL_AND},
+			Expect:   symbol.Token{`&&`, 0, 2, 0, symbol.LOGICAL_AND},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `<-`,
-			Expect:   symbol.Lexeme{`<-`, 0, 2, 0, symbol.ASSIGNMENT},
+			Expect:   symbol.Token{`<-`, 0, 2, 0, symbol.ASSIGNMENT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `=>`,
-			Expect:   symbol.Lexeme{`=>`, 0, 2, 0, symbol.LOGICAL_MATCH},
+			Expect:   symbol.Token{`=>`, 0, 2, 0, symbol.LOGICAL_MATCH},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `_`,
-			Expect:   symbol.Lexeme{`_`, 0, 1, 0, symbol.VOID},
+			Expect:   symbol.Token{`_`, 0, 1, 0, symbol.VOID},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `!`,
-			Expect:   symbol.Lexeme{`!`, 0, 1, 0, symbol.LOGICAL_NOT},
+			Expect:   symbol.Token{`!`, 0, 1, 0, symbol.LOGICAL_NOT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `+`,
-			Expect:   symbol.Lexeme{`+`, 0, 1, 0, symbol.CALC_ADD},
+			Expect:   symbol.Token{`+`, 0, 1, 0, symbol.CALC_ADD},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `-`,
-			Expect:   symbol.Lexeme{`-`, 0, 1, 0, symbol.CALC_SUBTRACT},
+			Expect:   symbol.Token{`-`, 0, 1, 0, symbol.CALC_SUBTRACT},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `*`,
-			Expect:   symbol.Lexeme{`*`, 0, 1, 0, symbol.CALC_MULTIPLY},
+			Expect:   symbol.Token{`*`, 0, 1, 0, symbol.CALC_MULTIPLY},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `/`,
-			Expect:   symbol.Lexeme{`/`, 0, 1, 0, symbol.CALC_DIVIDE},
+			Expect:   symbol.Token{`/`, 0, 1, 0, symbol.CALC_DIVIDE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `%`,
-			Expect:   symbol.Lexeme{`%`, 0, 1, 0, symbol.CALC_MODULO},
+			Expect:   symbol.Token{`%`, 0, 1, 0, symbol.CALC_MODULO},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `(`,
-			Expect:   symbol.Lexeme{`(`, 0, 1, 0, symbol.PAREN_CURVY_OPEN},
+			Expect:   symbol.Token{`(`, 0, 1, 0, symbol.PAREN_CURVY_OPEN},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `)`,
-			Expect:   symbol.Lexeme{`)`, 0, 1, 0, symbol.PAREN_CURVY_CLOSE},
+			Expect:   symbol.Token{`)`, 0, 1, 0, symbol.PAREN_CURVY_CLOSE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `[`,
-			Expect:   symbol.Lexeme{`[`, 0, 1, 0, symbol.PAREN_SQUARE_OPEN},
+			Expect:   symbol.Token{`[`, 0, 1, 0, symbol.PAREN_SQUARE_OPEN},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `]`,
-			Expect:   symbol.Lexeme{`]`, 0, 1, 0, symbol.PAREN_SQUARE_CLOSE},
+			Expect:   symbol.Token{`]`, 0, 1, 0, symbol.PAREN_SQUARE_CLOSE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `,`,
-			Expect:   symbol.Lexeme{`,`, 0, 1, 0, symbol.SEPARATOR_VALUE},
+			Expect:   symbol.Token{`,`, 0, 1, 0, symbol.SEPARATOR_VALUE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `:`,
-			Expect:   symbol.Lexeme{`:`, 0, 1, 0, symbol.SEPARATOR_KEY_VALUE},
+			Expect:   symbol.Token{`:`, 0, 1, 0, symbol.SEPARATOR_KEY_VALUE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `..`,
-			Expect:   symbol.Lexeme{`..`, 0, 2, 0, symbol.RANGE},
+			Expect:   symbol.Token{`..`, 0, 2, 0, symbol.RANGE},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `=`,
 			ExpectErr: fault.Dummy(fault.Symbol).Line(0).From(0).To(1),

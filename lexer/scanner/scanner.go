@@ -56,7 +56,8 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 			tk = scanComment(itr)
 			l = tokenToLexeme(tk)
 		default:
-			l, err = scanSymbol(itr)
+			tk, err = scanSymbol(itr)
+			l = tokenToLexeme(tk)
 		}
 
 		if err != nil {
