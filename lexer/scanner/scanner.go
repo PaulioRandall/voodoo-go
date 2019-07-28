@@ -32,7 +32,7 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 		case itr.IsNextDigit():
 			l, err = scanNumber(itr)
 		case itr.IsNextSpace():
-			l = spaceLex(itr)
+			l = scanSpace(itr)
 		case itr.IsNext('@'):
 			l, err = sourceryLex(itr)
 		case itr.IsNext('"'):
@@ -52,30 +52,6 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 	}
 
 	return
-}
-
-// spaceLex handles lexemes that start with a rune with the
-// unicode whitespace property.
-// I.e. any whitespace rune, whitespace may resolve into a:
-// - maningless lexeme that can be ignored at the parsing stage
-func spaceLex(itr *runer.RuneItr) *symbol.Lexeme {
-
-	start := itr.Index()
-	sb := strings.Builder{}
-
-	for itr.HasNext() {
-		if !itr.IsNextSpace() {
-			break
-		}
-		sb.WriteRune(itr.NextRune())
-	}
-
-	return &symbol.Lexeme{
-		Val:   sb.String(),
-		Start: start,
-		End:   itr.Index(),
-		Type:  symbol.WHITESPACE,
-	}
 }
 
 // sourceryLex handles lexemes that start with a at sign rune `@`.

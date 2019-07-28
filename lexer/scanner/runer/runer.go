@@ -43,6 +43,12 @@ func scanWordStr(in []rune) (string, []rune) {
 	return sb.String(), nil
 }
 
+// IsSpace returns true if the language considers the rune
+// to be whitespace.
+func IsSpace(r rune) bool {
+	return unicode.IsSpace(r)
+}
+
 // IsLetter returns true if the language considers the rune
 // to be a letter.
 func IsLetter(r rune) bool {

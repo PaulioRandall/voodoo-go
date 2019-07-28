@@ -8,10 +8,10 @@ import (
 )
 
 func TestSpace(t *testing.T) {
-	lexFuncTest(t, "space_test.go", spaceLex, spaceLexTests())
+	lexFuncTest(t, "space_test.go", scanSpace, scanSpaceTests())
 }
 
-func spaceLexTests() []lexTest {
+func scanSpaceTests() []lexTest {
 	return []lexTest{
 		lexTest{
 			TestLine: fault.CurrLine(),
