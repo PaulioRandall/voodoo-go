@@ -6,6 +6,15 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
+// TODO: Delete me
+func tokensToLexemes(tks []symbol.Token) []symbol.Lexeme {
+	s := make([]symbol.Lexeme, len(tks))
+	for i, v := range tks {
+		s[i] = symbol.Lexeme(v)
+	}
+	return s
+}
+
 // Scan scans a line and creates an array of lexemes based on
 // the grammer rules of the language. Longest match is used to
 // identify variable names and keywords etc.
