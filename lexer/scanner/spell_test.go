@@ -7,7 +7,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-func TestSpellLex(t *testing.T) {
+func TestScanSpell(t *testing.T) {
 	lexErrFuncTest(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 

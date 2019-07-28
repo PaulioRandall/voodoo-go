@@ -7,7 +7,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/symbol"
 )
 
-func TestSpace(t *testing.T) {
+func TestScanSpace(t *testing.T) {
 	lexFuncTest(t, "space_test.go", scanSpace, scanSpaceTests())
 }
 

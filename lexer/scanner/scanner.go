@@ -36,7 +36,7 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 		case itr.IsNext('"'):
 			l, err = scanString(itr)
 		case itr.IsNextStr(`//`):
-			l = commentLex(itr)
+			l = scanComment(itr)
 		default:
 			l, err = symbolLex(itr)
 		}
@@ -50,22 +50,6 @@ func Scan(in string) (out []symbol.Lexeme, err fault.Fault) {
 	}
 
 	return
-}
-
-// commentLex handles lexemes that start with two forward slashes
-// `//`. Double forward slashes may resolve into a:
-// - comment
-func commentLex(itr *runer.RuneItr) *symbol.Lexeme {
-
-	start := itr.Index()
-	str := itr.RemainingStr()
-
-	return &symbol.Lexeme{
-		Val:   str,
-		Start: start,
-		End:   itr.Index(),
-		Type:  symbol.COMMENT,
-	}
 }
 
 // symbolLex handles any lexemes that are symbols. These
