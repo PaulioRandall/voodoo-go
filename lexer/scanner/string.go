@@ -10,7 +10,7 @@ import (
 
 // scanString scans symbols that start and end with an
 // non-escaped `"` returning a string literal token.
-func scanString(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
+func scanString(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
 
 	start := itr.Index()
 	closed, s := extractStr(itr)
@@ -21,7 +21,7 @@ func scanString(itr *runer.RuneItr) (l *symbol.Lexeme, err fault.Fault) {
 		return
 	}
 
-	l = &symbol.Lexeme{
+	tk = &symbol.Token{
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),

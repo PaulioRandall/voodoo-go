@@ -8,42 +8,42 @@ import (
 )
 
 func TestScanString(t *testing.T) {
-	lexErrFuncTest(t, "string_test.go", scanString, scanStringTests())
+	runFailableScanTest(t, "string_test.go", scanString, scanStringTests())
 }
 
-func scanStringTests() []lexTest {
-	return []lexTest{
-		lexTest{
+func scanStringTests() []scanFuncTest {
+	return []scanFuncTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `""`,
-			Expect:   symbol.Lexeme{`""`, 0, 2, 0, symbol.LITERAL_STRING},
+			Expect:   symbol.Token{`""`, 0, 2, 0, symbol.LITERAL_STRING},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `"From hell with love"`,
-			Expect:   symbol.Lexeme{`"From hell with love"`, 0, 21, 0, symbol.LITERAL_STRING},
+			Expect:   symbol.Token{`"From hell with love"`, 0, 21, 0, symbol.LITERAL_STRING},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `"Simon: \"Leaders eat last!\""`,
-			Expect:   symbol.Lexeme{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, symbol.LITERAL_STRING},
+			Expect:   symbol.Token{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, symbol.LITERAL_STRING},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `"\\\\\""`,
-			Expect:   symbol.Lexeme{`"\\\\\""`, 0, 8, 0, symbol.LITERAL_STRING},
+			Expect:   symbol.Token{`"\\\\\""`, 0, 8, 0, symbol.LITERAL_STRING},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `"`,
 			ExpectErr: fault.Dummy(fault.String).Line(0).From(0).To(1),
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `"a"x`,
-			Expect:   symbol.Lexeme{`"a"`, 0, 3, 0, symbol.LITERAL_STRING},
+			Expect:   symbol.Token{`"a"`, 0, 3, 0, symbol.LITERAL_STRING},
 		},
-		lexTest{
+		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `"escaped \"`,
 			ExpectErr: fault.Dummy(fault.String).Line(0).From(0).To(11),
