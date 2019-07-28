@@ -3,7 +3,7 @@ package analyser
 import (
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/operation"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // Analyse parses an array of tokens into a set of instructions.
@@ -53,6 +53,6 @@ import (
 //          As: x,
 //        },
 //      }
-func Analyse(in []symbol.Token) (operation.InstructionSet, fault.Fault) {
+func Analyse(in []token.Token) (operation.InstructionSet, fault.Fault) {
 	return nil, nil
 }

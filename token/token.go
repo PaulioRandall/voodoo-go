@@ -1,4 +1,4 @@
-package symbol
+package token
 
 import (
 	"fmt"
@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-// SymbolType represents the type of a symbol.
-type SymbolType int
+// TokenType represents the type of a token.
+type TokenType int
 
 const (
-	UNDEFINED SymbolType = iota
+	UNDEFINED TokenType = iota
 	// Fully or partly alphabetic
 	ALPHABETIC_START
 	KEYWORD_FUNC  // func
@@ -65,8 +65,8 @@ const (
 	VOID // _
 )
 
-// SymbolName returns the name of the symbol type.
-func SymbolName(t SymbolType) string {
+// TokenName returns the name of the token type.
+func TokenName(t TokenType) string {
 	switch t {
 	case KEYWORD_FUNC:
 		return `KEYWORD_FUNC`
@@ -151,35 +151,51 @@ func SymbolName(t SymbolType) string {
 	return `UNDEFINED`
 }
 
-// Symbol represents  a terminal or non-terminal symbol.
+// Token represents a token produced by lexical analysis.
 // I.e. identifier, operator, punctionation, etc.
-type Symbol struct {
-	Val   string     // Symbol value
-	Start int        // Index of first rune
-	End   int        // Index after last rune
-	Line  int        // Line number from scroll
-	Type  SymbolType // Type of symbol
+type Token struct {
+	Val   string    // Token value
+	Start int       // Index of first rune
+	End   int       // Index after last rune
+	Line  int       // Line number from scroll // DEPRECATED
+	Type  TokenType // Type of token
 }
 
-// String creates a string representation of the symbol.
-func (s Symbol) String() string {
-	start := strconv.Itoa(s.Start)
+// String creates a string representation of the token.
+func (tk Token) String() string {
+	start := strconv.Itoa(tk.Start)
 	start = strings.Repeat(` `, 3-len(start)) + start
-	return fmt.Sprintf("Line %-3d [%s->%-3d] `%s`", s.Line, start, s.End, s.Val)
+	return fmt.Sprintf("Line %-3d [%s->%-3d] `%s`", tk.Line, start, tk.End, tk.Val)
 }
 
-// printlnSymbols prints an array of symbols where the
-// value to print for each symbol is obtained via the
+// PrintlnTokenValues prints the value of an array of tokens.
+func PrintlnTokenValues(tks []Token) {
+	f := func(tk Token) string {
+		return tk.Val
+	}
+	printlnTokens(tks, f)
+}
+
+// PrintlnTokenTypes prints the types of an array of tokens.
+func PrintlnTokenTypes(tks []Token) {
+	f := func(tk Token) string {
+		return TokenName(tk.Type)
+	}
+	printlnTokens(tks, f)
+}
+
+// printlnTokens prints an array of tokens where the
+// value to print for each token is obtained via the
 // supplied function.
-func printlnSymbols(syms []Symbol, f func(Symbol) string) {
-	l := len(syms)
+func printlnTokens(tks []Token, f func(Token) string) {
+	l := len(tks)
 	if l == 0 {
 		fmt.Println(`[]`)
 		return
 	}
 
 	fmt.Print(`[`)
-	for i, v := range syms {
+	for i, v := range tks {
 		s := f(v)
 		fmt.Print(s)
 

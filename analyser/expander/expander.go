@@ -4,15 +4,15 @@ import (
 	"strconv"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // ExpandParens expands all expression parentheses into separate assignment
 // statements. These are then compiled into a correctly ordered set of token
 // arrays.
-func ExpandParens(outer []symbol.Token) ([][]symbol.Token, fault.Fault) {
-	r := [][]symbol.Token{}
-	var inner []symbol.Token
+func ExpandParens(outer []token.Token) ([][]token.Token, fault.Fault) {
+	r := [][]token.Token{}
+	var inner []token.Token
 	var err fault.Fault
 
 	for id := 1; outer != nil; id++ {
@@ -40,7 +40,7 @@ func ExpandParens(outer []symbol.Token) ([][]symbol.Token, fault.Fault) {
 // plugging the `outer` value back into the function the expression can be
 // broken up further until `outer` is nil. At which point there are no
 // parentheses left to expand.
-func expandParen(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner []symbol.Token, err fault.Fault) {
+func expandParen(in []token.Token, nextTempId int) (outer []token.Token, inner []token.Token, err fault.Fault) {
 
 	a, z := findParen(in)
 	if a == -1 && z == -1 {
@@ -60,10 +60,10 @@ func expandParen(in []symbol.Token, nextTempId int) (outer []symbol.Token, inner
 // sliceOutParen slices out the inner expression from the outer leaving an implicit
 // identifier in its place. The inner is prefixed with two tokens that assign the
 // the implicit identifier with the value of the inner expression.
-func sliceOutParen(in []symbol.Token, a, z, nextTempId int) (outer []symbol.Token, inner []symbol.Token) {
+func sliceOutParen(in []token.Token, a, z, nextTempId int) (outer []token.Token, inner []token.Token) {
 	id := newImplicitIdToken(nextTempId)
 
-	inner = []symbol.Token{
+	inner = []token.Token{
 		id,
 		newAssignToken(),
 	}
@@ -78,7 +78,7 @@ func sliceOutParen(in []symbol.Token, a, z, nextTempId int) (outer []symbol.Toke
 
 // checkParenIndexes checks the results of findParenPair() and returns
 // a non-nil error if they are invalid.
-func checkParenIndexes(in []symbol.Token, a, z int) (err fault.Fault) {
+func checkParenIndexes(in []token.Token, a, z int) (err fault.Fault) {
 	if a == -1 {
 		m := "Didn't expect to find a closing parenthesis without a corresponding opening one"
 		err = fault.Paren(m).To(in[z].Start)
@@ -91,37 +91,37 @@ func checkParenIndexes(in []symbol.Token, a, z int) (err fault.Fault) {
 }
 
 // newImplicitIdToken returns a new and unique implicit identifier token.
-func newImplicitIdToken(id int) symbol.Token {
-	return symbol.Token{
+func newImplicitIdToken(id int) token.Token {
+	return token.Token{
 		Val:  `#` + strconv.Itoa(id),
-		Type: symbol.IDENTIFIER_IMPLICIT,
+		Type: token.IDENTIFIER_IMPLICIT,
 	}
 }
 
 // newAssignToken returns a new assignment token.
-func newAssignToken() symbol.Token {
-	return symbol.Token{
+func newAssignToken() token.Token {
+	return token.Token{
 		Val:  `<-`,
-		Type: symbol.ASSIGNMENT,
+		Type: token.ASSIGNMENT,
 	}
 }
 
 // findParen finds a pair of matching parenthesis that do not contain
 // parentheses themselves.
-func findParen(in []symbol.Token) (a int, z int) {
+func findParen(in []token.Token) (a int, z int) {
 	l := len(in) - 1
-	a = rIndexOf(in, l, symbol.PAREN_CURVY_OPEN)
+	a = rIndexOf(in, l, token.PAREN_CURVY_OPEN)
 	if a == -1 {
-		z = indexOf(in, 0, symbol.PAREN_CURVY_CLOSE)
+		z = indexOf(in, 0, token.PAREN_CURVY_CLOSE)
 	} else {
-		z = indexOf(in, a, symbol.PAREN_CURVY_CLOSE)
+		z = indexOf(in, a, token.PAREN_CURVY_CLOSE)
 	}
 	return
 }
 
 // containsType returns true if the token array contains a token with
 // one of the specified symbol types.
-func containsType(a []symbol.Token, t ...symbol.SymbolType) bool {
+func containsType(a []token.Token, t ...token.TokenType) bool {
 	for _, v := range a {
 		for _, ty := range t {
 			if v.Type == ty {
@@ -134,7 +134,7 @@ func containsType(a []symbol.Token, t ...symbol.SymbolType) bool {
 
 // indexOf returns the next index of the symbol with the specified type
 // of -1 if no matching token is found.
-func indexOf(a []symbol.Token, start int, t symbol.SymbolType) int {
+func indexOf(a []token.Token, start int, t token.TokenType) int {
 	l := len(a)
 	for i := start; i < l; i++ {
 		if i < start {
@@ -152,7 +152,7 @@ func indexOf(a []symbol.Token, start int, t symbol.SymbolType) int {
 // rIndexOf returns the index of the last token with the specified type
 // of -1 if no matching token is found. 'start' determines where to start
 // searching back from, anything after will not be searched.
-func rIndexOf(a []symbol.Token, start int, t symbol.SymbolType) int {
+func rIndexOf(a []token.Token, start int, t token.TokenType) int {
 	for i := start; i > -1; i-- {
 		if a[i].Type == t {
 			return i

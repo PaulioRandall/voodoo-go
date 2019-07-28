@@ -5,12 +5,12 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/runer"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // scanString scans symbols that start and end with an
 // non-escaped `"` returning a string literal token.
-func scanString(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
+func scanString(itr *runer.RuneItr) (tk *token.Token, err fault.Fault) {
 
 	start := itr.Index()
 	closed, s := extractStr(itr)
@@ -21,11 +21,11 @@ func scanString(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
 		return
 	}
 
-	tk = &symbol.Token{
+	tk = &token.Token{
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),
-		Type:  symbol.LITERAL_STRING,
+		Type:  token.LITERAL_STRING,
 	}
 
 	return

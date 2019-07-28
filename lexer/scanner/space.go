@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/runer"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // scanSpace scans symbols that start with a unicode whitespace
@@ -16,7 +16,7 @@ import (
 // become the one exception to the rule as they will become
 // a token all by themselves used to delimit statements
 // and the bodies of different context.
-func scanSpace(itr *runer.RuneItr) *symbol.Token {
+func scanSpace(itr *runer.RuneItr) *token.Token {
 
 	start := itr.Index()
 	sb := strings.Builder{}
@@ -28,10 +28,10 @@ func scanSpace(itr *runer.RuneItr) *symbol.Token {
 		sb.WriteRune(itr.NextRune())
 	}
 
-	return &symbol.Token{
+	return &token.Token{
 		Val:   sb.String(),
 		Start: start,
 		End:   itr.Index(),
-		Type:  symbol.WHITESPACE,
+		Type:  token.WHITESPACE,
 	}
 }

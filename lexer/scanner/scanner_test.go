@@ -6,7 +6,7 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/runer"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -16,7 +16,7 @@ import (
 type scanFuncTest struct {
 	TestLine  int
 	Input     string
-	Expect    symbol.Token
+	Expect    token.Token
 	ExpectErr fault.Fault
 }
 
@@ -25,7 +25,7 @@ type scanFuncTest struct {
 func runScanTest(
 	t *testing.T,
 	fileName string,
-	f func(*runer.RuneItr) *symbol.Token,
+	f func(*runer.RuneItr) *token.Token,
 	tests []scanFuncTest) {
 
 	for _, tc := range tests {
@@ -48,7 +48,7 @@ func runScanTest(
 func runFailableScanTest(
 	t *testing.T,
 	fileName string,
-	f func(*runer.RuneItr) (*symbol.Token, fault.Fault),
+	f func(*runer.RuneItr) (*token.Token, fault.Fault),
 	tests []scanFuncTest) {
 
 	for _, tc := range tests {
@@ -78,7 +78,7 @@ func runFailableScanTest(
 type scanTest struct {
 	TestLine  int
 	Input     string
-	Expect    []symbol.Token
+	Expect    []token.Token
 	ExpectErr fault.Fault
 }
 
@@ -119,172 +119,172 @@ func scanTests() []scanTest {
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x <- 1`,
-			Expect: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Token{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
+			Expect: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 1, 2, 0, token.WHITESPACE},
+				token.Token{`<-`, 2, 4, 0, token.ASSIGNMENT},
+				token.Token{` `, 4, 5, 0, token.WHITESPACE},
+				token.Token{`1`, 5, 6, 0, token.LITERAL_NUMBER},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `y <- -1.1`,
-			Expect: []symbol.Token{
-				symbol.Token{`y`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Token{`-`, 5, 6, 0, symbol.CALC_SUBTRACT},
-				symbol.Token{`1.1`, 6, 9, 0, symbol.LITERAL_NUMBER},
+			Expect: []token.Token{
+				token.Token{`y`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 1, 2, 0, token.WHITESPACE},
+				token.Token{`<-`, 2, 4, 0, token.ASSIGNMENT},
+				token.Token{` `, 4, 5, 0, token.WHITESPACE},
+				token.Token{`-`, 5, 6, 0, token.CALC_SUBTRACT},
+				token.Token{`1.1`, 6, 9, 0, token.LITERAL_NUMBER},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x <- true`,
-			Expect: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Token{`true`, 5, 9, 0, symbol.BOOLEAN_TRUE},
+			Expect: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 1, 2, 0, token.WHITESPACE},
+				token.Token{`<-`, 2, 4, 0, token.ASSIGNMENT},
+				token.Token{` `, 4, 5, 0, token.WHITESPACE},
+				token.Token{`true`, 5, 9, 0, token.BOOLEAN_TRUE},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `@Println["Whelp"]`,
-			Expect: []symbol.Token{
-				symbol.Token{`@Println`, 0, 8, 0, symbol.SOURCERY},
-				symbol.Token{`[`, 8, 9, 0, symbol.PAREN_SQUARE_OPEN},
-				symbol.Token{`"Whelp"`, 9, 16, 0, symbol.LITERAL_STRING},
-				symbol.Token{`]`, 16, 17, 0, symbol.PAREN_SQUARE_CLOSE},
+			Expect: []token.Token{
+				token.Token{`@Println`, 0, 8, 0, token.SOURCERY},
+				token.Token{`[`, 8, 9, 0, token.PAREN_SQUARE_OPEN},
+				token.Token{`"Whelp"`, 9, 16, 0, token.LITERAL_STRING},
+				token.Token{`]`, 16, 17, 0, token.PAREN_SQUARE_CLOSE},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    "\tresult <- func(a, b) r, err     ",
-			Expect: []symbol.Token{
-				symbol.Token{"\t", 0, 1, 0, symbol.WHITESPACE},
-				symbol.Token{`result`, 1, 7, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 7, 8, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 8, 10, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 10, 11, 0, symbol.WHITESPACE},
-				symbol.Token{`func`, 11, 15, 0, symbol.KEYWORD_FUNC},
-				symbol.Token{`(`, 15, 16, 0, symbol.PAREN_CURVY_OPEN},
-				symbol.Token{`a`, 16, 17, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`,`, 17, 18, 0, symbol.SEPARATOR_VALUE},
-				symbol.Token{` `, 18, 19, 0, symbol.WHITESPACE},
-				symbol.Token{`b`, 19, 20, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`)`, 20, 21, 0, symbol.PAREN_CURVY_CLOSE},
-				symbol.Token{` `, 21, 22, 0, symbol.WHITESPACE},
-				symbol.Token{`r`, 22, 23, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`,`, 23, 24, 0, symbol.SEPARATOR_VALUE},
-				symbol.Token{` `, 24, 25, 0, symbol.WHITESPACE},
-				symbol.Token{`err`, 25, 28, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`     `, 28, 33, 0, symbol.WHITESPACE},
+			Expect: []token.Token{
+				token.Token{"\t", 0, 1, 0, token.WHITESPACE},
+				token.Token{`result`, 1, 7, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 7, 8, 0, token.WHITESPACE},
+				token.Token{`<-`, 8, 10, 0, token.ASSIGNMENT},
+				token.Token{` `, 10, 11, 0, token.WHITESPACE},
+				token.Token{`func`, 11, 15, 0, token.KEYWORD_FUNC},
+				token.Token{`(`, 15, 16, 0, token.PAREN_CURVY_OPEN},
+				token.Token{`a`, 16, 17, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`,`, 17, 18, 0, token.SEPARATOR_VALUE},
+				token.Token{` `, 18, 19, 0, token.WHITESPACE},
+				token.Token{`b`, 19, 20, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`)`, 20, 21, 0, token.PAREN_CURVY_CLOSE},
+				token.Token{` `, 21, 22, 0, token.WHITESPACE},
+				token.Token{`r`, 22, 23, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`,`, 23, 24, 0, token.SEPARATOR_VALUE},
+				token.Token{` `, 24, 25, 0, token.WHITESPACE},
+				token.Token{`err`, 25, 28, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`     `, 28, 33, 0, token.WHITESPACE},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `keyValue <- "pi": 3.1419`,
-			Expect: []symbol.Token{
-				symbol.Token{`keyValue`, 0, 8, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 8, 9, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 11, 12, 0, symbol.WHITESPACE},
-				symbol.Token{`"pi"`, 12, 16, 0, symbol.LITERAL_STRING},
-				symbol.Token{`:`, 16, 17, 0, symbol.SEPARATOR_KEY_VALUE},
-				symbol.Token{` `, 17, 18, 0, symbol.WHITESPACE},
-				symbol.Token{`3.1419`, 18, 24, 0, symbol.LITERAL_NUMBER},
+			Expect: []token.Token{
+				token.Token{`keyValue`, 0, 8, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 8, 9, 0, token.WHITESPACE},
+				token.Token{`<-`, 9, 11, 0, token.ASSIGNMENT},
+				token.Token{` `, 11, 12, 0, token.WHITESPACE},
+				token.Token{`"pi"`, 12, 16, 0, token.LITERAL_STRING},
+				token.Token{`:`, 16, 17, 0, token.SEPARATOR_KEY_VALUE},
+				token.Token{` `, 17, 18, 0, token.WHITESPACE},
+				token.Token{`3.1419`, 18, 24, 0, token.LITERAL_NUMBER},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `alphabet <- ["a", "b", "c"]`,
-			Expect: []symbol.Token{
-				symbol.Token{`alphabet`, 0, 8, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 8, 9, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 9, 11, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 11, 12, 0, symbol.WHITESPACE},
-				symbol.Token{`[`, 12, 13, 0, symbol.PAREN_SQUARE_OPEN},
-				symbol.Token{`"a"`, 13, 16, 0, symbol.LITERAL_STRING},
-				symbol.Token{`,`, 16, 17, 0, symbol.SEPARATOR_VALUE},
-				symbol.Token{` `, 17, 18, 0, symbol.WHITESPACE},
-				symbol.Token{`"b"`, 18, 21, 0, symbol.LITERAL_STRING},
-				symbol.Token{`,`, 21, 22, 0, symbol.SEPARATOR_VALUE},
-				symbol.Token{` `, 22, 23, 0, symbol.WHITESPACE},
-				symbol.Token{`"c"`, 23, 26, 0, symbol.LITERAL_STRING},
-				symbol.Token{`]`, 26, 27, 0, symbol.PAREN_SQUARE_CLOSE},
+			Expect: []token.Token{
+				token.Token{`alphabet`, 0, 8, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 8, 9, 0, token.WHITESPACE},
+				token.Token{`<-`, 9, 11, 0, token.ASSIGNMENT},
+				token.Token{` `, 11, 12, 0, token.WHITESPACE},
+				token.Token{`[`, 12, 13, 0, token.PAREN_SQUARE_OPEN},
+				token.Token{`"a"`, 13, 16, 0, token.LITERAL_STRING},
+				token.Token{`,`, 16, 17, 0, token.SEPARATOR_VALUE},
+				token.Token{` `, 17, 18, 0, token.WHITESPACE},
+				token.Token{`"b"`, 18, 21, 0, token.LITERAL_STRING},
+				token.Token{`,`, 21, 22, 0, token.SEPARATOR_VALUE},
+				token.Token{` `, 22, 23, 0, token.WHITESPACE},
+				token.Token{`"c"`, 23, 26, 0, token.LITERAL_STRING},
+				token.Token{`]`, 26, 27, 0, token.PAREN_SQUARE_CLOSE},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `loop i <- 0..5`,
-			Expect: []symbol.Token{
-				symbol.Token{`loop`, 0, 4, 0, symbol.KEYWORD_LOOP},
-				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Token{`i`, 5, 6, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 6, 7, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 7, 9, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 9, 10, 0, symbol.WHITESPACE},
-				symbol.Token{`0`, 10, 11, 0, symbol.LITERAL_NUMBER},
-				symbol.Token{`..`, 11, 13, 0, symbol.RANGE},
-				symbol.Token{`5`, 13, 14, 0, symbol.LITERAL_NUMBER},
+			Expect: []token.Token{
+				token.Token{`loop`, 0, 4, 0, token.KEYWORD_LOOP},
+				token.Token{` `, 4, 5, 0, token.WHITESPACE},
+				token.Token{`i`, 5, 6, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 6, 7, 0, token.WHITESPACE},
+				token.Token{`<-`, 7, 9, 0, token.ASSIGNMENT},
+				token.Token{` `, 9, 10, 0, token.WHITESPACE},
+				token.Token{`0`, 10, 11, 0, token.LITERAL_NUMBER},
+				token.Token{`..`, 11, 13, 0, token.RANGE},
+				token.Token{`5`, 13, 14, 0, token.LITERAL_NUMBER},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x<-2 // The value of x is now 2`,
-			Expect: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
-				symbol.Token{`2`, 3, 4, 0, symbol.LITERAL_NUMBER},
-				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Token{`// The value of x is now 2`, 5, 31, 0, symbol.COMMENT},
+			Expect: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`<-`, 1, 3, 0, token.ASSIGNMENT},
+				token.Token{`2`, 3, 4, 0, token.LITERAL_NUMBER},
+				token.Token{` `, 4, 5, 0, token.WHITESPACE},
+				token.Token{`// The value of x is now 2`, 5, 31, 0, token.COMMENT},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `isLandscape<-length<height`,
-			Expect: []symbol.Token{
-				symbol.Token{`isLandscape`, 0, 11, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`<-`, 11, 13, 0, symbol.ASSIGNMENT},
-				symbol.Token{`length`, 13, 19, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`<`, 19, 20, 0, symbol.CMP_LESS_THAN},
-				symbol.Token{`height`, 20, 26, 0, symbol.IDENTIFIER_EXPLICIT},
+			Expect: []token.Token{
+				token.Token{`isLandscape`, 0, 11, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`<-`, 11, 13, 0, token.ASSIGNMENT},
+				token.Token{`length`, 13, 19, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`<`, 19, 20, 0, token.CMP_LESS_THAN},
+				token.Token{`height`, 20, 26, 0, token.IDENTIFIER_EXPLICIT},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x<-3.14*(1-2+3)`,
-			Expect: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
-				symbol.Token{`3.14`, 3, 7, 0, symbol.LITERAL_NUMBER},
-				symbol.Token{`*`, 7, 8, 0, symbol.CALC_MULTIPLY},
-				symbol.Token{`(`, 8, 9, 0, symbol.PAREN_CURVY_OPEN},
-				symbol.Token{`1`, 9, 10, 0, symbol.LITERAL_NUMBER},
-				symbol.Token{`-`, 10, 11, 0, symbol.CALC_SUBTRACT},
-				symbol.Token{`2`, 11, 12, 0, symbol.LITERAL_NUMBER},
-				symbol.Token{`+`, 12, 13, 0, symbol.CALC_ADD},
-				symbol.Token{`3`, 13, 14, 0, symbol.LITERAL_NUMBER},
-				symbol.Token{`)`, 14, 15, 0, symbol.PAREN_CURVY_CLOSE},
+			Expect: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`<-`, 1, 3, 0, token.ASSIGNMENT},
+				token.Token{`3.14`, 3, 7, 0, token.LITERAL_NUMBER},
+				token.Token{`*`, 7, 8, 0, token.CALC_MULTIPLY},
+				token.Token{`(`, 8, 9, 0, token.PAREN_CURVY_OPEN},
+				token.Token{`1`, 9, 10, 0, token.LITERAL_NUMBER},
+				token.Token{`-`, 10, 11, 0, token.CALC_SUBTRACT},
+				token.Token{`2`, 11, 12, 0, token.LITERAL_NUMBER},
+				token.Token{`+`, 12, 13, 0, token.CALC_ADD},
+				token.Token{`3`, 13, 14, 0, token.LITERAL_NUMBER},
+				token.Token{`)`, 14, 15, 0, token.PAREN_CURVY_CLOSE},
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `!x => y <- _`,
-			Expect: []symbol.Token{
-				symbol.Token{`!`, 0, 1, 0, symbol.LOGICAL_NOT},
-				symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 2, 3, 0, symbol.WHITESPACE},
-				symbol.Token{`=>`, 3, 5, 0, symbol.LOGICAL_MATCH},
-				symbol.Token{` `, 5, 6, 0, symbol.WHITESPACE},
-				symbol.Token{`y`, 6, 7, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{` `, 7, 8, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 8, 10, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 10, 11, 0, symbol.WHITESPACE},
-				symbol.Token{`_`, 11, 12, 0, symbol.VOID},
+			Expect: []token.Token{
+				token.Token{`!`, 0, 1, 0, token.LOGICAL_NOT},
+				token.Token{`x`, 1, 2, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 2, 3, 0, token.WHITESPACE},
+				token.Token{`=>`, 3, 5, 0, token.LOGICAL_MATCH},
+				token.Token{` `, 5, 6, 0, token.WHITESPACE},
+				token.Token{`y`, 6, 7, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{` `, 7, 8, 0, token.WHITESPACE},
+				token.Token{`<-`, 8, 10, 0, token.ASSIGNMENT},
+				token.Token{` `, 10, 11, 0, token.WHITESPACE},
+				token.Token{`_`, 11, 12, 0, token.VOID},
 			},
 		},
 	}

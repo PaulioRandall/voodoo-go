@@ -5,15 +5,15 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 type strimTest struct {
 	TestLine   int
-	Input      []symbol.Token
-	ExpectToks []symbol.Token
+	Input      []token.Token
+	ExpectToks []token.Token
 }
 
 func TestStrim(t *testing.T) {
@@ -31,85 +31,85 @@ func strimTests() []strimTest {
 	return []strimTest{
 		strimTest{
 			TestLine: fault.CurrLine(),
-			Input: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
-				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Token{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
+			Input: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_IMPLICIT},
+				token.Token{` `, 1, 2, 0, token.WHITESPACE},
+				token.Token{`<-`, 2, 4, 0, token.ASSIGNMENT},
+				token.Token{` `, 4, 5, 0, token.WHITESPACE},
+				token.Token{`1`, 5, 6, 0, token.LITERAL_NUMBER},
 			},
-			ExpectToks: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
-				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{`1`, 5, 6, 0, symbol.LITERAL_NUMBER},
-			},
-		},
-		strimTest{
-			TestLine: fault.CurrLine(),
-			Input: []symbol.Token{
-				symbol.Token{`// 'There's a snake in my boot'`, 0, 31, 0, symbol.COMMENT},
-			},
-			ExpectToks: []symbol.Token{},
-		},
-		strimTest{
-			TestLine: fault.CurrLine(),
-			Input: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
-				symbol.Token{` `, 1, 2, 0, symbol.WHITESPACE},
-				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{` `, 4, 5, 0, symbol.WHITESPACE},
-				symbol.Token{`2`, 5, 6, 0, symbol.LITERAL_NUMBER},
-				symbol.Token{` `, 6, 7, 0, symbol.WHITESPACE},
-				symbol.Token{`// 'There's a snake in my boot'`, 7, 38, 0, symbol.COMMENT},
-			},
-			ExpectToks: []symbol.Token{
-				symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_IMPLICIT},
-				symbol.Token{`<-`, 2, 4, 0, symbol.ASSIGNMENT},
-				symbol.Token{`2`, 5, 6, 0, symbol.LITERAL_NUMBER},
+			ExpectToks: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_IMPLICIT},
+				token.Token{`<-`, 2, 4, 0, token.ASSIGNMENT},
+				token.Token{`1`, 5, 6, 0, token.LITERAL_NUMBER},
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
-			Input: []symbol.Token{
-				symbol.Token{`"Howdy partner"`, 5, 20, 0, symbol.LITERAL_STRING},
+			Input: []token.Token{
+				token.Token{`// 'There's a snake in my boot'`, 0, 31, 0, token.COMMENT},
 			},
-			ExpectToks: []symbol.Token{
-				symbol.Token{`Howdy partner`, 5, 20, 0, symbol.LITERAL_STRING},
+			ExpectToks: []token.Token{},
+		},
+		strimTest{
+			TestLine: fault.CurrLine(),
+			Input: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_IMPLICIT},
+				token.Token{` `, 1, 2, 0, token.WHITESPACE},
+				token.Token{`<-`, 2, 4, 0, token.ASSIGNMENT},
+				token.Token{` `, 4, 5, 0, token.WHITESPACE},
+				token.Token{`2`, 5, 6, 0, token.LITERAL_NUMBER},
+				token.Token{` `, 6, 7, 0, token.WHITESPACE},
+				token.Token{`// 'There's a snake in my boot'`, 7, 38, 0, token.COMMENT},
+			},
+			ExpectToks: []token.Token{
+				token.Token{`x`, 0, 1, 0, token.IDENTIFIER_IMPLICIT},
+				token.Token{`<-`, 2, 4, 0, token.ASSIGNMENT},
+				token.Token{`2`, 5, 6, 0, token.LITERAL_NUMBER},
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
-			Input: []symbol.Token{
-				symbol.Token{`123_456`, 0, 7, 0, symbol.LITERAL_NUMBER},
+			Input: []token.Token{
+				token.Token{`"Howdy partner"`, 5, 20, 0, token.LITERAL_STRING},
 			},
-			ExpectToks: []symbol.Token{
-				symbol.Token{`123456`, 0, 7, 0, symbol.LITERAL_NUMBER},
-			},
-		},
-		strimTest{
-			TestLine: fault.CurrLine(),
-			Input: []symbol.Token{
-				symbol.Token{`1__2__3__.__4__5__6__`, 0, 21, 0, symbol.LITERAL_NUMBER},
-			},
-			ExpectToks: []symbol.Token{
-				symbol.Token{`123.456`, 0, 21, 0, symbol.LITERAL_NUMBER},
+			ExpectToks: []token.Token{
+				token.Token{`Howdy partner`, 5, 20, 0, token.LITERAL_STRING},
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
-			Input: []symbol.Token{
-				symbol.Token{`func`, 0, 6, 0, symbol.KEYWORD_FUNC},
-				symbol.Token{` `, 6, 7, 0, symbol.WHITESPACE},
-				symbol.Token{`END`, 7, 10, 0, symbol.KEYWORD_END},
-				symbol.Token{` `, 10, 11, 0, symbol.WHITESPACE},
-				symbol.Token{`@PrInTlN`, 11, 19, 0, symbol.SOURCERY},
-				symbol.Token{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
+			Input: []token.Token{
+				token.Token{`123_456`, 0, 7, 0, token.LITERAL_NUMBER},
 			},
-			ExpectToks: []symbol.Token{
-				symbol.Token{`func`, 0, 6, 0, symbol.KEYWORD_FUNC},
-				symbol.Token{`end`, 7, 10, 0, symbol.KEYWORD_END},
-				symbol.Token{`@println`, 11, 19, 0, symbol.SOURCERY},
-				symbol.Token{`語`, 19, 20, 0, symbol.IDENTIFIER_IMPLICIT},
+			ExpectToks: []token.Token{
+				token.Token{`123456`, 0, 7, 0, token.LITERAL_NUMBER},
+			},
+		},
+		strimTest{
+			TestLine: fault.CurrLine(),
+			Input: []token.Token{
+				token.Token{`1__2__3__.__4__5__6__`, 0, 21, 0, token.LITERAL_NUMBER},
+			},
+			ExpectToks: []token.Token{
+				token.Token{`123.456`, 0, 21, 0, token.LITERAL_NUMBER},
+			},
+		},
+		strimTest{
+			TestLine: fault.CurrLine(),
+			Input: []token.Token{
+				token.Token{`func`, 0, 6, 0, token.KEYWORD_FUNC},
+				token.Token{` `, 6, 7, 0, token.WHITESPACE},
+				token.Token{`END`, 7, 10, 0, token.KEYWORD_END},
+				token.Token{` `, 10, 11, 0, token.WHITESPACE},
+				token.Token{`@PrInTlN`, 11, 19, 0, token.SOURCERY},
+				token.Token{`語`, 19, 20, 0, token.IDENTIFIER_IMPLICIT},
+			},
+			ExpectToks: []token.Token{
+				token.Token{`func`, 0, 6, 0, token.KEYWORD_FUNC},
+				token.Token{`end`, 7, 10, 0, token.KEYWORD_END},
+				token.Token{`@println`, 11, 19, 0, token.SOURCERY},
+				token.Token{`語`, 19, 20, 0, token.IDENTIFIER_IMPLICIT},
 			},
 		},
 	}

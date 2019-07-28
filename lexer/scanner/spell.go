@@ -3,12 +3,12 @@ package scanner
 import (
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/runer"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // scanSpell scans symbols that start with a the '@' rune
 // returning a spell identifier. Spells are inbuilt functions.
-func scanSpell(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
+func scanSpell(itr *runer.RuneItr) (tk *token.Token, err fault.Fault) {
 
 	if !itr.IsRelLetter(1) {
 		m := "Expected first rune after `@` to be a letter"
@@ -20,11 +20,11 @@ func scanSpell(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
 	h := string(itr.NextRune())
 	t := scanWordStr(itr)
 
-	tk = &symbol.Token{
+	tk = &token.Token{
 		Val:   h + t,
 		Start: start,
 		End:   itr.Index(),
-		Type:  symbol.SOURCERY,
+		Type:  token.SOURCERY,
 	}
 
 	return

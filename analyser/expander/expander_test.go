@@ -3,105 +3,105 @@ package expander
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func dummyTok(s string, t symbol.SymbolType) symbol.Token {
-	return symbol.Token{
+func dummyTok(s string, t token.TokenType) token.Token {
+	return token.Token{
 		Val:  s,
 		Type: t,
 	}
 }
 
 func TestIndexOf(t *testing.T) {
-	in := []symbol.Token{
-		dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in := []token.Token{
+		dummyTok(`a`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 
-	assert.Equal(t, 0, indexOf(in, 0, symbol.IDENTIFIER_EXPLICIT))
-	assert.Equal(t, 1, indexOf(in, 0, symbol.PAREN_CURVY_OPEN))
-	assert.Equal(t, 2, indexOf(in, 1, symbol.IDENTIFIER_EXPLICIT))
-	assert.Equal(t, -1, indexOf(in, 2, symbol.PAREN_CURVY_OPEN))
+	assert.Equal(t, 0, indexOf(in, 0, token.IDENTIFIER_EXPLICIT))
+	assert.Equal(t, 1, indexOf(in, 0, token.PAREN_CURVY_OPEN))
+	assert.Equal(t, 2, indexOf(in, 1, token.IDENTIFIER_EXPLICIT))
+	assert.Equal(t, -1, indexOf(in, 2, token.PAREN_CURVY_OPEN))
 }
 
 func TestRIndexOf(t *testing.T) {
-	in := []symbol.Token{
-		dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in := []token.Token{
+		dummyTok(`a`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 	last := len(in) - 1
 
-	assert.Equal(t, 2, rIndexOf(in, last, symbol.IDENTIFIER_EXPLICIT))
-	assert.Equal(t, 1, rIndexOf(in, last, symbol.PAREN_CURVY_OPEN))
-	assert.Equal(t, 2, rIndexOf(in, 2, symbol.IDENTIFIER_EXPLICIT))
-	assert.Equal(t, 0, rIndexOf(in, 1, symbol.IDENTIFIER_EXPLICIT))
-	assert.Equal(t, -1, rIndexOf(in, last, symbol.LITERAL_STRING))
+	assert.Equal(t, 2, rIndexOf(in, last, token.IDENTIFIER_EXPLICIT))
+	assert.Equal(t, 1, rIndexOf(in, last, token.PAREN_CURVY_OPEN))
+	assert.Equal(t, 2, rIndexOf(in, 2, token.IDENTIFIER_EXPLICIT))
+	assert.Equal(t, 0, rIndexOf(in, 1, token.IDENTIFIER_EXPLICIT))
+	assert.Equal(t, -1, rIndexOf(in, last, token.LITERAL_STRING))
 }
 
 func TestContainsType(t *testing.T) {
-	in := []symbol.Token{}
-	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
-	in = append(in, dummyTok(`(`, symbol.IDENTIFIER_EXPLICIT))
-	assert.True(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
+	in := []token.Token{}
+	assert.False(t, containsType(in, token.IDENTIFIER_EXPLICIT))
+	in = append(in, dummyTok(`(`, token.IDENTIFIER_EXPLICIT))
+	assert.True(t, containsType(in, token.IDENTIFIER_EXPLICIT))
 
-	in = []symbol.Token{}
-	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_FUNC))
-	in = append(in, dummyTok(`)`, symbol.PAREN_CURVY_CLOSE))
-	in = append(in, dummyTok(`func`, symbol.KEYWORD_FUNC))
-	assert.False(t, containsType(in, symbol.IDENTIFIER_EXPLICIT))
-	assert.True(t, containsType(in, symbol.KEYWORD_FUNC))
-	in = append(in, dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT))
-	assert.True(t, containsType(in, symbol.IDENTIFIER_EXPLICIT, symbol.KEYWORD_FUNC))
-	assert.False(t, containsType(in, symbol.PAREN_CURVY_OPEN))
+	in = []token.Token{}
+	assert.False(t, containsType(in, token.IDENTIFIER_EXPLICIT, token.KEYWORD_FUNC))
+	in = append(in, dummyTok(`)`, token.PAREN_CURVY_CLOSE))
+	in = append(in, dummyTok(`func`, token.KEYWORD_FUNC))
+	assert.False(t, containsType(in, token.IDENTIFIER_EXPLICIT))
+	assert.True(t, containsType(in, token.KEYWORD_FUNC))
+	in = append(in, dummyTok(`語`, token.IDENTIFIER_EXPLICIT))
+	assert.True(t, containsType(in, token.IDENTIFIER_EXPLICIT, token.KEYWORD_FUNC))
+	assert.False(t, containsType(in, token.PAREN_CURVY_OPEN))
 }
 
 func TestFindParen_1(t *testing.T) {
-	in := []symbol.Token{
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in := []token.Token{
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 	a, z := findParen(in)
 	assert.Equal(t, 0, a)
 	assert.Equal(t, 2, z)
 
-	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in = []token.Token{
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 	a, z = findParen(in)
 	assert.Equal(t, 1, a)
 	assert.Equal(t, 2, z)
 
-	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in = []token.Token{
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 	a, z = findParen(in)
 	assert.Equal(t, 3, a)
 	assert.Equal(t, 4, z)
 
-	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
+	in = []token.Token{
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
 	}
 	a, z = findParen(in)
 	assert.Equal(t, 3, a)
@@ -109,27 +109,27 @@ func TestFindParen_1(t *testing.T) {
 }
 
 func TestFindParen_2(t *testing.T) {
-	in := []symbol.Token{
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
+	in := []token.Token{
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
 	}
 	a, z := findParen(in)
 	assert.Equal(t, 0, a)
 	assert.Equal(t, -1, z)
 
-	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in = []token.Token{
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 	a, z = findParen(in)
 	assert.Equal(t, -1, a)
 	assert.Equal(t, 1, z)
 
-	in = []symbol.Token{
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in = []token.Token{
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 	a, z = findParen(in)
 	assert.Equal(t, 2, a)
@@ -137,24 +137,24 @@ func TestFindParen_2(t *testing.T) {
 }
 
 func TestExpandParen_1(t *testing.T) {
-	in := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`<-`, symbol.ASSIGNMENT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in := []token.Token{
+		dummyTok(`x`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`<-`, token.ASSIGNMENT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 
-	exp_outer := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`<-`, symbol.ASSIGNMENT),
-		dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
+	exp_outer := []token.Token{
+		dummyTok(`x`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`<-`, token.ASSIGNMENT),
+		dummyTok(`#1`, token.IDENTIFIER_IMPLICIT),
 	}
 
-	exp_inner := []symbol.Token{
-		dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
-		dummyTok(`<-`, symbol.ASSIGNMENT),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
+	exp_inner := []token.Token{
+		dummyTok(`#1`, token.IDENTIFIER_IMPLICIT),
+		dummyTok(`<-`, token.ASSIGNMENT),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
 	}
 
 	outer, inner, err := expandParen(in, 1)
@@ -164,11 +164,11 @@ func TestExpandParen_1(t *testing.T) {
 }
 
 func TestExpandParen_2(t *testing.T) {
-	in := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`<-`, symbol.ASSIGNMENT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`語`, symbol.IDENTIFIER_EXPLICIT),
+	in := []token.Token{
+		dummyTok(`x`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`<-`, token.ASSIGNMENT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`語`, token.IDENTIFIER_EXPLICIT),
 	}
 
 	outer, inner, err := expandParen(in, 1)
@@ -178,39 +178,39 @@ func TestExpandParen_2(t *testing.T) {
 }
 
 func TestExpandParens(t *testing.T) {
-	in := []symbol.Token{
-		dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`<-`, symbol.ASSIGNMENT),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`*`, symbol.CALC_MULTIPLY),
-		dummyTok(`(`, symbol.PAREN_CURVY_OPEN),
-		dummyTok(`b`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`+`, symbol.CALC_ADD),
-		dummyTok(`c`, symbol.IDENTIFIER_EXPLICIT),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
-		dummyTok(`)`, symbol.PAREN_CURVY_CLOSE),
+	in := []token.Token{
+		dummyTok(`x`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`<-`, token.ASSIGNMENT),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`a`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`*`, token.CALC_MULTIPLY),
+		dummyTok(`(`, token.PAREN_CURVY_OPEN),
+		dummyTok(`b`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`+`, token.CALC_ADD),
+		dummyTok(`c`, token.IDENTIFIER_EXPLICIT),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
+		dummyTok(`)`, token.PAREN_CURVY_CLOSE),
 	}
 
-	exp := [][]symbol.Token{
-		[]symbol.Token{
-			dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
-			dummyTok(`<-`, symbol.ASSIGNMENT),
-			dummyTok(`b`, symbol.IDENTIFIER_EXPLICIT),
-			dummyTok(`+`, symbol.CALC_ADD),
-			dummyTok(`c`, symbol.IDENTIFIER_EXPLICIT),
+	exp := [][]token.Token{
+		[]token.Token{
+			dummyTok(`#1`, token.IDENTIFIER_IMPLICIT),
+			dummyTok(`<-`, token.ASSIGNMENT),
+			dummyTok(`b`, token.IDENTIFIER_EXPLICIT),
+			dummyTok(`+`, token.CALC_ADD),
+			dummyTok(`c`, token.IDENTIFIER_EXPLICIT),
 		},
-		[]symbol.Token{
-			dummyTok(`#2`, symbol.IDENTIFIER_IMPLICIT),
-			dummyTok(`<-`, symbol.ASSIGNMENT),
-			dummyTok(`a`, symbol.IDENTIFIER_EXPLICIT),
-			dummyTok(`*`, symbol.CALC_MULTIPLY),
-			dummyTok(`#1`, symbol.IDENTIFIER_IMPLICIT),
+		[]token.Token{
+			dummyTok(`#2`, token.IDENTIFIER_IMPLICIT),
+			dummyTok(`<-`, token.ASSIGNMENT),
+			dummyTok(`a`, token.IDENTIFIER_EXPLICIT),
+			dummyTok(`*`, token.CALC_MULTIPLY),
+			dummyTok(`#1`, token.IDENTIFIER_IMPLICIT),
 		},
-		[]symbol.Token{
-			dummyTok(`x`, symbol.IDENTIFIER_EXPLICIT),
-			dummyTok(`<-`, symbol.ASSIGNMENT),
-			dummyTok(`#2`, symbol.IDENTIFIER_IMPLICIT),
+		[]token.Token{
+			dummyTok(`x`, token.IDENTIFIER_EXPLICIT),
+			dummyTok(`<-`, token.ASSIGNMENT),
+			dummyTok(`#2`, token.IDENTIFIER_IMPLICIT),
 		},
 	}
 
@@ -240,39 +240,39 @@ func TestExpandBrackets(t *testing.T) {
 }
 
 type expBracketsTest struct {
-	Input     []symbol.Token
-	Expect    [][]symbol.Token
+	Input     []token.Token
+	Expect    [][]token.Token
 	ExpectErr AnaError
 }
 
 func expBracketsTests() []expBracketsTest {
 	return []expBracketsTest{
 		expBracketsTest{
-			Input: []symbol.Token{
-				symbol.Token{`(`, 0, 1, 0, symbol.PAREN_CURVY_OPEN},
-				symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
-				symbol.Token{`)`, 2, 3, 0, symbol.PAREN_CURVY_CLOSE},
+			Input: []token.Token{
+				token.Token{`(`, 0, 1, 0, token.PAREN_CURVY_OPEN},
+				token.Token{`x`, 1, 2, 0, token.IDENTIFIER_EXPLICIT},
+				token.Token{`)`, 2, 3, 0, token.PAREN_CURVY_CLOSE},
 			},
-			Expect: [][]symbol.Token{
-				[]symbol.Token{
-					symbol.Token{`x`, 1, 2, 0, symbol.IDENTIFIER_EXPLICIT},
+			Expect: [][]token.Token{
+				[]token.Token{
+					token.Token{`x`, 1, 2, 0, token.IDENTIFIER_EXPLICIT},
 				},
 			},
 		},
 
 			expBracketsTest{
-				Input: []symbol.Token{
-					symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-					symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
-					symbol.Token{`(`, 3, 4, 0, symbol.PAREN_CURVY_OPEN},
-					symbol.Token{`y`, 4, 5, 0, symbol.IDENTIFIER_EXPLICIT},
-					symbol.Token{`)`, 5, 6, 0, symbol.PAREN_CURVY_CLOSE},
+				Input: []token.Token{
+					token.Token{`x`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+					token.Token{`<-`, 1, 3, 0, token.ASSIGNMENT},
+					token.Token{`(`, 3, 4, 0, token.PAREN_CURVY_OPEN},
+					token.Token{`y`, 4, 5, 0, token.IDENTIFIER_EXPLICIT},
+					token.Token{`)`, 5, 6, 0, token.PAREN_CURVY_CLOSE},
 				},
-				Expect: [][]symbol.Token{
-					[]symbol.Token{
-						symbol.Token{`x`, 0, 1, 0, symbol.IDENTIFIER_EXPLICIT},
-						symbol.Token{`<-`, 1, 3, 0, symbol.ASSIGNMENT},
-						symbol.Token{`y`, 4, 5, 0, symbol.IDENTIFIER_EXPLICIT},
+				Expect: [][]token.Token{
+					[]token.Token{
+						token.Token{`x`, 0, 1, 0, token.IDENTIFIER_EXPLICIT},
+						token.Token{`<-`, 1, 3, 0, token.ASSIGNMENT},
+						token.Token{`y`, 4, 5, 0, token.IDENTIFIER_EXPLICIT},
 					},
 				},
 			},

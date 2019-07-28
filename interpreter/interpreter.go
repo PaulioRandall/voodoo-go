@@ -6,7 +6,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/lexer/scanner"
 	"github.com/PaulioRandall/voodoo-go/lexer/strimmer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // ExitCode represents a program exit code
@@ -27,8 +27,8 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 		}
 
 		tokens := strimmer.Strim(lexemes)
-		symbol.PrintlnTokenValues(tokens)
-		symbol.PrintlnTokenTypes(tokens)
+		token.PrintlnTokenValues(tokens)
+		token.PrintlnTokenTypes(tokens)
 		fmt.Println()
 
 		// NEXT: Rename lexeme pkg to symbol

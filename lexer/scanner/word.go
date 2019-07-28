@@ -4,40 +4,40 @@ import (
 	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/runer"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // scanWord scans symbols that start with a unicode category L
 // rune returning a keyword or identifier. Note that anything
 // not a literal within voodoo is NOT case sensitive.
-func scanWord(itr *runer.RuneItr) *symbol.Token {
+func scanWord(itr *runer.RuneItr) *token.Token {
 
 	start := itr.Index()
 	s := scanWordStr(itr)
-	t := symbol.UNDEFINED
+	t := token.UNDEFINED
 
 	switch strings.ToLower(s) {
 	case `func`:
-		t = symbol.KEYWORD_FUNC
+		t = token.KEYWORD_FUNC
 	case `loop`:
-		t = symbol.KEYWORD_LOOP
+		t = token.KEYWORD_LOOP
 	case `when`:
-		t = symbol.KEYWORD_WHEN
+		t = token.KEYWORD_WHEN
 	case `end`:
-		t = symbol.KEYWORD_END
+		t = token.KEYWORD_END
 	case `key`:
-		t = symbol.KEYWORD_KEY
+		t = token.KEYWORD_KEY
 	case `val`:
-		t = symbol.KEYWORD_VALUE
+		t = token.KEYWORD_VALUE
 	case `true`:
-		t = symbol.BOOLEAN_TRUE
+		t = token.BOOLEAN_TRUE
 	case `false`:
-		t = symbol.BOOLEAN_FALSE
+		t = token.BOOLEAN_FALSE
 	default:
-		t = symbol.IDENTIFIER_EXPLICIT
+		t = token.IDENTIFIER_EXPLICIT
 	}
 
-	return &symbol.Token{
+	return &token.Token{
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),

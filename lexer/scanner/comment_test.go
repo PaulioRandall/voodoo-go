@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 func TestScanComment(t *testing.T) {
@@ -16,17 +16,17 @@ func scanCommentTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `//`,
-			Expect:   symbol.Token{`//`, 0, 2, 0, symbol.COMMENT},
+			Expect:   token.Token{`//`, 0, 2, 0, token.COMMENT},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `// A comment`,
-			Expect:   symbol.Token{`// A comment`, 0, 12, 0, symbol.COMMENT},
+			Expect:   token.Token{`// A comment`, 0, 12, 0, token.COMMENT},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `// Abc // 123 // xyz`,
-			Expect:   symbol.Token{`// Abc // 123 // xyz`, 0, 20, 0, symbol.COMMENT},
+			Expect:   token.Token{`// Abc // 123 // xyz`, 0, 20, 0, token.COMMENT},
 		},
 	}
 }

@@ -5,12 +5,12 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/runer"
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // scanNumber scans symbols that start with a unicode category Nd
 // rune returning a literal number; all numbers are floats.
-func scanNumber(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
+func scanNumber(itr *runer.RuneItr) (tk *token.Token, err fault.Fault) {
 
 	start := itr.Index()
 	s, err := extractNum(itr)
@@ -18,11 +18,11 @@ func scanNumber(itr *runer.RuneItr) (tk *symbol.Token, err fault.Fault) {
 		return
 	}
 
-	tk = &symbol.Token{
+	tk = &token.Token{
 		Val:   s,
 		Start: start,
 		End:   itr.Index(),
-		Type:  symbol.LITERAL_NUMBER,
+		Type:  token.LITERAL_NUMBER,
 	}
 
 	return

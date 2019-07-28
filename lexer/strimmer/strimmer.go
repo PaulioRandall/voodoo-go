@@ -3,7 +3,7 @@ package strimmer
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/symbol"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // Strim normalises an array of tokens ready for the
@@ -14,22 +14,22 @@ import (
 // -> Removing underscores from numbers
 // -> Removing now redundant punctuation
 // -> Converting all letters to lowercase (Except string literals)
-func Strim(in []symbol.Token) []symbol.Token {
+func Strim(in []token.Token) []token.Token {
 
-	out := []symbol.Token{}
+	out := []token.Token{}
 
 	for _, tk := range in {
 		switch {
-		case tk.Type == symbol.WHITESPACE:
+		case tk.Type == token.WHITESPACE:
 			continue
-		case tk.Type == symbol.COMMENT:
+		case tk.Type == token.COMMENT:
 			continue
-		case tk.Type == symbol.LITERAL_STRING:
+		case tk.Type == token.LITERAL_STRING:
 			penultimate := len(tk.Val) - 1
 			tk.Val = tk.Val[1:penultimate]
-		case tk.Type == symbol.LITERAL_NUMBER:
+		case tk.Type == token.LITERAL_NUMBER:
 			tk.Val = strings.ReplaceAll(tk.Val, `_`, ``)
-		case tk.Type > symbol.ALPHABETIC_START && tk.Type < symbol.ALPHABETIC_END:
+		case tk.Type > token.ALPHABETIC_START && tk.Type < token.ALPHABETIC_END:
 			tk.Val = strings.ToLower(tk.Val)
 		}
 
