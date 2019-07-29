@@ -26,7 +26,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 			return 1, err
 		}
 
-		tks = strimmer.Strim(tks)
+		tks = strimmer.Strim(tks)    
 		token.PrintlnTokenValues(tks)
 		token.PrintlnTokenTypes(tks)
 		fmt.Println()

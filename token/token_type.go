@@ -47,6 +47,7 @@ const (
 	// Punctuation
 	ASSIGNMENT      // <-
 	SEPARATOR_VALUE // ,
+	SEPARATOR_LINE  // \n
 	// Whitespace
 	WHITESPACE
 	// Ignoramuses
@@ -122,6 +123,8 @@ func TokenName(t TokenType) string {
 		return `ASSIGNMENT`
 	case SEPARATOR_VALUE:
 		return `SEPARATOR_VALUE`
+	case SEPARATOR_LINE:
+		return `SEPARATOR_LINE`
 	case WHITESPACE:
 		return `WHITESPACE`
 	case VOID:
