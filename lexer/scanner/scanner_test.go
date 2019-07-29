@@ -91,7 +91,7 @@ func scanTests() []scanTest {
 			TestLine: fault.CurrLine(),
 			Input:    `@Println["Whelp"]`,
 			Expect: []token.Token{
-				token.Token{`@Println`, 0, 8, 0, token.SOURCERY},
+				token.Token{`@Println`, 0, 8, 0, token.SPELL},
 				token.Token{`[`, 8, 9, 0, token.PAREN_SQUARE_OPEN},
 				token.Token{`"Whelp"`, 9, 16, 0, token.LITERAL_STRING},
 				token.Token{`]`, 16, 17, 0, token.PAREN_SQUARE_CLOSE},

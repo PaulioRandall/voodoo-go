@@ -23,7 +23,7 @@ func scanSpell(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 
 	tk = &token.Token{
 		Val:  at + s,
-		Type: token.SOURCERY,
+		Type: token.SPELL,
 	}
 
 	return

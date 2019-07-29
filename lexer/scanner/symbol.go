@@ -68,8 +68,6 @@ func scanSymbol(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 		set(token.PAREN_SQUARE_CLOSE, 1)
 	case startsWith(in, `,`):
 		set(token.SEPARATOR_VALUE, 1)
-	case startsWith(in, `:`):
-		set(token.SEPARATOR_KEY_VALUE, 1)
 	case startsWith(in, `_`):
 		set(token.VOID, 1)
 	default:

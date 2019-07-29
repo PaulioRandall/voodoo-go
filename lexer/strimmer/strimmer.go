@@ -49,7 +49,7 @@ func isAlphabeticType(t token.TokenType) bool {
 	case token.KEYWORD_END:
 	case token.BOOLEAN_TRUE:
 	case token.BOOLEAN_FALSE:
-	case token.SOURCERY:
+	case token.SPELL:
 	default:
 		return false
 	}

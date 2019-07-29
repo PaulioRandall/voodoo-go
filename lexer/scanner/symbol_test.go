@@ -154,12 +154,6 @@ func scanSymbolTests() []scanFuncTest {
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    []rune(`:`),
-			Output:   []rune{},
-			Expect:   newToken(`:`, token.SEPARATOR_KEY_VALUE),
-		},
-		scanFuncTest{
-			TestLine: fault.CurrLine(),
 			Input:    []rune(`+ 69`),
 			Output:   []rune(` 69`),
 			Expect:   newToken(`+`, token.CALC_ADD),

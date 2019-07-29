@@ -19,7 +19,7 @@ func scanSpellTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `@P`,
-				Type: token.SOURCERY,
+				Type: token.SPELL,
 			},
 		},
 		scanFuncTest{
@@ -28,7 +28,7 @@ func scanSpellTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `@Println`,
-				Type: token.SOURCERY,
+				Type: token.SPELL,
 			},
 		},
 		scanFuncTest{
@@ -37,7 +37,7 @@ func scanSpellTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `@a__12__xy__`,
-				Type: token.SOURCERY,
+				Type: token.SPELL,
 			},
 		},
 		scanFuncTest{
@@ -46,7 +46,7 @@ func scanSpellTests() []scanFuncTest {
 			Output:   []rune(`(msg)`),
 			Expect: token.Token{
 				Val:  `@Println`,
-				Type: token.SOURCERY,
+				Type: token.SPELL,
 			},
 		},
 		scanFuncTest{

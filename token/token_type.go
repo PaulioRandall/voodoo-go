@@ -16,7 +16,7 @@ const (
 	// Booleans
 	BOOLEAN_TRUE  // true
 	BOOLEAN_FALSE // false
-	SOURCERY      // @Blahblah
+	SPELL         // @Blahblah
 	// Literals
 	LITERAL_NUMBER // ##.###
 	LITERAL_STRING // "blahblah"
@@ -45,10 +45,8 @@ const (
 	PAREN_SQUARE_OPEN  // [
 	PAREN_SQUARE_CLOSE // ]
 	// Punctuation
-	ASSIGNMENT          // <-
-	SEPARATOR_VALUE     // ,
-	SEPARATOR_KEY_VALUE // :
-	RANGE               // ..
+	ASSIGNMENT      // <-
+	SEPARATOR_VALUE // ,
 	// Whitespace
 	WHITESPACE
 	// Ignoramuses
@@ -74,8 +72,8 @@ func TokenName(t TokenType) string {
 		return `BOOLEAN_TRUE`
 	case BOOLEAN_FALSE:
 		return `BOOLEAN_FALSE`
-	case SOURCERY:
-		return `SOURCERY`
+	case SPELL:
+		return `SPELL`
 	case LITERAL_NUMBER:
 		return `LITERAL_NUMBER`
 	case LITERAL_STRING:
@@ -124,10 +122,6 @@ func TokenName(t TokenType) string {
 		return `ASSIGNMENT`
 	case SEPARATOR_VALUE:
 		return `SEPARATOR_VALUE`
-	case SEPARATOR_KEY_VALUE:
-		return `SEPARATOR_KEY_VALUE`
-	case RANGE:
-		return `RANGE`
 	case WHITESPACE:
 		return `WHITESPACE`
 	case VOID:
