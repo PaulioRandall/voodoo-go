@@ -60,10 +60,10 @@ func scanWordTests() []scanFuncTest {
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    []rune(`DO`),
+			Input:    []rune(`func`),
 			Output:   []rune{},
 			Expect: token.Token{
-				Val:  `DO`,
+				Val:  `func`,
 				Type: token.KEYWORD_FUNC,
 			},
 		},

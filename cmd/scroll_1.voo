@@ -5,25 +5,25 @@
 //   r <- a + b * c
 // done
 
-calc <- do(a, b, c) r
+calc <- func(a, b, c) r
   r <- a + b * c
 done
 
-safeDivide <- do(a, b) c, err
+safeDivide <- func(a, b) c, err
   when
     b == 0 => err <- "Can't divide by zero"
     _      => c <- a / b
   done
 done
 
-onErr <- do(err)
+onErr <- func(err)
   when
     err != _ => @Println(err)
                 @Exit(1)
   done
 done
 
-sumSeries <- do(n) sum
+sumSeries <- func(n) sum
   loop _, v, _ <- @Range(1, n)
     // I wonder if there's a more efficient way to do this... ^^
     sum == _ => sum <- 0
@@ -31,7 +31,7 @@ sumSeries <- do(n) sum
   done
 done
 
-printList <- do(list,delim)
+printList <- func(list,delim)
   loop _, v, more <- list
     @Print("[")
     when
@@ -42,27 +42,25 @@ printList <- do(list,delim)
   done
 done
 
-do
-  x, y, z <- 9, 3, 0
+x, y, z <- 9, 3, 0
   
-  r <- calc(x,y,z)
-  when
-    r == 2 => @Println(":(")
-    r == 9 => @Println(":)")
-    _ => @Break(do)
-  done
-  
-  _, err <- safeDivide(2, 0)
-  onErr(err)
-  
-  str <- "abc123"
-  list <- []
-  loop
-    i == _ => i <- 0
-    r <- str[i]
-    @Append(list, r)
-    @Break(loop)
-  done
-    
-  printList(list, ",")
+r <- calc(x,y,z)
+when
+  r == 2 => @Println(":(")
+  r == 9 => @Println(":)")
+  _ => @Break(func)
 done
+  
+_, err <- safeDivide(2, 0)
+onErr(err)
+  
+str <- "abc123"
+list <- []
+loop
+  i == _ => i <- 0
+  r <- str[i]
+  @Append(list, r)
+  @Break(loop)
+done
+  
+printList(list, ",")

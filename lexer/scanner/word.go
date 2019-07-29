@@ -14,7 +14,7 @@ func scanWord(in []rune) (*token.Token, []rune) {
 	t := token.IDENTIFIER_EXPLICIT
 
 	switch strings.ToLower(s) {
-	case `do`:
+	case `func`:
 		t = token.KEYWORD_FUNC
 	case `loop`:
 		t = token.KEYWORD_LOOP
