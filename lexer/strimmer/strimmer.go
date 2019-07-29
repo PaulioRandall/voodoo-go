@@ -46,7 +46,7 @@ func isAlphabeticType(t token.TokenType) bool {
 	case token.KEYWORD_FUNC:
 	case token.KEYWORD_LOOP:
 	case token.KEYWORD_WHEN:
-	case token.KEYWORD_END:
+	case token.KEYWORD_DONE:
 	case token.BOOLEAN_TRUE:
 	case token.BOOLEAN_FALSE:
 	case token.SPELL:

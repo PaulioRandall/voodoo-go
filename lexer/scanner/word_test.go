@@ -91,7 +91,7 @@ func scanWordTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `done`,
-				Type: token.KEYWORD_END,
+				Type: token.KEYWORD_DONE,
 			},
 		},
 		scanFuncTest{

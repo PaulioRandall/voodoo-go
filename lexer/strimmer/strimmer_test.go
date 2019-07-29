@@ -100,14 +100,14 @@ func strimTests() []strimTest {
 			Input: []token.Token{
 				token.Token{`func`, 0, 6, 0, token.KEYWORD_FUNC},
 				token.Token{` `, 6, 7, 0, token.WHITESPACE},
-				token.Token{`END`, 7, 10, 0, token.KEYWORD_END},
+				token.Token{`END`, 7, 10, 0, token.KEYWORD_DONE},
 				token.Token{` `, 10, 11, 0, token.WHITESPACE},
 				token.Token{`@PrInTlN`, 11, 19, 0, token.SPELL},
 				token.Token{`語`, 19, 20, 0, token.IDENTIFIER_IMPLICIT},
 			},
 			ExpectToks: []token.Token{
 				token.Token{`func`, 0, 6, 0, token.KEYWORD_FUNC},
-				token.Token{`end`, 7, 10, 0, token.KEYWORD_END},
+				token.Token{`end`, 7, 10, 0, token.KEYWORD_DONE},
 				token.Token{`@println`, 11, 19, 0, token.SPELL},
 				token.Token{`語`, 19, 20, 0, token.IDENTIFIER_IMPLICIT},
 			},

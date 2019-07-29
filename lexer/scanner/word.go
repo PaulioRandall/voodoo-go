@@ -21,7 +21,7 @@ func scanWord(in []rune) (*token.Token, []rune) {
 	case `when`:
 		t = token.KEYWORD_WHEN
 	case `done`:
-		t = token.KEYWORD_END
+		t = token.KEYWORD_DONE
 	case `true`:
 		t = token.BOOLEAN_TRUE
 	case `false`:

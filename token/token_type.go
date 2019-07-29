@@ -9,7 +9,7 @@ const (
 	KEYWORD_FUNC // func
 	KEYWORD_LOOP // loop
 	KEYWORD_WHEN // when
-	KEYWORD_END  // end
+	KEYWORD_DONE // done
 	// Identifiers
 	IDENTIFIER_EXPLICIT // Declared by the coder
 	IDENTIFIER_IMPLICIT // Inserted during syntax analysis
@@ -62,8 +62,8 @@ func TokenName(t TokenType) string {
 		return `KEYWORD_LOOP`
 	case KEYWORD_WHEN:
 		return `KEYWORD_WHEN`
-	case KEYWORD_END:
-		return `KEYWORD_END`
+	case KEYWORD_DONE:
+		return `KEYWORD_DONE`
 	case IDENTIFIER_EXPLICIT:
 		return `IDENTIFIER_EXPLICIT`
 	case IDENTIFIER_IMPLICIT:
