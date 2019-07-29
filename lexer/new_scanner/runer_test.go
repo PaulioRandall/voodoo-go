@@ -6,6 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestStartWith(t *testing.T) {
+	assert.True(t, startsWith([]rune(`abc`), `abc`))
+	assert.True(t, startsWith([]rune(`abc123`), `abc`))
+	assert.False(t, startsWith([]rune(`abc`), `abc123`))
+	assert.False(t, startsWith([]rune(`abcd`), `abyz`))
+}
+
 func TestScanFrac_1(t *testing.T) {
 	in := []rune(`._1_2_3_`)
 	act, out := scanFrac(in)

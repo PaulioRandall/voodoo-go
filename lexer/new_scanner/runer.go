@@ -5,6 +5,22 @@ import (
 	"unicode"
 )
 
+// startsWith returns true if the input array starts with
+// the runes represented by the string.
+func startsWith(in []rune, s string) bool {
+	if len(in) < len(s) {
+		return false
+	}
+
+	for i, r := range s {
+		if in[i] != r {
+			return false
+		}
+	}
+
+	return true
+}
+
 // scanFrac iterates a rune array until a single fractional
 // has been extracted returning the fractional slice followed
 // by a slice of the remaining input.
