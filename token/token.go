@@ -12,7 +12,6 @@ type Token struct {
 	Val   string    // Token value
 	Start int       // Index of first rune
 	End   int       // Index after last rune
-	Line  int       // Line number from scroll // DEPRECATED
 	Type  TokenType // Type of token
 }
 
@@ -20,7 +19,7 @@ type Token struct {
 func (tk Token) String() string {
 	start := strconv.Itoa(tk.Start)
 	start = strings.Repeat(` `, 3-len(start)) + start
-	return fmt.Sprintf("Line %-3d [%s->%-3d] `%s`", tk.Line, start, tk.End, tk.Val)
+	return fmt.Sprintf("[%s->%-3d] `%s`", start, tk.End, tk.Val)
 }
 
 // PrintlnTokenValues prints the value of an array of tokens.
