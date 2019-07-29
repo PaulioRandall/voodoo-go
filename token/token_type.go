@@ -6,12 +6,10 @@ type TokenType int
 const (
 	UNDEFINED TokenType = iota
 	// Fully or partly alphabetic
-	KEYWORD_FUNC  // func
-	KEYWORD_LOOP  // loop
-	KEYWORD_WHEN  // when
-	KEYWORD_END   // end
-	KEYWORD_KEY   // key
-	KEYWORD_VALUE // value
+	KEYWORD_FUNC // func
+	KEYWORD_LOOP // loop
+	KEYWORD_WHEN // when
+	KEYWORD_END  // end
 	// Identifiers
 	IDENTIFIER_EXPLICIT // Declared by the coder
 	IDENTIFIER_IMPLICIT // Inserted during syntax analysis
@@ -68,10 +66,6 @@ func TokenName(t TokenType) string {
 		return `KEYWORD_WHEN`
 	case KEYWORD_END:
 		return `KEYWORD_END`
-	case KEYWORD_KEY:
-		return `KEYWORD_KEY`
-	case KEYWORD_VALUE:
-		return `KEYWORD_VALUE`
 	case IDENTIFIER_EXPLICIT:
 		return `IDENTIFIER_EXPLICIT`
 	case IDENTIFIER_IMPLICIT:
