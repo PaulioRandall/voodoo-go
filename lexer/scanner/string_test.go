@@ -36,7 +36,7 @@ func scanStringTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `"`,
-			ExpectErr: fault.Dummy(fault.String).Line(0).From(0).To(1),
+			ExpectErr: fault.Dummy(fault.String).SetLine(0).SetFrom(0).SetTo(1),
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
@@ -46,7 +46,7 @@ func scanStringTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `"escaped \"`,
-			ExpectErr: fault.Dummy(fault.String).Line(0).From(0).To(11),
+			ExpectErr: fault.Dummy(fault.String).SetLine(0).SetFrom(0).SetTo(11),
 		},
 	}
 }

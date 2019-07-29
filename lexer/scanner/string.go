@@ -17,7 +17,7 @@ func scanString(itr *runer.RuneItr) (tk *token.Token, err fault.Fault) {
 
 	if !closed {
 		m := "Did someone forget to close a string literal?!"
-		err = fault.Str(m).From(start).To(itr.Index())
+		err = fault.Str(m).SetFrom(start).SetTo(itr.Index())
 		return
 	}
 

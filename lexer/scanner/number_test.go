@@ -51,7 +51,7 @@ func scanNumberTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `1_._2_._3`,
-			ExpectErr: fault.Dummy(fault.Number).Line(0).From(6),
+			ExpectErr: fault.Dummy(fault.Number).SetLine(0).SetFrom(6),
 		},
 	}
 }

@@ -22,7 +22,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 		lexemes, err := scanner.Scan(line.Val)
 		if err != nil {
-			err = err.Line(line.Num)
+			err = err.SetLine(line.Num)
 			return 1, err
 		}
 

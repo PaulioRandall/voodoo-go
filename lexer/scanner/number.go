@@ -65,7 +65,7 @@ func extractFrac(itr *runer.RuneItr) (string, fault.Fault) {
 	for itr.HasNext() {
 		if itr.IsNext('.') {
 			m := "Numbers can't have two fractional parts"
-			return "", fault.Num(m).From(itr.Index())
+			return "", fault.Num(m).SetFrom(itr.Index())
 		}
 
 		if !itr.IsNextDigit() && !itr.IsNext('_') {

@@ -136,7 +136,7 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `=`,
-			ExpectErr: fault.Dummy(fault.Symbol).Line(0).From(0).To(1),
+			ExpectErr: fault.Dummy(fault.Symbol).SetLine(0).SetFrom(0).SetTo(1),
 		},
 	}
 }

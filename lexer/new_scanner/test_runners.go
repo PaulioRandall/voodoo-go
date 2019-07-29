@@ -37,9 +37,9 @@ func runScanTest(
 
 		tk, out := f(tc.Input)
 
-		require.NotNil(t, tk)
-		assert.Equal(t, tc.Output, out)
-		assert.Equal(t, tc.Expect, *tk)
+		require.NotNil(t, tk, "Did not expect token to be nil")
+		assert.Equal(t, tc.Output, out, "Expected a different array of leftover runes")
+		assert.Equal(t, tc.Expect, *tk, "Expected a different token")
 	}
 }
 
@@ -59,16 +59,16 @@ func runFailableScanTest(
 		tk, out, err := f(tc.Input)
 
 		if tc.ExpectErr != nil {
-			assert.Nil(t, tk)
-			require.NotNil(t, err)
-			assert.NotEmpty(t, err.Error())
+			assert.Nil(t, tk, "Expected token to be nil")
+			require.NotNil(t, err, "Did NOT expect error to be nil")
+			assert.NotEmpty(t, err.Error(), "Did NOT expect error message to be empty")
 			fault.Assert(t, tc.ExpectErr, err)
 
 		} else {
-			assert.Nil(t, err)
-			require.NotNil(t, tk)
-			assert.Equal(t, tc.Output, out)
-			assert.Equal(t, tc.Expect, *tk)
+			assert.Nil(t, err, "Expected error to be nil")
+			require.NotNil(t, tk, "Did NOT expect token to be nil")
+			assert.Equal(t, tc.Output, out, "Expected a different array of leftover runes")
+			assert.Equal(t, tc.Expect, *tk, "Expected a different token")
 		}
 	}
 }

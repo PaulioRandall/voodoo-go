@@ -77,13 +77,13 @@ func scanSymbol(itr *runer.RuneItr) (tk *token.Token, err fault.Fault) {
 	default:
 		ru := itr.NextRune()
 		m := "I don't know what this symbol means '" + string(ru) + "'"
-		err = fault.Sym(m).From(start).To(itr.Index())
+		err = fault.Sym(m).SetFrom(start).SetTo(itr.Index())
 		return
 	}
 
 	s, e := itr.NextStr(c)
 	if e != nil {
-		err = fault.Sym(err.Error()).From(start).To(itr.Index())
+		err = fault.Sym(err.Error()).SetFrom(start).SetTo(itr.Index())
 		return
 	}
 

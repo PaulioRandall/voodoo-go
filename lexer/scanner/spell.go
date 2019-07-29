@@ -12,7 +12,7 @@ func scanSpell(itr *runer.RuneItr) (tk *token.Token, err fault.Fault) {
 
 	if !itr.IsRelLetter(1) {
 		m := "Expected first rune after `@` to be a letter"
-		err = fault.Func(m).From(itr.Index())
+		err = fault.Func(m).SetFrom(itr.Index())
 		return
 	}
 

@@ -17,7 +17,7 @@ func scanString(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 
 	if !closed {
 		m := "Did someone forget to close a string literal?!"
-		err = fault.Str(m)
+		err = fault.Str(m).SetTo(len(in))
 		return
 	}
 
