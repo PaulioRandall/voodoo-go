@@ -46,12 +46,12 @@ func scanTests() []scanTest {
 		scanTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `x # 1`,
-			ExpectErr: fault.Dummy(fault.Symbol).SetFrom(2).SetTo(3),
+			ExpectErr: fault.Dummy(fault.Symbol, 0, 2, 3),
 		},
 		scanTest{
 			TestLine:  fault.CurrLine(),
 			Input:     `123.456.789`,
-			ExpectErr: fault.Dummy(fault.Symbol).SetFrom(7).SetTo(8),
+			ExpectErr: fault.Dummy(fault.Symbol, 0, 7, 8),
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),

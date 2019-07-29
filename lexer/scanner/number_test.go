@@ -79,12 +79,12 @@ func scanNumberTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     []rune(`123.`),
-			ExpectErr: fault.Dummy(fault.Number).SetTo(4),
+			ExpectErr: fault.Dummy(fault.Number, 0, 0, 4),
 		},
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     []rune(`123..456`),
-			ExpectErr: fault.Dummy(fault.Number).SetTo(4),
+			ExpectErr: fault.Dummy(fault.Number, 0, 0, 4),
 		},
 	}
 }

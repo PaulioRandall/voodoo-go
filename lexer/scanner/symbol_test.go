@@ -161,7 +161,7 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     []rune(`=`),
-			ExpectErr: fault.Dummy(fault.Symbol).SetTo(1),
+			ExpectErr: fault.Dummy(fault.Symbol, 0, 0, 1),
 		},
 	}
 }

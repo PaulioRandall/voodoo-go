@@ -28,6 +28,17 @@ type Fault interface {
 	Type() FaultType
 }
 
+// SetLine sets the line index of a fault within the scroll.
+func SetLine(f Fault, i int) Fault {
+	sf, ok := f.(stdFault)
+	if !ok {
+		return Bug("Can't deal with this unknown concrete fault type")
+	}
+
+	sf.line = i
+	return Fault(sf)
+}
+
 // stdFault is the standard implementation of the
 // Fault interface.
 type stdFault struct {

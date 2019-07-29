@@ -8,8 +8,11 @@ import (
 )
 
 // Dummy returns a new Fault intended for test use only.
-func Dummy(t FaultType) Fault {
+func Dummy(t FaultType, line, from, to int) Fault {
 	return stdFault{
+		line:    line,
+		from:    from,
+		to:      to,
 		errType: t,
 	}
 }

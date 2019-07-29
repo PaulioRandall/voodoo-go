@@ -61,12 +61,12 @@ func scanStringTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     []rune(`"`),
-			ExpectErr: fault.Dummy(fault.String).SetTo(1),
+			ExpectErr: fault.Dummy(fault.String, 0, 0, 1),
 		},
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     []rune(`"escaped \"`),
-			ExpectErr: fault.Dummy(fault.String).SetTo(11),
+			ExpectErr: fault.Dummy(fault.String, 0, 0, 11),
 		},
 	}
 }

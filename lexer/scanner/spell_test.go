@@ -52,7 +52,7 @@ func scanSpellTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
 			Input:     []rune(`@2`),
-			ExpectErr: fault.Dummy(fault.Function),
+			ExpectErr: fault.Dummy(fault.Function, 0, 0, 0),
 		},
 	}
 }

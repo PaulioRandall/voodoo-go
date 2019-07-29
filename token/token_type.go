@@ -5,7 +5,7 @@ type TokenType int
 
 const (
 	UNDEFINED TokenType = iota
-	// Fully or partly alphabetic
+	// Keywords
 	KEYWORD_FUNC // func
 	KEYWORD_LOOP // loop
 	KEYWORD_WHEN // when
@@ -16,7 +16,8 @@ const (
 	// Booleans
 	BOOLEAN_TRUE  // true
 	BOOLEAN_FALSE // false
-	SPELL         // @Blahblah
+	// Spells
+	SPELL // @Blahblah
 	// Literals
 	LITERAL_NUMBER // ##.###
 	LITERAL_STRING // "blahblah"
@@ -47,8 +48,8 @@ const (
 	// Punctuation
 	ASSIGNMENT      // <-
 	SEPARATOR_VALUE // ,
-	SEPARATOR_LINE  // \n
 	// Whitespace
+	SEPARATOR_LINE // \n
 	WHITESPACE
 	// Ignoramuses
 	VOID // _
