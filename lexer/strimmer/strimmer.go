@@ -29,7 +29,7 @@ func Strim(in []token.Token) []token.Token {
 			tk.Val = tk.Val[1:penultimate]
 		case tk.Type == token.LITERAL_NUMBER:
 			tk.Val = strings.ReplaceAll(tk.Val, `_`, ``)
-		case tk.Type > token.ALPHABETIC_START && tk.Type < token.ALPHABETIC_END:
+		case isAlphabeticType(tk.Type):
 			tk.Val = strings.ToLower(tk.Val)
 		}
 
@@ -37,4 +37,22 @@ func Strim(in []token.Token) []token.Token {
 	}
 
 	return out
+}
+
+// isAlphabeticType returns true if input token type is for
+// tokens that may have alphabetic values.
+func isAlphabeticType(t token.TokenType) bool {
+	switch t {
+	case token.KEYWORD_FUNC:
+	case token.KEYWORD_LOOP:
+	case token.KEYWORD_WHEN:
+	case token.KEYWORD_END:
+	case token.BOOLEAN_TRUE:
+	case token.BOOLEAN_FALSE:
+	case token.SOURCERY:
+	default:
+		return false
+	}
+
+	return true
 }

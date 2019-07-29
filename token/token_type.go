@@ -6,7 +6,6 @@ type TokenType int
 const (
 	UNDEFINED TokenType = iota
 	// Fully or partly alphabetic
-	ALPHABETIC_START
 	KEYWORD_FUNC  // func
 	KEYWORD_LOOP  // loop
 	KEYWORD_WHEN  // when
@@ -20,7 +19,6 @@ const (
 	BOOLEAN_TRUE  // true
 	BOOLEAN_FALSE // false
 	SOURCERY      // @Blahblah
-	ALPHABETIC_END
 	// Literals
 	LITERAL_NUMBER // ##.###
 	LITERAL_STRING // "blahblah"
