@@ -77,6 +77,18 @@ func scanWordStr(in []rune) (string, []rune) {
 	return sb.String(), []rune{}
 }
 
+// isStrStart returns true if the language considers the rune
+// to be the start of a string literal.
+func isStrStart(r rune) bool {
+	return r == '"'
+}
+
+// isSpell returns true if the language considers the rune
+// to be the start of a spell.
+func isSpellStart(r rune) bool {
+	return r == '@'
+}
+
 // isDecimalSeparator returns true if the language considers the
 // rune to be a separator between the integer part of a number
 // and the fractional part.
