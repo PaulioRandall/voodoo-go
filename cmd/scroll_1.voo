@@ -1,10 +1,15 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
-calc <- do(a,b,c) r
+// Type assertions for later
+// calc <- do(a.(float), b.(int), c.(int)) r.(float)
+//   r <- a + b * c
+// done
+
+calc <- do(a, b, c) r
   r <- a + b * c
 done
 
-safeDivide <- do(a,b) c, err
+safeDivide <- do(a, b) c, err
   when
     b == 0 => err <- "Can't divide by zero"
     _      => c <- a / b
@@ -46,8 +51,6 @@ do
     r == 9 => @Println(":)")
     _ => @Break(do)
   done
-  
-  x, y, z <- _, _, _
   
   _, err <- safeDivide(2, 0)
   onErr(err)
