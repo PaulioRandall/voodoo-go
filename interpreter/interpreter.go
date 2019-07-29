@@ -15,26 +15,21 @@ type ExitCode int
 // Execute runs a Voodoo scroll.
 func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
-	line := sc.Next(nil)
-	line = sc.Next(line) // Ignoring first line: shebang
+	for i, line := range sc.Lines {
+		if i == 0 {
+			continue // Ignoring first line: shebang
+		}
 
-	for line != nil {
-
-		lexemes, err := scanner.Scan(line.Val)
+		tks, err := scanner.Scan(line)
 		if err != nil {
-			err = err.SetLine(line.Num)
+			err = err.SetLine(i + 1)
 			return 1, err
 		}
 
-		tokens := strimmer.Strim(lexemes)
-		token.PrintlnTokenValues(tokens)
-		token.PrintlnTokenTypes(tokens)
+		tks = strimmer.Strim(tks)
+		token.PrintlnTokenValues(tks)
+		token.PrintlnTokenTypes(tks)
 		fmt.Println()
-
-		// NEXT: Rename lexeme pkg to symbol
-		// NEXT: Syntax Analyser
-
-		line = sc.Next(line)
 	}
 
 	return 0, nil
