@@ -15,18 +15,44 @@ func scanSpellTests() []scanFuncTest {
 	return []scanFuncTest{
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `@P`,
-			Expect:   token.Token{`@P`, 0, 2, 0, token.SOURCERY},
+			Input:    []rune(`@P`),
+			Output:   []rune{},
+			Expect: token.Token{
+				Val:  `@P`,
+				Type: token.SOURCERY,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `@Println`,
-			Expect:   token.Token{`@Println`, 0, 8, 0, token.SOURCERY},
+			Input:    []rune(`@Println`),
+			Output:   []rune{},
+			Expect: token.Token{
+				Val:  `@Println`,
+				Type: token.SOURCERY,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `@a__12__xy__`,
-			Expect:   token.Token{`@a__12__xy__`, 0, 12, 0, token.SOURCERY},
+			Input:    []rune(`@a__12__xy__`),
+			Output:   []rune{},
+			Expect: token.Token{
+				Val:  `@a__12__xy__`,
+				Type: token.SOURCERY,
+			},
+		},
+		scanFuncTest{
+			TestLine: fault.CurrLine(),
+			Input:    []rune(`@Println(msg)`),
+			Output:   []rune(`(msg)`),
+			Expect: token.Token{
+				Val:  `@Println`,
+				Type: token.SOURCERY,
+			},
+		},
+		scanFuncTest{
+			TestLine:  fault.CurrLine(),
+			Input:     []rune(`@2`),
+			ExpectErr: fault.Dummy(fault.Function),
 		},
 	}
 }

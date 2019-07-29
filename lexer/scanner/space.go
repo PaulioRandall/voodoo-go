@@ -1,13 +1,10 @@
 package scanner
 
 import (
-	"strings"
-
-	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// scanSpace scans symbols that start with a unicode whitespace
+// scanSpace scans tokens that start with a unicode whitespace
 // property rune returning a token representing all whitespace
 // between two non-whitespace tokens.
 //
@@ -16,22 +13,26 @@ import (
 // become the one exception to the rule as they will become
 // a token all by themselves used to delimit statements
 // and the bodies of different context.
-func scanSpace(itr *runer.RuneItr) *token.Token {
+func scanSpace(in []rune) (tk *token.Token, out []rune) {
 
-	start := itr.Index()
-	sb := strings.Builder{}
+	end := -1
 
-	for itr.HasNext() {
-		if !itr.IsNextSpace() {
+	for i, v := range in {
+		if !isSpace(v) {
+			end = i
 			break
 		}
-		sb.WriteRune(itr.NextRune())
 	}
 
-	return &token.Token{
-		Val:   sb.String(),
-		Start: start,
-		End:   itr.Index(),
-		Type:  token.WHITESPACE,
+	if end == -1 {
+		end = len(in)
 	}
+
+	tk = &token.Token{
+		Val:  string(in[:end]),
+		Type: token.WHITESPACE,
+	}
+
+	out = in[end:]
+	return
 }

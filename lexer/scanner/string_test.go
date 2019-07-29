@@ -15,38 +15,58 @@ func scanStringTests() []scanFuncTest {
 	return []scanFuncTest{
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `""`,
-			Expect:   token.Token{`""`, 0, 2, 0, token.LITERAL_STRING},
+			Input:    []rune(`""`),
+			Output:   []rune{},
+			Expect: token.Token{
+				Val:  `""`,
+				Type: token.LITERAL_STRING,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `"From hell with love"`,
-			Expect:   token.Token{`"From hell with love"`, 0, 21, 0, token.LITERAL_STRING},
+			Input:    []rune(`"From hell with love"`),
+			Output:   []rune{},
+			Expect: token.Token{
+				Val:  `"From hell with love"`,
+				Type: token.LITERAL_STRING,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `"Simon: \"Leaders eat last!\""`,
-			Expect:   token.Token{`"Simon: \"Leaders eat last!\""`, 0, 30, 0, token.LITERAL_STRING},
+			Input:    []rune(`"From hell with love", 123.456`),
+			Output:   []rune(`, 123.456`),
+			Expect: token.Token{
+				Val:  `"From hell with love"`,
+				Type: token.LITERAL_STRING,
+			},
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    `"\\\\\""`,
-			Expect:   token.Token{`"\\\\\""`, 0, 8, 0, token.LITERAL_STRING},
+			Input:    []rune(`"Simon: \"Leaders eat last!\""`),
+			Output:   []rune{},
+			Expect: token.Token{
+				Val:  `"Simon: \"Leaders eat last!\""`,
+				Type: token.LITERAL_STRING,
+			},
+		},
+		scanFuncTest{
+			TestLine: fault.CurrLine(),
+			Input:    []rune(`"\\\\\""`),
+			Output:   []rune{},
+			Expect: token.Token{
+				Val:  `"\\\\\""`,
+				Type: token.LITERAL_STRING,
+			},
 		},
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
-			Input:     `"`,
-			ExpectErr: fault.Dummy(fault.String).SetLine(0).SetFrom(0).SetTo(1),
-		},
-		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    `"a"x`,
-			Expect:   token.Token{`"a"`, 0, 3, 0, token.LITERAL_STRING},
+			Input:     []rune(`"`),
+			ExpectErr: fault.Dummy(fault.String).SetTo(1),
 		},
 		scanFuncTest{
 			TestLine:  fault.CurrLine(),
-			Input:     `"escaped \"`,
-			ExpectErr: fault.Dummy(fault.String).SetLine(0).SetFrom(0).SetTo(11),
+			Input:     []rune(`"escaped \"`),
+			ExpectErr: fault.Dummy(fault.String).SetTo(11),
 		},
 	}
 }

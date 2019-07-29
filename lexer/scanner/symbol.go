@@ -2,7 +2,6 @@ package scanner
 
 import (
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/runer"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
@@ -14,85 +13,76 @@ import (
 // - value or key-value separator
 // - void identifier
 // - number range generator
-func scanSymbol(itr *runer.RuneItr) (tk *token.Token, err fault.Fault) {
+//
+// Assumes that the input is not empty.
+func scanSymbol(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 
-	start := itr.Index()
 	var t token.TokenType
 	c := 0
 
-	set := func(lexType token.TokenType, runeCount int) {
-		t = lexType
+	set := func(tkType token.TokenType, runeCount int) {
+		t = tkType
 		c = runeCount
 	}
 
 	switch {
-	case itr.IsNextStr(`<-`):
+	case startsWith(in, `<-`):
 		set(token.ASSIGNMENT, 2)
-	case itr.IsNextStr(`<=`):
+	case startsWith(in, `<=`):
 		set(token.CMP_LESS_THAN_OR_EQUAL, 2)
-	case itr.IsNext('<'):
+	case startsWith(in, `<`):
 		set(token.CMP_LESS_THAN, 1)
-	case itr.IsNextStr(`>=`):
+	case startsWith(in, `>=`):
 		set(token.CMP_GREATER_THAN_OR_EQUAL, 2)
-	case itr.IsNext('>'):
+	case startsWith(in, `>`):
 		set(token.CMP_GREATER_THAN, 1)
-	case itr.IsNextStr(`==`):
+	case startsWith(in, `==`):
 		set(token.CMP_EQUAL, 2)
-	case itr.IsNextStr(`!=`):
+	case startsWith(in, `!=`):
 		set(token.CMP_NOT_EQUAL, 2)
-	case itr.IsNextStr(`=>`):
+	case startsWith(in, `=>`):
 		set(token.LOGICAL_MATCH, 2)
-	case itr.IsNext('!'):
+	case startsWith(in, `!`):
 		set(token.LOGICAL_NOT, 1)
-	case itr.IsNextStr(`||`):
+	case startsWith(in, `||`):
 		set(token.LOGICAL_OR, 2)
-	case itr.IsNextStr(`&&`):
+	case startsWith(in, `&&`):
 		set(token.LOGICAL_AND, 2)
-	case itr.IsNext('+'):
+	case startsWith(in, `+`):
 		set(token.CALC_ADD, 1)
-	case itr.IsNext('-'):
+	case startsWith(in, `-`):
 		set(token.CALC_SUBTRACT, 1)
-	case itr.IsNext('*'):
+	case startsWith(in, `*`):
 		set(token.CALC_MULTIPLY, 1)
-	case itr.IsNext('/'):
+	case startsWith(in, `/`):
 		set(token.CALC_DIVIDE, 1)
-	case itr.IsNext('%'):
+	case startsWith(in, `%`):
 		set(token.CALC_MODULO, 1)
-	case itr.IsNext('('):
+	case startsWith(in, `(`):
 		set(token.PAREN_CURVY_OPEN, 1)
-	case itr.IsNext(')'):
+	case startsWith(in, `)`):
 		set(token.PAREN_CURVY_CLOSE, 1)
-	case itr.IsNext('['):
+	case startsWith(in, `[`):
 		set(token.PAREN_SQUARE_OPEN, 1)
-	case itr.IsNext(']'):
+	case startsWith(in, `]`):
 		set(token.PAREN_SQUARE_CLOSE, 1)
-	case itr.IsNext(','):
+	case startsWith(in, `,`):
 		set(token.SEPARATOR_VALUE, 1)
-	case itr.IsNext(':'):
+	case startsWith(in, `:`):
 		set(token.SEPARATOR_KEY_VALUE, 1)
-	case itr.IsNextStr(`..`):
-		set(token.RANGE, 2)
-	case itr.IsNext('_'):
+	case startsWith(in, `_`):
 		set(token.VOID, 1)
 	default:
-		ru := itr.NextRune()
-		m := "I don't know what this symbol means '" + string(ru) + "'"
-		err = fault.Sym(m).SetFrom(start).SetTo(itr.Index())
-		return
-	}
-
-	s, e := itr.NextStr(c)
-	if e != nil {
-		err = fault.Sym(err.Error()).SetFrom(start).SetTo(itr.Index())
+		m := "I don't know what this symbol means '" + string(in[0]) + "'"
+		err = fault.Sym(m).SetTo(1)
 		return
 	}
 
 	tk = &token.Token{
-		Val:   s,
-		Start: start,
-		End:   itr.Index(),
-		Type:  t,
+		Val:  string(in[:c]),
+		Type: t,
 	}
 
+	out = in[c:]
 	return
 }
