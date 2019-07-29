@@ -5,23 +5,41 @@ import (
 	"unicode"
 )
 
-// scanInt iterates a rune array until a single integer
-// has been extracted returning the integer followed by a
-// slice of the remaining input or nil if the whole input
-// represented a single integer.
-func scanInt(in []rune) (string, []rune) {
-	sb := strings.Builder{}
+// scanFrac iterates a rune array until a single fractional
+// has been extracted returning the fractional slice followed
+// by a slice of the remaining input.
+func scanFrac(in []rune) (frac []rune, out []rune) {
+	if len(in) < 1 || !isDecimalSeparator(in[0]) {
+		out = in
+		frac = []rune{}
+		return
+	}
 
+	var tail []rune
+
+	frac = in[0:1]
+	tail, out = scanInt(in[1:])
+	frac = append(frac, tail...)
+
+	return
+}
+
+// scanInt iterates a rune array until a single integer has
+// been extracted returning the integer slice followed by a
+// slice of the remaining input.
+func scanInt(in []rune) (num []rune, out []rune) {
 	for i, r := range in {
 		if isDigit(r) || isUnderscore(r) {
-			sb.WriteRune(r)
+			num = append(num, r)
 			continue
 		}
 
-		return sb.String(), in[i:]
+		out = in[i:]
+		return
 	}
 
-	return sb.String(), nil
+	out = []rune{}
+	return
 }
 
 // scanWordStr iterates a rune array until a single word has
@@ -40,7 +58,14 @@ func scanWordStr(in []rune) (string, []rune) {
 		return sb.String(), in[i:]
 	}
 
-	return sb.String(), nil
+	return sb.String(), []rune{}
+}
+
+// isDecimalSeparator returns true if the language considers the
+// rune to be a separator between the integer part of a number
+// and the fractional part.
+func isDecimalSeparator(r rune) bool {
+	return r == '.'
 }
 
 // isSpace returns true if the language considers the rune

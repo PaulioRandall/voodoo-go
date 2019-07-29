@@ -16,6 +16,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`a`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `a`,
 				Type: token.IDENTIFIER_EXPLICIT,
@@ -24,6 +25,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`abc`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `abc`,
 				Type: token.IDENTIFIER_EXPLICIT,
@@ -32,6 +34,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`abc_123`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `abc_123`,
 				Type: token.IDENTIFIER_EXPLICIT,
@@ -40,6 +43,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`a__________123456789`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `a__________123456789`,
 				Type: token.IDENTIFIER_EXPLICIT,
@@ -57,6 +61,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`DO`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `DO`,
 				Type: token.KEYWORD_FUNC,
@@ -65,6 +70,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`loop`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `loop`,
 				Type: token.KEYWORD_LOOP,
@@ -73,6 +79,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`when`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `when`,
 				Type: token.KEYWORD_WHEN,
@@ -81,6 +88,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`done`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `done`,
 				Type: token.KEYWORD_END,
@@ -89,6 +97,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`true`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `true`,
 				Type: token.BOOLEAN_TRUE,
@@ -97,6 +106,7 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    []rune(`false`),
+			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `false`,
 				Type: token.BOOLEAN_FALSE,
