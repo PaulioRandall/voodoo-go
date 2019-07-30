@@ -7,7 +7,7 @@ import (
 
 // scanNumber scans symbols that start with a unicode category Nd
 // rune returning a literal number; all numbers are floats.
-func scanNumber(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
+func scanNumber(in []rune, col int) (tk *token.Token, out []rune, err fault.Fault) {
 
 	var num []rune
 	var frac []rune
@@ -21,7 +21,7 @@ func scanNumber(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 		if size < 2 {
 			out = nil
 			err = fault.SyntaxFault{
-				Index: len(num) + 1,
+				Index: col + len(num) + 1,
 				Msgs: []string{
 					"Invalid number format, either...",
 					" - fractional digits are missing",
@@ -36,8 +36,9 @@ func scanNumber(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 	}
 
 	tk = &token.Token{
-		Val:  string(num),
-		Type: token.LITERAL_NUMBER,
+		Val:   string(num),
+		Start: col,
+		Type:  token.LITERAL_NUMBER,
 	}
 
 	return

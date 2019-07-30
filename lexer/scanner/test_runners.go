@@ -15,6 +15,7 @@ import (
 type scanFuncTest struct {
 	TestLine int
 	Input    []rune
+	col      int
 	Output   []rune
 	Expect   token.Token
 	Error    fault.Fault
@@ -31,7 +32,7 @@ func newFault(i int) fault.SyntaxFault {
 func runScanTest(
 	t *testing.T,
 	fileName string,
-	f func([]rune) (*token.Token, []rune),
+	f func([]rune, int) (*token.Token, []rune),
 	tests []scanFuncTest) {
 
 	for _, tc := range tests {
@@ -41,7 +42,7 @@ func runScanTest(
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> " + fileName + " : " + testLine)
 
-		tk, out := f(tc.Input)
+		tk, out := f(tc.Input, tc.col)
 
 		require.NotNil(t, tk, "Did not expect token to be nil")
 		assert.Equal(t, tc.Output, out, "Expected a different array of leftover runes")
@@ -54,7 +55,7 @@ func runScanTest(
 func runFailableScanTest(
 	t *testing.T,
 	fileName string,
-	f func([]rune) (*token.Token, []rune, fault.Fault),
+	f func([]rune, int) (*token.Token, []rune, fault.Fault),
 	tests []scanFuncTest) {
 
 	for _, tc := range tests {
@@ -62,7 +63,7 @@ func runFailableScanTest(
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> " + fileName + " : " + testLine)
 
-		tk, out, err := f(tc.Input)
+		tk, out, err := f(tc.Input, tc.col)
 
 		if tc.Error != nil {
 			assert.Nil(t, tk, "Expected token to be nil")

@@ -29,15 +29,15 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 
 		switch {
 		case isLetter(r):
-			tk, in = scanWord(in)
+			tk, in = scanWord(in, i)
 		case isDigit(r):
-			tk, in, err = scanNumber(in)
+			tk, in, err = scanNumber(in, i)
 		case isSpace(r):
-			tk, in = scanSpace(in)
+			tk, in = scanSpace(in, i)
 		case isSpellStart(r):
-			tk, in, err = scanSpell(in)
+			tk, in, err = scanSpell(in, i)
 		case isStrStart(r):
-			tk, in, err = scanString(in)
+			tk, in, err = scanString(in, i)
 		case startsWith(in, `//`):
 			tk = &token.Token{
 				Val:  string(in),
@@ -45,7 +45,7 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 			}
 			in = []rune{}
 		default:
-			tk, in, err = scanSymbol(in)
+			tk, in, err = scanSymbol(in, i)
 		}
 
 		if err != nil {

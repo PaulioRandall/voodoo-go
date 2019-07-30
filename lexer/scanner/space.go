@@ -13,7 +13,7 @@ import (
 // become the one exception to the rule as they will become
 // a token all by themselves used to delimit statements
 // and the bodies of different context.
-func scanSpace(in []rune) (tk *token.Token, out []rune) {
+func scanSpace(in []rune, col int) (tk *token.Token, out []rune) {
 
 	end := -1
 
@@ -29,8 +29,9 @@ func scanSpace(in []rune) (tk *token.Token, out []rune) {
 	}
 
 	tk = &token.Token{
-		Val:  string(in[:end]),
-		Type: token.WHITESPACE,
+		Val:   string(in[:end]),
+		Start: col,
+		Type:  token.WHITESPACE,
 	}
 
 	out = in[end:]

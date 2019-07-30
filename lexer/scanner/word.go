@@ -8,7 +8,7 @@ import (
 
 // scanWord scans tokens that start with a unicode category L
 // rune returning a keyword or identifier.
-func scanWord(in []rune) (*token.Token, []rune) {
+func scanWord(in []rune, col int) (*token.Token, []rune) {
 
 	s, out := scanWordStr(in)
 	t := token.IDENTIFIER_EXPLICIT
@@ -29,8 +29,9 @@ func scanWord(in []rune) (*token.Token, []rune) {
 	}
 
 	tk := &token.Token{
-		Val:  s,
-		Type: t,
+		Val:   s,
+		Start: col,
+		Type:  t,
 	}
 
 	return tk, out

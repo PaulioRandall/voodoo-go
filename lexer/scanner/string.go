@@ -9,7 +9,7 @@ import (
 // returning a string literal token.
 //
 // This function asumes the first rune of the input array is a '"'.
-func scanString(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
+func scanString(in []rune, col int) (tk *token.Token, out []rune, err fault.Fault) {
 
 	var s string
 	var closed bool
@@ -17,7 +17,7 @@ func scanString(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 
 	if !closed {
 		err = fault.SyntaxFault{
-			Index: len(in),
+			Index: col + len(in),
 			Msgs: []string{
 				"Did someone forget to close a string literal?!",
 			},
@@ -26,8 +26,9 @@ func scanString(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 	}
 
 	tk = &token.Token{
-		Val:  s,
-		Type: token.LITERAL_STRING,
+		Val:   s,
+		Start: col,
+		Type:  token.LITERAL_STRING,
 	}
 
 	return

@@ -15,7 +15,7 @@ import (
 // - number range generator
 //
 // Assumes that the input is not empty.
-func scanSymbol(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
+func scanSymbol(in []rune, col int) (tk *token.Token, out []rune, err fault.Fault) {
 
 	var t token.TokenType
 	c := 0
@@ -72,7 +72,7 @@ func scanSymbol(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 		set(token.VOID, 1)
 	default:
 		err = fault.SyntaxFault{
-			Index: 1,
+			Index: col + 1,
 			Msgs: []string{
 				"I don't know what this symbol means '" + string(in[0]) + "'",
 			},
@@ -81,8 +81,9 @@ func scanSymbol(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 	}
 
 	tk = &token.Token{
-		Val:  string(in[:c]),
-		Type: t,
+		Val:   string(in[:c]),
+		Start: col,
+		Type:  t,
 	}
 
 	out = in[c:]
