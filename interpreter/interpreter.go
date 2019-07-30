@@ -3,7 +3,6 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/lexer/scanner"
 	"github.com/PaulioRandall/voodoo-go/lexer/strimmer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
@@ -23,8 +22,8 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 
 		tks, err := scanner.Scan(line)
 		if err != nil {
-			err = fault.SetLine(err, i+1)
-			return 1, err
+			err.Print(sc, i+1)
+			return 1, nil
 		}
 
 		tks = strimmer.Strim(tks)

@@ -4,8 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/new_fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -14,11 +13,10 @@ import (
 // scanTest represents a test case for the Scan()
 // function.
 type scanTest struct {
-	TestLine     int
-	Input        string
-	Expect       []token.Token
-	ExpectErr    fault.Fault
-	ExpectNewErr new_fault.Fault
+	TestLine int
+	Input    string
+	Expect   []token.Token
+	Error    fault.Fault
 }
 
 // TestScan runs the test cases for the Scan() function.
@@ -28,11 +26,9 @@ func TestScan(t *testing.T) {
 		t.Log("-> scanner_test.go : " + testLine)
 		act, err := Scan(tc.Input)
 
-		if tc.ExpectErr != nil {
-			assert.Nil(t, act, "Expected token array to be nil")
+		if tc.Error != nil {
+			assert.Nil(t, act, "Expected token to be nil")
 			require.NotNil(t, err, "Did NOT expect error to be nil")
-			assert.NotEmpty(t, err.Error(), "Did NOT expect error message to be empty")
-			fault.Assert(t, tc.ExpectErr, err)
 		}
 
 		if tc.Expect != nil {
@@ -46,14 +42,14 @@ func TestScan(t *testing.T) {
 func scanTests() []scanTest {
 	return []scanTest{
 		scanTest{
-			TestLine:     fault.CurrLine(),
-			Input:        `x # 1`,
-			ExpectNewErr: newFault(3),
+			TestLine: fault.CurrLine(),
+			Input:    `x # 1`,
+			Error:    newFault(3),
 		},
 		scanTest{
-			TestLine:     fault.CurrLine(),
-			Input:        `123.456.789`,
-			ExpectNewErr: newFault(8),
+			TestLine: fault.CurrLine(),
+			Input:    `123.456.789`,
+			Error:    newFault(8),
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
