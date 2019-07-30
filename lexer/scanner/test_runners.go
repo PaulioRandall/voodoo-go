@@ -13,11 +13,11 @@ import (
 // scanFuncTest represents a test case for any of the
 // delegate scanning functions.
 type scanFuncTest struct {
-	TestLine  int
-	Input     []rune
-	Output    []rune
-	Expect    token.Token
-	ExpectErr fault.Fault
+	TestLine int
+	Input    []rune
+	Output   []rune
+	Expect   token.Token
+	Error    fault.Fault
 }
 
 func newFault(i int) fault.SyntaxFault {
@@ -36,7 +36,7 @@ func runScanTest(
 
 	for _, tc := range tests {
 		require.NotNil(t, tc.Expect)
-		require.Nil(t, tc.ExpectErr)
+		require.Nil(t, tc.Error)
 
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> " + fileName + " : " + testLine)
@@ -64,7 +64,7 @@ func runFailableScanTest(
 
 		tk, out, err := f(tc.Input)
 
-		if tc.ExpectErr != nil {
+		if tc.Error != nil {
 			assert.Nil(t, tk, "Expected token to be nil")
 			require.NotNil(t, err, "Did NOT expect error to be nil")
 		} else {

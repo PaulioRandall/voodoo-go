@@ -50,9 +50,9 @@ func scanSpellTests() []scanFuncTest {
 			},
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`@2`),
-			ExpectErr: newFault(0),
+			TestLine: fault.CurrLine(),
+			Input:    []rune(`@2`),
+			Error:    newFault(0),
 		},
 	}
 }

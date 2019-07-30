@@ -59,14 +59,14 @@ func scanStringTests() []scanFuncTest {
 			},
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`"`),
-			ExpectErr: newFault(1),
+			TestLine: fault.CurrLine(),
+			Input:    []rune(`"`),
+			Error:    newFault(1),
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`"escaped \"`),
-			ExpectErr: newFault(11),
+			TestLine: fault.CurrLine(),
+			Input:    []rune(`"escaped \"`),
+			Error:    newFault(11),
 		},
 	}
 }

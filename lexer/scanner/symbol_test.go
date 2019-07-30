@@ -159,9 +159,9 @@ func scanSymbolTests() []scanFuncTest {
 			Expect:   newToken(`+`, token.CALC_ADD),
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`=`),
-			ExpectErr: newFault(1),
+			TestLine: fault.CurrLine(),
+			Input:    []rune(`=`),
+			Error:    newFault(1),
 		},
 	}
 }
