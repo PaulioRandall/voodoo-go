@@ -6,15 +6,6 @@ package fault
 type Fault interface {
 	error
 
-	// SetLine sets the line index where the error occurred.
-	SetLine(i int) Fault
-
-	// SetFrom sets the inclusive column index where the error starts.
-	SetFrom(i int) Fault
-
-	// SetTo sets the exclusive column index where the error ends.
-	SetTo(i int) Fault
-
 	// Line returns the line index where the error occurred.
 	Line() int
 
@@ -39,6 +30,28 @@ func SetLine(f Fault, i int) Fault {
 	return Fault(sf)
 }
 
+// SetFrom sets the column index where the error starts.
+func SetFrom(f Fault, i int) Fault {
+	sf, ok := f.(stdFault)
+	if !ok {
+		return Bug("Can't deal with this unknown concrete fault type")
+	}
+
+	sf.from = i
+	return Fault(sf)
+}
+
+// SetTo sets the column index where the error ends.
+func SetTo(f Fault, i int) Fault {
+	sf, ok := f.(stdFault)
+	if !ok {
+		return Bug("Can't deal with this unknown concrete fault type")
+	}
+
+	sf.to = i
+	return Fault(sf)
+}
+
 // stdFault is the standard implementation of the
 // Fault interface.
 type stdFault struct {
@@ -52,24 +65,6 @@ type stdFault struct {
 // Error satisfies the error interface.
 func (err stdFault) Error() string {
 	return err.msg
-}
-
-// SetLine satisfies the Fault interface.
-func (err stdFault) SetLine(i int) Fault {
-	err.line = i
-	return err
-}
-
-// SetFrom satisfies the Fault interface.
-func (err stdFault) SetFrom(i int) Fault {
-	err.from = i
-	return err
-}
-
-// SetTo satisfies the Fault interface.
-func (err stdFault) SetTo(i int) Fault {
-	err.to = i
-	return err
 }
 
 // Line satisfies the Fault interface.

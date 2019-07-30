@@ -72,7 +72,8 @@ func scanSymbol(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 		set(token.VOID, 1)
 	default:
 		m := "I don't know what this symbol means '" + string(in[0]) + "'"
-		err = fault.Sym(m).SetTo(1)
+		err = fault.Sym(m)
+		err = fault.SetTo(err, 1)
 		return
 	}
 

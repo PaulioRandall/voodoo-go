@@ -81,10 +81,12 @@ func sliceOutParen(in []token.Token, a, z, nextTempId int) (outer []token.Token,
 func checkParenIndexes(in []token.Token, a, z int) (err fault.Fault) {
 	if a == -1 {
 		m := "Didn't expect to find a closing parenthesis without a corresponding opening one"
-		err = fault.Paren(m).SetTo(in[z].Start)
+		err = fault.Paren(m)
+		err = fault.SetTo(err, in[z].Start)
 	} else if z == -1 {
 		m := "Didn't expect to find an opening parenthesis without a corresponding closing one"
-		err = fault.Paren(m).SetFrom(in[a].Start)
+		err = fault.Paren(m)
+		err = fault.SetFrom(err, in[a].Start)
 	}
 
 	return

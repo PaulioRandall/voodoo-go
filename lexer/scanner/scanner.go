@@ -50,8 +50,8 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 
 		if err != nil {
 			out = nil
-			err = err.SetFrom(i)
-			err = err.SetTo(i + err.To())
+			err = fault.SetFrom(err, i)
+			err = fault.SetTo(err, i+err.To())
 			return
 		}
 

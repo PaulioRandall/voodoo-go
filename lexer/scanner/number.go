@@ -20,7 +20,8 @@ func scanNumber(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 	if size > 0 {
 		if size < 2 {
 			m := "Number has a decimal separator but the fractional digits are missing"
-			err = fault.Num(m).SetTo(len(num) + 1)
+			err = fault.Num(m)
+			err = fault.SetTo(err, len(num)+1)
 			out = nil
 			return
 		}
