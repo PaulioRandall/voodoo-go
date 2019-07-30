@@ -13,3 +13,16 @@ type Fault interface {
 	// of the scroll where the error originated.
 	Print(sc *scroll.Scroll, line int)
 }
+
+// SyntaxFault represents a generic fault with syntax.
+// If different forms of error logging are required then
+// they must reimplement the Fault interface.
+type SyntaxFault struct {
+	Index int      // Index where the error actually occurred
+	Msgs  []string // Description of the error
+}
+
+// Print satisfies the Fault interface.
+func (err SyntaxFault) Print(sc *scroll.Scroll, line int) {
+	sc.PrettyPrintError(line, err.Index, err.Msgs...)
+}
