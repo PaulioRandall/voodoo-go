@@ -40,7 +40,7 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 		case isSpellStart(r):
 			tk, in, new_err = scanSpell(in)
 		case isStrStart(r):
-			tk, in, err = scanString(in)
+			tk, in, new_err = scanString(in)
 		case startsWith(in, `//`):
 			tk = &token.Token{
 				Val:  string(in),

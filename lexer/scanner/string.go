@@ -1,7 +1,7 @@
 package scanner
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
@@ -16,9 +16,12 @@ func scanString(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 	s, out, closed = scanStr(in)
 
 	if !closed {
-		m := "Did someone forget to close a string literal?!"
-		err = fault.Str(m)
-		err = fault.SetTo(err, len(in))
+		err = fault.SyntaxFault{
+			Index: len(in),
+			Msgs: []string{
+				"Did someone forget to close a string literal?!",
+			},
+		}
 		return
 	}
 
