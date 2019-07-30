@@ -38,7 +38,7 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 		case isSpace(r):
 			tk, in = scanSpace(in)
 		case isSpellStart(r):
-			tk, in, err = scanSpell(in)
+			tk, in, new_err = scanSpell(in)
 		case isStrStart(r):
 			tk, in, err = scanString(in)
 		case startsWith(in, `//`):

@@ -1,7 +1,7 @@
 package scanner
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
@@ -12,8 +12,12 @@ import (
 func scanSpell(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 
 	if len(in) < 2 || !isLetter(in[1]) {
-		m := "Expected first rune after `@` to be a letter"
-		err = fault.Func(m)
+		err = fault.SyntaxFault{
+			Index: 1,
+			Msgs: []string{
+				"Expected first rune after '@' to be a letter",
+			},
+		}
 		return
 	}
 

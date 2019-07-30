@@ -22,6 +22,12 @@ type scanFuncTest struct {
 	ExpectNewErr new_fault.Fault
 }
 
+func newFault(i int) new_fault.SyntaxFault {
+	return new_fault.SyntaxFault{
+		Index: i,
+	}
+}
+
 // runScanTest runs the input test cases on the input
 // function.
 func runScanTest(

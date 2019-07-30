@@ -3,12 +3,12 @@ package scanner
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 func TestScanSpell(t *testing.T) {
-	runFailableScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
+	new_runFailableScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 
 func scanSpellTests() []scanFuncTest {
@@ -50,9 +50,9 @@ func scanSpellTests() []scanFuncTest {
 			},
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`@2`),
-			ExpectErr: fault.Dummy(fault.Function, 0, 0, 0),
+			TestLine:     fault.CurrLine(),
+			Input:        []rune(`@2`),
+			ExpectNewErr: newFault(0),
 		},
 	}
 }

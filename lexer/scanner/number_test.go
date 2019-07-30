@@ -11,12 +11,6 @@ func TestScanNumber(t *testing.T) {
 	new_runFailableScanTest(t, "number_test.go", scanNumber, scanNumberTests())
 }
 
-func newFault(i int) fault.SyntaxFault {
-	return fault.SyntaxFault{
-		Index: i,
-	}
-}
-
 func scanNumberTests() []scanFuncTest {
 	return []scanFuncTest{
 		scanFuncTest{
