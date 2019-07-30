@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	fault "github.com/PaulioRandall/voodoo-go/new_fault"
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

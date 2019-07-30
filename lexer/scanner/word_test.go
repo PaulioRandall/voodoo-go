@@ -3,7 +3,7 @@ package scanner
 import (
 	"testing"
 
-	fault "github.com/PaulioRandall/voodoo-go/new_fault"
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
