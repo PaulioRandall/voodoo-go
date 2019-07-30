@@ -2,6 +2,7 @@ package scanner
 
 import (
 	"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
@@ -27,11 +28,13 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 		var tk *token.Token
 		r := in[0]
 
+		var new_err new_fault.Fault
+
 		switch {
 		case isLetter(r):
 			tk, in = scanWord(in)
 		case isDigit(r):
-			tk, in, err = scanNumber(in)
+			tk, in, new_err = scanNumber(in)
 		case isSpace(r):
 			tk, in = scanSpace(in)
 		case isSpellStart(r):
@@ -46,6 +49,11 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 			in = []rune{}
 		default:
 			tk, in, err = scanSymbol(in)
+		}
+
+		if new_err != nil {
+			out = nil
+			return
 		}
 
 		if err != nil {

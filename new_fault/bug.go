@@ -1,4 +1,4 @@
-package fault_new
+package new_fault
 
 import (
 	"fmt"

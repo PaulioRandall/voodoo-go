@@ -1,6 +1,8 @@
-package fault_new
+package new_fault
 
 import (
+	"runtime"
+
 	"github.com/PaulioRandall/voodoo-go/scroll"
 )
 
@@ -25,4 +27,15 @@ type SyntaxFault struct {
 // Print satisfies the Fault interface.
 func (err SyntaxFault) Print(sc *scroll.Scroll, line int) {
 	sc.PrettyPrintError(line, err.Index, err.Msgs...)
+}
+
+// CurrLine returns the line of the caller to this function.
+func CurrLine() int {
+	_, _, line, ok := runtime.Caller(1)
+
+	if !ok {
+		return -1
+	}
+
+	return line
 }

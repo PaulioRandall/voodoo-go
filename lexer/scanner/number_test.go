@@ -3,12 +3,18 @@ package scanner
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 func TestScanNumber(t *testing.T) {
-	runFailableScanTest(t, "number_test.go", scanNumber, scanNumberTests())
+	new_runFailableScanTest(t, "number_test.go", scanNumber, scanNumberTests())
+}
+
+func newFault(i int) fault.SyntaxFault {
+	return fault.SyntaxFault{
+		Index: i,
+	}
 }
 
 func scanNumberTests() []scanFuncTest {
@@ -77,14 +83,14 @@ func scanNumberTests() []scanFuncTest {
 			},
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`123.`),
-			ExpectErr: fault.Dummy(fault.Number, 0, 0, 4),
+			TestLine:     fault.CurrLine(),
+			Input:        []rune(`123.`),
+			ExpectNewErr: newFault(4),
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`123..456`),
-			ExpectErr: fault.Dummy(fault.Number, 0, 0, 4),
+			TestLine:     fault.CurrLine(),
+			Input:        []rune(`123..456`),
+			ExpectNewErr: newFault(4),
 		},
 	}
 }

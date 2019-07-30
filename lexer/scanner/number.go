@@ -1,7 +1,7 @@
 package scanner
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
@@ -19,10 +19,16 @@ func scanNumber(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 
 	if size > 0 {
 		if size < 2 {
-			m := "Number has a decimal separator but the fractional digits are missing"
-			err = fault.Num(m)
-			err = fault.SetTo(err, len(num)+1)
 			out = nil
+			err = fault.SyntaxFault{
+				Index: len(num) + 1,
+				Msgs: []string{
+					"Invalid number format, either...",
+					" - fractional digits are missing",
+					" - or the decimal separator is a typo",
+				},
+			}
+
 			return
 		}
 
