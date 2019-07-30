@@ -3,12 +3,12 @@ package scanner
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 func TestScanSymbol(t *testing.T) {
-	runFailableScanTest(t, "symbol_test.go", scanSymbol, scanSymbolTests())
+	new_runFailableScanTest(t, "symbol_test.go", scanSymbol, scanSymbolTests())
 }
 
 func newToken(s string, t token.TokenType) token.Token {
@@ -159,9 +159,9 @@ func scanSymbolTests() []scanFuncTest {
 			Expect:   newToken(`+`, token.CALC_ADD),
 		},
 		scanFuncTest{
-			TestLine:  fault.CurrLine(),
-			Input:     []rune(`=`),
-			ExpectErr: fault.Dummy(fault.Symbol, 0, 0, 1),
+			TestLine:     fault.CurrLine(),
+			Input:        []rune(`=`),
+			ExpectNewErr: newFault(1),
 		},
 	}
 }

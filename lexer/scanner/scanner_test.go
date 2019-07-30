@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -13,10 +14,11 @@ import (
 // scanTest represents a test case for the Scan()
 // function.
 type scanTest struct {
-	TestLine  int
-	Input     string
-	Expect    []token.Token
-	ExpectErr fault.Fault
+	TestLine     int
+	Input        string
+	Expect       []token.Token
+	ExpectErr    fault.Fault
+	ExpectNewErr new_fault.Fault
 }
 
 // TestScan runs the test cases for the Scan() function.
@@ -44,14 +46,14 @@ func TestScan(t *testing.T) {
 func scanTests() []scanTest {
 	return []scanTest{
 		scanTest{
-			TestLine:  fault.CurrLine(),
-			Input:     `x # 1`,
-			ExpectErr: fault.Dummy(fault.Symbol, 0, 2, 3),
+			TestLine:     fault.CurrLine(),
+			Input:        `x # 1`,
+			ExpectNewErr: newFault(3),
 		},
 		scanTest{
-			TestLine:  fault.CurrLine(),
-			Input:     `123.456.789`,
-			ExpectErr: fault.Dummy(fault.Symbol, 0, 7, 8),
+			TestLine:     fault.CurrLine(),
+			Input:        `123.456.789`,
+			ExpectNewErr: newFault(8),
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),

@@ -48,7 +48,7 @@ func Scan(s string) (out []token.Token, err fault.Fault) {
 			}
 			in = []rune{}
 		default:
-			tk, in, err = scanSymbol(in)
+			tk, in, new_err = scanSymbol(in)
 		}
 
 		if new_err != nil {

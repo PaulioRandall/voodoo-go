@@ -1,7 +1,7 @@
 package scanner
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
+	fault "github.com/PaulioRandall/voodoo-go/new_fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
@@ -71,9 +71,12 @@ func scanSymbol(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 	case startsWith(in, `_`):
 		set(token.VOID, 1)
 	default:
-		m := "I don't know what this symbol means '" + string(in[0]) + "'"
-		err = fault.Sym(m)
-		err = fault.SetTo(err, 1)
+		err = fault.SyntaxFault{
+			Index: 1,
+			Msgs: []string{
+				"I don't know what this symbol means '" + string(in[0]) + "'",
+			},
+		}
 		return
 	}
 
