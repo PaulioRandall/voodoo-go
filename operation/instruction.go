@@ -1,5 +1,9 @@
 package operation
 
+import (
+	"github.com/PaulioRandall/voodoo-go/fault"
+)
+
 // Instruction is a unit of activity within this
 // implementation. Instructions are executed within a given
 // context. Usually, it will make a single change to the
@@ -12,5 +16,5 @@ type Instruction interface {
 
 	// Exe executes the instruction within the given context
 	// returning true if the context has changed.
-	Exe(Context) (bool, OpError)
+	Exe(Context) (bool, fault.Fault)
 }

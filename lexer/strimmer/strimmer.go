@@ -22,8 +22,6 @@ func Strim(in []token.Token) []token.Token {
 		switch {
 		case tk.Type == token.WHITESPACE:
 			continue
-		case tk.Type == token.SEPARATOR_VALUE:
-			continue
 		case tk.Type == token.COMMENT:
 			continue
 		case tk.Type == token.LITERAL_STRING:
