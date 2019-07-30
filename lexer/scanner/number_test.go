@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanNumber(t *testing.T) {
-	new_runFailableScanTest(t, "number_test.go", scanNumber, scanNumberTests())
+	runFailableScanTest(t, "number_test.go", scanNumber, scanNumberTests())
 }
 
 func scanNumberTests() []scanFuncTest {
@@ -77,14 +77,14 @@ func scanNumberTests() []scanFuncTest {
 			},
 		},
 		scanFuncTest{
-			TestLine:     fault.CurrLine(),
-			Input:        []rune(`123.`),
-			ExpectNewErr: newFault(4),
+			TestLine:  fault.CurrLine(),
+			Input:     []rune(`123.`),
+			ExpectErr: newFault(4),
 		},
 		scanFuncTest{
-			TestLine:     fault.CurrLine(),
-			Input:        []rune(`123..456`),
-			ExpectNewErr: newFault(4),
+			TestLine:  fault.CurrLine(),
+			Input:     []rune(`123..456`),
+			ExpectErr: newFault(4),
 		},
 	}
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanSpell(t *testing.T) {
-	new_runFailableScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
+	runFailableScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 
 func scanSpellTests() []scanFuncTest {
@@ -50,9 +50,9 @@ func scanSpellTests() []scanFuncTest {
 			},
 		},
 		scanFuncTest{
-			TestLine:     fault.CurrLine(),
-			Input:        []rune(`@2`),
-			ExpectNewErr: newFault(0),
+			TestLine:  fault.CurrLine(),
+			Input:     []rune(`@2`),
+			ExpectErr: newFault(0),
 		},
 	}
 }
