@@ -3,6 +3,8 @@ package fault_new
 import (
 	"fmt"
 	"unicode"
+
+	"github.com/PaulioRandall/voodoo-go/scroll"
 )
 
 // Bug represents a fault with this program.
@@ -12,14 +14,11 @@ type Bug struct {
 	Actual string // What was the actual action or result
 }
 
-// Error satisfies the error interface.
-func (err Bug) Error() string {
-	return err.Actual
-}
-
 // Print satisfies the Fault interface.
-func (err Bug) Print() {
+func (err Bug) Print(sc *scroll.Scroll, line int) {
 	fmt.Println("\n[BUG]")
+
+	fmt.Printf("%3d: %s\n", line, sc.Lines[line])
 
 	fmt.Println("During:")
 	printPara([]rune(err.Stage))
@@ -36,54 +35,43 @@ func (err Bug) Print() {
 func printPara(in []rune) {
 	maxSize := 72
 	size := maxSize
-	var s string
 
-	for {
-		s, in = nextStr(in)
-		size += len(s) + 1
-
+	printIndent := func(s string) {
 		if size >= maxSize {
 			size = len(s)
 			fmt.Print("\n\t")
 		} else {
 			fmt.Print(" ")
 		}
+	}
 
+	for _, s := range splitSpace(in) {
+		size += len(s) + 1
+		printIndent(s)
 		fmt.Print(s)
 	}
 
 	fmt.Println()
 }
 
-// nextStr returns the next trimmed string in the rune slice.
-func nextStr(in []rune) (string, []rune) {
-	in = skipSpaces(in)
-	s, out := nextWord(in)
-	return string(s), out
-}
+// splitSpace splits a string on the whitespace removing
+// empty and whitespace tokens.
+func splitSpace(in []rune) []string {
+	out := []string{}
+	f := 0
 
-// nextWord returns the next word in the rune slice.
-func nextWord(in []rune) (word, out []rune) {
+	doAppend := func(i int) {
+		if f+1 < i {
+			out = append(out, string(in[f:i]))
+		}
+	}
+
 	for i, r := range in {
 		if unicode.IsSpace(r) {
-			word = in[:i]
-			out = in[i:]
-			return
+			doAppend(i)
+			f = i
 		}
 	}
 
-	word = in
-	out = []rune{}
-	return
-}
-
-// skipSpaces returns a slice of the array without any
-// preceeding unicode whitespace property runes.
-func skipSpaces(in []rune) []rune {
-	for i, r := range in {
-		if !unicode.IsSpace(r) {
-			return in[i:]
-		}
-	}
-	return []rune{}
+	return out
 }

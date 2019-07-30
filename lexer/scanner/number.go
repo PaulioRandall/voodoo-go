@@ -2,6 +2,7 @@ package scanner
 
 import (
 	"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/scroll"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
@@ -35,4 +36,15 @@ func scanNumber(in []rune) (tk *token.Token, out []rune, err fault.Fault) {
 	}
 
 	return
+}
+
+// numLiteralFault represents a fault with a literal number.
+type numLiteralFault struct {
+	Index int      // Index where the error actually occurred
+	Msgs  []string // Description of the error
+}
+
+// Print satisfies the Fault interface.
+func (err numLiteralFault) Print(sc *scroll.Scroll, line int) {
+	sc.PrettyPrintError(line, err.Index, err.Msgs...)
 }
