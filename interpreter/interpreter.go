@@ -9,11 +9,8 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// ExitCode represents a program exit code
-type ExitCode int
-
 // Execute runs a Voodoo scroll.
-func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
+func Execute(sc *scroll.Scroll, scArgs []string) int {
 
 	for i, line := range sc.Lines {
 		if i == 0 {
@@ -23,7 +20,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 		tks, err := scanner.Scan(line)
 		if err != nil {
 			err.Print(sc, i+1)
-			return 1, nil
+			return 1
 		}
 
 		tks = strimmer.Strim(tks)
@@ -32,5 +29,5 @@ func Execute(sc *scroll.Scroll, scArgs []string) (ExitCode, error) {
 		fmt.Println()
 	}
 
-	return 0, nil
+	return 0
 }

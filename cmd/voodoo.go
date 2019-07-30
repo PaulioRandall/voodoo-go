@@ -79,7 +79,7 @@ func exeScroll() {
 		panic(err)
 	}
 
-	exitCode, err := interpreter.Execute(sc, scArgs)
+	exitCode := interpreter.Execute(sc, scArgs)
 	if err != nil {
 		// TODO: Handle when error returned.
 		panic(err)
