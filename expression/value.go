@@ -1,4 +1,4 @@
-package parser
+package expression
 
 // ValueType represents a type of value
 type ValueType int

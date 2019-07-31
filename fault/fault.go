@@ -18,7 +18,7 @@ type Fault interface {
 
 // SyntaxFault represents a generic fault with syntax.
 // If different forms of error logging are required then
-// they must reimplement the Fault interface.
+// they must implement the Fault interface.
 type SyntaxFault struct {
 	Index int      // Index where the error actually occurred
 	Msgs  []string // Description of the error
