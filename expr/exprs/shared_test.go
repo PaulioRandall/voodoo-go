@@ -6,9 +6,16 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-func dummyToken(val string) token.Token {
+func typedToken(v string, t token.TokenType) token.Token {
 	return token.Token{
-		Val: val,
+		Val:  v,
+		Type: t,
+	}
+}
+
+func dummyToken(v string) token.Token {
+	return token.Token{
+		Val: v,
 	}
 }
 
@@ -19,4 +26,16 @@ type dummy struct {
 
 func (d dummy) Evaluate(c *ctx.Context) (v ctx.Value, err fault.Fault) {
 	return d.Val, d.Err
+}
+
+func valDummy(v ctx.Value) ctx.Expression {
+	return dummy{
+		Val: v,
+	}
+}
+
+func errDummy(err fault.Fault) ctx.Expression {
+	return dummy{
+		Err: err,
+	}
 }
