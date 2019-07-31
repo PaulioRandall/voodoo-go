@@ -57,3 +57,27 @@ func TestContextAssign_3(t *testing.T) {
 	err := c.Assign(`a`, v)
 	assert.NotNil(t, err, "Expected a fault for this invalid assignment")
 }
+
+func TestContextGet_1(t *testing.T) {
+	exp := NumberValue(2)
+
+	c := &Context{
+		vars: map[string]Value{
+			`a`: exp,
+		},
+	}
+
+	v, err := c.Get(`a`)
+	assert.Nil(t, err, "Expected the fault to be nil")
+	assert.Equal(t, exp, v, "Expected a different value")
+}
+
+func TestContextGet_2(t *testing.T) {
+	c := &Context{
+		vars: map[string]Value{},
+	}
+
+	v, err := c.Get(`a`)
+	assert.Nil(t, v, "Expected the value to be nil")
+	assert.NotNil(t, err, "Expected a fault when attempting to read a non existent variable")
+}

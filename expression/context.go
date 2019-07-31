@@ -47,3 +47,21 @@ func (c *Context) Assign(id string, new Value) (err fault.Fault) {
 	c.vars[id] = new
 	return
 }
+
+// Get returns the value of the specified identifier. If the identifier
+// does not exist a fault is returned.
+func (c *Context) Get(id string) (v Value, err fault.Fault) {
+	v = c.vars[id]
+
+	if v == nil {
+		err = EvalFault{
+			ExprType: `Variable access`,
+			Msgs: []string{
+				fmt.Sprintf("Variable `%s` doesn't exist", id),
+				`Or at least not within this scope`,
+			},
+		}
+	}
+
+	return
+}
