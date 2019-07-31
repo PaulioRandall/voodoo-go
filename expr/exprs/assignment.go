@@ -9,7 +9,7 @@ import (
 // Assignment represents an assignment expression.
 type Assignment struct {
 	Operator   token.Token    // Scroll token representing the operator used
-	Identifier token.Token    // Identifier that will reference the result
+	Identifier token.Token    // Target identifier for the result
 	Expression ctx.Expression // Expression to evaluate that produces the result
 }
 

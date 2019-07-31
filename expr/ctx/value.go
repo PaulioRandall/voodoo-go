@@ -8,6 +8,7 @@ const (
 	BOOL
 	NUMBER
 	STRING
+	LIST
 )
 
 // NameOfValueType returns the name of a value type.
@@ -19,6 +20,8 @@ func NameOfValueType(t ValueType) string {
 		return `number`
 	case STRING:
 		return `string`
+	case LIST:
+		return `list`
 	}
 
 	return `undefined`
@@ -32,26 +35,34 @@ type Value interface {
 	Type() ValueType
 }
 
-// BoolValue represents a boolean value
+// BoolValue represents a boolean.
 type BoolValue bool
+
+// NumberValue represents a number.
+type NumberValue float64
+
+// StringValue represents a string.
+type StringValue string
+
+// ListValue represents a list.
+type ListValue []Value
 
 // Type returns the type of the value.
 func (v BoolValue) Type() ValueType {
 	return BOOL
 }
 
-// NumberValue represents a number value
-type NumberValue float64
-
 // Type returns the type of the value.
 func (v NumberValue) Type() ValueType {
 	return NUMBER
 }
 
-// StringValue represents a string value
-type StringValue string
-
 // Type returns the type of the value.
 func (v StringValue) Type() ValueType {
 	return STRING
+}
+
+// Type returns the type of the value.
+func (v ListValue) Type() ValueType {
+	return LIST
 }
