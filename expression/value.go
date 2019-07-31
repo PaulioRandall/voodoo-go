@@ -29,29 +29,29 @@ func NameOfValueType(t ValueType) string {
 type Value interface {
 
 	// Type returns the type of the value.
-	ValueType() ValueType
+	Type() ValueType
 }
 
 // BoolValue represents a boolean value
 type BoolValue bool
 
-// ValueType returns the type of the value.
-func (v BoolValue) ValueType() ValueType {
+// Type returns the type of the value.
+func (v BoolValue) Type() ValueType {
 	return BOOL
 }
 
 // NumberValue represents a number value
 type NumberValue float64
 
-// ValueType returns the type of the value.
-func (v NumberValue) ValueType() ValueType {
+// Type returns the type of the value.
+func (v NumberValue) Type() ValueType {
 	return NUMBER
 }
 
 // StringValue represents a string value
 type StringValue string
 
-// ValueType returns the type of the value.
-func (v StringValue) ValueType() ValueType {
+// Type returns the type of the value.
+func (v StringValue) Type() ValueType {
 	return STRING
 }

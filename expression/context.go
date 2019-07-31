@@ -1,6 +1,8 @@
 package expression
 
 import (
+	"fmt"
+
 	"github.com/PaulioRandall/voodoo-go/fault"
 )
 
@@ -24,14 +26,24 @@ type Context struct {
 // currently assigned value is compatible with the identifiers
 // type, if it already exists. An assumption is made that the
 // input value is never nil.
-func (c *Context) Assign(id string, new Value) fault.Fault {
+func (c *Context) Assign(id string, new Value) (err fault.Fault) {
 	old := c.vars[id]
-	if old == nil {
-		c.vars[id] = new
-		return nil
+
+	if old != nil && old.Type() != new.Type() {
+		oldType := NameOfValueType(old.Type())
+		newType := NameOfValueType(new.Type())
+
+		err = EvalFault{
+			ExprType: `Assignment`,
+			Msgs: []string{
+				fmt.Sprintf("Identifier `%s` stores values of type `%s`", id, oldType),
+				fmt.Sprintf("Your trying assign a value of type `%s`", newType),
+				`Implicit type casting is not allowed`,
+			},
+		}
+		return
 	}
 
-	// TODO: When the value already exists
-
-	return nil
+	c.vars[id] = new
+	return
 }
