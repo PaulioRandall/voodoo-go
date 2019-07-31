@@ -1,4 +1,4 @@
-package expression
+package ctx
 
 import (
 	"fmt"
@@ -6,20 +6,27 @@ import (
 	"github.com/PaulioRandall/voodoo-go/fault"
 )
 
-// Expression represents a node within a parse tree.
-type Expression interface {
-
-	// Evaluate executes the expression within the given
-	// context.
-	Evaluate(*Context) (Value, fault.Fault)
-}
-
 // Context represents the working environment in which
 // expressions can be evaluated. It contains the existing
 // identifiers and their values and provides a means to
 // add and modify them.
 type Context struct {
 	vars map[string]Value // Map of identifiers to values
+}
+
+// New returns a new initialised context.
+func New(m map[string]Value) *Context {
+	return &Context{
+		vars: m,
+	}
+}
+
+// Empty returns a new initialised context with an empty
+// variable map.
+func Empty() *Context {
+	return &Context{
+		vars: map[string]Value{},
+	}
 }
 
 // Assign assigns a value to an identifier ensuring that the

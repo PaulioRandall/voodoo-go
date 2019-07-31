@@ -1,12 +1,11 @@
-package expression
+package exprs
 
 import (
 	"testing"
 
-	//"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/expr/ctx"
 	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
-	//"github.com/stretchr/testify/require"
 )
 
 func newToken(val string) token.Token {
@@ -15,24 +14,19 @@ func newToken(val string) token.Token {
 	}
 }
 
-func newNumber(n string) Expression {
+func newNumber(n string) ctx.Expression {
 	num := Number{
 		Number: newToken(n),
 	}
-	expr := Expression(num)
+	expr := ctx.Expression(num)
 	return expr
 }
 
 func TestAssignmentEvaluate_1(t *testing.T) {
-	c := &Context{
-		vars: map[string]Value{},
-	}
-
-	exp := &Context{
-		vars: map[string]Value{
-			`a`: NumberValue(123.456),
-		},
-	}
+	c := ctx.Empty()
+	exp := ctx.New(map[string]ctx.Value{
+		`a`: ctx.NumberValue(123.456),
+	})
 
 	a := &Assignment{
 		Operator:   newToken(`<-`),

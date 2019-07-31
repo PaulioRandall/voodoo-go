@@ -1,10 +1,19 @@
-package expression
+package ctx
 
 import (
 	"fmt"
 
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/scroll"
 )
+
+// Expression represents an expression that results in a value.
+type Expression interface {
+
+	// Evaluate evaluates the expression returning the resultant
+	// value if there is one.
+	Evaluate(*Context) (Value, fault.Fault)
+}
 
 // EvalFault represents a generic fault during an expressions
 // evaluation.
