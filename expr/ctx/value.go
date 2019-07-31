@@ -47,22 +47,28 @@ type StringValue string
 // ListValue represents a list.
 type ListValue []Value
 
-// Type returns the type of the value.
+// Type satisfies the Value interface.
 func (v BoolValue) Type() ValueType {
 	return BOOL
 }
 
-// Type returns the type of the value.
+// Type satisfies the Value interface.
 func (v NumberValue) Type() ValueType {
 	return NUMBER
 }
 
-// Type returns the type of the value.
+// Type satisfies the Value interface.
 func (v StringValue) Type() ValueType {
 	return STRING
 }
 
-// Type returns the type of the value.
+// Type satisfies the Value interface.
 func (v ListValue) Type() ValueType {
 	return LIST
+}
+
+// HasSameType returns true if both input values have the
+// same type.
+func HasSameType(a Value, b Value) bool {
+	return a.Type() == b.Type()
 }
