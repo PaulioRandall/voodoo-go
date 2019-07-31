@@ -10,5 +10,5 @@ type ParseTree struct {
 
 // Evaluate satisfies the Expression interface.
 func (pt *ParseTree) Evaluate(c *Context) (Value, fault.Fault) {
-	return Value{}, nil
+	return nil, nil
 }

@@ -13,7 +13,13 @@ type Assignment struct {
 }
 
 // Evaluate satisfies the Expression interface.
-func (a *Assignment) Evaluate(c *Context) (Value, fault.Fault) {
+func (a *Assignment) Evaluate(c *Context) (v Value, err fault.Fault) {
+	val, err := a.Expression.Evaluate(c)
+	if err != nil {
+		return
+	}
 
-	return Value{}, nil
+	id := a.Identifier.Val
+	c.IDs[id] = val
+	return
 }
