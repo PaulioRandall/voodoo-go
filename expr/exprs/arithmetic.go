@@ -11,8 +11,8 @@ import (
 // subtraction, multiplication, or division and returns
 // the result.
 type Arithmetic struct {
-	Operator token.Token    // Arithmetic token defined in the scroll
 	Left     ctx.Expression // Left value or numerator
+	Operator token.Token    // Arithmetic token defined in the scroll
 	Right    ctx.Expression // Right value or denominator
 }
 

@@ -18,8 +18,8 @@ func TestArithmetic_Evaluate_1(t *testing.T) {
 	exp_v := ctx.NumberValue(6)
 
 	a := &Arithmetic{
-		Operator: typedToken(`+`, token.CALC_ADD),
 		Left:     valDummy(left),
+		Operator: typedToken(`+`, token.CALC_ADD),
 		Right:    valDummy(right),
 	}
 
@@ -40,8 +40,8 @@ func TestArithmetic_Evaluate_2(t *testing.T) {
 	exp_v := ctx.NumberValue(3)
 
 	a := &Arithmetic{
-		Operator: typedToken(`-`, token.CALC_SUBTRACT),
 		Left:     valDummy(left),
+		Operator: typedToken(`-`, token.CALC_SUBTRACT),
 		Right:    valDummy(right),
 	}
 
@@ -62,8 +62,8 @@ func TestArithmetic_Evaluate_3(t *testing.T) {
 	exp_v := ctx.NumberValue(9)
 
 	a := &Arithmetic{
-		Operator: typedToken(`*`, token.CALC_MULTIPLY),
 		Left:     valDummy(left),
+		Operator: typedToken(`*`, token.CALC_MULTIPLY),
 		Right:    valDummy(right),
 	}
 
@@ -84,8 +84,8 @@ func TestArithmetic_Evaluate_4(t *testing.T) {
 	exp_v := ctx.NumberValue(2)
 
 	a := &Arithmetic{
-		Operator: typedToken(`/`, token.CALC_DIVIDE),
 		Left:     valDummy(left),
+		Operator: typedToken(`/`, token.CALC_DIVIDE),
 		Right:    valDummy(right),
 	}
 
@@ -105,8 +105,8 @@ func TestArithmetic_Evaluate_5(t *testing.T) {
 	right := ctx.NumberValue(6)
 
 	a := &Arithmetic{
-		Operator: typedToken(`+`, token.CALC_ADD),
 		Left:     valDummy(left),
+		Operator: typedToken(`+`, token.CALC_ADD),
 		Right:    valDummy(right),
 	}
 
@@ -125,8 +125,8 @@ func TestArithmetic_Evaluate_6(t *testing.T) {
 	right := ctx.NumberValue(2)
 
 	a := &Arithmetic{
-		Operator: typedToken(`<-`, token.ASSIGNMENT),
 		Left:     valDummy(left),
+		Operator: typedToken(`<-`, token.ASSIGNMENT),
 		Right:    valDummy(right),
 	}
 

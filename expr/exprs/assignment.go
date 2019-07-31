@@ -8,14 +8,14 @@ import (
 
 // Assignment represents an assignment expression.
 type Assignment struct {
-	Operator   token.Token    // Scroll token representing the operator used
 	Identifier token.Token    // Target identifier for the result
-	Expression ctx.Expression // Expression to evaluate that produces the result
+	Operator   token.Token    // Scroll token representing the operator used
+	Right      ctx.Expression // Expression to evaluate that produces the result
 }
 
 // Evaluate satisfies the Expression interface.
 func (a Assignment) Evaluate(c *ctx.Context) (v ctx.Value, err fault.Fault) {
-	val, err := a.Expression.Evaluate(c)
+	val, err := a.Right.Evaluate(c)
 
 	if err != nil {
 		return

@@ -16,9 +16,9 @@ func TestAssignment_Evaluate_1(t *testing.T) {
 	})
 
 	a := &Assignment{
-		Operator:   dummyToken(`<-`),
 		Identifier: dummyToken(`a`),
-		Expression: dummy{
+		Operator:   dummyToken(`<-`),
+		Right: dummy{
 			Val: n,
 		},
 	}
@@ -35,9 +35,9 @@ func TestAssignment_Evaluate_2(t *testing.T) {
 	exp := ctx.Empty()
 
 	a := &Assignment{
-		Operator:   dummyToken(`<-`),
 		Identifier: dummyToken(`a`),
-		Expression: dummy{
+		Operator:   dummyToken(`<-`),
+		Right: dummy{
 			Err: ctx.EvalFault{},
 		},
 	}
@@ -54,9 +54,9 @@ func TestAssignment_Evaluate_3(t *testing.T) {
 	exp := ctx.Empty()
 
 	a := &Assignment{
-		Operator:   dummyToken(`<-`),
 		Identifier: dummyToken(`a`),
-		Expression: dummy{},
+		Operator:   dummyToken(`<-`),
+		Right:      dummy{},
 	}
 
 	v, err := a.Evaluate(c)
