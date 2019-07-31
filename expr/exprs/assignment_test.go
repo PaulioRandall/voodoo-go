@@ -9,19 +9,42 @@ import (
 
 func TestAssignment_Evaluate_1(t *testing.T) {
 	c := ctx.Empty()
+	n := ctx.NumberValue(123.456)
+
 	exp := ctx.New(map[string]ctx.Value{
-		`a`: ctx.NumberValue(123.456),
+		`a`: n,
 	})
 
 	a := &Assignment{
 		Operator:   dummyToken(`<-`),
 		Identifier: dummyToken(`a`),
-		Expression: dummyNumber(`123.456`),
+		Expression: dummy{
+			Val: n,
+		},
 	}
 
 	v, err := a.Evaluate(c)
 
-	assert.Nil(t, v, "Did NOT expect a value to be returned for an assignment")
-	assert.Nil(t, err, "Did NOT expect an fault for a valid assignment")
-	assert.Equal(t, exp, c, "Context was not in the expected state")
+	assert.Nil(t, v)
+	assert.Nil(t, err)
+	assert.Equal(t, exp, c)
+}
+
+func TestAssignment_Evaluate_2(t *testing.T) {
+	c := ctx.Empty()
+	exp := ctx.Empty()
+
+	a := &Assignment{
+		Operator:   dummyToken(`<-`),
+		Identifier: dummyToken(`a`),
+		Expression: dummy{
+			Err: ctx.EvalFault{},
+		},
+	}
+
+	v, err := a.Evaluate(c)
+
+	assert.Nil(t, v)
+	assert.NotNil(t, err)
+	assert.Equal(t, exp, c)
 }
