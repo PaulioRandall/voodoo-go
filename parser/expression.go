@@ -9,5 +9,5 @@ type Expression interface {
 
 	// Evaluate executes the expression within the given
 	// context.
-	Evaluate(*Context) fault.Fault
+	Evaluate(*Context) (Value, fault.Fault)
 }

@@ -13,6 +13,7 @@ type Assignment struct {
 }
 
 // Evaluate satisfies the Expression interface.
-func (pt *Assignment) Evaluate(c *Context) fault.Fault {
-	return nil
+func (a *Assignment) Evaluate(c *Context) (Value, fault.Fault) {
+
+	return Value{}, nil
 }
