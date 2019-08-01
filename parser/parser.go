@@ -4,18 +4,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// Instruction represents a scroll instruction.
-type Instruction struct {
-	Token   Token
-	Params  int // Number of parameters to pop from the value stack
-	Returns int // Number of parameters to push on to the value stack
-}
-
 // Parse parses the input into a stack of instructions followed by a
 // stack of values.
-func Parse(in []Token) ([]Instruction, []Token, Fault) {
+func Parse(in []Token) ([]Exe, []Token, Fault) {
 
-	exeStack := []Instruction{}
+	exeStack := []Exe{}
 	valueStack := []Token{}
 	assign := false
 
@@ -30,7 +23,7 @@ func Parse(in []Token) ([]Instruction, []Token, Fault) {
 			assign = true
 			fallthrough
 		case isOperator(tk):
-			var exe Instruction
+			var exe Exe
 			exe, in = parseOperation(in)
 			exeStack = append(exeStack, exe)
 		default:
@@ -52,7 +45,7 @@ func Parse(in []Token) ([]Instruction, []Token, Fault) {
 }
 
 // reverseInstructions reverses an array of instructions.
-func reverseInstructions(in []Instruction) []Instruction {
+func reverseInstructions(in []Exe) []Exe {
 	for i := len(in)/2 - 1; i >= 0; i-- {
 		opp := len(in) - 1 - i
 		in[i], in[opp] = in[opp], in[i]
@@ -70,8 +63,8 @@ func reverseTokens(in []Token) []Token {
 }
 
 // parseOperation parses an operation.
-func parseOperation(in []Token) (Instruction, []Token) {
-	exe := Instruction{
+func parseOperation(in []Token) (Exe, []Token) {
+	exe := Exe{
 		Token:   in[0],
 		Params:  2,
 		Returns: 1,

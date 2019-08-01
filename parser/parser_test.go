@@ -13,13 +13,13 @@ import (
 type parseTest struct {
 	TestLine int
 	Input    []Token
-	Exes     []Instruction
+	Exes     []Exe
 	Values   []Token
 	Error    Fault
 }
 
-func newExe(p, r int, tk Token) Instruction {
-	return Instruction{
+func newExe(p, r int, tk Token) Exe {
+	return Exe{
 		Token:   tk,
 		Params:  p,
 		Returns: r,
@@ -32,7 +32,7 @@ func TestParser(t *testing.T) {
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> parser_test.go : " + testLine)
 
-		var exes []Instruction
+		var exes []Exe
 		var values []Token
 		var err Fault
 		exes, values, err = Parse(tc.Input)
@@ -63,7 +63,7 @@ func makeParseTests() []parseTest {
 				Token{`<-`, 2, 4, token.ASSIGNMENT},
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 			},
-			Exes: []Instruction{
+			Exes: []Exe{
 				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
 			Values: []Token{
@@ -80,7 +80,7 @@ func makeParseTests() []parseTest {
 				Token{`+`, 7, 8, token.CALC_ADD},
 				Token{`2`, 9, 10, token.LITERAL_NUMBER},
 			},
-			Exes: []Instruction{
+			Exes: []Exe{
 				newExe(2, 1, Token{`+`, 7, 8, token.CALC_ADD}),
 				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
@@ -101,7 +101,7 @@ func makeParseTests() []parseTest {
 				Token{`-`, 11, 12, token.CALC_SUBTRACT},
 				Token{`2`, 13, 14, token.LITERAL_NUMBER},
 			},
-			Exes: []Instruction{
+			Exes: []Exe{
 				newExe(2, 1, Token{`+`, 7, 8, token.CALC_ADD}),
 				newExe(2, 1, Token{`-`, 11, 12, token.CALC_SUBTRACT}),
 				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
