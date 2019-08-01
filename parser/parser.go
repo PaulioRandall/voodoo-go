@@ -7,5 +7,6 @@ import (
 
 // Parse parses the input into a parse tree.
 func Parse(in []token.Token) (out *ParseTree, err fault.Fault) {
+
 	return nil, nil
 }
