@@ -1,12 +1,8 @@
 package parser
 
-import (
-	"github.com/PaulioRandall/voodoo-go/token"
-)
-
 // Exe represents an executable instruction.
 type Exe struct {
-	Token   token.Token
+	Token   Token
 	Params  int // Number of input parameters
 	Returns int // Number of output parameters
 }

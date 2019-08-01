@@ -44,8 +44,8 @@ func TestExeStack(t *testing.T) {
 	assert.Equal(t, Exe{}, a0)
 }
 
-func dummyToken(t token.TokenType) token.Token {
-	return token.Token{
+func dummyToken(t token.TokenType) Token {
+	return Token{
 		Type: t,
 	}
 }
@@ -76,5 +76,5 @@ func TestValStack(t *testing.T) {
 	s.Pop()
 	a0, ok := s.Pop()
 	assert.False(t, ok)
-	assert.Equal(t, token.Token{}, a0)
+	assert.Equal(t, Token{}, a0)
 }

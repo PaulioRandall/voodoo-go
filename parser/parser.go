@@ -5,19 +5,25 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
+// Token
+type Token token.Token
+
+// Fault
+type Fault fault.Fault
+
 // Instruction represents a scroll instruction.
 type Instruction struct {
-	Token   token.Token
+	Token   Token
 	Params  int // Number of parameters to pop from the value stack
 	Returns int // Number of parameters to push on to the value stack
 }
 
 // Parse parses the input into a stack of instructions followed by a
 // stack of values.
-func Parse(in []token.Token) ([]Instruction, []token.Token, fault.Fault) {
+func Parse(in []Token) ([]Instruction, []Token, Fault) {
 
 	exeStack := []Instruction{}
-	valueStack := []token.Token{}
+	valueStack := []Token{}
 	assign := false
 
 	for len(in) > 0 {
@@ -62,7 +68,7 @@ func reverseInstructions(in []Instruction) []Instruction {
 }
 
 // reverseTokens reverses an array of tokens.
-func reverseTokens(in []token.Token) []token.Token {
+func reverseTokens(in []Token) []Token {
 	for i := len(in)/2 - 1; i >= 0; i-- {
 		opp := len(in) - 1 - i
 		in[i], in[opp] = in[opp], in[i]
@@ -71,7 +77,7 @@ func reverseTokens(in []token.Token) []token.Token {
 }
 
 // parseOperation parses an operation.
-func parseOperation(in []token.Token) (Instruction, []token.Token) {
+func parseOperation(in []Token) (Instruction, []Token) {
 	exe := Instruction{
 		Token:   in[0],
 		Params:  2,
@@ -81,12 +87,12 @@ func parseOperation(in []token.Token) (Instruction, []token.Token) {
 }
 
 // isAssignment returns true if the token is an assignment.
-func isAssignment(tk token.Token) bool {
+func isAssignment(tk Token) bool {
 	return tk.Type == token.ASSIGNMENT
 }
 
 // isOperator returns true if the token is an operation.
-func isOperator(tk token.Token) bool {
+func isOperator(tk Token) bool {
 	switch tk.Type {
 	case token.CALC_ADD:
 		return true
@@ -98,7 +104,7 @@ func isOperator(tk token.Token) bool {
 }
 
 // isValueOrID returns true if the token is a value or identifier.
-func isValueOrID(tk token.Token) bool {
+func isValueOrID(tk Token) bool {
 	switch tk.Type {
 	case token.IDENTIFIER_EXPLICIT:
 		return true
@@ -111,7 +117,7 @@ func isValueOrID(tk token.Token) bool {
 
 // requireMin returns a fault if the length of the token array
 // is less than the minimum number required.
-func requireMin(in []token.Token, min int) fault.Fault {
+func requireMin(in []Token, min int) Fault {
 	if len(in) >= min {
 		return nil
 	}
@@ -126,7 +132,7 @@ func requireMin(in []token.Token, min int) fault.Fault {
 
 // notImplemented returns a fault if there's no implementation for a
 // particular arrangement of tokens.
-func notImplemented() fault.Fault {
+func notImplemented() Fault {
 	return ParseFault{
 		Type: `Not implemented`,
 		Msgs: []string{
@@ -137,7 +143,7 @@ func notImplemented() fault.Fault {
 
 // missingTokens returns a fault if there are no tokens supplied for
 // parsing when some were expected.
-func missingTokens() fault.Fault {
+func missingTokens() Fault {
 	return ParseFault{
 		Type: `Missing tokens`,
 		Msgs: []string{
