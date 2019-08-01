@@ -1,86 +1,92 @@
 package parser
 
 import (
-	"github.com/PaulioRandall/voodoo-go/expr/ctx"
-	"github.com/PaulioRandall/voodoo-go/expr/exprs"
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// Parse parses the input into an expression.
-func Parse(in []token.Token) (out ctx.Expression, err fault.Fault) {
-	return parse(in)
+// Instruction represents a scroll instruction.
+type Instruction struct {
+	Token   token.Token
+	Params  int // Number of parameters to pop from the value stack
+	Returns int // Number of parameters to push on to the value stack
 }
 
-// parse parses the input into an expression.
-func parse(in []token.Token) (out ctx.Expression, err fault.Fault) {
+// Parse parses the input into a stack of instructions followed by a
+// stack of values.
+func Parse(in []token.Token) ([]Instruction, []token.Token, fault.Fault) {
 
-	if len(in) == 0 {
-		err = missingTokens()
-		return
-	}
+	exeStack := []Instruction{}
+	valueStack := []token.Token{}
 
-	if len(in) == 1 {
-		return parseToken(in[0])
-	}
+	for len(in) > 0 {
+		tk := in[0]
 
-	if in[0].Type == token.IDENTIFIER_EXPLICIT && in[1].Type == token.ASSIGNMENT {
-		return parseAssignment(in)
-	}
-
-	return nil, notImplemented()
-}
-
-// parseToken parses an expression containing a single token.
-func parseToken(in token.Token) (out ctx.Expression, err fault.Fault) {
-	println("parseToken")
-
-	switch in.Type {
-	case token.LITERAL_NUMBER:
-		out = exprs.Number{
-			Number: in,
+		switch {
+		case isValueOrID(tk):
+			valueStack = append(valueStack, tk)
+			in = in[1:]
+		case isOperator(tk):
+			var exe Instruction
+			exe, in = parseOperation(in)
+			exeStack = append(exeStack, exe)
+		default:
+			return nil, nil, notImplemented()
 		}
-	default:
-		err = notImplemented()
 	}
 
-	return
+	exeStack = reverseInstructions(exeStack)
+	valueStack = reverseTokens(valueStack)
+	return exeStack, valueStack, nil
 }
 
-// parseAssignment parses an assignment expression.
-func parseAssignment(in []token.Token) (out ctx.Expression, err fault.Fault) {
-	println("parseAssignment")
-
-	err = requireMin(in, 3)
-	if err != nil {
-		return
+// reverseInstructions reverses an array of instructions.
+func reverseInstructions(in []Instruction) []Instruction {
+	for i := len(in)/2 - 1; i >= 0; i-- {
+		opp := len(in) - 1 - i
+		in[i], in[opp] = in[opp], in[i]
 	}
-
-	right, err := parse(in[2:])
-	if err != nil {
-		return
-	}
-
-	out = exprs.Assignment{
-		Identifier: in[0],
-		Operator:   in[1],
-		Right:      right,
-	}
-
-	return
+	return in
 }
 
 // reverseTokens reverses an array of tokens.
 func reverseTokens(in []token.Token) []token.Token {
-	size := len(in)
-	out := make([]token.Token, size)
+	for i := len(in)/2 - 1; i >= 0; i-- {
+		opp := len(in) - 1 - i
+		in[i], in[opp] = in[opp], in[i]
+	}
+	return in
+}
 
-	for i, v := range in {
-		i = size - 1 - i
-		out[i] = v
+// parseOperation parses an operation.
+func parseOperation(in []token.Token) (Instruction, []token.Token) {
+	exe := Instruction{
+		Token:  in[0],
+		Params: 2,
+	}
+	return exe, in[1:]
+}
+
+// isOperator returns true if the token is an operation.
+func isOperator(tk token.Token) bool {
+	switch tk.Type {
+	case token.ASSIGNMENT:
+		return true
 	}
 
-	return out
+	return false
+}
+
+// isValueOrID returns true if the token is a value or identifier.
+func isValueOrID(tk token.Token) bool {
+	switch tk.Type {
+	case token.IDENTIFIER_EXPLICIT:
+		return true
+	case token.LITERAL_NUMBER:
+		return true
+	}
+
+	return false
 }
 
 // requireMin returns a fault if the length of the token array
