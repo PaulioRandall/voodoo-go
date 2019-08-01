@@ -18,6 +18,14 @@ type parseTest struct {
 	Error    fault.Fault
 }
 
+func newExe(p, r int, tk token.Token) Instruction {
+	return Instruction{
+		Token:   tk,
+		Params:  p,
+		Returns: r,
+	}
+}
+
 func TestParser(t *testing.T) {
 	for _, tc := range makeParseTests() {
 
@@ -56,13 +64,52 @@ func makeParseTests() []parseTest {
 				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
 			},
 			Exes: []Instruction{
-				Instruction{
-					Token:  token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-					Params: 2,
-				},
+				newExe(2, 1, token.Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
 			Values: []token.Token{
 				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				token.Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+			},
+		},
+		parseTest{
+			TestLine: fault.CurrLine(),
+			Input: []token.Token{
+				token.Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
+				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				token.Token{`+`, 7, 8, token.CALC_ADD},
+				token.Token{`2`, 9, 10, token.LITERAL_NUMBER},
+			},
+			Exes: []Instruction{
+				newExe(2, 1, token.Token{`+`, 7, 8, token.CALC_ADD}),
+				newExe(2, 1, token.Token{`<-`, 2, 4, token.ASSIGNMENT}),
+			},
+			Values: []token.Token{
+				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				token.Token{`2`, 9, 10, token.LITERAL_NUMBER},
+				token.Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+			},
+		},
+		parseTest{
+			TestLine: fault.CurrLine(),
+			Input: []token.Token{
+				token.Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
+				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				token.Token{`+`, 7, 8, token.CALC_ADD},
+				token.Token{`3`, 9, 10, token.LITERAL_NUMBER},
+				token.Token{`-`, 11, 12, token.CALC_SUBTRACT},
+				token.Token{`2`, 13, 14, token.LITERAL_NUMBER},
+			},
+			Exes: []Instruction{
+				newExe(2, 1, token.Token{`+`, 7, 8, token.CALC_ADD}),
+				newExe(2, 1, token.Token{`-`, 11, 12, token.CALC_SUBTRACT}),
+				newExe(2, 1, token.Token{`<-`, 2, 4, token.ASSIGNMENT}),
+			},
+			Values: []token.Token{
+				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				token.Token{`3`, 9, 10, token.LITERAL_NUMBER},
+				token.Token{`2`, 13, 14, token.LITERAL_NUMBER},
 				token.Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
 			},
 		},

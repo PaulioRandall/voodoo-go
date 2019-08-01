@@ -18,6 +18,7 @@ func Parse(in []token.Token) ([]Instruction, []token.Token, fault.Fault) {
 
 	exeStack := []Instruction{}
 	valueStack := []token.Token{}
+	assign := false
 
 	for len(in) > 0 {
 		tk := in[0]
@@ -26,6 +27,9 @@ func Parse(in []token.Token) ([]Instruction, []token.Token, fault.Fault) {
 		case isValueOrID(tk):
 			valueStack = append(valueStack, tk)
 			in = in[1:]
+		case isAssignment(tk):
+			assign = true
+			fallthrough
 		case isOperator(tk):
 			var exe Instruction
 			exe, in = parseOperation(in)
@@ -35,8 +39,16 @@ func Parse(in []token.Token) ([]Instruction, []token.Token, fault.Fault) {
 		}
 	}
 
-	exeStack = reverseInstructions(exeStack)
-	valueStack = reverseTokens(valueStack)
+	if assign {
+		val := valueStack[0]
+		valueStack = valueStack[1:]
+		valueStack = append(valueStack, val)
+
+		exe := exeStack[0]
+		exeStack = exeStack[1:]
+		exeStack = append(exeStack, exe)
+	}
+
 	return exeStack, valueStack, nil
 }
 
@@ -61,16 +73,24 @@ func reverseTokens(in []token.Token) []token.Token {
 // parseOperation parses an operation.
 func parseOperation(in []token.Token) (Instruction, []token.Token) {
 	exe := Instruction{
-		Token:  in[0],
-		Params: 2,
+		Token:   in[0],
+		Params:  2,
+		Returns: 1,
 	}
 	return exe, in[1:]
+}
+
+// isAssignment returns true if the token is an assignment.
+func isAssignment(tk token.Token) bool {
+	return tk.Type == token.ASSIGNMENT
 }
 
 // isOperator returns true if the token is an operation.
 func isOperator(tk token.Token) bool {
 	switch tk.Type {
-	case token.ASSIGNMENT:
+	case token.CALC_ADD:
+		return true
+	case token.CALC_SUBTRACT:
 		return true
 	}
 
