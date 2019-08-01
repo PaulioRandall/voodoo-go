@@ -1,15 +1,8 @@
 package parser
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
-
-// Token
-type Token token.Token
-
-// Fault
-type Fault fault.Fault
 
 // Instruction represents a scroll instruction.
 type Instruction struct {

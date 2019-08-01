@@ -1,17 +1,5 @@
 package parser
 
-// Exe represents an executable instruction.
-type Exe struct {
-	Token   Token
-	Params  int // Number of input parameters
-	Returns int // Number of output parameters
-}
-
-// ExeStack represents a stack of instructions.
-type ExeStack struct {
-	stack []Exe
-}
-
 // Push appends the instruction to the top of the
 // stack.
 func (e *ExeStack) Push(in Exe) {

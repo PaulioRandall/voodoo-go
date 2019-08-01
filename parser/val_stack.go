@@ -1,10 +1,5 @@
 package parser
 
-// ValStack represents a stack of values.
-type ValStack struct {
-	stack []Token
-}
-
 // Push appends the value to the top of the stack.
 func (e *ValStack) Push(in Token) {
 	e.stack = append(e.stack, in)
