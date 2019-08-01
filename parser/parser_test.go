@@ -64,10 +64,6 @@ func TestParser(t *testing.T) {
 }
 
 func makeParseTests() []parseTest {
-	return []parseTest{}
-}
-
-func NEW_makeParseTests() []parseTest {
 	return []parseTest{
 		parseTest{
 			TestLine: fault.CurrLine(),
@@ -79,7 +75,9 @@ func NEW_makeParseTests() []parseTest {
 			Expect: exprs.Assignment{
 				Identifier: token.Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
 				Operator:   token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-				Right:      valDummy(ctx.NumberValue(1)),
+				Right: exprs.Number{
+					Number: token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				},
 			},
 		},
 	}

@@ -1,0 +1,5 @@
+[NEXT]
++ Implement parser
+
+[TODO]
++ Delete the voodoo API repository
