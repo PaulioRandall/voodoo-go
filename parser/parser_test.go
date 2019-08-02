@@ -64,7 +64,7 @@ func makeParseTests() []parseTest {
 			TestLine: fault.CurrLine(),
 			Input: []Token{
 				// x <- 1
-				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				Token{`x`, 0, 1, token.IDENTIFIER},
 				Token{`<-`, 2, 4, token.ASSIGNMENT},
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 			},
@@ -73,14 +73,14 @@ func makeParseTests() []parseTest {
 			},
 			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
-				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				Token{`x`, 0, 1, token.IDENTIFIER},
 			},
 		},
 		parseTest{
 			TestLine: fault.CurrLine(),
 			Input: []Token{
 				// x <- 1 + 2
-				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				Token{`x`, 0, 1, token.IDENTIFIER},
 				Token{`<-`, 2, 4, token.ASSIGNMENT},
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 				Token{`+`, 7, 8, token.CALC_ADD},
@@ -93,14 +93,14 @@ func makeParseTests() []parseTest {
 			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 				Token{`2`, 9, 10, token.LITERAL_NUMBER},
-				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				Token{`x`, 0, 1, token.IDENTIFIER},
 			},
 		},
 		parseTest{
 			TestLine: fault.CurrLine(),
 			Input: []Token{
 				// x <- 1 + 3 - 2
-				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				Token{`x`, 0, 1, token.IDENTIFIER},
 				Token{`<-`, 2, 4, token.ASSIGNMENT},
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 				Token{`+`, 7, 8, token.CALC_ADD},
@@ -117,7 +117,7 @@ func makeParseTests() []parseTest {
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 				Token{`3`, 9, 10, token.LITERAL_NUMBER},
 				Token{`2`, 13, 14, token.LITERAL_NUMBER},
-				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
+				Token{`x`, 0, 1, token.IDENTIFIER},
 			},
 		},
 	}

@@ -19,7 +19,7 @@ func scanWordTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `a`,
-				Type: token.IDENTIFIER_EXPLICIT,
+				Type: token.IDENTIFIER,
 			},
 		},
 		scanFuncTest{
@@ -28,7 +28,7 @@ func scanWordTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `abc`,
-				Type: token.IDENTIFIER_EXPLICIT,
+				Type: token.IDENTIFIER,
 			},
 		},
 		scanFuncTest{
@@ -37,7 +37,7 @@ func scanWordTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `abc_123`,
-				Type: token.IDENTIFIER_EXPLICIT,
+				Type: token.IDENTIFIER,
 			},
 		},
 		scanFuncTest{
@@ -46,7 +46,7 @@ func scanWordTests() []scanFuncTest {
 			Output:   []rune{},
 			Expect: token.Token{
 				Val:  `a__________123456789`,
-				Type: token.IDENTIFIER_EXPLICIT,
+				Type: token.IDENTIFIER,
 			},
 		},
 		scanFuncTest{
@@ -55,7 +55,7 @@ func scanWordTests() []scanFuncTest {
 			Output:   []rune(` efg`),
 			Expect: token.Token{
 				Val:  `abc`,
-				Type: token.IDENTIFIER_EXPLICIT,
+				Type: token.IDENTIFIER,
 			},
 		},
 		scanFuncTest{

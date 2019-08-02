@@ -32,14 +32,14 @@ func strimTests() []strimTest {
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER_IMPLICIT},
+				token.Token{`x`, 0, 1, token.IDENTIFIER},
 				token.Token{` `, 1, 2, token.WHITESPACE},
 				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
 				token.Token{` `, 4, 5, token.WHITESPACE},
 				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
 			},
 			ExpectToks: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER_IMPLICIT},
+				token.Token{`x`, 0, 1, token.IDENTIFIER},
 				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
 				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
 			},
@@ -54,7 +54,7 @@ func strimTests() []strimTest {
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER_IMPLICIT},
+				token.Token{`x`, 0, 1, token.IDENTIFIER},
 				token.Token{` `, 1, 2, token.WHITESPACE},
 				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
 				token.Token{` `, 4, 5, token.WHITESPACE},
@@ -63,7 +63,7 @@ func strimTests() []strimTest {
 				token.Token{`// 'There's a snake in my boot'`, 7, 38, token.COMMENT},
 			},
 			ExpectToks: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER_IMPLICIT},
+				token.Token{`x`, 0, 1, token.IDENTIFIER},
 				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
 				token.Token{`2`, 5, 6, token.LITERAL_NUMBER},
 			},
@@ -103,13 +103,13 @@ func strimTests() []strimTest {
 				token.Token{`END`, 7, 10, token.KEYWORD_DONE},
 				token.Token{` `, 10, 11, token.WHITESPACE},
 				token.Token{`@PrInTlN`, 11, 19, token.SPELL},
-				token.Token{`語`, 19, 20, token.IDENTIFIER_IMPLICIT},
+				token.Token{`語`, 19, 20, token.IDENTIFIER},
 			},
 			ExpectToks: []token.Token{
 				token.Token{`func`, 0, 6, token.KEYWORD_FUNC},
 				token.Token{`end`, 7, 10, token.KEYWORD_DONE},
 				token.Token{`@println`, 11, 19, token.SPELL},
-				token.Token{`語`, 19, 20, token.IDENTIFIER_IMPLICIT},
+				token.Token{`語`, 19, 20, token.IDENTIFIER},
 			},
 		},
 	}

@@ -11,7 +11,7 @@ import (
 func scanWord(in []rune, col int) (*token.Token, []rune) {
 
 	s, out := scanWordStr(in)
-	t := token.IDENTIFIER_EXPLICIT
+	t := token.IDENTIFIER
 
 	switch strings.ToLower(s) {
 	case `func`:

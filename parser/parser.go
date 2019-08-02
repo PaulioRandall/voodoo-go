@@ -84,7 +84,7 @@ func isAssignment(tk Token) bool {
 // isValueOrID returns true if the token is a value or identifier.
 func isValueOrID(tk Token) bool {
 	switch tk.Type {
-	case token.IDENTIFIER_EXPLICIT:
+	case token.IDENTIFIER:
 		return true
 	case token.LITERAL_NUMBER:
 		return true

@@ -11,8 +11,7 @@ const (
 	KEYWORD_WHEN // when
 	KEYWORD_DONE // done
 	// Identifiers
-	IDENTIFIER_EXPLICIT // Declared by the coder
-	IDENTIFIER_IMPLICIT // Inserted during syntax analysis
+	IDENTIFIER
 	// Booleans
 	BOOLEAN_TRUE  // true
 	BOOLEAN_FALSE // false
@@ -66,10 +65,8 @@ func TokenName(t TokenType) string {
 		return `KEYWORD_WHEN`
 	case KEYWORD_DONE:
 		return `KEYWORD_DONE`
-	case IDENTIFIER_EXPLICIT:
-		return `IDENTIFIER_EXPLICIT`
-	case IDENTIFIER_IMPLICIT:
-		return `IDENTIFIER_IMPLICIT`
+	case IDENTIFIER:
+		return `IDENTIFIER`
 	case BOOLEAN_TRUE:
 		return `BOOLEAN_TRUE`
 	case BOOLEAN_FALSE:
