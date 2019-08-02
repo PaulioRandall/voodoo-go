@@ -14,18 +14,10 @@ import (
 type parseTest struct {
 	TestLine int
 	Input    []Token
-	Exes     []Exe
-	Vals     []Token
+	Stat     *Statement
 	Error    Fault
 }
 
-func newExe(p, r int, tk Token) Exe {
-	return Exe{
-		Token:   tk,
-		Params:  p,
-		Returns: r,
-	}
-}
 
 func TestParser(t *testing.T) {
 	for _, tc := range makeParseTests() {

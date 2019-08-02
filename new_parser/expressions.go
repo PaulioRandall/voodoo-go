@@ -1,16 +1,21 @@
 package new_parser
 
-// Name satisfies the Expression interface.
-func (e *Operation) Name() string {
-	return `operation`
+// StatName satisfies the Statement interface.
+func (e *Assignment) StatName() string {
+	return `assignment`
 }
 
-// Name satisfies the Expression interface.
-func (e *Value) Name() string {
+// ExprName satisfies the Expression interface.
+func (e *Value) ExprName() string {
 	return `value`
 }
 
-// Name satisfies the Expression interface.
-func (e *Join) Name() string {
+// ExprName satisfies the Expression interface.
+func (e *Join) ExprName() string {
 	return `join`
+}
+
+// ExprName satisfies the Expression interface.
+func (e *Operation) ExprName() string {
+	return `operation`
 }

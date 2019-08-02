@@ -4,24 +4,31 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// Parse parses a token array into a parse tree.
-func Parse(in []Token) (*Expression, Fault) {
+// Parse parses a token array into a statement.
+func Parse(in []Token) (*Statement, Fault) {
+	//_, in := splitAssignment(in)
 
 	return nil, nil
 }
 
-// containsAssignment returns true if the input token array results
-// in an assignment but not a match.
-func containsAssignment(in []Token) bool {
-	for _, tk := range in {
+// parseAssignment parses the assignment part of the
+// token array to produce an expression
+func parseAssignment(in []Token) (*Expression, Fault) {
+	return nil, nil
+}
+
+// splitAssignment returns the assignment part of the
+// token array or nil if there is no assignment part.
+func splitAssignment(in []Token) ([]Token, []Token) {
+	for i, tk := range in {
 		if tk.Type == token.ASSIGNMENT {
-			return true
+			return in[:i], in[i:]
 		}
 
 		if tk.Type == token.LOGICAL_MATCH {
-			return false
+			return nil, in
 		}
 	}
 
-	return false
+	return nil, in
 }

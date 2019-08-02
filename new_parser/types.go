@@ -11,21 +11,27 @@ type Token token.Token
 // Fault
 type Fault fault.Fault
 
-// Expression represents an evaluatable expression.
-// Expressions are often built from other expressions
-// which will need to be evaluated first.
-type Expression interface {
+// Statement represents an executable statement.
+// Statements are built from expressions.
+type Statement interface {
 
-	// Name returns the name of the expression.
-	Name() string
+	// StatName returns the name of the statment.
+	StatName() string
 }
 
-// Operation represents an operation expression such
-// as addition, subtraction, etc.
-type Operation struct {
+// Assignment represents an assignment statement.
+type Assignment struct {
 	Token Token
-	Left  *Expression
-	Right *Expression
+	Left  *Join
+	Right *Join
+}
+
+// Expression represents an evaluatable expression.
+// Expressions are often built from other expressions.
+type Expression interface {
+
+	// ExprName returns the name of the expression.
+	ExprName() string
 }
 
 // Value represents an expression which simple evaluates
@@ -37,7 +43,14 @@ type Value struct {
 // Join represents an expression which joins the results
 // of two other expressions.
 type Join struct {
-	Token []Token
+	Left  *Expression
+	Right *Expression
+}
+
+// Operation represents an operation expression such
+// as addition, subtraction, etc.
+type Operation struct {
+	Token Token
 	Left  *Expression
 	Right *Expression
 }
