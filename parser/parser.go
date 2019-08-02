@@ -13,6 +13,7 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 	assign := false
 
 	for len(in) > 0 {
+		var exe Exe
 		tk := in[0]
 
 		switch {
@@ -21,9 +22,9 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 			in = in[1:]
 		case isAssignment(tk):
 			assign = true
-			fallthrough
+			exe, in = parseAssignment(in)
+			exes.Push(exe)
 		case isOperator(tk):
-			var exe Exe
 			exe, in = parseOperation(in)
 			exes.Push(exe)
 		default:
@@ -54,11 +55,6 @@ func parseOperation(in []Token) (Exe, []Token) {
 	return exe, in[1:]
 }
 
-// isAssignment returns true if the token is an assignment.
-func isAssignment(tk Token) bool {
-	return tk.Type == token.ASSIGNMENT
-}
-
 // isOperator returns true if the token is an operation.
 func isOperator(tk Token) bool {
 	switch tk.Type {
@@ -69,6 +65,20 @@ func isOperator(tk Token) bool {
 	}
 
 	return false
+}
+
+// parseAssignment parses an operation.
+func parseAssignment(in []Token) (Exe, []Token) {
+	exe := Exe{
+		Token:  in[0],
+		Params: 2,
+	}
+	return exe, in[1:]
+}
+
+// isAssignment returns true if the token is an assignment.
+func isAssignment(tk Token) bool {
+	return tk.Type == token.ASSIGNMENT
 }
 
 // isValueOrID returns true if the token is a value or identifier.

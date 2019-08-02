@@ -69,7 +69,7 @@ func makeParseTests() []parseTest {
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 			},
 			Exes: []Exe{
-				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
+				newExe(2, 0, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
 			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
@@ -88,7 +88,7 @@ func makeParseTests() []parseTest {
 			},
 			Exes: []Exe{
 				newExe(2, 1, Token{`+`, 7, 8, token.CALC_ADD}),
-				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
+				newExe(2, 0, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
 			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
@@ -111,7 +111,7 @@ func makeParseTests() []parseTest {
 			Exes: []Exe{
 				newExe(2, 1, Token{`+`, 7, 8, token.CALC_ADD}),
 				newExe(2, 1, Token{`-`, 11, 12, token.CALC_SUBTRACT}),
-				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
+				newExe(2, 0, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
 			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
