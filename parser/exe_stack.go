@@ -1,9 +1,17 @@
 package parser
 
-// NewExeStack returns a new initialised ExeStack.
-func NewExeStack() *ExeStack {
+// EmptyExeStack returns a new initialised but empty
+// ExeStack.
+func EmptyExeStack() *ExeStack {
 	return &ExeStack{
 		stack: []Exe{},
+	}
+}
+
+// NewExeStack returns a new initialised ExeStack.
+func NewExeStack(s []Exe) *ExeStack {
+	return &ExeStack{
+		stack: s,
 	}
 }
 
@@ -22,9 +30,10 @@ func (s *ExeStack) Len() int {
 }
 
 // Push appends the instruction to the top of the
-// stack.
-func (s *ExeStack) Push(in Exe) {
+// stack. Returns its self.
+func (s *ExeStack) Push(in Exe) *ExeStack {
 	s.stack = append(s.stack, in)
+	return s
 }
 
 // Pop removes and returns the instruction at the
@@ -55,9 +64,9 @@ func (s *ExeStack) Peek() (Exe, bool) {
 
 // Sink moves the top n items to the bottom of the
 // stack maintaining the order of the shifted items.
-// Note that this function will panic if the n is
-// negative or the n > len.
-func (s *ExeStack) Sink(n int) {
+// Note that this function will panic if n is
+// negative or n > len. Returns its self.
+func (s *ExeStack) Sink(n int) *ExeStack {
 	if n < 0 {
 		panic("Non-negative input not expected")
 	}
@@ -68,4 +77,16 @@ func (s *ExeStack) Sink(n int) {
 	}
 
 	s.stack = append(s.stack[x:], s.stack[:x]...)
+	return s
+}
+
+// Reverse tips the stack upside down so the bottom
+// becomes the top and the top becomes the bottom.
+// Returns its self.
+func (s *ExeStack) Reverse() *ExeStack {
+	for i := len(s.stack)/2 - 1; i >= 0; i-- {
+		opp := len(s.stack) - 1 - i
+		s.stack[i], s.stack[opp] = s.stack[opp], s.stack[i]
+	}
+	return s
 }

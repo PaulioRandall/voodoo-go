@@ -14,7 +14,7 @@ type parseTest struct {
 	TestLine int
 	Input    []Token
 	Exes     []Exe
-	Values   []Token
+	Vals     []Token
 	Error    Fault
 }
 
@@ -48,8 +48,12 @@ func TestParser(t *testing.T) {
 			require.NotNil(t, exes)
 			require.NotNil(t, vals)
 
-			assert.Equal(t, tc.Exes, exes.Array())
-			assert.Equal(t, tc.Values, vals.Array())
+			// For readability test stacks are declared in reverse
+			exp_exes := NewExeStack(tc.Exes).Reverse()
+			exp_vals := NewValStack(tc.Vals).Reverse()
+
+			assert.Equal(t, exp_exes, exes)
+			assert.Equal(t, exp_vals, vals)
 		}
 	}
 }
@@ -59,6 +63,7 @@ func makeParseTests() []parseTest {
 		parseTest{
 			TestLine: fault.CurrLine(),
 			Input: []Token{
+				// x <- 1
 				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
 				Token{`<-`, 2, 4, token.ASSIGNMENT},
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
@@ -66,7 +71,7 @@ func makeParseTests() []parseTest {
 			Exes: []Exe{
 				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
-			Values: []Token{
+			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
 			},
@@ -74,6 +79,7 @@ func makeParseTests() []parseTest {
 		parseTest{
 			TestLine: fault.CurrLine(),
 			Input: []Token{
+				// x <- 1 + 2
 				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
 				Token{`<-`, 2, 4, token.ASSIGNMENT},
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
@@ -84,7 +90,7 @@ func makeParseTests() []parseTest {
 				newExe(2, 1, Token{`+`, 7, 8, token.CALC_ADD}),
 				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
-			Values: []Token{
+			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 				Token{`2`, 9, 10, token.LITERAL_NUMBER},
 				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
@@ -93,6 +99,7 @@ func makeParseTests() []parseTest {
 		parseTest{
 			TestLine: fault.CurrLine(),
 			Input: []Token{
+				// x <- 1 + 3 - 2
 				Token{`x`, 0, 1, token.IDENTIFIER_EXPLICIT},
 				Token{`<-`, 2, 4, token.ASSIGNMENT},
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
@@ -106,7 +113,7 @@ func makeParseTests() []parseTest {
 				newExe(2, 1, Token{`-`, 11, 12, token.CALC_SUBTRACT}),
 				newExe(2, 1, Token{`<-`, 2, 4, token.ASSIGNMENT}),
 			},
-			Values: []Token{
+			Vals: []Token{
 				Token{`1`, 5, 6, token.LITERAL_NUMBER},
 				Token{`3`, 9, 10, token.LITERAL_NUMBER},
 				Token{`2`, 13, 14, token.LITERAL_NUMBER},

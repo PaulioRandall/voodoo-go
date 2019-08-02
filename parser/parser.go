@@ -8,8 +8,8 @@ import (
 // stack of values.
 func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 
-	exes := NewExeStack()
-	vals := NewValStack()
+	exes := EmptyExeStack()
+	vals := EmptyValStack()
 	assign := false
 
 	for len(in) > 0 {
@@ -32,32 +32,16 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 	}
 
 	if assign {
-		size := exes.Len() - 1
-		exes.Sink(size)
+		allButOne := exes.Len() - 1
+		exes.Sink(allButOne)
+		exes.Reverse()
 
-		size = vals.Len() - 1
-		vals.Sink(size)
+		allButOne = vals.Len() - 1
+		vals.Sink(allButOne)
+		vals.Reverse()
 	}
 
 	return exes, vals, nil
-}
-
-// reverseInstructions reverses an array of instructions.
-func reverseInstructions(in []Exe) []Exe {
-	for i := len(in)/2 - 1; i >= 0; i-- {
-		opp := len(in) - 1 - i
-		in[i], in[opp] = in[opp], in[i]
-	}
-	return in
-}
-
-// reverseTokens reverses an array of tokens.
-func reverseTokens(in []Token) []Token {
-	for i := len(in)/2 - 1; i >= 0; i-- {
-		opp := len(in) - 1 - i
-		in[i], in[opp] = in[opp], in[i]
-	}
-	return in
 }
 
 // parseOperation parses an operation.
