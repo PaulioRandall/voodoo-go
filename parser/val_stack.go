@@ -1,5 +1,26 @@
 package parser
 
+// NewValStack returns a new initialised ValStack.
+func NewValStack() *ValStack {
+	return &ValStack{
+		stack: []Token{},
+	}
+}
+
+// Array returns a copy of the backing slice.
+func (s *ValStack) Array() []Token {
+	out := make([]Token, len(s.stack))
+	for i, v := range s.stack {
+		out[i] = v
+	}
+	return out
+}
+
+// Len returns size of the stack.
+func (s *ValStack) Len() int {
+	return len(s.stack)
+}
+
 // Push appends the value to the top of the stack.
 func (e *ValStack) Push(in Token) {
 	e.stack = append(e.stack, in)
@@ -33,9 +54,11 @@ func (e *ValStack) Peek() (Token, bool) {
 
 // Sink moves the top n items to the bottom of the
 // stack maintaining the order of the shifted items.
+// Note that this function will panic if the n is
+// negative or the n > len.
 func (s *ValStack) Sink(n int) {
-	if n < 1 {
-		panic("Non-positive input not expected")
+	if n < 0 {
+		panic("Non-negative input not expected")
 	}
 
 	x := len(s.stack) - n

@@ -6,10 +6,10 @@ import (
 
 // Parse parses the input into a stack of instructions followed by a
 // stack of values.
-func Parse(in []Token) ([]Exe, []Token, Fault) {
+func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 
-	exeStack := []Exe{}
-	valueStack := []Token{}
+	exes := NewExeStack()
+	vals := NewValStack()
 	assign := false
 
 	for len(in) > 0 {
@@ -17,7 +17,7 @@ func Parse(in []Token) ([]Exe, []Token, Fault) {
 
 		switch {
 		case isValueOrID(tk):
-			valueStack = append(valueStack, tk)
+			vals.Push(tk)
 			in = in[1:]
 		case isAssignment(tk):
 			assign = true
@@ -25,23 +25,21 @@ func Parse(in []Token) ([]Exe, []Token, Fault) {
 		case isOperator(tk):
 			var exe Exe
 			exe, in = parseOperation(in)
-			exeStack = append(exeStack, exe)
+			exes.Push(exe)
 		default:
 			return nil, nil, notImplemented()
 		}
 	}
 
 	if assign {
-		val := valueStack[0]
-		valueStack = valueStack[1:]
-		valueStack = append(valueStack, val)
+		size := exes.Len() - 1
+		exes.Sink(size)
 
-		exe := exeStack[0]
-		exeStack = exeStack[1:]
-		exeStack = append(exeStack, exe)
+		size = vals.Len() - 1
+		vals.Sink(size)
 	}
 
-	return exeStack, valueStack, nil
+	return exes, vals, nil
 }
 
 // reverseInstructions reverses an array of instructions.

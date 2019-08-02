@@ -1,5 +1,26 @@
 package parser
 
+// NewExeStack returns a new initialised ExeStack.
+func NewExeStack() *ExeStack {
+	return &ExeStack{
+		stack: []Exe{},
+	}
+}
+
+// Array returns a copy of the backing slice.
+func (s *ExeStack) Array() []Exe {
+	out := make([]Exe, len(s.stack))
+	for i, v := range s.stack {
+		out[i] = v
+	}
+	return out
+}
+
+// Len returns size of the stack.
+func (s *ExeStack) Len() int {
+	return len(s.stack)
+}
+
 // Push appends the instruction to the top of the
 // stack.
 func (s *ExeStack) Push(in Exe) {
@@ -34,9 +55,11 @@ func (s *ExeStack) Peek() (Exe, bool) {
 
 // Sink moves the top n items to the bottom of the
 // stack maintaining the order of the shifted items.
+// Note that this function will panic if the n is
+// negative or the n > len.
 func (s *ExeStack) Sink(n int) {
-	if n < 1 {
-		panic("Non-positive input not expected")
+	if n < 0 {
+		panic("Non-negative input not expected")
 	}
 
 	x := len(s.stack) - n

@@ -32,24 +32,24 @@ func TestParser(t *testing.T) {
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> parser_test.go : " + testLine)
 
-		var exes []Exe
-		var values []Token
+		var exes *ExeStack
+		var vals *ValStack
 		var err Fault
-		exes, values, err = Parse(tc.Input)
+		exes, vals, err = Parse(tc.Input)
 
 		if tc.Error != nil {
 			assert.Nil(t, exes)
-			assert.Nil(t, values)
+			assert.Nil(t, vals)
 			require.NotNil(t, err)
 
 		} else {
 			assert.Nil(t, err)
 
 			require.NotNil(t, exes)
-			require.NotNil(t, values)
+			require.NotNil(t, vals)
 
-			assert.Equal(t, tc.Exes, exes)
-			assert.Equal(t, tc.Values, values)
+			assert.Equal(t, tc.Exes, exes.Array())
+			assert.Equal(t, tc.Values, vals.Array())
 		}
 	}
 }
