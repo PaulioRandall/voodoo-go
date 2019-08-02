@@ -16,10 +16,6 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 		return nil, nil, err
 	}
 
-	if ids > 0 {
-		defer reverseStacks(ids, exes, vals)
-	}
-
 	for len(in) > 0 {
 		var exe Exe
 		tk := in[0]
@@ -28,7 +24,7 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 		case isValueOrID(tk):
 			vals.Push(tk)
 			in = in[1:]
-		case isValueSeparator():
+		case isValueSeparator(tk):
 			in = in[1:]
 		case isOperator(tk):
 			exe, in = parseOperation(in)
@@ -38,6 +34,10 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 		}
 	}
 
+	if ids > 0 {
+		reverseStacks(ids, exes, vals)
+	}
+
 	return exes, vals, nil
 }
 
@@ -45,7 +45,7 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 // are the first to be processed. If an assignment operation is
 // present then it is sunk to the bottom of the stack.
 func reverseStacks(ids int, exes *ExeStack, vals *ValStack) {
-	expr := exes.Len() - ids
+	expr := exes.Len() - 1
 	exes.Sink(expr)
 	exes.Reverse()
 
@@ -78,11 +78,11 @@ func preParseAssignment(in []Token, exes *ExeStack, vals *ValStack) (int, []Toke
 			return -1, nil, badAssignment("Expected identifier")
 		}
 
-		if punc.Type == token.SEPARATOR_VALUE {
+		if isValueSeparator(punc) {
 			continue
 		}
 
-		if punc.Type == token.ASSIGNMENT {
+		if isAssignment(punc) {
 			e := Exe{
 				Token:  punc,
 				Params: ids * 2,
@@ -133,6 +133,11 @@ func parseOperation(in []Token) (Exe, []Token) {
 		Returns: 1,
 	}
 	return exe, in[1:]
+}
+
+// isValueSeparator returns true if the token is a value separator.
+func isValueSeparator(tk Token) bool {
+	return tk.Type == token.SEPARATOR_VALUE
 }
 
 // isAssignment returns true if the token is an assignment.

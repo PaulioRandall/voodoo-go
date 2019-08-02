@@ -136,10 +136,10 @@ func makeParseTests() []parseTest {
 				newExe(4, 0, Token{`<-`, 5, 7, token.ASSIGNMENT}),
 			},
 			Vals: []Token{
-				Token{`2`, 11, 12, token.LITERAL_NUMBER},
 				Token{`1`, 8, 9, token.LITERAL_NUMBER},
-				Token{`y`, 3, 4, token.IDENTIFIER},
+				Token{`2`, 11, 12, token.LITERAL_NUMBER},
 				Token{`x`, 0, 1, token.IDENTIFIER},
+				Token{`y`, 3, 4, token.IDENTIFIER},
 			},
 		},
 	}
