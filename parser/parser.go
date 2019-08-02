@@ -10,7 +10,15 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 
 	exes := EmptyExeStack()
 	vals := EmptyValStack()
-	assign := false
+
+	ids, in, err := preParseAssignment(in, exes, vals)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if ids > 0 {
+		defer reverseStacks(ids, exes, vals)
+	}
 
 	for len(in) > 0 {
 		var exe Exe
@@ -20,10 +28,8 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 		case isValueOrID(tk):
 			vals.Push(tk)
 			in = in[1:]
-		case isAssignment(tk):
-			assign = true
-			exe, in = parseAssignment(in)
-			exes.Push(exe)
+		case isValueSeparator():
+			in = in[1:]
 		case isOperator(tk):
 			exe, in = parseOperation(in)
 			exes.Push(exe)
@@ -32,27 +38,79 @@ func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
 		}
 	}
 
-	if assign {
-		allButOne := exes.Len() - 1
-		exes.Sink(allButOne)
-		exes.Reverse()
-
-		allButOne = vals.Len() - 1
-		vals.Sink(allButOne)
-		vals.Reverse()
-	}
-
 	return exes, vals, nil
 }
 
-// parseOperation parses an operation.
-func parseOperation(in []Token) (Exe, []Token) {
-	exe := Exe{
-		Token:   in[0],
-		Params:  2,
-		Returns: 1,
+// reverseStacks reverses the input stacks so the firt items added
+// are the first to be processed. If an assignment operation is
+// present then it is sunk to the bottom of the stack.
+func reverseStacks(ids int, exes *ExeStack, vals *ValStack) {
+	expr := exes.Len() - ids
+	exes.Sink(expr)
+	exes.Reverse()
+
+	expr = vals.Len() - ids
+	vals.Sink(expr)
+	vals.Reverse()
+}
+
+// preParseAssignment parses the initial assignment in a statement.
+func preParseAssignment(in []Token, exes *ExeStack, vals *ValStack) (int, []Token, Fault) {
+	if !containsAssignment(in) {
+		return 0, in, nil
 	}
-	return exe, in[1:]
+
+	size := len(in)
+	ids := 0
+
+	for i := 0; i < size; i += 2 {
+		if (size - i) < 2 {
+			return -1, nil, badAssignment("Odd number of assignment tokens")
+		}
+
+		id := in[i]
+		punc := in[i+1]
+
+		if id.Type == token.IDENTIFIER {
+			ids++
+			vals.Push(id)
+		} else {
+			return -1, nil, badAssignment("Expected identifier")
+		}
+
+		if punc.Type == token.SEPARATOR_VALUE {
+			continue
+		}
+
+		if punc.Type == token.ASSIGNMENT {
+			e := Exe{
+				Token:  punc,
+				Params: ids * 2,
+			}
+			exes.Push(e)
+			return ids, in[i+2:], nil
+		}
+
+		return -1, nil, badAssignment("Unexpected token")
+	}
+
+	return -1, nil, badAssignment("Unexpected end of statement")
+}
+
+// containsAssignment returns true if the input token array results
+// in an assignment but not a match.
+func containsAssignment(in []Token) bool {
+	for _, tk := range in {
+		if tk.Type == token.ASSIGNMENT {
+			return true
+		}
+
+		if tk.Type == token.LOGICAL_MATCH {
+			return false
+		}
+	}
+
+	return false
 }
 
 // isOperator returns true if the token is an operation.
@@ -67,11 +125,12 @@ func isOperator(tk Token) bool {
 	return false
 }
 
-// parseAssignment parses an operation.
-func parseAssignment(in []Token) (Exe, []Token) {
+// parseOperation parses an operation.
+func parseOperation(in []Token) (Exe, []Token) {
 	exe := Exe{
-		Token:  in[0],
-		Params: 2,
+		Token:   in[0],
+		Params:  2,
+		Returns: 1,
 	}
 	return exe, in[1:]
 }
@@ -104,6 +163,17 @@ func requireMin(in []Token, min int) Fault {
 		Type: `Not implemented`,
 		Msgs: []string{
 			`I haven't coded that path yet!`,
+		},
+	}
+}
+
+// badAssignment returns a fault if the tokens that make up the
+// initial assignment part of a statement are not valid.
+func badAssignment(m string) Fault {
+	return ParseFault{
+		Type: `Bad assignment`,
+		Msgs: []string{
+			m,
 		},
 	}
 }

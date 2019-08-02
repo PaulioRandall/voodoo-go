@@ -120,5 +120,27 @@ func makeParseTests() []parseTest {
 				Token{`x`, 0, 1, token.IDENTIFIER},
 			},
 		},
+		parseTest{
+			TestLine: fault.CurrLine(),
+			Input: []Token{
+				// x, y <- 1, 2
+				Token{`x`, 0, 1, token.IDENTIFIER},
+				Token{`,`, 1, 2, token.SEPARATOR_VALUE},
+				Token{`y`, 3, 4, token.IDENTIFIER},
+				Token{`<-`, 5, 7, token.ASSIGNMENT},
+				Token{`1`, 8, 9, token.LITERAL_NUMBER},
+				Token{`,`, 9, 10, token.SEPARATOR_VALUE},
+				Token{`2`, 11, 12, token.LITERAL_NUMBER},
+			},
+			Exes: []Exe{
+				newExe(4, 0, Token{`<-`, 5, 7, token.ASSIGNMENT}),
+			},
+			Vals: []Token{
+				Token{`2`, 11, 12, token.LITERAL_NUMBER},
+				Token{`1`, 8, 9, token.LITERAL_NUMBER},
+				Token{`y`, 3, 4, token.IDENTIFIER},
+				Token{`x`, 0, 1, token.IDENTIFIER},
+			},
+		},
 	}
 }
