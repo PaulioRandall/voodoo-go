@@ -11,20 +11,33 @@ type Token token.Token
 // Fault
 type Fault fault.Fault
 
-// NodeType represents the type of a node.
-type NodeType int
+// Expression represents an evaluatable expression.
+// Expressions are often built from other expressions
+// which will need to be evaluated first.
+type Expression interface {
 
-// Node represents an operation or value.
-type Node struct {
-	Type   NodeType
-	Tokens []Token
+	// Name returns the name of the expression.
+	Name() string
 }
 
-// ParseTree represents a statment as a parse tree.
-type ParseTree struct {
-	Node
+// Operation represents an operation expression such
+// as addition, subtraction, etc.
+type Operation struct {
+	Token Token
+	Left  *Expression
+	Right *Expression
 }
 
-const (
-	UNDEFINED NodeType = iota
-)
+// Value represents an expression which simple evaluates
+// to a literal value or identifier.
+type Value struct {
+	Token Token
+}
+
+// Join represents an expression which joins the results
+// of two other expressions.
+type Join struct {
+	Token []Token
+	Left  *Expression
+	Right *Expression
+}
