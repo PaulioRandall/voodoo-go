@@ -38,7 +38,20 @@ func TestExeStack(t *testing.T) {
 	require.True(t, ok)
 	assert.Equal(t, e1, a1)
 
-	s.Pop()
+	s.Push(e1)
+	s.Push(e2)
+	s.Push(e2)
+	s.Sink(2)
+
+	a, _ := s.Pop()
+	assert.Equal(t, e1, a)
+	a, _ = s.Pop()
+	assert.Equal(t, e1, a)
+	a, _ = s.Pop()
+	assert.Equal(t, e2, a)
+	a, _ = s.Pop()
+	assert.Equal(t, e2, a)
+
 	a0, ok := s.Pop()
 	assert.False(t, ok)
 	assert.Equal(t, Exe{}, a0)
@@ -73,7 +86,20 @@ func TestValStack(t *testing.T) {
 	require.True(t, ok)
 	assert.Equal(t, e1, a1)
 
-	s.Pop()
+	s.Push(e1)
+	s.Push(e2)
+	s.Push(e2)
+	s.Sink(2)
+
+	a, _ := s.Pop()
+	assert.Equal(t, e1, a)
+	a, _ = s.Pop()
+	assert.Equal(t, e1, a)
+	a, _ = s.Pop()
+	assert.Equal(t, e2, a)
+	a, _ = s.Pop()
+	assert.Equal(t, e2, a)
+
 	a0, ok := s.Pop()
 	assert.False(t, ok)
 	assert.Equal(t, Token{}, a0)
