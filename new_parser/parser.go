@@ -5,7 +5,7 @@ import (
 )
 
 // Parse parses a token array into a statement.
-func Parse(in []Token) (*Statement, Fault) {
+func Parse(in []Token) (Statement, Fault) {
 	//a, in := splitAssignment(in)
 
 	return nil, nil
