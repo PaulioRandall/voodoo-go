@@ -52,15 +52,19 @@ func TestParseAssignment_1(t *testing.T) {
 		Token{`<-`, 0, 0, token.ASSIGNMENT},
 	}
 
-	exp_a := List{
+	exp_tk := Token{`<-`, 0, 0, token.ASSIGNMENT}
+
+	exp_out := List{
 		Tokens: []Token{
 			Token{`x`, 0, 0, token.IDENTIFIER},
 		},
 	}
 
-	a, err := parseAssignment(in)
+	tk, out, err := parseAssignment(in)
+
 	assert.Nil(t, err)
-	assert.Equal(t, exp_a, a)
+	assert.Equal(t, exp_tk, tk)
+	assert.Equal(t, exp_out, out)
 }
 
 func TestParseAssignment_2(t *testing.T) {
@@ -71,30 +75,20 @@ func TestParseAssignment_2(t *testing.T) {
 		Token{`<-`, 0, 0, token.ASSIGNMENT},
 	}
 
-	exp_a := List{
+	exp_tk := Token{`<-`, 0, 0, token.ASSIGNMENT}
+
+	exp_out := List{
 		Tokens: []Token{
 			Token{`x`, 0, 0, token.IDENTIFIER},
 			Token{`y`, 0, 0, token.IDENTIFIER},
 		},
 	}
 
-	a, err := parseAssignment(in)
+	tk, out, err := parseAssignment(in)
+
 	assert.Nil(t, err)
-	assert.Equal(t, exp_a, a)
-}
-
-func TestParseAssignment_3(t *testing.T) {
-	in := []Token{
-		Token{`x`, 0, 0, token.IDENTIFIER},
-		Token{`,`, 0, 0, token.SEPARATOR_VALUE},
-		Token{`<-`, 0, 0, token.ASSIGNMENT},
-	}
-
-	var exp_a Expression = nil
-
-	a, err := parseAssignment(in)
-	assert.NotNil(t, err)
-	assert.Equal(t, exp_a, a)
+	assert.Equal(t, exp_tk, tk)
+	assert.Equal(t, exp_out, out)
 }
 
 func TestSplitOnToken_1(t *testing.T) {

@@ -39,35 +39,51 @@ func splitOnToken(in []Token, delim token.TokenType) [][]Token {
 	return out
 }
 
+// containsAssignment returns true if the input token array
+// contains an assignment.
+func containsAssignment(in []Token) bool {
+	for _, tk := range in {
+		if tk.Type == token.ASSIGNMENT {
+			return true
+		}
+
+		if tk.Type == token.LOGICAL_MATCH {
+			return false
+		}
+	}
+
+	return false
+}
+
 // parseAssignment parses the assignment part of a statment
 // to produce an expression for the left side.
-func parseAssignment(in []Token) (Expression, Fault) {
+func parseAssignment(in []Token) (Token, Expression, Fault) {
 
-	idCount := len(in) / 2
-	ids := make([]Token, idCount)
+	size := len(in)
+	ids := make([]Token, size/2)
 
-	for i, tk := range in {
-		if isEven(i) {
-			err := validateIdentifier(tk)
-			if err != nil {
-				return nil, err
-			}
+	assign := in[size-1]
+	in = in[:size-1]
 
-			ids[i/2] = tk
-			continue
+	split := splitOnToken(in, token.SEPARATOR_VALUE)
+
+	for i, id := range split {
+		if len(id) != 1 {
+			// TODO: Fault
 		}
 
-		err := validateDelimiter(tk)
-		if err != nil {
-			return nil, err
+		if id[0].Type != token.IDENTIFIER {
+			// TODO: Fault
 		}
+
+		ids[i] = id[0]
 	}
 
 	out := List{
 		Tokens: ids,
 	}
 
-	return out, nil
+	return assign, out, nil
 }
 
 // validateDelimiter validates the passed token is a value
