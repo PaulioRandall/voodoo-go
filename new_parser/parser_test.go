@@ -65,27 +65,39 @@ func makeParseTests() []parseTest {
 				},
 			},
 		},
-		/*
-			parseTest{
-				TestLine: fault.CurrLine(),
-				Input: []Token{
-					// x <- 1 + 2
-					Token{`x`, 0, 1, token.IDENTIFIER},
-					Token{`<-`, 2, 4, token.ASSIGNMENT},
-					Token{`1`, 5, 6, token.LITERAL_NUMBER},
-					Token{`+`, 7, 8, token.CALC_ADD},
-					Token{`2`, 9, 10, token.LITERAL_NUMBER},
+		parseTest{
+			TestLine: fault.CurrLine(),
+			Input: []Token{
+				// x <- 1 + 2
+				Token{`x`, 0, 0, token.IDENTIFIER},
+				Token{`<-`, 0, 0, token.ASSIGNMENT},
+				Token{`1`, 0, 0, token.LITERAL_NUMBER},
+				Token{`+`, 0, 0, token.CALC_ADD},
+				Token{`2`, 0, 0, token.LITERAL_NUMBER},
+			},
+			Stat: Assignment{
+				Left: List{
+					Tokens: []Token{
+						Token{`x`, 0, 0, token.IDENTIFIER},
+					},
 				},
-				Exes: []Exe{
-					newExe(2, 1, Token{`+`, 7, 8, token.CALC_ADD}),
-					newExe(2, 0, Token{`<-`, 2, 4, token.ASSIGNMENT}),
-				},
-				Vals: []Token{
-					Token{`1`, 5, 6, token.LITERAL_NUMBER},
-					Token{`2`, 9, 10, token.LITERAL_NUMBER},
-					Token{`x`, 0, 1, token.IDENTIFIER},
+				Operator: Token{`<-`, 0, 0, token.ASSIGNMENT},
+				Right: Join{
+					Exprs: []Expression{
+						Operation{
+							Left: Value{
+								Token{`1`, 0, 0, token.LITERAL_NUMBER},
+							},
+							Operator: Token{`+`, 0, 0, token.CALC_ADD},
+							Right: Value{
+								Token{`2`, 0, 0, token.LITERAL_NUMBER},
+							},
+						},
+					},
 				},
 			},
+		},
+		/*
 			parseTest{
 				TestLine: fault.CurrLine(),
 				Input: []Token{
