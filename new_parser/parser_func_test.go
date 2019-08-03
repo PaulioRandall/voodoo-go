@@ -7,6 +7,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func NewValue(val string, t token.TokenType) Expression {
+	return Value{
+		Token: Token{
+			Val:  val,
+			Type: t,
+		},
+	}
+}
+
 func TestSplitOnAssignment_1(t *testing.T) {
 	in := []Token{
 		Token{`x`, 0, 0, token.IDENTIFIER},
@@ -114,4 +123,36 @@ func TestSplitOnToken_1(t *testing.T) {
 	out = splitOnToken(in, token.SEPARATOR_VALUE)
 
 	assert.Equal(t, exp, out)
+}
+
+func TestParseExpression_1(t *testing.T) {
+	in := []Token{
+		Token{`x`, 0, 0, token.IDENTIFIER},
+	}
+
+	exp_out := NewValue(`x`, token.IDENTIFIER)
+
+	out, err := parseExpression(in)
+
+	assert.Nil(t, err)
+	assert.Equal(t, exp_out, out)
+}
+
+func TestParseExpression_2(t *testing.T) {
+	in := []Token{
+		Token{`x`, 0, 0, token.IDENTIFIER},
+		Token{`+`, 0, 0, token.CALC_ADD},
+		Token{`y`, 0, 0, token.IDENTIFIER},
+	}
+
+	exp_out := Operation{
+		Left:     NewValue(`x`, token.IDENTIFIER),
+		Operator: Token{`+`, 0, 0, token.CALC_ADD},
+		Right:    NewValue(`y`, token.IDENTIFIER),
+	}
+
+	out, err := parseExpression(in)
+
+	assert.Nil(t, err)
+	assert.Equal(t, exp_out, out)
 }

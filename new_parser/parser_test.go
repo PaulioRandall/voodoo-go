@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"testing"
 
-	//"github.com/PaulioRandall/voodoo-go/fault"
-	//"github.com/PaulioRandall/voodoo-go/token"
+	"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -41,26 +41,30 @@ func TestParser(t *testing.T) {
 
 func makeParseTests() []parseTest {
 	return []parseTest{
-		/*
-			parseTest{
-				TestLine: fault.CurrLine(),
-				Input: []Token{
-					// x <- 1
-					Token{`x`, 0, 0, token.IDENTIFIER},
-					Token{`<-`, 0, 0, token.ASSIGNMENT},
-					Token{`1`, 0, 0, token.LITERAL_NUMBER},
-				},
-				Stat: Assignment{
-					Token: Token{`<-`, 0, 0, token.ASSIGNMENT},
-					Left: Value{
+		parseTest{
+			TestLine: fault.CurrLine(),
+			Input: []Token{
+				// x <- 1
+				Token{`x`, 0, 0, token.IDENTIFIER},
+				Token{`<-`, 0, 0, token.ASSIGNMENT},
+				Token{`1`, 0, 0, token.LITERAL_NUMBER},
+			},
+			Stat: Assignment{
+				Left: List{
+					Tokens: []Token{
 						Token{`x`, 0, 0, token.IDENTIFIER},
 					},
-					Right: Value{
-						Token{`1`, 0, 0, token.LITERAL_NUMBER},
+				},
+				Operator: Token{`<-`, 0, 0, token.ASSIGNMENT},
+				Right: Join{
+					Exprs: []Expression{
+						Value{
+							Token{`1`, 0, 0, token.LITERAL_NUMBER},
+						},
 					},
 				},
 			},
-		*/
+		},
 		/*
 			parseTest{
 				TestLine: fault.CurrLine(),

@@ -6,16 +6,64 @@ import (
 
 // Parse parses a token array into a statement.
 func Parse(in []Token) (Statement, Fault) {
-	//a, in := splitAssignment(in)
 
-	return nil, nil
+	a, in := splitOnAssignment(in)
+	if a == nil {
+		return nil, notImplemented()
+	}
+
+	op, left, err := parseAssignment(a)
+	if err != nil {
+		return nil, err
+	}
+
+	right, err := parseExpressions(in)
+	if err != nil {
+		return nil, err
+	}
+
+	out := Assignment{
+		Left:     left,
+		Operator: op,
+		Right:    right,
+	}
+
+	return out, nil
+}
+
+// notImplemented returns a fault if there's no implementation for a
+// particular arrangement of tokens.
+func notImplemented() Fault {
+	return ParseFault{
+		Msgs: []string{
+			`I haven't coded that path yet!`,
+		},
+	}
 }
 
 // parseExpression parses the whole token array as a single
 // expression.
 func parseExpression(in []Token) (Expression, Fault) {
 
-	return nil, nil
+	var out Expression
+	var err Fault
+
+	// NEXT: Whats the next test case?
+
+	switch {
+	case len(in) == 1:
+		out = Value{in[0]}
+	case len(in) == 3:
+		out = Operation{
+			Left:     Value{in[0]},
+			Operator: in[1],
+			Right:    Value{in[2]},
+		}
+	default:
+		err = notImplemented()
+	}
+
+	return out, err
 }
 
 // parseExpressions parses the expression part of a statement

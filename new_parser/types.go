@@ -21,9 +21,9 @@ type Statement interface {
 
 // Assignment represents an assignment statement.
 type Assignment struct {
-	Token Token
-	Left  Expression
-	Right Expression
+	Left     Expression
+	Operator Token
+	Right    Expression
 }
 
 // Expression represents an evaluatable expression.
@@ -55,7 +55,7 @@ type Join struct {
 // Operation represents an operation expression such
 // as addition, subtraction, etc.
 type Operation struct {
-	Token Token
-	Left  Expression
-	Right Expression
+	Left     Expression
+	Operator Token
+	Right    Expression
 }
