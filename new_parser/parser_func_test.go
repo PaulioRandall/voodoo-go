@@ -96,3 +96,28 @@ func TestParseAssignment_3(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, exp_a, a)
 }
+
+func TestSplitOnToken_1(t *testing.T) {
+
+	in := []Token{
+		Token{`x`, 0, 0, token.IDENTIFIER},
+		Token{`,`, 0, 0, token.SEPARATOR_VALUE},
+		Token{`y`, 0, 0, token.IDENTIFIER},
+		Token{`<-`, 0, 0, token.ASSIGNMENT},
+	}
+
+	exp := [][]Token{
+		[]Token{
+			Token{`x`, 0, 0, token.IDENTIFIER},
+		},
+		[]Token{
+			Token{`y`, 0, 0, token.IDENTIFIER},
+			Token{`<-`, 0, 0, token.ASSIGNMENT},
+		},
+	}
+
+	var out [][]Token
+	out = splitOnToken(in, token.SEPARATOR_VALUE)
+
+	assert.Equal(t, exp, out)
+}

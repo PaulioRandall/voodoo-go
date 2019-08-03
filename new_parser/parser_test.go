@@ -13,7 +13,7 @@ import (
 type parseTest struct {
 	TestLine int
 	Input    []Token
-	Stat     *Statement
+	Stat     Statement
 	Error    Fault
 }
 
@@ -46,16 +46,18 @@ func makeParseTests() []parseTest {
 				TestLine: fault.CurrLine(),
 				Input: []Token{
 					// x <- 1
-					Token{`x`, 0, 1, token.IDENTIFIER},
-					Token{`<-`, 2, 4, token.ASSIGNMENT},
-					Token{`1`, 5, 6, token.LITERAL_NUMBER},
+					Token{`x`, 0, 0, token.IDENTIFIER},
+					Token{`<-`, 0, 0, token.ASSIGNMENT},
+					Token{`1`, 0, 0, token.LITERAL_NUMBER},
 				},
-				Exes: []Exe{
-					newExe(2, 0, Token{`<-`, 2, 4, token.ASSIGNMENT}),
-				},
-				Vals: []Token{
-					Token{`1`, 5, 6, token.LITERAL_NUMBER},
-					Token{`x`, 0, 1, token.IDENTIFIER},
+				Stat: Assignment{
+					Token: Token{`<-`, 0, 0, token.ASSIGNMENT},
+					Left: Value{
+						Token{`x`, 0, 0, token.IDENTIFIER},
+					},
+					Right: Value{
+						Token{`1`, 0, 0, token.LITERAL_NUMBER},
+					},
 				},
 			},
 		*/

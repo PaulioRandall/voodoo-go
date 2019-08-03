@@ -11,6 +11,34 @@ func Parse(in []Token) (Statement, Fault) {
 	return nil, nil
 }
 
+// parseExpression parses the expression part of a statement
+// to produce an expression for the right side.
+func parseExpression(in []Token) (Expression, Fault) {
+	return nil, nil
+}
+
+// splitOnToken splits the token array into slices on the
+// tokens with the specified token type.
+func splitOnToken(in []Token, delim token.TokenType) [][]Token {
+
+	out := [][]Token{}
+	start := 0
+	size := len(in)
+
+	for i := 0; i < size; i++ {
+		if in[i].Type == delim {
+			out = append(out, in[start:i])
+			start = i + 1
+		}
+	}
+
+	if start < size {
+		out = append(out, in[start:size])
+	}
+
+	return out
+}
+
 // parseAssignment parses the assignment part of a statment
 // to produce an expression for the left side.
 func parseAssignment(in []Token) (Expression, Fault) {
