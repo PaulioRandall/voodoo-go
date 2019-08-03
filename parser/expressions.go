@@ -1,4 +1,4 @@
-package new_parser
+package parser
 
 // StatName satisfies the Statement interface.
 func (e Assignment) StatName() string {

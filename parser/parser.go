@@ -4,101 +4,117 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// Parse parses the input into a stack of instructions followed by a
-// stack of values.
-func Parse(in []Token) (*ExeStack, *ValStack, Fault) {
+// Parse parses a token array into a statement.
+func Parse(in []Token) (Statement, Fault) {
 
-	exes := EmptyExeStack()
-	vals := EmptyValStack()
+	a, in := splitOnAssignment(in)
+	if a == nil {
+		return nil, notImplemented()
+	}
 
-	ids, in, err := preParseAssignment(in, exes, vals)
+	op, left, err := parseAssignment(a)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	for len(in) > 0 {
-		var exe Exe
-		tk := in[0]
+	right, err := parseExpressions(in)
+	if err != nil {
+		return nil, err
+	}
 
-		switch {
-		case isValueOrID(tk):
-			vals.Push(tk)
-			in = in[1:]
-		case isValueSeparator(tk):
-			in = in[1:]
-		case isOperator(tk):
-			exe, in = parseOperation(in)
-			exes.Push(exe)
-		default:
-			return nil, nil, notImplemented()
+	out := Assignment{
+		Left:     left,
+		Operator: op,
+		Right:    right,
+	}
+
+	return out, nil
+}
+
+// notImplemented returns a fault if there's no implementation for a
+// particular arrangement of tokens.
+func notImplemented() Fault {
+	return ParseFault{
+		Msgs: []string{
+			`I haven't coded that path yet!`,
+		},
+	}
+}
+
+// parseExpression parses the whole token array as a single
+// expression.
+func parseExpression(in []Token) (Expression, Fault) {
+
+	var out Expression
+	var err Fault
+
+	// NEXT: Whats the next test case?
+
+	switch {
+	case len(in) == 1:
+		out = Value{in[0]}
+	case len(in) == 3:
+		out = Operation{
+			Left:     Value{in[0]},
+			Operator: in[1],
+			Right:    Value{in[2]},
 		}
+	default:
+		err = notImplemented()
 	}
 
-	if ids > 0 {
-		reverseStacks(ids, exes, vals)
-	}
-
-	return exes, vals, nil
+	return out, err
 }
 
-// reverseStacks reverses the input stacks so the firt items added
-// are the first to be processed. If an assignment operation is
-// present then it is sunk to the bottom of the stack.
-func reverseStacks(ids int, exes *ExeStack, vals *ValStack) {
-	expr := exes.Len() - 1
-	exes.Sink(expr)
-	exes.Reverse()
+// parseExpressions parses the expression part of a statement
+// to produce one or many expressions for the right side.
+func parseExpressions(in []Token) (Expression, Fault) {
 
-	expr = vals.Len() - ids
-	vals.Sink(expr)
-	vals.Reverse()
-}
+	split := splitOnToken(in, token.SEPARATOR_VALUE)
+	exprs := make([]Expression, len(split))
 
-// preParseAssignment parses the initial assignment in a statement.
-func preParseAssignment(in []Token, exes *ExeStack, vals *ValStack) (int, []Token, Fault) {
-	if !containsAssignment(in) {
-		return 0, in, nil
+	for i, v := range split {
+		expr, err := parseExpression(v)
+		if err != nil {
+			return nil, err
+		}
+
+		exprs[i] = expr
 	}
 
+	out := Join{
+		Exprs: exprs,
+	}
+
+	return out, nil
+}
+
+// splitOnToken splits the token array into slices on the
+// tokens with the specified token type.
+func splitOnToken(in []Token, delim token.TokenType) [][]Token {
+
+	out := [][]Token{}
+	start := 0
 	size := len(in)
-	ids := 0
 
-	for i := 0; i < size; i += 2 {
-		if (size - i) < 2 {
-			return -1, nil, badAssignment("Odd number of assignment tokens")
+	// TODO: Don't split if within spell or function param braces
+
+	for i := 0; i < size; i++ {
+		if in[i].Type == delim {
+			out = append(out, in[start:i])
+			start = i + 1
 		}
-
-		id := in[i]
-		punc := in[i+1]
-
-		if id.Type == token.IDENTIFIER {
-			ids++
-			vals.Push(id)
-		} else {
-			return -1, nil, badAssignment("Expected identifier")
-		}
-
-		if isValueSeparator(punc) {
-			continue
-		}
-
-		if isAssignment(punc) {
-			e := Exe{
-				Token:  punc,
-				Params: ids * 2,
-			}
-			exes.Push(e)
-			return ids, in[i+2:], nil
-		}
-
-		return -1, nil, badAssignment("Unexpected token")
 	}
 
-	return -1, nil, badAssignment("Unexpected end of statement")
+	if start < size {
+		out = append(out, in[start:size])
+	}
+
+	return out
 }
 
-// containsAssignment returns true if the input token array results
-// in an assignment but not a match.
+// containsAssignment returns true if the input token array
+// contains an assignment.
 func containsAssignment(in []Token) bool {
 	for _, tk := range in {
 		if tk.Type == token.ASSIGNMENT {
@@ -113,94 +129,85 @@ func containsAssignment(in []Token) bool {
 	return false
 }
 
-// isOperator returns true if the token is an operation.
-func isOperator(tk Token) bool {
-	switch tk.Type {
-	case token.CALC_ADD:
-		return true
-	case token.CALC_SUBTRACT:
-		return true
+// parseAssignment parses the assignment part of a statment
+// to produce an expression for the left side.
+func parseAssignment(in []Token) (Token, Expression, Fault) {
+
+	size := len(in)
+	ids := make([]Token, size/2)
+
+	assign := in[size-1]
+	in = in[:size-1]
+
+	split := splitOnToken(in, token.SEPARATOR_VALUE)
+
+	for i, id := range split {
+		if len(id) != 1 {
+			// TODO: Fault
+		}
+
+		if id[0].Type != token.IDENTIFIER {
+			// TODO: Fault
+		}
+
+		ids[i] = id[0]
 	}
 
-	return false
-}
-
-// parseOperation parses an operation.
-func parseOperation(in []Token) (Exe, []Token) {
-	exe := Exe{
-		Token:   in[0],
-		Params:  2,
-		Returns: 1,
-	}
-	return exe, in[1:]
-}
-
-// isValueSeparator returns true if the token is a value separator.
-func isValueSeparator(tk Token) bool {
-	return tk.Type == token.SEPARATOR_VALUE
-}
-
-// isAssignment returns true if the token is an assignment.
-func isAssignment(tk Token) bool {
-	return tk.Type == token.ASSIGNMENT
-}
-
-// isValueOrID returns true if the token is a value or identifier.
-func isValueOrID(tk Token) bool {
-	switch tk.Type {
-	case token.IDENTIFIER:
-		return true
-	case token.LITERAL_NUMBER:
-		return true
+	out := List{
+		Tokens: ids,
 	}
 
-	return false
+	return assign, out, nil
 }
 
-// requireMin returns a fault if the length of the token array
-// is less than the minimum number required.
-func requireMin(in []Token, min int) Fault {
-	if len(in) >= min {
-		return nil
+// validateDelimiter validates the passed token is a value
+// delimiter or assignment returning a fault if not.
+func validateDelimiter(tk Token) Fault {
+	if tk.Type != token.ASSIGNMENT && tk.Type != token.SEPARATOR_VALUE {
+		return ParseFault{
+			Msgs: []string{
+				`Unexpected token type`,
+				`Expected a value delimiter or assignment token`,
+			},
+		}
 	}
 
-	return ParseFault{
-		Type: `Not implemented`,
-		Msgs: []string{
-			`I haven't coded that path yet!`,
-		},
-	}
+	return nil
 }
 
-// badAssignment returns a fault if the tokens that make up the
-// initial assignment part of a statement are not valid.
-func badAssignment(m string) Fault {
-	return ParseFault{
-		Type: `Bad assignment`,
-		Msgs: []string{
-			m,
-		},
+// validateIdentifier validates the passed token is an identifier
+// returning a fault if not.
+func validateIdentifier(tk Token) Fault {
+	if tk.Type != token.IDENTIFIER {
+		return ParseFault{
+			Msgs: []string{
+				`Can't assign to non-identifier`,
+				`Expected an identifier`,
+			},
+		}
 	}
+
+	return nil
 }
 
-// notImplemented returns a fault if there's no implementation for a
-// particular arrangement of tokens.
-func notImplemented() Fault {
-	return ParseFault{
-		Type: `Not implemented`,
-		Msgs: []string{
-			`I haven't coded that path yet!`,
-		},
-	}
+// isEven returns true if the input is odd.
+func isEven(i int) bool {
+	return i == 0 || i%2 == 0
 }
 
-// missingTokens returns a fault if there are no tokens supplied for
-// parsing when some were expected.
-func missingTokens() Fault {
-	return ParseFault{
-		Type: `Missing tokens`,
-		Msgs: []string{
-			`I expected some tokens to parse`,
-		},
+// splitOnAssignment returns the assignment part of the
+// token array or nil if there is no assignment part.
+func splitOnAssignment(in []Token) ([]Token, []Token) {
+	for i, tk := range in {
+		if tk.Type == token.ASSIGNMENT {
+			i++
+			return in[:i], in[i:]
+		}
+
+		if tk.Type == token.LOGICAL_MATCH {
+			return nil, in
+		}
 	}
+
+	return nil, in
 }

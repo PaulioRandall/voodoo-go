@@ -9,7 +9,6 @@ import (
 // ParseFault represents a generic fault whilst parsing
 // an expression.
 type ParseFault struct {
-	Type string
 	Msgs []string
 }
 
@@ -20,9 +19,6 @@ func (err ParseFault) Print(sc *scroll.Scroll, line int) {
 	fmt.Println("`")
 
 	fmt.Printf("%3d: %s\n", line, sc.Lines[line])
-
-	fmt.Print(`Type: `)
-	fmt.Println(err.Type)
 
 	for _, m := range err.Msgs {
 		fmt.Print(`...`)
