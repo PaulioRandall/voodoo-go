@@ -7,7 +7,7 @@ import (
 // Parse parses a token array into a statement.
 func Parse(in []Token) (Statement, Fault) {
 
-	a, in := splitOnAssignment(in)
+	a, in := divideOnAssignment(in)
 	if a == nil {
 		return nil, notImplemented()
 	}
@@ -39,6 +39,21 @@ func notImplemented() Fault {
 			`I haven't coded that path yet!`,
 		},
 	}
+}
+
+// divideOnOperator returns the first part of the
+// token array up to an operator followed by the remainder.
+// Nil is returned as the first token array if there are no
+// operators.
+func divideOnOperator(in []Token) ([]Token, []Token) {
+	for i, tk := range in {
+		if token.IsOperator(tk.Type) {
+			i++
+			return in[:i], in[i:]
+		}
+	}
+
+	return nil, in
 }
 
 // parseExpression parses the whole token array as a single
@@ -199,9 +214,9 @@ func isEven(i int) bool {
 	return i == 0 || i%2 == 0
 }
 
-// splitOnAssignment returns the assignment part of the
+// divideOnAssignment returns the assignment part of the
 // token array or nil if there is no assignment part.
-func splitOnAssignment(in []Token) ([]Token, []Token) {
+func divideOnAssignment(in []Token) ([]Token, []Token) {
 	for i, tk := range in {
 		if tk.Type == token.ASSIGNMENT {
 			i++

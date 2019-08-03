@@ -16,7 +16,7 @@ func NewValue(val string, t token.TokenType) Expression {
 	}
 }
 
-func TestSplitOnAssignment_1(t *testing.T) {
+func TestDivideOnAssignment_1(t *testing.T) {
 	in := []Token{
 		Token{`x`, 0, 0, token.IDENTIFIER},
 		Token{`<-`, 0, 0, token.ASSIGNMENT},
@@ -34,12 +34,12 @@ func TestSplitOnAssignment_1(t *testing.T) {
 		Token{`2`, 0, 0, token.LITERAL_NUMBER},
 	}
 
-	a, out := splitOnAssignment(in)
+	a, out := divideOnAssignment(in)
 	assert.Equal(t, exp_a, a)
 	assert.Equal(t, exp_out, out)
 }
 
-func TestSplitOnAssignment_2(t *testing.T) {
+func TestDivideOnAssignment_2(t *testing.T) {
 	in := []Token{
 		Token{`@Spell`, 0, 0, token.SPELL},
 		Token{`(`, 0, 0, token.PAREN_CURVY_OPEN},
@@ -50,7 +50,7 @@ func TestSplitOnAssignment_2(t *testing.T) {
 	var exp_a []Token = nil
 	exp_out := in
 
-	a, out := splitOnAssignment(in)
+	a, out := divideOnAssignment(in)
 	assert.Equal(t, exp_a, a)
 	assert.Equal(t, exp_out, out)
 }
