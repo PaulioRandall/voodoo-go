@@ -50,6 +50,10 @@ func parseExpression(in []Token) (Expression, Fault) {
 
 	// NEXT: Whats the next test case?
 
+	// TODO: Refactor to use toke.IsOperator()
+	// TODO: - maybe split on the operators
+	// TODO: - and reucrsively call parseExpression(...)?
+
 	switch {
 	case len(in) == 1:
 		out = Value{in[0]}

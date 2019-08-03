@@ -21,6 +21,8 @@ const (
 	LITERAL_NUMBER // ##.###
 	LITERAL_STRING // "blahblah"
 	COMMENT        // // blahblah
+	// Assignment
+	ASSIGNMENT // <-
 	// Comparison operators
 	CMP_EQUAL                 // ==
 	CMP_NOT_EQUAL             // !=
@@ -45,7 +47,6 @@ const (
 	PAREN_SQUARE_OPEN  // [
 	PAREN_SQUARE_CLOSE // ]
 	// Punctuation
-	ASSIGNMENT      // <-
 	SEPARATOR_VALUE // ,
 	// Whitespace
 	SEPARATOR_LINE // \n
@@ -53,6 +54,11 @@ const (
 	// Ignoramuses
 	VOID // _
 )
+
+// IsOperator returns true if the input type is an operator.
+func IsOperator(t TokenType) bool {
+	return t >= CMP_EQUAL && t <= CALC_MODULO
+}
 
 // TokenName returns the name of the token type.
 func TokenName(t TokenType) string {
@@ -78,6 +84,8 @@ func TokenName(t TokenType) string {
 	case LITERAL_STRING:
 		return `LITERAL_STRING`
 	case COMMENT:
+	case ASSIGNMENT:
+		return `ASSIGNMENT`
 		return `COMMENT`
 	case CMP_EQUAL:
 		return `CMP_EQUAL`
@@ -117,8 +125,6 @@ func TokenName(t TokenType) string {
 		return `PAREN_SQUARE_OPEN`
 	case PAREN_SQUARE_CLOSE:
 		return `PAREN_SQUARE_CLOSE`
-	case ASSIGNMENT:
-		return `ASSIGNMENT`
 	case SEPARATOR_VALUE:
 		return `SEPARATOR_VALUE`
 	case SEPARATOR_LINE:
