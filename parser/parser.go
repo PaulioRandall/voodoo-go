@@ -56,33 +56,60 @@ func divideOnOperator(in []Token) ([]Token, []Token) {
 	return nil, in
 }
 
+// parseOperatorExpression creates an operator expression  from the
+// left and right input.
+func parseOperatorExpression(left []Token, right []Token) (Expression, Fault) {
+	size := len(left)
+
+	switch {
+	case size == 1:
+		// TODO: Fault
+	case size == 2:
+		expr, err := parseExpression(right)
+		if err != nil {
+			// TODO: Fault
+		}
+
+		out := Operation{
+			Left:     Value{left[0]},
+			Operator: left[1],
+			Right:    expr,
+		}
+		return out, nil
+	}
+
+	return nil, notImplemented()
+}
+
 // parseExpression parses the whole token array as a single
 // expression.
 func parseExpression(in []Token) (Expression, Fault) {
 
-	var out Expression
-	var err Fault
-
 	// NEXT: Whats the next test case?
 
-	// TODO: Refactor to use toke.IsOperator()
-	// TODO: - maybe split on the operators
-	// TODO: - and reucrsively call parseExpression(...)?
+	var left []Token
+	var right []Token
 
-	switch {
-	case len(in) == 1:
-		out = Value{in[0]}
-	case len(in) == 3:
-		out = Operation{
-			Left:     Value{in[0]},
-			Operator: in[1],
-			Right:    Value{in[2]},
+	for {
+
+		left, right = divideOnOperator(in)
+		if right == nil || len(right) == 0 {
+			// TODO: Fault
 		}
-	default:
-		err = notImplemented()
+
+		if left == nil {
+			break
+		}
+
+		return parseOperatorExpression(left, right)
 	}
 
-	return out, err
+	if len(right) == 1 {
+		out := Value{right[0]}
+		return out, nil
+	}
+
+	return nil, notImplemented()
 }
 
 // parseExpressions parses the expression part of a statement
