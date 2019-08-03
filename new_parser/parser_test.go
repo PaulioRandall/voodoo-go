@@ -63,6 +63,40 @@ func TestParseAssignment_1(t *testing.T) {
 	assert.Equal(t, exp_a, a)
 }
 
+func TestParseAssignment_2(t *testing.T) {
+	in := []Token{
+		Token{`x`, 0, 0, token.IDENTIFIER},
+		Token{`,`, 0, 0, token.SEPARATOR_VALUE},
+		Token{`y`, 0, 0, token.IDENTIFIER},
+		Token{`<-`, 0, 0, token.ASSIGNMENT},
+	}
+
+	exp_a := List{
+		Tokens: []Token{
+			Token{`x`, 0, 0, token.IDENTIFIER},
+			Token{`y`, 0, 0, token.IDENTIFIER},
+		},
+	}
+
+	a, err := parseAssignment(in)
+	assert.Nil(t, err)
+	assert.Equal(t, exp_a, a)
+}
+
+func TestParseAssignment_3(t *testing.T) {
+	in := []Token{
+		Token{`x`, 0, 0, token.IDENTIFIER},
+		Token{`,`, 0, 0, token.SEPARATOR_VALUE},
+		Token{`<-`, 0, 0, token.ASSIGNMENT},
+	}
+
+	var exp_a Expression = nil
+
+	a, err := parseAssignment(in)
+	assert.NotNil(t, err)
+	assert.Equal(t, exp_a, a)
+}
+
 /*
 import (
 	"strconv"
