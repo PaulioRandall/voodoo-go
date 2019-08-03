@@ -41,39 +41,49 @@ func notImplemented() Fault {
 	}
 }
 
-// divideOnOperator returns the first part of the
-// token array up to an operator followed by the remainder.
+// divideOnLastOperator returns the first part of the
+// token array before the last operator followed by the remainder.
 // Nil is returned as the first token array if there are no
 // operators.
-func divideOnOperator(in []Token) ([]Token, []Token) {
+func divideOnLastOperator(in []Token) ([]Token, Token, []Token) {
+
+	size := len(in)
+	op := -1
+
 	for i, tk := range in {
 		if token.IsOperator(tk.Type) {
-			i++
-			return in[:i], in[i:]
+			op = i
 		}
 	}
 
-	return nil, in
+	if op == -1 {
+		return in, Token{}, nil
+	}
+
+	if op == 0 || op+1 >= size {
+		// Operator is on the edge of the array which is not valid syntax.
+		return nil, Token{}, nil
+	}
+
+	return in[:op], in[op], in[op+1:]
 }
 
 // parseOperatorExpression creates an operator expression  from the
 // left and right input.
-func parseOperatorExpression(left []Token, right []Token) (Expression, Fault) {
-	size := len(left)
+func parseOperatorExpression(left []Token, op Token, right []Token) (Expression, Fault) {
+	size := len(right)
 
 	switch {
 	case size == 1:
-		// TODO: Fault
-	case size == 2:
-		expr, err := parseExpression(right)
+		expr, err := parseExpression(left)
 		if err != nil {
 			// TODO: Fault
 		}
 
 		out := Operation{
-			Left:     Value{left[0]},
-			Operator: left[1],
-			Right:    expr,
+			Left:     expr,
+			Operator: op,
+			Right:    Value{right[0]},
 		}
 		return out, nil
 	}
@@ -88,24 +98,29 @@ func parseExpression(in []Token) (Expression, Fault) {
 	// NEXT: Whats the next test case?
 
 	var left []Token
+	var op Token
 	var right []Token
 
 	for {
 
-		left, right = divideOnOperator(in)
-		if right == nil || len(right) == 0 {
+		left, op, right = divideOnLastOperator(in)
+		if left == nil {
 			// TODO: Fault
 		}
 
-		if left == nil {
+		if op == (Token{}) {
+			// TODO: Fault
+		}
+
+		if right == nil {
 			break
 		}
 
-		return parseOperatorExpression(left, right)
+		return parseOperatorExpression(left, op, right)
 	}
 
-	if len(right) == 1 {
-		out := Value{right[0]}
+	if len(left) == 1 {
+		out := Value{left[0]}
 		return out, nil
 	}
 

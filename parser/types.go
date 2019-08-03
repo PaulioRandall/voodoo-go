@@ -20,10 +20,12 @@ type Statement interface {
 }
 
 // Assignment represents an assignment statement.
+// Left and right list lengths must match otherwise invalid syntax.
 type Assignment struct {
-	Left     Expression
+	Left     Expression // List of all identifiers on left side
 	Operator Token
-	Right    Expression
+	Right    Expression // List created from joining results of all comma
+	// separated right side expressions
 }
 
 // Expression represents an evaluatable expression.
@@ -53,9 +55,9 @@ type Join struct {
 }
 
 // Operation represents an operation expression such
-// as addition, subtraction, etc.
+// as `addition`, `and`, `less than`, etc.
 type Operation struct {
-	Left     Expression
+	Left     Expression // Could be any expression
 	Operator Token
-	Right    Expression
+	Right    Expression // Value or func call
 }
