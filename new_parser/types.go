@@ -47,10 +47,9 @@ type List struct {
 }
 
 // Join represents an expression which joins the results
-// of two other expressions.
+// of one or more other expressions into a list.
 type Join struct {
-	Left  Expression
-	Right Expression
+	Exprs []Expression
 }
 
 // Operation represents an operation expression such

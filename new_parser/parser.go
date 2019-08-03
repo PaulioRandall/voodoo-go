@@ -11,10 +11,34 @@ func Parse(in []Token) (Statement, Fault) {
 	return nil, nil
 }
 
-// parseExpression parses the expression part of a statement
-// to produce an expression for the right side.
+// parseExpression parses the whole token array as a single
+// expression.
 func parseExpression(in []Token) (Expression, Fault) {
+
 	return nil, nil
+}
+
+// parseExpressions parses the expression part of a statement
+// to produce one or many expressions for the right side.
+func parseExpressions(in []Token) (Expression, Fault) {
+
+	split := splitOnToken(in, token.SEPARATOR_VALUE)
+	exprs := make([]Expression, len(split))
+
+	for i, v := range split {
+		expr, err := parseExpression(v)
+		if err != nil {
+			return nil, err
+		}
+
+		exprs[i] = expr
+	}
+
+	out := Join{
+		Exprs: exprs,
+	}
+
+	return out, nil
 }
 
 // splitOnToken splits the token array into slices on the
@@ -24,6 +48,8 @@ func splitOnToken(in []Token, delim token.TokenType) [][]Token {
 	out := [][]Token{}
 	start := 0
 	size := len(in)
+
+	// TODO: Don't split if within spell or function param braces
 
 	for i := 0; i < size; i++ {
 		if in[i].Type == delim {
