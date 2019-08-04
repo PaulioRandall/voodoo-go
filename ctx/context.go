@@ -53,7 +53,6 @@ func (c *Context) Assign(id string, new Value) fault.Fault {
 // Get returns the value of the specified identifier. If the identifier
 // does not exist a fault is returned.
 func (c *Context) Get(id string) (Value, fault.Fault) {
-
 	v, ok := c.vars[id]
 
 	if ok {

@@ -23,5 +23,6 @@ func (a Assignment) StatName() string {
 
 // Evaluate satisfies the Express interface.
 func (a Assignment) Evaluate(c *ctx.Context) fault.Fault {
+	// TODO
 	return nil
 }
