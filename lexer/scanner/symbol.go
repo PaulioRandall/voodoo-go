@@ -15,77 +15,75 @@ import (
 // - number range generator
 //
 // Assumes that the input is not empty.
-func scanSymbol(in []rune, col int) (tk *token.Token, out []rune, err fault.Fault) {
-
-	var t token.TokenType
-	c := 0
-
-	set := func(tkType token.TokenType, runeCount int) {
-		t = tkType
-		c = runeCount
-	}
+func scanSymbol(in []rune, col int) (*token.Token, []rune, fault.Fault) {
 
 	switch {
 	case startsWith(in, `<-`):
-		set(token.ASSIGNMENT, 2)
+		return onMatchedSymbol(in, token.ASSIGNMENT, 2, col)
 	case startsWith(in, `<=`):
-		set(token.CMP_LESS_THAN_OR_EQUAL, 2)
+		return onMatchedSymbol(in, token.CMP_LESS_THAN_OR_EQUAL, 2, col)
 	case startsWith(in, `<`):
-		set(token.CMP_LESS_THAN, 1)
+		return onMatchedSymbol(in, token.CMP_LESS_THAN, 1, col)
 	case startsWith(in, `>=`):
-		set(token.CMP_GREATER_THAN_OR_EQUAL, 2)
+		return onMatchedSymbol(in, token.CMP_GREATER_THAN_OR_EQUAL, 2, col)
 	case startsWith(in, `>`):
-		set(token.CMP_GREATER_THAN, 1)
+		return onMatchedSymbol(in, token.CMP_GREATER_THAN, 1, col)
 	case startsWith(in, `==`):
-		set(token.CMP_EQUAL, 2)
+		return onMatchedSymbol(in, token.CMP_EQUAL, 2, col)
 	case startsWith(in, `!=`):
-		set(token.CMP_NOT_EQUAL, 2)
+		return onMatchedSymbol(in, token.CMP_NOT_EQUAL, 2, col)
 	case startsWith(in, `=>`):
-		set(token.LOGICAL_MATCH, 2)
+		return onMatchedSymbol(in, token.LOGICAL_MATCH, 2, col)
 	case startsWith(in, `!`):
-		set(token.LOGICAL_NOT, 1)
+		return onMatchedSymbol(in, token.LOGICAL_NOT, 1, col)
 	case startsWith(in, `||`):
-		set(token.LOGICAL_OR, 2)
+		return onMatchedSymbol(in, token.LOGICAL_OR, 2, col)
 	case startsWith(in, `&&`):
-		set(token.LOGICAL_AND, 2)
+		return onMatchedSymbol(in, token.LOGICAL_AND, 2, col)
 	case startsWith(in, `+`):
-		set(token.CALC_ADD, 1)
+		return onMatchedSymbol(in, token.CALC_ADD, 1, col)
 	case startsWith(in, `-`):
-		set(token.CALC_SUBTRACT, 1)
+		return onMatchedSymbol(in, token.CALC_SUBTRACT, 1, col)
 	case startsWith(in, `*`):
-		set(token.CALC_MULTIPLY, 1)
+		return onMatchedSymbol(in, token.CALC_MULTIPLY, 1, col)
 	case startsWith(in, `/`):
-		set(token.CALC_DIVIDE, 1)
+		return onMatchedSymbol(in, token.CALC_DIVIDE, 1, col)
 	case startsWith(in, `%`):
-		set(token.CALC_MODULO, 1)
+		return onMatchedSymbol(in, token.CALC_MODULO, 1, col)
 	case startsWith(in, `(`):
-		set(token.PAREN_CURVY_OPEN, 1)
+		return onMatchedSymbol(in, token.PAREN_CURVY_OPEN, 1, col)
 	case startsWith(in, `)`):
-		set(token.PAREN_CURVY_CLOSE, 1)
+		return onMatchedSymbol(in, token.PAREN_CURVY_CLOSE, 1, col)
 	case startsWith(in, `[`):
-		set(token.PAREN_SQUARE_OPEN, 1)
+		return onMatchedSymbol(in, token.PAREN_SQUARE_OPEN, 1, col)
 	case startsWith(in, `]`):
-		set(token.PAREN_SQUARE_CLOSE, 1)
+		return onMatchedSymbol(in, token.PAREN_SQUARE_CLOSE, 1, col)
 	case startsWith(in, `,`):
-		set(token.SEPARATOR_VALUE, 1)
+		return onMatchedSymbol(in, token.SEPARATOR_VALUE, 1, col)
 	case startsWith(in, `_`):
-		set(token.VOID, 1)
+		return onMatchedSymbol(in, token.VOID, 1, col)
 	default:
-		err = fault.SyntaxFault{
-			Index: col + 1,
-			Msgs: []string{
-				"I don't know what this symbol means '" + string(in[0]) + "'",
-			},
-		}
-		return
+		return nil, nil, unknownSymbol(in[0], col+1)
 	}
+}
 
-	tk = &token.Token{
-		Val:   string(in[:c]),
+// onMatchedSymbol creates the new token when a symbol match is found.
+func onMatchedSymbol(in []rune, t token.TokenType, count, col int) (*token.Token, []rune, fault.Fault) {
+	tk := &token.Token{
+		Val:   string(in[:count]),
 		Start: col,
 		Type:  t,
 	}
 
-	out = in[c:]
-	return
+	return tk, in[count:], nil
+}
+
+// unknownSymbol creates a fault for when a symbol is not known.
+func unknownSymbol(r rune, i int) fault.Fault {
+	return fault.SyntaxFault{
+		Index: i,
+		Msgs: []string{
+			"I don't know what this symbol means '" + string(r) + "'",
+		},
+	}
 }

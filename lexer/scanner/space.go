@@ -15,15 +15,7 @@ import (
 // and the bodies of different context.
 func scanSpace(in []rune, col int) (tk *token.Token, out []rune) {
 
-	end := -1
-
-	for i, v := range in {
-		if !isSpace(v) {
-			end = i
-			break
-		}
-	}
-
+	end := findNonWhitespace(in)
 	if end == -1 {
 		end = len(in)
 	}
@@ -36,4 +28,15 @@ func scanSpace(in []rune, col int) (tk *token.Token, out []rune) {
 
 	out = in[end:]
 	return
+}
+
+// findNonWhitespace finds the first non-whitespace index.
+func findNonWhitespace(in []rune) int {
+	for i, v := range in {
+		if !isSpace(v) {
+			return i
+		}
+	}
+
+	return -1
 }

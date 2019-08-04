@@ -36,7 +36,7 @@ func appendFractional(num, frac []rune, col int) ([]rune, fault.Fault) {
 
 	if size > 0 {
 		if size < 2 {
-			return nil, badNumberFormat(col, len(num))
+			return nil, badNumberFormat(col + len(num) + 1)
 		}
 
 		num = append(num, frac...)
@@ -47,9 +47,9 @@ func appendFractional(num, frac []rune, col int) ([]rune, fault.Fault) {
 
 // badNumberFormat returns a fault detailing a bad number
 // format.
-func badNumberFormat(col, offset int) fault.Fault {
+func badNumberFormat(i int) fault.Fault {
 	return fault.SyntaxFault{
-		Index: col + offset + 1,
+		Index: i,
 		Msgs: []string{
 			"Invalid number format, either...",
 			" - fractional digits are missing",

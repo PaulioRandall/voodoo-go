@@ -11,28 +11,32 @@ import (
 func scanWord(in []rune, col int) (*token.Token, []rune) {
 
 	s, out := scanWordStr(in)
-	t := token.IDENTIFIER
-
-	switch strings.ToLower(s) {
-	case `func`:
-		t = token.KEYWORD_FUNC
-	case `loop`:
-		t = token.KEYWORD_LOOP
-	case `when`:
-		t = token.KEYWORD_WHEN
-	case `done`:
-		t = token.KEYWORD_DONE
-	case `true`:
-		t = token.BOOLEAN_TRUE
-	case `false`:
-		t = token.BOOLEAN_FALSE
-	}
 
 	tk := &token.Token{
 		Val:   s,
 		Start: col,
-		Type:  t,
+		Type:  findWordType(s),
 	}
 
 	return tk, out
+}
+
+// findWordType finds the type of the word.
+func findWordType(s string) token.TokenType {
+	switch strings.ToLower(s) {
+	case `func`:
+		return token.KEYWORD_FUNC
+	case `loop`:
+		return token.KEYWORD_LOOP
+	case `when`:
+		return token.KEYWORD_WHEN
+	case `done`:
+		return token.KEYWORD_DONE
+	case `true`:
+		return token.BOOLEAN_TRUE
+	case `false`:
+		return token.BOOLEAN_FALSE
+	default:
+		return token.IDENTIFIER
+	}
 }

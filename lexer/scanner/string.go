@@ -16,12 +16,7 @@ func scanString(in []rune, col int) (tk *token.Token, out []rune, err fault.Faul
 	s, out, closed = scanStr(in)
 
 	if !closed {
-		err = fault.SyntaxFault{
-			Index: col + len(in),
-			Msgs: []string{
-				"Did someone forget to close a string literal?!",
-			},
-		}
+		err = unclosedString(col + len(in))
 		return
 	}
 
@@ -44,7 +39,7 @@ func scanStr(in []rune) (s string, out []rune, closed bool) {
 	for i, r := range in[1:] {
 
 		if !isEscaped && r == '"' {
-			end = i + 1 // +1 because first rune wwaas ignored
+			end = i + 1 // +1 because first rune was ignored
 			end += 1    // +1 converts last index to length
 			break
 		}
@@ -64,4 +59,15 @@ func scanStr(in []rune) (s string, out []rune, closed bool) {
 	s = string(in[:end])
 	out = in[end:]
 	return
+}
+
+// unclosedString creates a fault for when a string literal is
+// is not closed before the end of a line.
+func unclosedString(i int) fault.Fault {
+	return fault.SyntaxFault{
+		Index: i,
+		Msgs: []string{
+			"Did someone forget to close a string literal?!",
+		},
+	}
 }
