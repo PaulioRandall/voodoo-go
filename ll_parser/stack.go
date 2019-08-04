@@ -1,5 +1,9 @@
 package ll_parser
 
+import (
+	"github.com/PaulioRandall/voodoo-go/token"
+)
+
 // stack represents a stack of expressions and tokens
 // used while parsing a statement.
 type stack struct {
@@ -58,4 +62,15 @@ func (s *stack) Pop() interface{} {
 	item := s.a[s.i]
 	s.a[s.i] = nil
 	return item
+}
+
+// PopTokens pops n tokens off the top of the stack returning
+// them as a new array.
+func (s *stack) PopTokens(n int) []token.Token {
+	s.panicIfEmpty()
+	b := make([]token.Token, n)
+	for i := 0; i < n; i++ {
+		b[i] = s.Pop().(token.Token)
+	}
+	return b
 }

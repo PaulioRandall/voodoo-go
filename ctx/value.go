@@ -25,9 +25,9 @@ type Value struct {
 	Type  ValueType
 }
 
-// ExprType satisfies the Expression interface.
-func (v Value) ExprType() ExprType {
-	return ASSIGNMENT
+// Expr satisfies the Expression interface.
+func (v Value) Expr() ExprType {
+	return VALUE
 }
 
 // Evaluate satisfies the Expression interface.

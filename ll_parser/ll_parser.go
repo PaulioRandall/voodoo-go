@@ -89,10 +89,9 @@ func buildAssignment(s *stack) {
 // buildOperation takes the last three items from the stack
 // and builds an expression from them.
 func buildOperation(s *stack) {
-	exp := ctx.Operation{
-		Right:    s.Pop().(ctx.Expression),
-		Operator: s.Pop().(token.Token),
-		Left:     s.Pop().(ctx.Expression),
+	exp := ctx.Evaluation{
+		Tokens: s.PopTokens(3),
+		Type:   ctx.OPERATION,
 	}
 
 	s.Push(exp)
