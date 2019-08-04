@@ -1,7 +1,6 @@
-package exprs
+package ctx
 
 import (
-	"github.com/PaulioRandall/voodoo-go/ctx"
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
@@ -9,18 +8,18 @@ import (
 // Operation represents an operation expression such
 // as `addition`, `and`, `less than`, etc.
 type Operation struct {
-	Left     ctx.Expression
+	Left     Expression
 	Operator token.Token
-	Right    ctx.Expression
+	Right    Expression
 }
 
 // ExprType satisfies the Expression interface.
-func (o Operation) ExprType() ctx.ExprType {
-	return ctx.ADDITION
+func (o Operation) ExprType() ExprType {
+	return ADDITION
 }
 
 // Evaluate satisfies the Expression interface.
-func (o Operation) Evaluate(c *ctx.Context) (ctx.Value, fault.Fault) {
+func (o Operation) Evaluate(c *Context) (Value, fault.Fault) {
 	// TODO
-	return ctx.Value{}, nil
+	return Value{}, nil
 }

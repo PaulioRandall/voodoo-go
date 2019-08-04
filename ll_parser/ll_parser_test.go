@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/ctx"
-	"github.com/PaulioRandall/voodoo-go/exprs"
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 	"github.com/stretchr/testify/assert"
@@ -62,7 +61,7 @@ func makeParseTests() []parseTest {
 				token.Token{`<-`, 0, 0, token.ASSIGNMENT},
 				token.Token{`1`, 0, 0, token.LITERAL_NUMBER},
 			},
-			Stat: exprs.Assignment{
+			Stat: ctx.Assignment{
 				Left:     NewValue(`x`, `x`, token.IDENTIFIER, ctx.IDENTIFIER_TYPE),
 				Operator: token.Token{`<-`, 0, 0, token.ASSIGNMENT},
 				Right:    NewValue(`1`, float64(1), token.LITERAL_NUMBER, ctx.NUMBER_TYPE),

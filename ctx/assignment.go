@@ -1,7 +1,6 @@
-package exprs
+package ctx
 
 import (
-	"github.com/PaulioRandall/voodoo-go/ctx"
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
@@ -10,9 +9,9 @@ import (
 // of each value of a set expressions to a set of identifiers.
 // Left and right set lengths must match otherwise invalid syntax.
 type Assignment struct {
-	Left     ctx.Value // List of all identifiers on left side
+	Left     Value // List of all identifiers on left side
 	Operator token.Token
-	Right    ctx.Expression // List created from joining results of all comma
+	Right    Expression // List created from joining results of all comma
 	// separated right side expressions
 }
 
@@ -22,7 +21,7 @@ func (a Assignment) StatName() string {
 }
 
 // Evaluate satisfies the Express interface.
-func (a Assignment) Evaluate(c *ctx.Context) fault.Fault {
+func (a Assignment) Evaluate(c *Context) fault.Fault {
 	// TODO
 	return nil
 }

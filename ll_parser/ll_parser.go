@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/PaulioRandall/voodoo-go/ctx"
-	"github.com/PaulioRandall/voodoo-go/exprs"
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
@@ -78,7 +77,7 @@ func lookAhead(in []token.Token, i int) token.TokenType {
 // buildAssignment takes the last three items from the stack
 // and builds an assignment statement from them.
 func buildAssignment(s *stack) {
-	ass := exprs.Assignment{
+	ass := ctx.Assignment{
 		Right:    s.Pop().(ctx.Expression),
 		Operator: s.Pop().(token.Token),
 		Left:     s.Pop().(ctx.Value),
@@ -90,7 +89,7 @@ func buildAssignment(s *stack) {
 // buildOperation takes the last three items from the stack
 // and builds an expression from them.
 func buildOperation(s *stack) {
-	exp := exprs.Operation{
+	exp := ctx.Operation{
 		Right:    s.Pop().(ctx.Expression),
 		Operator: s.Pop().(token.Token),
 		Left:     s.Pop().(ctx.Expression),
