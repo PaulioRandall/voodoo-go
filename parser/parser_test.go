@@ -58,9 +58,7 @@ func makeParseTests() []parseTest {
 				Operator: Token{`<-`, 0, 0, token.ASSIGNMENT},
 				Right: Join{
 					Exprs: []Expression{
-						Value{
-							Token{`1`, 0, 0, token.LITERAL_NUMBER},
-						},
+						NewValue(`1`, token.LITERAL_NUMBER),
 					},
 				},
 			},
@@ -85,13 +83,9 @@ func makeParseTests() []parseTest {
 				Right: Join{
 					Exprs: []Expression{
 						Operation{
-							Left: Value{
-								Token{`1`, 0, 0, token.LITERAL_NUMBER},
-							},
+							Left:     NewValue(`1`, token.LITERAL_NUMBER),
 							Operator: Token{`+`, 0, 0, token.CALC_ADD},
-							Right: Value{
-								Token{`2`, 0, 0, token.LITERAL_NUMBER},
-							},
+							Right:    NewValue(`2`, token.LITERAL_NUMBER),
 						},
 					},
 				},
@@ -120,18 +114,58 @@ func makeParseTests() []parseTest {
 					Exprs: []Expression{
 						Operation{
 							Left: Operation{
-								Left: Value{
-									Token{`1`, 0, 0, token.LITERAL_NUMBER},
-								},
+								Left:     NewValue(`1`, token.LITERAL_NUMBER),
 								Operator: Token{`+`, 0, 0, token.CALC_ADD},
-								Right: Value{
-									Token{`3`, 0, 0, token.LITERAL_NUMBER},
-								},
+								Right:    NewValue(`3`, token.LITERAL_NUMBER),
 							},
 							Operator: Token{`-`, 0, 0, token.CALC_SUBTRACT},
-							Right: Value{
-								Token{`2`, 0, 0, token.LITERAL_NUMBER},
+							Right:    NewValue(`2`, token.LITERAL_NUMBER),
+						},
+					},
+				},
+			},
+		},
+		parseTest{
+			TestLine: fault.CurrLine(),
+			Input: []Token{
+				// x <- 1 + 2 + 3 + 4
+				Token{`x`, 0, 0, token.IDENTIFIER},
+				Token{`<-`, 0, 0, token.ASSIGNMENT},
+				Token{`1`, 0, 0, token.LITERAL_NUMBER},
+				Token{`-`, 0, 0, token.CALC_SUBTRACT},
+				Token{`2`, 0, 0, token.LITERAL_NUMBER},
+				Token{`+`, 0, 0, token.CALC_ADD},
+				Token{`3`, 0, 0, token.LITERAL_NUMBER},
+				Token{`*`, 0, 0, token.CALC_MULTIPLY},
+				Token{`4`, 0, 0, token.LITERAL_NUMBER},
+				Token{`/`, 0, 0, token.CALC_DIVIDE},
+				Token{`5`, 0, 0, token.LITERAL_NUMBER},
+			},
+			Stat: Assignment{
+				Left: List{
+					Tokens: []Token{
+						Token{`x`, 0, 0, token.IDENTIFIER},
+					},
+				},
+				Operator: Token{`<-`, 0, 0, token.ASSIGNMENT},
+				Right: Join{
+					Exprs: []Expression{
+						Operation{
+							Left: Operation{
+								Left: Operation{
+									Left: Operation{
+										Left:     NewValue(`1`, token.LITERAL_NUMBER),
+										Operator: Token{`-`, 0, 0, token.CALC_SUBTRACT},
+										Right:    NewValue(`2`, token.LITERAL_NUMBER),
+									},
+									Operator: Token{`+`, 0, 0, token.CALC_ADD},
+									Right:    NewValue(`3`, token.LITERAL_NUMBER),
+								},
+								Operator: Token{`*`, 0, 0, token.CALC_MULTIPLY},
+								Right:    NewValue(`4`, token.LITERAL_NUMBER),
 							},
+							Operator: Token{`/`, 0, 0, token.CALC_DIVIDE},
+							Right:    NewValue(`5`, token.LITERAL_NUMBER),
 						},
 					},
 				},
