@@ -10,7 +10,7 @@ import (
 // of each value of a set expressions to a set of identifiers.
 // Left and right set lengths must match otherwise invalid syntax.
 type Assignment struct {
-	Left     ctx.Expression // List of all identifiers on left side
+	Left     ctx.Value // List of all identifiers on left side
 	Operator token.Token
 	Right    ctx.Expression // List created from joining results of all comma
 	// separated right side expressions

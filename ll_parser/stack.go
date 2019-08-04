@@ -16,6 +16,20 @@ func newStack(size int) *stack {
 	}
 }
 
+// Len returns the length of the stack.
+func (s *stack) Len() int {
+	return s.i
+}
+
+// PeekAt returns the item at the top index - offset.
+func (s *stack) PeekAt(offset int) interface{} {
+	i := s.i - 1 - offset
+	if i < 0 || i >= s.size {
+		panic(`Index + 1 - offset is out of bounds`)
+	}
+	return s.a[i]
+}
+
 // PanicIfFull panics if the stack is full.
 func (s *stack) panicIfFull() {
 	if s.i+1 >= s.size {

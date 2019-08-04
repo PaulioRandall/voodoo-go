@@ -9,11 +9,12 @@ import (
 type ValueType string
 
 const (
-	UNDEFINED_TYPE = `undefined`
-	BOOL_TYPE      = `bool`
-	NUMBER_TYPE    = `number`
-	STRING_TYPE    = `string`
-	LIST_TYPE      = `list`
+	UNDEFINED_TYPE  = `undefined`
+	IDENTIFIER_TYPE = `identifier`
+	BOOL_TYPE       = `bool`
+	NUMBER_TYPE     = `number`
+	STRING_TYPE     = `string`
+	LIST_TYPE       = `list`
 )
 
 // Value represents an expression which simple evaluates

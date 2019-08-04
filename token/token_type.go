@@ -5,6 +5,7 @@ type TokenType int
 
 const (
 	UNDEFINED TokenType = iota
+	END_OF_STATMENT
 	// Keywords
 	KEYWORD_FUNC // func
 	KEYWORD_LOOP // loop
