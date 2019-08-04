@@ -1,74 +1,40 @@
 package ctx
 
-// ValueType represents a type of value
-type ValueType int
-
-const (
-	UNDEFINED ValueType = iota
-	BOOL
-	NUMBER
-	STRING
-	LIST
+import (
+	"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// NameOfValueType returns the name of a value type.
-func NameOfValueType(t ValueType) string {
-	switch t {
-	case BOOL:
-		return `bool`
-	case NUMBER:
-		return `number`
-	case STRING:
-		return `string`
-	case LIST:
-		return `list`
-	}
+// ValueType represents the name of the type of a value.
+type ValueType string
 
-	return `undefined`
+const (
+	UNDEFINED_TYPE = `undefined`
+	BOOL_TYPE      = `bool`
+	NUMBER_TYPE    = `number`
+	STRING_TYPE    = `string`
+	LIST_TYPE      = `list`
+)
+
+// Value represents an expression which simple evaluates
+// to itself; an actual value or identifier.
+type Value struct {
+	Token token.Token
+	Val   interface{}
+	Type  string
 }
 
-// Value represents a value within a scroll. Not all values
-// are explicitly declared within the code.
-type Value interface {
-
-	// Type returns the type of the value.
-	Type() ValueType
+// ExprName satisfies the Expression interface.
+func (v Value) ExprName() string {
+	return `value`
 }
 
-// BoolValue represents a boolean.
-type BoolValue bool
-
-// NumberValue represents a number.
-type NumberValue float64
-
-// StringValue represents a string.
-type StringValue string
-
-// ListValue represents a list.
-type ListValue []Value
-
-// Type satisfies the Value interface.
-func (v BoolValue) Type() ValueType {
-	return BOOL
+// Evaluate satisfies the Expression interface.
+func (v Value) Evaluate(c *Context) (Value, fault.Fault) {
+	return v, nil
 }
 
-// Type satisfies the Value interface.
-func (v NumberValue) Type() ValueType {
-	return NUMBER
-}
-
-// Type satisfies the Value interface.
-func (v StringValue) Type() ValueType {
-	return STRING
-}
-
-// Type satisfies the Value interface.
-func (v ListValue) Type() ValueType {
-	return LIST
-}
-
-// HasSameType returns true if both input values have the
-// same type.
-func HasSameType(a Value, b Value) bool {
-	return a.Type() == b.Type()
+// IsSameType returns true if the value types are the same.
+func (v Value) IsSameType(other Value) bool {
+	return v.Type == other.Type
 }

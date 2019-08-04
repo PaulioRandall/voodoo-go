@@ -22,6 +22,6 @@ func (a Assignment) StatName() string {
 }
 
 // Evaluate satisfies the Express interface.
-func Evaluate(c *ctx.Context) fault.Fault {
+func (a Assignment) Evaluate(c *ctx.Context) fault.Fault {
 	return nil
 }

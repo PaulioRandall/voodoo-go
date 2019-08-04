@@ -8,12 +8,26 @@ import (
 	//"github.com/stretchr/testify/require"
 )
 
+func boolValue(b bool) Value {
+	return Value{
+		Val:  b,
+		Type: BOOL_TYPE,
+	}
+}
+
+func numValue(n float64) Value {
+	return Value{
+		Val:  n,
+		Type: NUMBER_TYPE,
+	}
+}
+
 func TestContextAssign_1(t *testing.T) {
 	c := &Context{
 		vars: map[string]Value{},
 	}
 
-	v := NumberValue(2)
+	v := numValue(2)
 	exp := &Context{
 		vars: map[string]Value{
 			`a`: v,
@@ -22,18 +36,18 @@ func TestContextAssign_1(t *testing.T) {
 
 	err := c.Assign(`a`, v)
 
-	assert.Nil(t, err, "Did NOT expect an fault for a valid assignment")
-	assert.Equal(t, exp, c, "Context was not in the expected state")
+	assert.Nil(t, err)
+	assert.Equal(t, exp, c)
 }
 
 func TestContextAssign_2(t *testing.T) {
 	c := &Context{
 		vars: map[string]Value{
-			`a`: NumberValue(2),
+			`a`: numValue(2),
 		},
 	}
 
-	v := NumberValue(3)
+	v := numValue(3)
 	exp := &Context{
 		vars: map[string]Value{
 			`a`: v,
@@ -42,24 +56,24 @@ func TestContextAssign_2(t *testing.T) {
 
 	err := c.Assign(`a`, v)
 
-	assert.Nil(t, err, "Did NOT expect an fault for a valid assignment")
-	assert.Equal(t, exp, c, "Context was not in the expected state")
+	assert.Nil(t, err)
+	assert.Equal(t, exp, c)
 }
 
 func TestContextAssign_3(t *testing.T) {
 	c := &Context{
 		vars: map[string]Value{
-			`a`: NumberValue(2),
+			`a`: numValue(2),
 		},
 	}
 
-	v := BoolValue(true)
+	v := boolValue(true)
 	err := c.Assign(`a`, v)
-	assert.NotNil(t, err, "Expected a fault for this invalid assignment")
+	assert.NotNil(t, err)
 }
 
 func TestContextGet_1(t *testing.T) {
-	exp := NumberValue(2)
+	exp := numValue(2)
 
 	c := &Context{
 		vars: map[string]Value{
@@ -68,8 +82,8 @@ func TestContextGet_1(t *testing.T) {
 	}
 
 	v, err := c.Get(`a`)
-	assert.Nil(t, err, "Expected the fault to be nil")
-	assert.Equal(t, exp, v, "Expected a different value")
+	assert.Nil(t, err)
+	assert.Equal(t, exp, v)
 }
 
 func TestContextGet_2(t *testing.T) {
@@ -78,6 +92,6 @@ func TestContextGet_2(t *testing.T) {
 	}
 
 	v, err := c.Get(`a`)
-	assert.Nil(t, v, "Expected the value to be nil")
-	assert.NotNil(t, err, "Expected a fault when attempting to read a non existent variable")
+	assert.Empty(t, v)
+	assert.NotNil(t, err)
 }
