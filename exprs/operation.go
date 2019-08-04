@@ -14,9 +14,9 @@ type Operation struct {
 	Right    ctx.Expression
 }
 
-// ExprName satisfies the Expression interface.
-func (o Operation) ExprName() string {
-	return `operation`
+// ExprType satisfies the Expression interface.
+func (o Operation) ExprType() ctx.ExprType {
+	return ctx.ADDITION
 }
 
 // Evaluate satisfies the Expression interface.
