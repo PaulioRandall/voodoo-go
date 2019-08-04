@@ -9,12 +9,12 @@ import (
 type ValueType string
 
 const (
-	UNDEFINED_TYPE  = `undefined`
-	IDENTIFIER_TYPE = `identifier`
-	BOOL_TYPE       = `bool`
-	NUMBER_TYPE     = `number`
-	STRING_TYPE     = `string`
-	LIST_TYPE       = `list`
+	UNDEFINED_TYPE  ValueType = `undefined`
+	IDENTIFIER_TYPE ValueType = `identifier`
+	BOOL_TYPE       ValueType = `bool`
+	NUMBER_TYPE     ValueType = `number`
+	STRING_TYPE     ValueType = `string`
+	LIST_TYPE       ValueType = `list`
 )
 
 // Value represents an expression which simple evaluates
@@ -22,7 +22,7 @@ const (
 type Value struct {
 	Token token.Token
 	Val   interface{}
-	Type  string
+	Type  ValueType
 }
 
 // ExprName satisfies the Expression interface.
