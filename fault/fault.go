@@ -1,6 +1,7 @@
 package fault
 
 import (
+	"fmt"
 	"runtime"
 
 	"github.com/PaulioRandall/voodoo-go/scroll"
@@ -14,6 +15,14 @@ type Fault interface {
 	// Print prints the fault to console with the line number
 	// of the scroll where the error originated.
 	Print(sc *scroll.Scroll, line int)
+}
+
+// ReaderFault represents an reader error wrapped as a fault.
+type ReaderFault string
+
+// Print satisfies the Fault interface.
+func (err ReaderFault) Print(sc *scroll.Scroll, line int) {
+	fmt.Println(err)
 }
 
 // SyntaxFault represents a generic fault with syntax.
