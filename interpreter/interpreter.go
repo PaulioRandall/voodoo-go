@@ -29,7 +29,13 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 
 		tks := <-colChan
 
-		tks = strimmer.Strim(tks)
+		strimChan := make(chan token.Token)
+		colChan = make(chan []token.Token)
+		go collateLine(strimChan, colChan)
+
+		strimmer.Strim(tks, strimChan)
+		tks = <-colChan
+
 		token.PrintlnTokenValues(tks)
 		token.PrintlnTokenTypes(tks)
 		fmt.Println()

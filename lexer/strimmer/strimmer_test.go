@@ -16,12 +16,28 @@ type strimTest struct {
 	ExpectToks []token.Token
 }
 
+// collateLine collates a single line from a channel of tokens.
+func collateLine(in chan token.Token, out chan []token.Token) {
+	defer close(out)
+	tks := []token.Token{}
+	for tk := range in {
+		tks = append(tks, tk)
+	}
+	out <- tks
+}
+
 func TestStrim(t *testing.T) {
 	for _, tc := range strimTests() {
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> strimmer_test.go : " + testLine)
 
-		ts := Strim(tc.Input)
+		inChan := make(chan token.Token)
+		outChan := make(chan []token.Token)
+		go collateLine(inChan, outChan)
+
+		Strim(tc.Input, inChan)
+		ts := <-outChan
+
 		require.NotNil(t, ts)
 		assert.Equal(t, tc.ExpectToks, ts)
 	}

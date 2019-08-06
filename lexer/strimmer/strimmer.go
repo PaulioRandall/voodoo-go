@@ -14,9 +14,8 @@ import (
 // -> Removing underscores from numbers
 // -> Removing now redundant punctuation
 // -> Converting all letters to lowercase (Except string literals)
-func Strim(in []token.Token) []token.Token {
-
-	out := []token.Token{}
+func Strim(in []token.Token, out chan token.Token) {
+	defer close(out)
 
 	for _, tk := range in {
 		switch {
@@ -33,10 +32,8 @@ func Strim(in []token.Token) []token.Token {
 			tk.Val = strings.ToLower(tk.Val)
 		}
 
-		out = append(out, tk)
+		out <- tk
 	}
-
-	return out
 }
 
 // isAlphabeticType returns true if input token type is for
