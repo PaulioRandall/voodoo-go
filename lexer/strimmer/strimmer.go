@@ -14,10 +14,10 @@ import (
 // -> Removing underscores from numbers
 // -> Removing now redundant punctuation
 // -> Converting all letters to lowercase (Except string literals)
-func Strim(in []token.Token, out chan token.Token) {
+func Strim(in chan token.Token, out chan token.Token) {
 	defer close(out)
 
-	for _, tk := range in {
+	for tk := range in {
 		switch {
 		case tk.Type == token.WHITESPACE:
 			continue

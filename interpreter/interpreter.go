@@ -1,8 +1,6 @@
 package interpreter
 
 import (
-	"fmt"
-
 	"github.com/PaulioRandall/voodoo-go/lexer/scanner"
 	"github.com/PaulioRandall/voodoo-go/lexer/strimmer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
@@ -17,9 +15,12 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 			continue // Ignoring first line: shebang
 		}
 
+		done := make(chan bool)
 		scanChan := make(chan token.Token)
-		colChan := make(chan []token.Token)
-		go collateLine(scanChan, colChan)
+		strimChan := make(chan token.Token)
+
+		go token.PrintlnTokenChan(done, strimChan, tokenToString)
+		go strimmer.Strim(scanChan, strimChan)
 
 		err := scanner.Scan(line, scanChan)
 		if err != nil {
@@ -27,27 +28,10 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 			return 1
 		}
 
-		tks := <-colChan
-
-		strimChan := make(chan token.Token)
-
-		go token.PrintlnTokenChan(strimChan, tokenToString)
-		strimmer.Strim(tks, strimChan)
-
-		fmt.Println()
+		<-done
 	}
 
 	return 0
-}
-
-// collateLine collates a single line from a channel of tokens.
-func collateLine(in chan token.Token, out chan []token.Token) {
-	defer close(out)
-	tks := []token.Token{}
-	for tk := range in {
-		tks = append(tks, tk)
-	}
-	out <- tks
 }
 
 // tokenToString is used by token.PrintlnTokenChan() to determine what should

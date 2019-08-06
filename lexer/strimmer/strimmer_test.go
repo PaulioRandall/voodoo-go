@@ -16,8 +16,16 @@ type strimTest struct {
 	ExpectToks []token.Token
 }
 
-// collateLine collates a single line from a channel of tokens.
-func collateLine(in chan token.Token, out chan []token.Token) {
+// stream takes an array of tokens and pushes them into a token channel.
+func stream(in []token.Token, out chan token.Token) {
+	defer close(out)
+	for _, tk := range in {
+		out <- tk
+	}
+}
+
+// collect collects all tokens coming from a channel into an array.
+func collect(in chan token.Token, out chan []token.Token) {
 	defer close(out)
 	tks := []token.Token{}
 	for tk := range in {
@@ -32,14 +40,17 @@ func TestStrim(t *testing.T) {
 		t.Log("-> strimmer_test.go : " + testLine)
 
 		inChan := make(chan token.Token)
-		outChan := make(chan []token.Token)
-		go collateLine(inChan, outChan)
+		outChan := make(chan token.Token)
+		collectChan := make(chan []token.Token)
 
-		Strim(tc.Input, inChan)
-		ts := <-outChan
+		go stream(tc.Input, inChan)
+		go collect(outChan, collectChan)
 
-		require.NotNil(t, ts)
-		assert.Equal(t, tc.ExpectToks, ts)
+		Strim(inChan, outChan)
+		tks := <-collectChan
+
+		require.NotNil(t, tks)
+		assert.Equal(t, tc.ExpectToks, tks)
 	}
 }
 

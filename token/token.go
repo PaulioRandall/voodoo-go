@@ -64,7 +64,9 @@ func printlnTokens(tks []Token, f func(Token) string) {
 // PrintlnTokenChan prints each token arriving on the channel until the channel
 // is closed. The value to print is obtained via calling the supplied function
 // with each token.
-func PrintlnTokenChan(in chan Token, f func(Token) string) {
+func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
+	defer close(done)
+
 	fmt.Print(`[`)
 	first := true
 
