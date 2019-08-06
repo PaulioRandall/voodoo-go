@@ -30,14 +30,10 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 		tks := <-colChan
 
 		strimChan := make(chan token.Token)
-		colChan = make(chan []token.Token)
-		go collateLine(strimChan, colChan)
 
+		go token.PrintlnTokenChan(strimChan, tokenToString)
 		strimmer.Strim(tks, strimChan)
-		tks = <-colChan
 
-		token.PrintlnTokenValues(tks)
-		token.PrintlnTokenTypes(tks)
 		fmt.Println()
 	}
 
@@ -52,4 +48,10 @@ func collateLine(in chan token.Token, out chan []token.Token) {
 		tks = append(tks, tk)
 	}
 	out <- tks
+}
+
+// tokenToString is used by token.PrintlnTokenChan() to determine what should
+// be printed for each supplied token.
+func tokenToString(tk token.Token) string {
+	return tk.Val
 }
