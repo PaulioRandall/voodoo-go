@@ -43,10 +43,9 @@ func (r *Runer) ReadRune() (rune, fault.Fault) {
 	return ru, err
 }
 
-// PeekRunes returns the next two runes in the sequence without incrementing the
-// 'cursor'. It will check the temp buffer first and if there are NUL, populate
-// them with new values from the reader before returning their contents.
-func (r *Runer) PeekRunes() (rune, rune, fault.Fault) {
+// LookAhead returns the next two runes in the sequence without incrementing the
+// 'cursor'.
+func (r *Runer) LookAhead() (rune, rune, fault.Fault) {
 	var err fault.Fault
 
 	if r.buf[0] == NUL {
@@ -79,7 +78,7 @@ func (r *Runer) nextRune() (rune, fault.Fault) {
 	return ru, nil
 }
 
-// readRune reads the next rune from the reader returning EOF if the end of the
+// readRune reads the next rune in the sequence returning EOF if the end of the
 // reader has been reached.
 func (r *Runer) readRune() (rune, fault.Fault) {
 	ru, _, err := r.reader.ReadRune()

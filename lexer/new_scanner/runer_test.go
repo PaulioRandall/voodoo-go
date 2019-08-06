@@ -37,21 +37,27 @@ func TestRuner_ReadRune(t *testing.T) {
 	assert.Equal(t, EOF, ru4)
 }
 
-func TestRuner_PeekRunes(t *testing.T) {
+func TestRuner_LookAhead(t *testing.T) {
 	r := dummyRuner(`abc`)
 
-	ru1, ru2, err := r.PeekRunes()
+	ru1, ru2, err := r.LookAhead()
 	require.Nil(t, err)
 	assert.Equal(t, 'a', ru1)
 	assert.Equal(t, 'b', ru2)
 
 	readRequireNoErr(t, r)
+
+	ru3, ru4, err := r.LookAhead()
+	require.Nil(t, err)
+	assert.Equal(t, 'b', ru3)
+	assert.Equal(t, 'c', ru4)
+
 	readRequireNoErr(t, r)
 
-	ru3, ru4, err := r.PeekRunes()
+	ru5, ru6, err := r.LookAhead()
 	require.Nil(t, err)
-	assert.Equal(t, 'c', ru3)
-	assert.Equal(t, EOF, ru4)
+	assert.Equal(t, 'c', ru5)
+	assert.Equal(t, EOF, ru6)
 }
 
 func TestRuner_Line(t *testing.T) {
@@ -59,18 +65,18 @@ func TestRuner_Line(t *testing.T) {
 
 	assert.Equal(t, 0, r.Line())
 
-	_ = readRequireNoErr(t, r)
-	_ = readRequireNoErr(t, r)
+	readRequireNoErr(t, r)
+	readRequireNoErr(t, r)
 
 	assert.Equal(t, 1, r.Line())
 
-	_ = readRequireNoErr(t, r)
-	_ = readRequireNoErr(t, r)
+	readRequireNoErr(t, r)
+	readRequireNoErr(t, r)
 
 	assert.Equal(t, 2, r.Line())
 
-	_ = readRequireNoErr(t, r)
-	_ = readRequireNoErr(t, r)
+	readRequireNoErr(t, r)
+	readRequireNoErr(t, r)
 
 	assert.Equal(t, 3, r.Line())
 }
