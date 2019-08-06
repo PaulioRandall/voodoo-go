@@ -60,6 +60,6 @@ contains "$1" "run"
 if [[ $? == 1 ]]; then
 	echo Running...
 	cd cmd
-	./voodoo run scroll_1.voo
+	./voodoo run test_1.voo
 	cd ..
 fi

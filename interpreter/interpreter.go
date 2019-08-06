@@ -17,11 +17,17 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 			continue // Ignoring first line: shebang
 		}
 
-		tks, err := scanner.Scan(line)
+		scanChan := make(chan token.Token)
+		colChan := make(chan []token.Token)
+		go collateLine(scanChan, colChan)
+
+		err := scanner.Scan(line, scanChan)
 		if err != nil {
 			err.Print(sc, i+1)
 			return 1
 		}
+
+		tks := <-colChan
 
 		tks = strimmer.Strim(tks)
 		token.PrintlnTokenValues(tks)
@@ -30,4 +36,14 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 	}
 
 	return 0
+}
+
+// collateLine collates a single line from a channel of tokens.
+func collateLine(in chan token.Token, out chan []token.Token) {
+	defer close(out)
+	tks := []token.Token{}
+	for tk := range in {
+		tks = append(tks, tk)
+	}
+	out <- tks
 }

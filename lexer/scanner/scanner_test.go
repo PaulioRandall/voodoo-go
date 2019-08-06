@@ -19,21 +19,36 @@ type scanTest struct {
 	Error    fault.Fault
 }
 
+// collateLine collates a single line from a channel of tokens.
+func collateLine(in chan token.Token, out chan []token.Token) {
+	defer close(out)
+	tks := []token.Token{}
+	for tk := range in {
+		tks = append(tks, tk)
+	}
+	out <- tks
+}
+
 // TestScan runs the test cases for the Scan() function.
 func TestScan(t *testing.T) {
 	for _, tc := range scanTests() {
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> scanner_test.go : " + testLine)
-		act, err := Scan(tc.Input)
+
+		inChan := make(chan token.Token)
+		outChan := make(chan []token.Token)
+		go collateLine(inChan, outChan)
+
+		err := Scan(tc.Input, inChan)
+		act := <-outChan
 
 		if tc.Error != nil {
-			assert.Nil(t, act, "Expected token to be nil")
-			require.NotNil(t, err, "Did NOT expect error to be nil")
+			require.NotNil(t, err)
 		}
 
 		if tc.Expect != nil {
-			require.Nil(t, err, "Expected error to be nil")
-			assert.Equal(t, tc.Expect, act, "Expected a different token array")
+			require.Nil(t, err)
+			assert.Equal(t, tc.Expect, act)
 		}
 	}
 }
