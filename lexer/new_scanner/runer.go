@@ -12,32 +12,50 @@ const EOF = rune(3)
 
 // Runer wraps a bufio.Reader to provide easy reading and peeking of runes. It
 // allows a look ahead of two runes by using a temp array. It also keeps a track
-// of the number of lines read so far.
+// of the line and column index.
 type Runer struct {
-	line   int
-	reader *bufio.Reader
-	buf    [2]rune
+	line    int
+	col     int
+	newLine bool
+	reader  *bufio.Reader
+	buf     [2]rune
 }
 
 // NewRuner returns a new initialised Runer instance.
 func NewRuner(reader *bufio.Reader) *Runer {
 	return &Runer{
-		reader: reader,
+		reader:  reader,
+		line:    -1,
+		col:     -1,
+		newLine: true,
 	}
 }
 
-// Line returns the number of newline runes incountered.
+// Line returns the line index, number of newline runes incountered.
 func (r *Runer) Line() int {
 	return r.line
+}
+
+// Col returns the column index of the last rune returned or -1 if no calls to
+// read runes has been made yet.
+func (r *Runer) Col() int {
+	return r.col
 }
 
 // ReadRune reads the next rune from the reader. EOF is returned if the end of
 // the file has been reached.
 func (r *Runer) ReadRune() (rune, fault.Fault) {
+	if r.newLine {
+		r.newLine = false
+		r.line++
+		r.col = -1
+	}
+
 	ru, err := r.nextRune()
+	r.col++
 
 	if ru == '\n' {
-		r.line++
+		r.newLine = true
 	}
 
 	return ru, err

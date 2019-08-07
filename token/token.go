@@ -6,10 +6,13 @@ import (
 	"strings"
 )
 
+var EMPTY Token = Token{}
+
 // Token represents a token produced by lexical analysis.
 // I.e. identifier, operator, punctionation, etc.
 type Token struct {
-	Val   string    // Token value
+	Val string // Token value
+	//Line  int
 	Start int       // Index of first rune
 	End   int       // Index after last rune
 	Type  TokenType // Type of token

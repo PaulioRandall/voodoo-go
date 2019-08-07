@@ -8,13 +8,14 @@ import (
 )
 
 // scanWordStr reads a full word from a Runer.
-func scanWordStr(r *Runer) (string, fault.Fault) {
+func scanWordStr(r *Runer) (string, int, fault.Fault) {
 	sb := strings.Builder{}
+	size := 0
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return ``, err
+			return ``, -1, err
 		}
 
 		if !isLetter(ru) && !isDigit(ru) && !isUnderscore(ru) {
@@ -22,10 +23,11 @@ func scanWordStr(r *Runer) (string, fault.Fault) {
 		}
 
 		r.SkipRune()
+		size++
 		sb.WriteRune(ru)
 	}
 
-	return sb.String(), nil
+	return sb.String(), size, nil
 }
 
 // isStrStart returns true if the language considers the rune

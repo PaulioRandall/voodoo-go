@@ -59,24 +59,3 @@ func TestRuner_LookAhead(t *testing.T) {
 	assert.Equal(t, 'c', ru5)
 	assert.Equal(t, EOF, ru6)
 }
-
-func TestRuner_Line(t *testing.T) {
-	r := dummyRuner("a\nb\nc\nd")
-
-	assert.Equal(t, 0, r.Line())
-
-	readRequireNoErr(t, r)
-	readRequireNoErr(t, r)
-
-	assert.Equal(t, 1, r.Line())
-
-	readRequireNoErr(t, r)
-	readRequireNoErr(t, r)
-
-	assert.Equal(t, 2, r.Line())
-
-	readRequireNoErr(t, r)
-	readRequireNoErr(t, r)
-
-	assert.Equal(t, 3, r.Line())
-}
