@@ -4,60 +4,44 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestStartWith(t *testing.T) {
-	assert.True(t, startsWith([]rune(`abc`), `abc`))
-	assert.True(t, startsWith([]rune(`abc123`), `abc`))
-	assert.False(t, startsWith([]rune(`abc`), `abc123`))
-	assert.False(t, startsWith([]rune(`abcd`), `abyz`))
+func TestRuner_ReadRune(t *testing.T) {
+	r := dummyRuner(`abc`)
+
+	ru1 := readRequireNoErr(t, r)
+	assert.Equal(t, 'a', ru1)
+
+	ru2 := readRequireNoErr(t, r)
+	assert.Equal(t, 'b', ru2)
+
+	ru3 := readRequireNoErr(t, r)
+	assert.Equal(t, 'c', ru3)
+
+	ru4 := readRequireNoErr(t, r)
+	assert.Equal(t, EOF, ru4)
 }
 
-func TestScanFrac_1(t *testing.T) {
-	in := []rune(`._1_2_3_`)
-	act, out := scanFrac(in)
-	assert.Equal(t, []rune(`._1_2_3_`), act)
-	assert.Equal(t, []rune{}, out)
-}
+func TestRuner_LookAhead(t *testing.T) {
+	r := dummyRuner(`abc`)
 
-func TestScanFrac_2(t *testing.T) {
-	in := []rune(`.123 456`)
-	act, out := scanFrac(in)
-	assert.Equal(t, []rune(`.123`), act)
-	assert.Equal(t, []rune(` 456`), out)
-}
+	ru1, ru2, err := r.LookAhead()
+	require.Nil(t, err)
+	assert.Equal(t, 'a', ru1)
+	assert.Equal(t, 'b', ru2)
 
-func TestScanFrac_3(t *testing.T) {
-	in := []rune(`456`)
-	act, out := scanFrac(in)
-	assert.Equal(t, []rune{}, act)
-	assert.Equal(t, []rune(`456`), out)
-}
+	readRequireNoErr(t, r)
 
-func TestScanInt_1(t *testing.T) {
-	in := []rune(`_1_2_3_`)
-	act, out := scanInt(in)
-	assert.Equal(t, []rune(`_1_2_3_`), act)
-	assert.Equal(t, []rune{}, out)
-}
+	ru3, ru4, err := r.LookAhead()
+	require.Nil(t, err)
+	assert.Equal(t, 'b', ru3)
+	assert.Equal(t, 'c', ru4)
 
-func TestScanInt_2(t *testing.T) {
-	in := []rune(`123.456`)
-	act, out := scanInt(in)
-	assert.Equal(t, []rune(`123`), act)
-	assert.Equal(t, []rune(`.456`), out)
-}
+	readRequireNoErr(t, r)
 
-func TestScanWordStr_1(t *testing.T) {
-	in := []rune(`Happi_123_ness`)
-	act, out := scanWordStr(in)
-	assert.Equal(t, `Happi_123_ness`, act)
-	assert.Equal(t, []rune{}, out)
-}
-
-func TestScanWordStr_2(t *testing.T) {
-	in := []rune(`Happi ness`)
-	act, out := scanWordStr(in)
-	assert.Equal(t, `Happi`, act)
-	assert.Equal(t, []rune(` ness`), out)
+	ru5, ru6, err := r.LookAhead()
+	require.Nil(t, err)
+	assert.Equal(t, 'c', ru5)
+	assert.Equal(t, EOF, ru6)
 }

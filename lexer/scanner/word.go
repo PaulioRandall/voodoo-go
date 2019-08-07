@@ -3,22 +3,26 @@ package scanner
 import (
 	"strings"
 
+	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// scanWord scans tokens that start with a unicode category L
-// rune returning a keyword or identifier.
-func scanWord(in []rune, col int) (*token.Token, []rune) {
+// scanWord scans word tokens returning a keyword or identifier.
+func scanWord(r *Runer) (token.Token, fault.Fault) {
 
-	s, out := scanWordStr(in)
+	s, size, err := scanWordStr(r)
+	if err != nil {
+		return token.EMPTY, err
+	}
 
-	tk := &token.Token{
+	tk := token.Token{
 		Val:   s,
-		Start: col,
+		Start: r.Col() - size + 1,
+		End:   r.Col() + 1,
 		Type:  findWordType(s),
 	}
 
-	return tk, out
+	return tk, nil
 }
 
 // findWordType finds the type of the word.

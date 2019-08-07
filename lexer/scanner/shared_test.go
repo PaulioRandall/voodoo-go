@@ -1,4 +1,4 @@
-package new_scanner
+package scanner
 
 import (
 	"testing"

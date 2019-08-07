@@ -1,7 +1,9 @@
 package scanner
 
 import (
+	"bufio"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
@@ -10,15 +12,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// scanFuncTest represents a test case for any of the
-// delegate scanning functions.
+func dummyRuner(s string) *Runer {
+	sr := strings.NewReader(s)
+	br := bufio.NewReader(sr)
+	return NewRuner(br)
+}
+
+func readRequireNoErr(t *testing.T, r *Runer) rune {
+	ru, err := r.ReadRune()
+	require.Nil(t, err)
+	return ru
+}
+
+// scanFuncTest represents a test case for any of the delegate scanning
+// functions.
 type scanFuncTest struct {
-	TestLine int
-	Input    []rune
-	col      int
-	Output   []rune
-	Expect   token.Token
-	Error    fault.Fault
+	TestLine       int
+	Input          string
+	Expect         token.Token
+	NextUnreadRune rune
+	Error          fault.Fault
 }
 
 func newFault(i int) fault.SyntaxFault {
@@ -27,35 +40,22 @@ func newFault(i int) fault.SyntaxFault {
 	}
 }
 
-// runScanTest runs the input test cases on the input
-// function.
-func runScanTest(
-	t *testing.T,
-	fileName string,
-	f func([]rune, int) (*token.Token, []rune),
-	tests []scanFuncTest) {
-
-	for _, tc := range tests {
-		require.NotNil(t, tc.Expect)
-		require.Nil(t, tc.Error)
-
-		testLine := strconv.Itoa(tc.TestLine)
-		t.Log("-> " + fileName + " : " + testLine)
-
-		tk, out := f(tc.Input, tc.col)
-
-		require.NotNil(t, tk, "Did not expect token to be nil")
-		assert.Equal(t, tc.Output, out, "Expected a different array of leftover runes")
-		assert.Equal(t, tc.Expect, *tk, "Expected a different token")
+// dummyToken creates a new dummy token.
+func dummyToken(line, start, end int, val string, t token.TokenType) token.Token {
+	return token.Token{
+		//Line: line,
+		Start: start,
+		End:   end,
+		Val:   val,
+		Type:  t,
 	}
 }
 
-// runFailableScanTest runs the input test cases on the
-// input function.
-func runFailableScanTest(
+// runScanTest runs the input test cases on the input function.
+func runScanTest(
 	t *testing.T,
 	fileName string,
-	f func([]rune, int) (*token.Token, []rune, fault.Fault),
+	f func(*Runer) (token.Token, fault.Fault),
 	tests []scanFuncTest) {
 
 	for _, tc := range tests {
@@ -63,16 +63,20 @@ func runFailableScanTest(
 		testLine := strconv.Itoa(tc.TestLine)
 		t.Log("-> " + fileName + " : " + testLine)
 
-		tk, out, err := f(tc.Input, tc.col)
+		r := dummyRuner(tc.Input)
+		tk, err := f(r)
 
 		if tc.Error != nil {
-			assert.Nil(t, tk, "Expected token to be nil")
-			require.NotNil(t, err, "Did NOT expect error to be nil")
-		} else {
-			assert.Nil(t, err, "Expected error to be nil")
-			require.NotNil(t, tk, "Did NOT expect token to be nil")
-			assert.Equal(t, tc.Output, out, "Expected a different array of leftover runes")
-			assert.Equal(t, tc.Expect, *tk, "Expected a different token")
+			assert.Empty(t, tk)
+			assert.NotNil(t, err)
+		}
+
+		if tc.Expect != token.EMPTY {
+			assert.Nil(t, err)
+			assert.Equal(t, tc.Expect, tk)
+
+			next := readRequireNoErr(t, r)
+			assert.Equal(t, tc.NextUnreadRune, next)
 		}
 	}
 }

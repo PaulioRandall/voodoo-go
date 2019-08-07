@@ -1,4 +1,4 @@
-package new_scanner
+package scanner
 
 import (
 	"testing"
@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanComment(t *testing.T) {
-	runFailableScanTest(t, "comment_test.go", scanComment, scanCommentTests())
+	runScanTest(t, "comment_test.go", scanComment, scanCommentTests())
 }
 
 func scanCommentTests() []scanFuncTest {

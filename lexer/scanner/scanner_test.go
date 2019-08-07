@@ -1,7 +1,9 @@
 package scanner
 
 import (
+	"bufio"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
@@ -29,17 +31,35 @@ func collateLine(in chan token.Token, out chan []token.Token) {
 	out <- tks
 }
 
+// printTestTitle prints the title and line number of the test.
+func printTestTitle(t *testing.T, lineNum int) {
+	testLine := strconv.Itoa(lineNum)
+	t.Log("-> scanner_test.go : " + testLine)
+}
+
+// bufferedReader returns a new buffered reader.
+func bufferedReader(s string) *bufio.Reader {
+	sr := strings.NewReader(s)
+	return bufio.NewReader(sr)
+}
+
+// makeChans makes some channels to use while testing.
+func makeChans() (chan token.Token, chan []token.Token) {
+	inChan := make(chan token.Token)
+	outChan := make(chan []token.Token)
+	return inChan, outChan
+}
+
 // TestScan runs the test cases for the Scan() function.
 func TestScan(t *testing.T) {
 	for _, tc := range scanTests() {
-		testLine := strconv.Itoa(tc.TestLine)
-		t.Log("-> scanner_test.go : " + testLine)
+		printTestTitle(t, tc.TestLine)
 
-		inChan := make(chan token.Token)
-		outChan := make(chan []token.Token)
+		inChan, outChan := makeChans()
 		go collateLine(inChan, outChan)
 
-		err := Scan(tc.Input, inChan)
+		br := bufferedReader(tc.Input)
+		err := Scan(br, inChan)
 		act := <-outChan
 
 		if tc.Error != nil {

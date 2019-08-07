@@ -1,120 +1,121 @@
 package scanner
 
 import (
-	"strings"
-	"unicode"
+	"bufio"
+	"io"
+
+	"github.com/PaulioRandall/voodoo-go/fault"
 )
 
-// startsWith returns true if the input array starts with
-// the runes represented by the string.
-func startsWith(in []rune, s string) bool {
-	if len(in) < len(s) {
-		return false
+const NUL = rune(0)
+const EOF = rune(3)
+
+// Runer wraps a bufio.Reader to provide easy reading and peeking of runes. It
+// allows a look ahead of two runes by using a temp array. It also keeps a track
+// of the current line and column index.
+type Runer struct {
+	line    int
+	col     int
+	newLine bool
+	reader  *bufio.Reader
+	buf     [2]rune
+}
+
+// NewRuner returns a new initialised Runer instance.
+func NewRuner(reader *bufio.Reader) *Runer {
+	return &Runer{
+		reader:  reader,
+		line:    -1,
+		col:     -1,
+		newLine: true,
+	}
+}
+
+// Line returns the line index, number of newline runes incountered.
+func (r *Runer) Line() int {
+	return r.line
+}
+
+// Col returns the column index of the last rune returned or -1 if no calls to
+// read runes has been made yet.
+func (r *Runer) Col() int {
+	return r.col
+}
+
+// ReadRune reads the next rune from the reader. EOF is returned if the end of
+// the file has been reached.
+func (r *Runer) ReadRune() (rune, fault.Fault) {
+	if r.newLine {
+		r.newLine = false
+		r.line++
+		r.col = -1
 	}
 
-	for i, r := range s {
-		if in[i] != r {
-			return false
+	ru, err := r.nextRune()
+	r.col++
+
+	if ru == '\n' {
+		r.newLine = true
+	}
+
+	return ru, err
+}
+
+// SkipRune skips the next rune in the reader. It still may produce an error as
+// the reader may still be read in order to do this.
+func (r *Runer) SkipRune() fault.Fault {
+	_, err := r.ReadRune()
+	return err
+}
+
+// LookAhead returns the next two runes in the sequence without incrementing the
+// 'cursor'. After a call to LookAhead() it is safe to ignore the error returned
+// on the next two calls to ReadRune() or SkipRune().
+func (r *Runer) LookAhead() (rune, rune, fault.Fault) {
+	var err fault.Fault
+
+	if r.buf[0] == NUL {
+		r.buf[0], err = r.readRune()
+		if err != nil {
+			return NUL, NUL, err
 		}
 	}
 
-	return true
-}
-
-// scanFrac iterates a rune array until a single fractional
-// has been extracted returning the fractional slice followed
-// by a slice of the remaining input.
-func scanFrac(in []rune) (frac []rune, out []rune) {
-	if len(in) < 1 || !isDecimalSeparator(in[0]) {
-		out = in
-		frac = []rune{}
-		return
-	}
-
-	var tail []rune
-
-	frac = in[0:1]
-	tail, out = scanInt(in[1:])
-	frac = append(frac, tail...)
-
-	return
-}
-
-// scanInt iterates a rune array until a single integer has
-// been extracted returning the integer slice followed by a
-// slice of the remaining input.
-func scanInt(in []rune) (num []rune, out []rune) {
-	for i, r := range in {
-		if isDigit(r) || isUnderscore(r) {
-			num = append(num, r)
-			continue
+	if r.buf[1] == NUL {
+		r.buf[1], err = r.readRune()
+		if err != nil {
+			return NUL, NUL, err
 		}
-
-		out = in[i:]
-		return
 	}
 
-	out = []rune{}
-	return
+	return r.buf[0], r.buf[1], nil
 }
 
-// scanWordStr iterates a rune array until a single word has
-// been extracted returning the word followed by a slice
-// of the remaining input or nil if the whole input represented
-// a single word.
-func scanWordStr(in []rune) (string, []rune) {
-	sb := strings.Builder{}
-
-	for i, r := range in {
-		if isLetter(r) || isDigit(r) || isUnderscore(r) {
-			sb.WriteRune(r)
-			continue
-		}
-
-		return sb.String(), in[i:]
+// nextRune returns the next rune in the sequence. It will check the temp buffer
+// before trying the reader.
+func (r *Runer) nextRune() (rune, fault.Fault) {
+	ru := r.buf[0]
+	if ru == NUL {
+		return r.readRune()
 	}
 
-	return sb.String(), []rune{}
+	r.buf[0] = r.buf[1]
+	r.buf[1] = NUL
+	return ru, nil
 }
 
-// isStrStart returns true if the language considers the rune
-// to be the start of a string literal.
-func isStrStart(r rune) bool {
-	return r == '"'
-}
+// readRune reads the next rune in the sequence returning EOF if the end of the
+// reader has been reached.
+func (r *Runer) readRune() (rune, fault.Fault) {
+	ru, _, err := r.reader.ReadRune()
 
-// isSpell returns true if the language considers the rune
-// to be the start of a spell.
-func isSpellStart(r rune) bool {
-	return r == '@'
-}
+	if err == io.EOF {
+		return EOF, nil
+	}
 
-// isDecimalSeparator returns true if the language considers the
-// rune to be a separator between the integer part of a number
-// and the fractional part.
-func isDecimalSeparator(r rune) bool {
-	return r == '.'
-}
+	if err != nil {
+		return NUL, fault.ReaderFault(err.Error())
+	}
 
-// isSpace returns true if the language considers the rune
-// to be whitespace.
-func isSpace(r rune) bool {
-	return unicode.IsSpace(r)
-}
-
-// isLetter returns true if the language considers the rune
-// to be a letter.
-func isLetter(r rune) bool {
-	return unicode.IsLetter(r)
-}
-
-// isDigit returns true if the language considers the rune
-// to be a digit.
-func isDigit(r rune) bool {
-	return unicode.IsDigit(r)
-}
-
-// isUnderscore returns true if the rune is an underscore.
-func isUnderscore(r rune) bool {
-	return r == '_'
+	return ru, nil
 }

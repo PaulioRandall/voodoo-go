@@ -5,35 +5,39 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// scanSpell scans symbols that start with a the '@' rune
-// returning a spell identifier. Spells are inbuilt functions.
-//
-// This function asumes the first rune of the input array is a '@'.
-func scanSpell(in []rune, col int) (tk *token.Token, out []rune, err fault.Fault) {
+// scanSpell scans symbols that start with a the '@' rune returning a spell
+// identifier. Spells are inbuilt functions.
+func scanSpell(r *Runer) (token.Token, fault.Fault) {
 
-	if len(in) < 2 || !isLetter(in[1]) {
-		err = badSpellName(col)
-		return
+	first, err := r.ReadRune()
+	ru, _, err := r.LookAhead()
+	if err != nil {
+		return token.EMPTY, err
 	}
 
-	var s string
-	at := string(in[:1])
-	s, out = scanWordStr(in[1:])
+	if !isLetter(ru) {
+		return token.EMPTY, badSpellName(r.Col() + 1)
+	}
 
-	tk = &token.Token{
-		Val:   at + s,
-		Start: col,
+	s, size, err := scanWordStr(r)
+	if err != nil {
+		return token.EMPTY, err
+	}
+
+	tk := token.Token{
+		Val:   string(first) + s,
+		Start: r.Col() - size,
+		End:   r.Col() + 1,
 		Type:  token.SPELL,
 	}
 
-	return
+	return tk, nil
 }
 
-// badSpellName creates a syntax fault for badly defined spell
-// names.
+// badSpellName creates a syntax fault for badly defined spell names.
 func badSpellName(col int) fault.Fault {
 	return fault.SyntaxFault{
-		Index: col + 1,
+		Index: col,
 		Msgs: []string{
 			"Expected first rune after '@' to be a letter",
 		},

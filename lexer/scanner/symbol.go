@@ -5,7 +5,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// scanSymbol scans one or two rune symbols returning one of:
+// scanSymbol scans one or two runes returning one of:
 // - comparison operator
 // - arithmetic operator
 // - logical operator
@@ -13,77 +13,101 @@ import (
 // - value or key-value separator
 // - void identifier
 // - number range generator
-//
-// Assumes that the input is not empty.
-func scanSymbol(in []rune, col int) (*token.Token, []rune, fault.Fault) {
+func scanSymbol(r *Runer) (token.Token, fault.Fault) {
+
+	ru1, ru2, err := r.LookAhead()
+	if err != nil {
+		return token.EMPTY, err
+	}
 
 	switch {
-	case startsWith(in, `<-`):
-		return onMatchedSymbol(in, token.ASSIGNMENT, 2, col)
-	case startsWith(in, `<=`):
-		return onMatchedSymbol(in, token.CMP_LESS_THAN_OR_EQUAL, 2, col)
-	case startsWith(in, `<`):
-		return onMatchedSymbol(in, token.CMP_LESS_THAN, 1, col)
-	case startsWith(in, `>=`):
-		return onMatchedSymbol(in, token.CMP_GREATER_THAN_OR_EQUAL, 2, col)
-	case startsWith(in, `>`):
-		return onMatchedSymbol(in, token.CMP_GREATER_THAN, 1, col)
-	case startsWith(in, `==`):
-		return onMatchedSymbol(in, token.CMP_EQUAL, 2, col)
-	case startsWith(in, `!=`):
-		return onMatchedSymbol(in, token.CMP_NOT_EQUAL, 2, col)
-	case startsWith(in, `=>`):
-		return onMatchedSymbol(in, token.LOGICAL_MATCH, 2, col)
-	case startsWith(in, `!`):
-		return onMatchedSymbol(in, token.LOGICAL_NOT, 1, col)
-	case startsWith(in, `||`):
-		return onMatchedSymbol(in, token.LOGICAL_OR, 2, col)
-	case startsWith(in, `&&`):
-		return onMatchedSymbol(in, token.LOGICAL_AND, 2, col)
-	case startsWith(in, `+`):
-		return onMatchedSymbol(in, token.CALC_ADD, 1, col)
-	case startsWith(in, `-`):
-		return onMatchedSymbol(in, token.CALC_SUBTRACT, 1, col)
-	case startsWith(in, `*`):
-		return onMatchedSymbol(in, token.CALC_MULTIPLY, 1, col)
-	case startsWith(in, `/`):
-		return onMatchedSymbol(in, token.CALC_DIVIDE, 1, col)
-	case startsWith(in, `%`):
-		return onMatchedSymbol(in, token.CALC_MODULO, 1, col)
-	case startsWith(in, `(`):
-		return onMatchedSymbol(in, token.PAREN_CURVY_OPEN, 1, col)
-	case startsWith(in, `)`):
-		return onMatchedSymbol(in, token.PAREN_CURVY_CLOSE, 1, col)
-	case startsWith(in, `[`):
-		return onMatchedSymbol(in, token.PAREN_SQUARE_OPEN, 1, col)
-	case startsWith(in, `]`):
-		return onMatchedSymbol(in, token.PAREN_SQUARE_CLOSE, 1, col)
-	case startsWith(in, `,`):
-		return onMatchedSymbol(in, token.SEPARATOR_VALUE, 1, col)
-	case startsWith(in, `_`):
-		return onMatchedSymbol(in, token.VOID, 1, col)
+	case cmpPair(ru1, ru2, '<', '-'):
+		return onMatch(r, token.ASSIGNMENT, 2)
+	case cmpPair(ru1, ru2, '<', '='):
+		return onMatch(r, token.CMP_LESS_THAN_OR_EQUAL, 2)
+	case cmp(ru1, '<'):
+		return onMatch(r, token.CMP_LESS_THAN, 1)
+	case cmpPair(ru1, ru2, '>', '='):
+		return onMatch(r, token.CMP_GREATER_THAN_OR_EQUAL, 2)
+	case cmp(ru1, '>'):
+		return onMatch(r, token.CMP_GREATER_THAN, 1)
+	case cmpPair(ru1, ru2, '=', '='):
+		return onMatch(r, token.CMP_EQUAL, 2)
+	case cmpPair(ru1, ru2, '!', '='):
+		return onMatch(r, token.CMP_NOT_EQUAL, 2)
+	case cmpPair(ru1, ru2, '=', '>'):
+		return onMatch(r, token.LOGICAL_MATCH, 2)
+	case cmp(ru1, '!'):
+		return onMatch(r, token.LOGICAL_NOT, 1)
+	case cmpPair(ru1, ru2, '|', '|'):
+		return onMatch(r, token.LOGICAL_OR, 2)
+	case cmpPair(ru1, ru2, '&', '&'):
+		return onMatch(r, token.LOGICAL_AND, 2)
+	case cmp(ru1, '+'):
+		return onMatch(r, token.CALC_ADD, 1)
+	case cmp(ru1, '-'):
+		return onMatch(r, token.CALC_SUBTRACT, 1)
+	case cmp(ru1, '*'):
+		return onMatch(r, token.CALC_MULTIPLY, 1)
+	case cmp(ru1, '/'):
+		return onMatch(r, token.CALC_DIVIDE, 1)
+	case cmp(ru1, '%'):
+		return onMatch(r, token.CALC_MODULO, 1)
+	case cmp(ru1, '('):
+		return onMatch(r, token.PAREN_CURVY_OPEN, 1)
+	case cmp(ru1, ')'):
+		return onMatch(r, token.PAREN_CURVY_CLOSE, 1)
+	case cmp(ru1, '['):
+		return onMatch(r, token.PAREN_SQUARE_OPEN, 1)
+	case cmp(ru1, ']'):
+		return onMatch(r, token.PAREN_SQUARE_CLOSE, 1)
+	case cmp(ru1, ','):
+		return onMatch(r, token.SEPARATOR_VALUE, 1)
+	case cmp(ru1, '_'):
+		return onMatch(r, token.VOID, 1)
 	default:
-		return nil, nil, unknownSymbol(in[0], col+1)
+		return token.EMPTY, unknownNonTerminal(ru1, r.Col()+1)
 	}
 }
 
-// onMatchedSymbol creates the new token when a symbol match is found.
-func onMatchedSymbol(in []rune, t token.TokenType, count, col int) (*token.Token, []rune, fault.Fault) {
-	tk := &token.Token{
-		Val:   string(in[:count]),
-		Start: col,
+// cmpPair compares the first terminal with the third and the second with the
+// last, if both sets match true is returned.
+func cmpPair(a1, b1, a2, b2 rune) bool {
+	return a1 == a2 && b1 == b2
+}
+
+// cmp compares the two terminals.
+func cmp(a, b rune) bool {
+	return a == b
+}
+
+// onMatch creates the new token when a symbol match is found.
+func onMatch(r *Runer, t token.TokenType, count int) (token.Token, fault.Fault) {
+
+	ru, _ := r.ReadRune()
+	s := string(ru)
+
+	if count == 2 {
+		ru, _ = r.ReadRune()
+		s += string(ru)
+	}
+
+	tk := token.Token{
+		Val:   s,
+		Start: r.Col() - count + 1,
+		End:   r.Col() + 1,
 		Type:  t,
 	}
 
-	return tk, in[count:], nil
+	return tk, nil
 }
 
-// unknownSymbol creates a fault for when a symbol is not known.
-func unknownSymbol(r rune, i int) fault.Fault {
+// unknownNonTerminal creates a fault for when a symbol is not known.
+func unknownNonTerminal(ru rune, i int) fault.Fault {
 	return fault.SyntaxFault{
 		Index: i,
 		Msgs: []string{
-			"I don't know what this symbol means '" + string(r) + "'",
+			"I don't know what this symbol means '" + string(ru) + "'",
 		},
 	}
 }

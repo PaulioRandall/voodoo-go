@@ -1,6 +1,9 @@
 package interpreter
 
 import (
+	"bufio"
+	"strings"
+
 	"github.com/PaulioRandall/voodoo-go/lexer/scanner"
 	"github.com/PaulioRandall/voodoo-go/lexer/strimmer"
 	"github.com/PaulioRandall/voodoo-go/scroll"
@@ -22,7 +25,8 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 		go token.PrintlnTokenChan(done, strimChan, tokenToString)
 		go strimmer.Strim(scanChan, strimChan)
 
-		err := scanner.Scan(line, scanChan)
+		br := bufio.NewReader(strings.NewReader(line))
+		err := scanner.Scan(br, scanChan)
 		if err != nil {
 			err.Print(sc, i+1)
 			return 1

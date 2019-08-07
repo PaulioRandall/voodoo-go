@@ -8,51 +8,33 @@ import (
 )
 
 func TestScanSpell(t *testing.T) {
-	runFailableScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
+	runScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 
 func scanSpellTests() []scanFuncTest {
 	return []scanFuncTest{
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`@P`),
-			Output:   []rune{},
-			Expect: token.Token{
-				Val:  `@P`,
-				Type: token.SPELL,
-			},
+			TestLine:       fault.CurrLine(),
+			Input:          `@Println`,
+			Expect:         dummyToken(0, 0, 8, `@Println`, token.SPELL),
+			NextUnreadRune: EOF,
+		},
+		scanFuncTest{
+			TestLine:       fault.CurrLine(),
+			Input:          `@a__12__xy__`,
+			Expect:         dummyToken(0, 0, 12, `@a__12__xy__`, token.SPELL),
+			NextUnreadRune: EOF,
+		},
+		scanFuncTest{
+			TestLine:       fault.CurrLine(),
+			Input:          `@Println(msg)`,
+			Expect:         dummyToken(0, 0, 8, `@Println`, token.SPELL),
+			NextUnreadRune: '(',
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
-			Input:    []rune(`@Println`),
-			Output:   []rune{},
-			Expect: token.Token{
-				Val:  `@Println`,
-				Type: token.SPELL,
-			},
-		},
-		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`@a__12__xy__`),
-			Output:   []rune{},
-			Expect: token.Token{
-				Val:  `@a__12__xy__`,
-				Type: token.SPELL,
-			},
-		},
-		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`@Println(msg)`),
-			Output:   []rune(`(msg)`),
-			Expect: token.Token{
-				Val:  `@Println`,
-				Type: token.SPELL,
-			},
-		},
-		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`@2`),
-			Error:    newFault(0),
+			Input:    `@2`,
+			Error:    newFault(1),
 		},
 	}
 }

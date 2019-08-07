@@ -8,65 +8,52 @@ import (
 )
 
 func TestScanString(t *testing.T) {
-	runFailableScanTest(t, "string_test.go", scanString, scanStringTests())
+	runScanTest(t, "string_test.go", scanString, scanStringTests())
 }
 
 func scanStringTests() []scanFuncTest {
 	return []scanFuncTest{
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`""`),
-			Output:   []rune{},
-			Expect: token.Token{
-				Val:  `""`,
-				Type: token.LITERAL_STRING,
-			},
+			TestLine:       fault.CurrLine(),
+			Input:          `""`,
+			Expect:         dummyToken(0, 0, 2, `""`, token.LITERAL_STRING),
+			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`"From hell with love"`),
-			Output:   []rune{},
-			Expect: token.Token{
-				Val:  `"From hell with love"`,
-				Type: token.LITERAL_STRING,
-			},
+			TestLine:       fault.CurrLine(),
+			Input:          `"From hell with love"`,
+			Expect:         dummyToken(0, 0, 21, `"From hell with love"`, token.LITERAL_STRING),
+			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`"From hell with love", 123.456`),
-			Output:   []rune(`, 123.456`),
-			Expect: token.Token{
-				Val:  `"From hell with love"`,
-				Type: token.LITERAL_STRING,
-			},
+			TestLine:       fault.CurrLine(),
+			Input:          `"From hell with love", 123.456`,
+			Expect:         dummyToken(0, 0, 21, `"From hell with love"`, token.LITERAL_STRING),
+			NextUnreadRune: ',',
 		},
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`"Simon: \"Leaders eat last!\""`),
-			Output:   []rune{},
-			Expect: token.Token{
-				Val:  `"Simon: \"Leaders eat last!\""`,
-				Type: token.LITERAL_STRING,
-			},
+			TestLine:       fault.CurrLine(),
+			Input:          `"Simon: \"Leaders eat last!\""`,
+			Expect:         dummyToken(0, 0, 30, `"Simon: \"Leaders eat last!\""`, token.LITERAL_STRING),
+			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`"\\\\\""`),
-			Output:   []rune{},
-			Expect: token.Token{
-				Val:  `"\\\\\""`,
-				Type: token.LITERAL_STRING,
-			},
+			TestLine:       fault.CurrLine(),
+			Input:          `"\\\\\""`,
+			Expect:         dummyToken(0, 0, 8, `"\\\\\""`, token.LITERAL_STRING),
+			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`"`),
-			Error:    newFault(1),
+			TestLine:       fault.CurrLine(),
+			Input:          `"`,
+			NextUnreadRune: '"',
+			Error:          newFault(1),
 		},
 		scanFuncTest{
-			TestLine: fault.CurrLine(),
-			Input:    []rune(`"escaped \"`),
-			Error:    newFault(11),
+			TestLine:       fault.CurrLine(),
+			Input:          `"escaped \"`,
+			NextUnreadRune: '"',
+			Error:          newFault(11),
 		},
 	}
 }

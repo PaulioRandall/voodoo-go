@@ -1,68 +1,87 @@
 package scanner
 
 import (
+	"strings"
+
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// scanString scans symbols that start and end with an non-escaped `"`
-// returning a string literal token.
-//
-// This function asumes the first rune of the input array is a '"'.
-func scanString(in []rune, col int) (tk *token.Token, out []rune, err fault.Fault) {
-
-	var s string
-	var closed bool
-	s, out, closed = scanStr(in)
-
-	if !closed {
-		err = unclosedString(col + len(in))
-		return
+// scanString scans symbols that start and end with an non-escaped `"` returning
+// a string literal token.
+func scanString(r *Runer) (token.Token, fault.Fault) {
+	s, size, err := scanStr(r)
+	if err != nil {
+		return token.EMPTY, err
 	}
 
-	tk = &token.Token{
+	tk := token.Token{
 		Val:   s,
-		Start: col,
+		Start: r.Col() - size + 1,
+		End:   r.Col() + 1,
 		Type:  token.LITERAL_STRING,
 	}
 
-	return
+	return tk, nil
 }
 
-// scanStr extracts a string literal from a string iterator
-// returning true if the last rune was escaped.
-func scanStr(in []rune) (s string, out []rune, closed bool) {
+// scanStr extracts a string literal from a string iterator returning true if
+// the last rune was escaped.
+func scanStr(r *Runer) (string, int, fault.Fault) {
 
+	open, err := r.ReadRune()
+	if err != nil {
+		return ``, -1, err
+	}
+
+	body, err := scanStrBody(r)
+	if err != nil {
+		return ``, -1, err
+	}
+
+	close, err := r.ReadRune()
+	if err != nil {
+		return ``, -1, err
+	}
+
+	s := string(open) + body + string(close)
+	return s, len(s), nil
+}
+
+// scanStrBody scans the body of a string literal.
+func scanStrBody(r *Runer) (string, fault.Fault) {
+	sb := strings.Builder{}
 	isEscaped := false
-	end := -1
 
-	for i, r := range in[1:] {
+	for {
+		ru, _, err := r.LookAhead()
+		if err != nil {
+			return ``, err
+		}
 
-		if !isEscaped && r == '"' {
-			end = i + 1 // +1 because first rune was ignored
-			end += 1    // +1 converts last index to length
+		if !isEscaped && ru == '"' {
 			break
 		}
 
-		if r == '\\' {
+		if ru == EOF || isNewline(ru) {
+			return ``, unclosedString(r.Col() + 1)
+		}
+
+		if ru == '\\' {
 			isEscaped = !isEscaped
 		} else {
 			isEscaped = false
 		}
+
+		r.SkipRune()
+		sb.WriteRune(ru)
 	}
 
-	if end == -1 {
-		return
-	}
-
-	closed = true
-	s = string(in[:end])
-	out = in[end:]
-	return
+	return sb.String(), nil
 }
 
-// unclosedString creates a fault for when a string literal is
-// is not closed before the end of a line.
+// unclosedString creates a fault for when a string literal is has not been
+// closed before the end of a line or file.
 func unclosedString(i int) fault.Fault {
 	return fault.SyntaxFault{
 		Index: i,
