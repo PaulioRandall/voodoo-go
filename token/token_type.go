@@ -11,7 +11,7 @@ const (
 	KEYWORD_FUNC // func
 	KEYWORD_LOOP // loop
 	KEYWORD_WHEN // when
-	KEYWORD_DONE // done
+	KEYWORD_DONE // done, end of block
 	// Identifiers
 	IDENTIFIER
 	// Booleans

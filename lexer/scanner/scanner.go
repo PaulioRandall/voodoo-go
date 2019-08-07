@@ -28,6 +28,8 @@ func Scan(br *bufio.Reader, out chan token.Token) fault.Fault {
 		}
 
 		switch {
+		case isNewline(ru1):
+			tk = newlineToken(r)
 		case isLetter(ru1):
 			tk, err = scanWord(r)
 		case isNaturalDigit(ru1):
@@ -49,5 +51,16 @@ func Scan(br *bufio.Reader, out chan token.Token) fault.Fault {
 		}
 
 		out <- tk
+	}
+}
+
+// newlineToken creates a newline token.
+func newlineToken(r *Runer) token.Token {
+	r.SkipRune()
+	return token.Token{
+		Val:   "\n",
+		Start: r.Col(),
+		End:   r.Col() + 1,
+		Type:  token.SEPARATOR_LINE,
 	}
 }

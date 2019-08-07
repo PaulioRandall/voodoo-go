@@ -32,14 +32,14 @@ sumSeries <- func(n) sum
 done
 
 printList <- func(list,delim)
+  @Print("[")
   loop _, v, more <- list
-    @Print("[")
     when
       more => @Print("${v} ${delim}")
       _    => @Print("${v}")
     done
-    @Println("]")
   done
+  @Println("]")
 done
 
 x, y, z <- 9, 3, 0

@@ -13,27 +13,30 @@ import (
 // Execute runs a Voodoo scroll.
 func Execute(sc *scroll.Scroll, scArgs []string) int {
 
+	text := ""
 	for i, line := range sc.Lines {
 		if i == 0 {
 			continue // Ignoring first line: shebang
 		}
 
-		done := make(chan bool)
-		scanChan := make(chan token.Token)
-		strimChan := make(chan token.Token)
-
-		go token.PrintlnTokenChan(done, strimChan, tokenToString)
-		go strimmer.Strim(scanChan, strimChan)
-
-		br := bufio.NewReader(strings.NewReader(line))
-		err := scanner.Scan(br, scanChan)
-		if err != nil {
-			err.Print(sc, i+1)
-			return 1
-		}
-
-		<-done
+		text += "\n" + line
 	}
+
+	done := make(chan bool)
+	scanChan := make(chan token.Token)
+	strimChan := make(chan token.Token)
+
+	go token.PrintlnTokenChan(done, strimChan, tokenToString)
+	go strimmer.Strim(scanChan, strimChan)
+
+	br := bufio.NewReader(strings.NewReader(text))
+	err := scanner.Scan(br, scanChan)
+	if err != nil {
+		err.Print(sc, -1)
+		return 1
+	}
+
+	<-done
 
 	return 0
 }
@@ -41,5 +44,9 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 // tokenToString is used by token.PrintlnTokenChan() to determine what should
 // be printed for each supplied token.
 func tokenToString(tk token.Token) string {
-	return tk.Val
+	if tk.Type == token.SEPARATOR_LINE {
+		return `\n`
+	}
+
+	return tk.Val //token.TokenName(tk.Type)
 }
