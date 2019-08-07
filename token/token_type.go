@@ -5,6 +5,8 @@ type TokenType int
 
 const (
 	UNDEFINED TokenType = iota
+	// Shebang
+	SHEBANG
 	// Flag tokens
 	END_OF_STATMENT
 	// Keywords
@@ -65,6 +67,8 @@ func IsOperator(t TokenType) bool {
 // TokenName returns the name of the token type.
 func TokenName(t TokenType) string {
 	switch t {
+	case SHEBANG:
+		return `SHEBANG`
 	case KEYWORD_FUNC:
 		return `KEYWORD_FUNC`
 	case KEYWORD_LOOP:
@@ -86,9 +90,9 @@ func TokenName(t TokenType) string {
 	case LITERAL_STRING:
 		return `LITERAL_STRING`
 	case COMMENT:
+		return `COMMENT`
 	case ASSIGNMENT:
 		return `ASSIGNMENT`
-		return `COMMENT`
 	case CMP_EQUAL:
 		return `CMP_EQUAL`
 	case CMP_NOT_EQUAL:

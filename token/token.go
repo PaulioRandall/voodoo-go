@@ -74,6 +74,7 @@ func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
 	first := true
 
 	for tk := range in {
+
 		if !first {
 			fmt.Print(`, `)
 		}

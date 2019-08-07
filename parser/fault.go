@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"github.com/PaulioRandall/voodoo-go/scroll"
 )
 
@@ -14,16 +12,18 @@ type ParseFault struct {
 
 // Print satisfies the Fault interface.
 func (err ParseFault) Print(sc *scroll.Scroll, line int) {
-	fmt.Print("[PARSE ERROR] `")
-	fmt.Print(sc.File)
-	fmt.Println("`")
+	/*
+		fmt.Print("[PARSE ERROR] `")
+		fmt.Print(sc.File)
+		fmt.Println("`")
 
-	fmt.Printf("%3d: %s\n", line, sc.Lines[line])
+		fmt.Printf("%3d: %s\n", line, sc.Lines[line])
 
-	for _, m := range err.Msgs {
-		fmt.Print(`...`)
-		fmt.Println(m)
-	}
+		for _, m := range err.Msgs {
+			fmt.Print(`...`)
+			fmt.Println(m)
+		}
 
-	fmt.Println()
+		fmt.Println()
+	*/
 }

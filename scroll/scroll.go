@@ -1,45 +1,44 @@
 package scroll
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/PaulioRandall/voodoo-go/shared"
+	"io/ioutil"
 )
 
 // Scroll represents a scroll.
 type Scroll struct {
-	File   string   // File path to the scroll
-	Lines  []string // Raw lines from the scroll
-	Length int      // Length of the scroll
+	File string // File path to the scroll
+	Data string // File data from the scroll
 }
 
-// LoadScroll reads the lines of the scroll and creates a
-// new Scroll instance for it.
-func LoadScroll(path string) (*Scroll, error) {
-	lines, err := shared.ReadLines(path)
+// LoadScroll loads the data from a scroll.
+func LoadScroll(f string) (*Scroll, error) {
+	d, err := ioutil.ReadFile(f)
 	if err != nil {
 		return nil, err
 	}
+
 	sc := &Scroll{
-		File:   path,
-		Lines:  lines,
-		Length: len(lines),
+		File: f,
+		Data: string(d),
 	}
+
 	return sc, nil
 }
 
 // PrettyPrintError prints an informative error message for a specific
 // line within the scroll.
 func (sc *Scroll) PrettyPrintError(line, index int, msgs ...string) {
-	sb := &strings.Builder{}
-	addHeader(sc, sb)
-	addLines(sc, sb, line-4, line+1)
-	addMessages(sb, index, msgs...)
-	addLines(sc, sb, line+1, line+5)
-	fmt.Println(sb.String())
+	/*
+		sb := &strings.Builder{}
+		addHeader(sc, sb)
+		addLines(sc, sb, line-4, line+1)
+		addMessages(sb, index, msgs...)
+		addLines(sc, sb, line+1, line+5)
+		fmt.Println(sb.String())
+	*/
 }
 
+/*
 // addHeader adds a header to the print message.
 func addHeader(sc *Scroll, sb *strings.Builder) {
 	sb.WriteString("\n[SYNTAX ERROR]")
@@ -88,3 +87,4 @@ func addIndent(sb *strings.Builder, base, specific int) {
 	s := strings.Repeat(" ", indent)
 	sb.WriteString(s)
 }
+*/

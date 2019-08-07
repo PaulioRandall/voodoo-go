@@ -59,5 +59,10 @@ func scanNumberTests() []scanFuncTest {
 			Input:    `123..456`,
 			Error:    newFault(4),
 		},
+		scanFuncTest{
+			TestLine: fault.CurrLine(),
+			Input:    `123.___`,
+			Error:    newFault(4),
+		},
 	}
 }

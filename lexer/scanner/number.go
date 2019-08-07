@@ -66,7 +66,7 @@ func scanFractional(r *Runer) (string, fault.Fault) {
 		return ``, err
 	}
 
-	if len(frac) == 0 {
+	if len(frac) == 0 || !strings.ContainsAny(frac, "0123456789") {
 		return ``, badNumberFormat(r.Col() + 1)
 	}
 

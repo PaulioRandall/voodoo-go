@@ -3,17 +3,26 @@ package scanner
 import (
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
+	"strings"
 )
 
 // Scan scans tokens from a stream of code using longest match and pushes them
 // onto a channel for processing.
-func Scan(r *Runer, out chan token.Token) fault.Fault {
+func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 	defer close(out)
 
-	for {
-		var tk token.Token
-		var err fault.Fault
+	var tk token.Token
+	var err fault.Fault
 
+	if shebang {
+		tk, err = scanShebang(r)
+		if err != nil {
+			return err
+		}
+		out <- tk
+	}
+
+	for {
 		ru1, ru2, err := r.LookAhead()
 		if err != nil {
 			return err
@@ -48,6 +57,37 @@ func Scan(r *Runer, out chan token.Token) fault.Fault {
 
 		out <- tk
 	}
+}
+
+// scanShebang scans the shebang line.
+func scanShebang(r *Runer) (token.Token, fault.Fault) {
+	sb := strings.Builder{}
+
+	for {
+		ru, _, err := r.LookAhead()
+		if err != nil {
+			return token.EMPTY, err
+		}
+
+		if isNewline(ru) || ru == EOF {
+			break
+		}
+
+		r.SkipRune()
+		sb.WriteRune(ru)
+	}
+
+	s := sb.String()
+	size := len(s)
+
+	tk := token.Token{
+		Val:   sb.String(),
+		Start: r.Col() - size + 1,
+		End:   r.Col() + 1,
+		Type:  token.SHEBANG,
+	}
+
+	return tk, nil
 }
 
 // newlineToken creates a newline token.
