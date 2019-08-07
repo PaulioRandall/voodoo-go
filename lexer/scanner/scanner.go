@@ -1,18 +1,14 @@
 package scanner
 
 import (
-	"bufio"
-
 	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // Scan scans tokens from a stream of code using longest match and pushes them
 // onto a channel for processing.
-func Scan(br *bufio.Reader, out chan token.Token) fault.Fault {
+func Scan(r *Runer, out chan token.Token) fault.Fault {
 	defer close(out)
-
-	r := NewRuner(br)
 
 	for {
 		var tk token.Token

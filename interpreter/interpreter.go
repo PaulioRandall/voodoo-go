@@ -29,8 +29,8 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 	go token.PrintlnTokenChan(done, strimChan, tokenToString)
 	go strimmer.Strim(scanChan, strimChan)
 
-	br := bufio.NewReader(strings.NewReader(text))
-	err := scanner.Scan(br, scanChan)
+	r := newRuner(text)
+	err := scanner.Scan(r, scanChan)
 	if err != nil {
 		err.Print(sc, -1)
 		return 1
@@ -39,6 +39,13 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 	<-done
 
 	return 0
+}
+
+// newRuner makes a new Runer instance.
+func newRuner(text string) *scanner.Runer {
+	sr := strings.NewReader(text)
+	br := bufio.NewReader(sr)
+	return scanner.NewRuner(br)
 }
 
 // tokenToString is used by token.PrintlnTokenChan() to determine what should

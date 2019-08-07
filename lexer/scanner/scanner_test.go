@@ -37,10 +37,11 @@ func printTestTitle(t *testing.T, lineNum int) {
 	t.Log("-> scanner_test.go : " + testLine)
 }
 
-// bufferedReader returns a new buffered reader.
-func bufferedReader(s string) *bufio.Reader {
+// newRuner returns a new Runer instance.
+func newRuner(s string) *Runer {
 	sr := strings.NewReader(s)
-	return bufio.NewReader(sr)
+	br := bufio.NewReader(sr)
+	return NewRuner(br)
 }
 
 // makeChans makes some channels to use while testing.
@@ -58,8 +59,8 @@ func TestScan(t *testing.T) {
 		inChan, outChan := makeChans()
 		go collateLine(inChan, outChan)
 
-		br := bufferedReader(tc.Input)
-		err := Scan(br, inChan)
+		r := newRuner(tc.Input)
+		err := Scan(r, inChan)
 		act := <-outChan
 
 		if tc.Error != nil {
