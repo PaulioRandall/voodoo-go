@@ -12,7 +12,7 @@ const EOF = rune(3)
 
 // Runer wraps a bufio.Reader to provide easy reading and peeking of runes. It
 // allows a look ahead of two runes by using a temp array. It also keeps a track
-// of the line and column index.
+// of the current line and column index.
 type Runer struct {
 	line    int
 	col     int

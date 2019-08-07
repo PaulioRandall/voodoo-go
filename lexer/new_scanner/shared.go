@@ -30,39 +30,30 @@ func scanWordStr(r *Runer) (string, int, fault.Fault) {
 	return sb.String(), size, nil
 }
 
-// isStrStart returns true if the language considers the rune
-// to be the start of a string literal.
-func isStrStart(r rune) bool {
-	return r == '"'
-}
-
-// isSpell returns true if the language considers the rune
-// to be the start of a spell.
-func isSpellStart(r rune) bool {
-	return r == '@'
-}
-
-// isDecimalSeparator returns true if the language considers the
-// rune to be a separator between the integer part of a number
-// and the fractional part.
+// isDecimalSeparator returns true if the language considers the rune to be a
+// separator between the integer part of a number and the fractional part.
 func isDecimalSeparator(r rune) bool {
 	return r == '.'
 }
 
-// isSpace returns true if the language considers the rune
-// to be whitespace.
-func isSpace(r rune) bool {
-	return unicode.IsSpace(r)
+// isNewline returns true if the language considers the rune to be a newline.
+func isNewline(r rune) bool {
+	return r == '\n'
 }
 
-// isLetter returns true if the language considers the rune
-// to be a letter.
+// isSpace returns true if the language considers the rune to be whitespace.
+// Note that newlines are not considered whitespace by this function, the
+// isNewline() function should be used to check for newlines.
+func isSpace(r rune) bool {
+	return !isNewline(r) && unicode.IsSpace(r)
+}
+
+// isLetter returns true if the language considers the rune to be a letter.
 func isLetter(r rune) bool {
 	return unicode.IsLetter(r)
 }
 
-// isDigit returns true if the language considers the rune
-// to be a digit.
+// isDigit returns true if the language considers the rune to be a digit.
 func isDigit(r rune) bool {
 	return unicode.IsDigit(r)
 }
