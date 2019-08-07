@@ -44,7 +44,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 // tokenToString is used by token.PrintlnTokenChan() to determine what should
 // be printed for each supplied token.
 func tokenToString(tk token.Token) string {
-	if tk.Type == token.SEPARATOR_LINE {
+	if tk.Type == token.NEWLINE {
 		return `\n`
 	}
 

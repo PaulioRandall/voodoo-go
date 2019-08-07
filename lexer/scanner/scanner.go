@@ -61,6 +61,6 @@ func newlineToken(r *Runer) token.Token {
 		Val:   "\n",
 		Start: r.Col(),
 		End:   r.Col() + 1,
-		Type:  token.SEPARATOR_LINE,
+		Type:  token.NEWLINE,
 	}
 }

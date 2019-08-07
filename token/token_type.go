@@ -51,7 +51,7 @@ const (
 	// Punctuation
 	SEPARATOR_VALUE // ,
 	// Whitespace
-	SEPARATOR_LINE // \n
+	NEWLINE // \n
 	WHITESPACE
 	// Ignoramuses
 	VOID // _
@@ -129,8 +129,8 @@ func TokenName(t TokenType) string {
 		return `PAREN_SQUARE_CLOSE`
 	case SEPARATOR_VALUE:
 		return `SEPARATOR_VALUE`
-	case SEPARATOR_LINE:
-		return `SEPARATOR_LINE`
+	case NEWLINE:
+		return `NEWLINE`
 	case WHITESPACE:
 		return `WHITESPACE`
 	case VOID:
