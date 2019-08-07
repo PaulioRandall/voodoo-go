@@ -43,8 +43,16 @@ func (r *Runer) ReadRune() (rune, fault.Fault) {
 	return ru, err
 }
 
+// SkipRune skips the next rune in the reader. It still may produce an error as
+// the reader may still be read in order to do this.
+func (r *Runer) SkipRune() fault.Fault {
+	_, err := r.ReadRune()
+	return err
+}
+
 // LookAhead returns the next two runes in the sequence without incrementing the
-// 'cursor'.
+// 'cursor'. After a call to LookAhead() it is safe to ignore the error returned
+// on the next two calls to ReadRune() or SkipRune().
 func (r *Runer) LookAhead() (rune, rune, fault.Fault) {
 	var err fault.Fault
 
