@@ -10,7 +10,6 @@ import (
 // scanNumber scans symbols that start with a unicode category Nd rune returning
 // a literal number token.
 func scanNumber(r *Runer) (token.Token, fault.Fault) {
-
 	sig, err := scanSignificant(r)
 	if err != nil {
 		return token.EMPTY, err
