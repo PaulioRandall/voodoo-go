@@ -5,6 +5,7 @@ type TokenType int
 
 const (
 	UNDEFINED TokenType = iota
+	// Flag tokens
 	END_OF_STATMENT
 	// Keywords
 	KEYWORD_FUNC // func

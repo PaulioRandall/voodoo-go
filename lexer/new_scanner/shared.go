@@ -18,7 +18,7 @@ func scanWordStr(r *Runer) (string, int, fault.Fault) {
 			return ``, -1, err
 		}
 
-		if !isLetter(ru) && !isDigit(ru) && !isUnderscore(ru) {
+		if !isWordLetter(ru) {
 			break
 		}
 
@@ -32,33 +32,59 @@ func scanWordStr(r *Runer) (string, int, fault.Fault) {
 
 // isDecimalDelim returns true if the language considers the rune to be a
 // separator between the integer part of a number and the fractional part.
-func isDecimalDelim(r rune) bool {
-	return r == '.'
+func isDecimalDelim(ru rune) bool {
+	return ru == '.'
 }
 
 // isNewline returns true if the language considers the rune to be a newline.
-func isNewline(r rune) bool {
-	return r == '\n'
+func isNewline(ru rune) bool {
+	return ru == '\n'
 }
 
 // isSpace returns true if the language considers the rune to be whitespace.
 // Note that newlines are not considered whitespace by this function, the
 // isNewline() function should be used to check for newlines.
-func isSpace(r rune) bool {
-	return !isNewline(r) && unicode.IsSpace(r)
+func isSpace(ru rune) bool {
+	return !isNewline(ru) && unicode.IsSpace(ru)
 }
 
 // isLetter returns true if the language considers the rune to be a letter.
-func isLetter(r rune) bool {
-	return unicode.IsLetter(r)
+func isLetter(ru rune) bool {
+	return unicode.IsLetter(ru)
+}
+
+// isNaturalDigit returns true if the digit is a positive interger.
+func isNaturalDigit(ru rune) bool {
+	return ru != 0 && unicode.IsDigit(ru)
 }
 
 // isDigit returns true if the language considers the rune to be a digit.
-func isDigit(r rune) bool {
-	return unicode.IsDigit(r)
+func isDigit(ru rune) bool {
+	return unicode.IsDigit(ru)
 }
 
 // isUnderscore returns true if the rune is an underscore.
-func isUnderscore(r rune) bool {
-	return r == '_'
+func isUnderscore(ru rune) bool {
+	return ru == '_'
+}
+
+// isWordLetter returns true if the rune can be used within a word.
+func isWordLetter(ru rune) bool {
+	return isLetter(ru) || isDigit(ru) || isUnderscore(ru)
+}
+
+// isSpellPrefix returns true if the rune signifies a spell name coming.
+func isSpellPrefix(ru rune) bool {
+	return ru == '@'
+}
+
+// isStringPrefix returns true if the rune signifies a string literal body is
+// coming.
+func isStringPrefix(ru rune) bool {
+	return ru == '"'
+}
+
+// isCommentPrefix returns true if the runes signify a comment coming.
+func isCommentPrefix(ru1, ru2 rune) bool {
+	return ru1 == '/' && ru2 == '/'
 }
