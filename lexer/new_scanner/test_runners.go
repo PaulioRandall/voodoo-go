@@ -25,31 +25,6 @@ func newFault(i int) fault.SyntaxFault {
 	}
 }
 
-/*
-// runScanTest runs the input test cases on the input
-// function.
-func runScanTest(
-	t *testing.T,
-	fileName string,
-	f func([]rune, int) (*token.Token, []rune),
-	tests []scanFuncTest) {
-
-	for _, tc := range tests {
-		require.NotNil(t, tc.Expect)
-		require.Nil(t, tc.Error)
-
-		testLine := strconv.Itoa(tc.TestLine)
-		t.Log("-> " + fileName + " : " + testLine)
-
-		tk, out := f(tc.Input, tc.col)
-
-		require.NotNil(t, tk, "Did not expect token to be nil")
-		assert.Equal(t, tc.Output, out, "Expected a different array of leftover runes")
-		assert.Equal(t, tc.Expect, *tk, "Expected a different token")
-	}
-}
-*/
-
 // dummyToken creates a new dummy token.
 func dummyToken(line, start, end int, val string, t token.TokenType) token.Token {
 	return token.Token{

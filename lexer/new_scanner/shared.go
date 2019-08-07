@@ -30,9 +30,9 @@ func scanWordStr(r *Runer) (string, int, fault.Fault) {
 	return sb.String(), size, nil
 }
 
-// isDecimalSeparator returns true if the language considers the rune to be a
+// isDecimalDelim returns true if the language considers the rune to be a
 // separator between the integer part of a number and the fractional part.
-func isDecimalSeparator(r rune) bool {
+func isDecimalDelim(r rune) bool {
 	return r == '.'
 }
 
