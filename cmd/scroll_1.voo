@@ -18,7 +18,7 @@ done
 
 onErr <- func(err)
   when
-    err != _ => @Println(err)
+    err != _ => @Println(err),
                 @Exit(1)
   done
 done

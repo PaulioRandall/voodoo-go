@@ -17,12 +17,26 @@ import (
 func Strim(in chan token.Token, out chan token.Token) {
 	defer close(out)
 
+	prevType := token.UNDEFINED
+	var ok bool
+
 	for tk := range in {
 		switch {
+		case tk.Type == token.SHEBANG:
+			prevType = tk.Type
+			continue
 		case tk.Type == token.WHITESPACE:
+			prevType = tk.Type
 			continue
 		case tk.Type == token.COMMENT:
+			prevType = tk.Type
 			continue
+		case tk.Type == token.NEWLINE:
+			tk, ok = whenNewline(tk, prevType)
+			prevType = tk.Type
+			if !ok {
+				continue
+			}
 		case tk.Type == token.LITERAL_STRING:
 			penultimate := len(tk.Val) - 1
 			tk.Val = tk.Val[1:penultimate]
@@ -33,6 +47,7 @@ func Strim(in chan token.Token, out chan token.Token) {
 		}
 
 		out <- tk
+		prevType = tk.Type
 	}
 }
 
@@ -52,4 +67,32 @@ func isAlphabeticType(t token.TokenType) bool {
 	}
 
 	return true
+}
+
+// isMultiLineType returns true if the input type allows for the following type
+// to be a newline without ending the statement.
+func isMultiLineType(t token.TokenType) bool {
+	switch t {
+	case token.SHEBANG:
+	case token.UNDEFINED:
+	case token.SEPARATOR_VALUE:
+	case token.NEWLINE:
+	case token.END_OF_STATEMENT:
+	case token.PAREN_CURVY_OPEN:
+	case token.PAREN_SQUARE_OPEN:
+	default:
+		return false
+	}
+
+	return true
+}
+
+// whenNewline handles newline tokens.
+func whenNewline(tk token.Token, prevType token.TokenType) (token.Token, bool) {
+	if isMultiLineType(prevType) {
+		return tk, false
+	}
+
+	tk.Type = token.END_OF_STATEMENT
+	return tk, true
 }

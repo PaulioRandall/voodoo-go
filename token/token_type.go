@@ -8,7 +8,7 @@ const (
 	// Shebang
 	SHEBANG
 	// Flag tokens
-	END_OF_STATMENT
+	END_OF_STATEMENT
 	// Keywords
 	KEYWORD_FUNC // func
 	KEYWORD_LOOP // loop
@@ -69,6 +69,8 @@ func TokenName(t TokenType) string {
 	switch t {
 	case SHEBANG:
 		return `SHEBANG`
+	case END_OF_STATEMENT:
+		return `END_OF_STATEMENT`
 	case KEYWORD_FUNC:
 		return `KEYWORD_FUNC`
 	case KEYWORD_LOOP:

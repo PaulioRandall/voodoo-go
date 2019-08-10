@@ -57,7 +57,7 @@ func printlnTokens(tks []Token, f func(Token) string) {
 		fmt.Print(s)
 
 		if i < l-1 {
-			fmt.Print(`, `)
+			fmt.Print(` `)
 		}
 	}
 
@@ -76,7 +76,7 @@ func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
 	for tk := range in {
 
 		if !first {
-			fmt.Print(`, `)
+			fmt.Print(` `)
 		}
 		first = false
 

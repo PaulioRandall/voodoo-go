@@ -17,7 +17,7 @@ func Parse(in []token.Token) (ctx.Statement, fault.Fault) {
 loop:
 	for i, tk := range in {
 		switch {
-		case tk.Type == token.END_OF_STATMENT:
+		case tk.Type == token.END_OF_STATEMENT:
 			break loop
 
 		case tk.Type == token.IDENTIFIER:
