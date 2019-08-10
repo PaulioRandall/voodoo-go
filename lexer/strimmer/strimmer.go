@@ -75,7 +75,7 @@ func isMultiLineType(t token.TokenType) bool {
 	switch t {
 	case token.SHEBANG:
 	case token.UNDEFINED:
-	case token.SEPARATOR_VALUE:
+	case token.VALUE_DELIM:
 	case token.NEWLINE:
 	case token.END_OF_STATEMENT:
 	case token.PAREN_CURVY_OPEN:

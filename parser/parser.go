@@ -131,7 +131,7 @@ func parseExpression(in []Token) (Expression, Fault) {
 // to produce one or many expressions for the right side.
 func parseExpressions(in []Token) (Expression, Fault) {
 
-	split := splitOnToken(in, token.SEPARATOR_VALUE)
+	split := splitOnToken(in, token.VALUE_DELIM)
 	exprs := make([]Expression, len(split))
 
 	for i, v := range split {
@@ -200,7 +200,7 @@ func parseAssignment(in []Token) (Token, Expression, Fault) {
 	assign := in[size-1]
 	in = in[:size-1]
 
-	split := splitOnToken(in, token.SEPARATOR_VALUE)
+	split := splitOnToken(in, token.VALUE_DELIM)
 
 	for i, id := range split {
 		if len(id) != 1 {
@@ -224,7 +224,7 @@ func parseAssignment(in []Token) (Token, Expression, Fault) {
 // validateDelimiter validates the passed token is a value
 // delimiter or assignment returning a fault if not.
 func validateDelimiter(tk Token) Fault {
-	if tk.Type != token.ASSIGNMENT && tk.Type != token.SEPARATOR_VALUE {
+	if tk.Type != token.ASSIGNMENT && tk.Type != token.VALUE_DELIM {
 		return ParseFault{
 			Msgs: []string{
 				`Unexpected token type`,

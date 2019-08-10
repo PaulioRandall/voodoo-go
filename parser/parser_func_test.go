@@ -79,7 +79,7 @@ func TestParseAssignment_1(t *testing.T) {
 func TestParseAssignment_2(t *testing.T) {
 	in := []Token{
 		Token{`x`, 0, 0, token.IDENTIFIER},
-		Token{`,`, 0, 0, token.SEPARATOR_VALUE},
+		Token{`,`, 0, 0, token.VALUE_DELIM},
 		Token{`y`, 0, 0, token.IDENTIFIER},
 		Token{`<-`, 0, 0, token.ASSIGNMENT},
 	}
@@ -104,7 +104,7 @@ func TestSplitOnToken_1(t *testing.T) {
 
 	in := []Token{
 		Token{`x`, 0, 0, token.IDENTIFIER},
-		Token{`,`, 0, 0, token.SEPARATOR_VALUE},
+		Token{`,`, 0, 0, token.VALUE_DELIM},
 		Token{`y`, 0, 0, token.IDENTIFIER},
 		Token{`<-`, 0, 0, token.ASSIGNMENT},
 	}
@@ -120,7 +120,7 @@ func TestSplitOnToken_1(t *testing.T) {
 	}
 
 	var out [][]Token
-	out = splitOnToken(in, token.SEPARATOR_VALUE)
+	out = splitOnToken(in, token.VALUE_DELIM)
 
 	assert.Equal(t, exp, out)
 }

@@ -62,7 +62,7 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 	case cmp(ru1, ']'):
 		return onMatch(r, token.PAREN_SQUARE_CLOSE, 1)
 	case cmp(ru1, ','):
-		return onMatch(r, token.SEPARATOR_VALUE, 1)
+		return onMatch(r, token.VALUE_DELIM, 1)
 	case cmp(ru1, '_'):
 		return onMatch(r, token.VOID, 1)
 	default:
