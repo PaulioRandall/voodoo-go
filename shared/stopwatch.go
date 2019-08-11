@@ -15,7 +15,7 @@ type StopWatch struct {
 	Stopped time.Time
 }
 
-// Start starts the stop watch overwritting any previously start time.
+// Start starts the stop watch overwritting any previous start time.
 func (sw *StopWatch) Start() {
 	sw.Started = time.Now().UTC()
 }
@@ -25,16 +25,12 @@ func (sw *StopWatch) Stop() {
 	sw.Stopped = time.Now().UTC()
 }
 
-// Lap restarts the stop watch but returns a copy of the stop watch with the
-// previous laps times.
-func (sw *StopWatch) Lap() StopWatch {
-	sw.Stop()
-	r := StopWatch{
+// Copy copies the stopwatch.
+func (sw *StopWatch) Copy() StopWatch {
+	return StopWatch{
 		Started: sw.Started,
 		Stopped: sw.Stopped,
 	}
-	sw.Started = sw.Stopped
-	return r
 }
 
 // Elapsed returns the elapsed time between the started and stopped times.
@@ -42,8 +38,8 @@ func (sw *StopWatch) Elapsed() time.Duration {
 	return sw.Stopped.Sub(sw.Started)
 }
 
-// PrintElapsed prints the elapsed time as returned by Elapsed(). 'radix' may be
-// passed to print the result in a more appropriate manner.
+// PrintElapsed prints the elapsed time as returned by Elapsed(). The 'radix'
+// passed is used to print an easily understandable result.
 //
 // e.g. PrintElapsed(time.Millisecond) will print as milliseconds.
 //
@@ -51,6 +47,11 @@ func (sw *StopWatch) Elapsed() time.Duration {
 // microseconds * 10 in this case.
 func (sw *StopWatch) PrintElapsed(radix time.Duration) {
 	t := sw.Elapsed()
+
+	if radix == 0 {
+		radix = time.Nanosecond
+	}
+
 	f := float64(t) / float64(radix)
 
 	switch radix {
