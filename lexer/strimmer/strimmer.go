@@ -6,49 +6,58 @@ import (
 	"github.com/PaulioRandall/voodoo-go/token"
 )
 
-// Strim normalises an array of tokens ready for the
-// the token parsing, this involves:
+// Strim normalises an array of tokens ready for the the token parsing, this
+// involves:
+// -> Removing shebang token
 // -> Removing whitespace tokens
 // -> Removing comment tokens
 // -> Removing quote marks from string literals
 // -> Removing underscores from numbers
-// -> Removing now redundant punctuation
-// -> Converting all letters to lowercase (Except string literals)
+// -> Removing newlines or converting them to end of statement tokens
+// -> Converting all letters to lowercase (except literals)
 func Strim(in chan token.Token, out chan token.Token) {
 	defer close(out)
 
-	prevType := token.UNDEFINED
-	var ok bool
+	var prevType token.TokenType
+	var tk token.Token
+	var keep bool
 
-	for tk := range in {
+	for tk = range in {
+		keep = true
+
 		switch {
 		case tk.Type == token.SHEBANG:
-			prevType = tk.Type
-			continue
+			keep = false
 		case tk.Type == token.WHITESPACE:
-			prevType = tk.Type
-			continue
+			keep = false
 		case tk.Type == token.COMMENT:
-			prevType = tk.Type
-			continue
+			keep = false
 		case tk.Type == token.NEWLINE:
-			tk, ok = whenNewline(tk, prevType)
-			prevType = tk.Type
-			if !ok {
-				continue
-			}
+			tk, keep = whenNewline(tk, prevType)
 		case tk.Type == token.LITERAL_STRING:
-			penultimate := len(tk.Val) - 1
-			tk.Val = tk.Val[1:penultimate]
+			tk.Val = trimQuotes(tk.Val)
 		case tk.Type == token.LITERAL_NUMBER:
-			tk.Val = strings.ReplaceAll(tk.Val, `_`, ``)
+			tk.Val = stripUnderscores(tk.Val)
 		case isAlphabeticType(tk.Type):
 			tk.Val = strings.ToLower(tk.Val)
 		}
 
-		out <- tk
+		if keep {
+			out <- tk
+		}
+
 		prevType = tk.Type
 	}
+}
+
+// stripUnderscores removes redudant underscores from numbers.
+func stripUnderscores(s string) string {
+	return strings.ReplaceAll(s, `_`, ``)
+}
+
+// trimQuotes removes the leading and trailing quotes on string literals.
+func trimQuotes(s string) string {
+	return s[1 : len(s)-1]
 }
 
 // isAlphabeticType returns true if input token type is for

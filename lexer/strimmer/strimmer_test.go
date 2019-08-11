@@ -139,5 +139,45 @@ func strimTests() []strimTest {
 				token.Token{`語`, 19, 20, token.IDENTIFIER},
 			},
 		},
+		strimTest{
+			TestLine: fault.CurrLine(),
+			Input: []token.Token{
+				// x <- [
+				//   1,
+				//   2, 3,
+				// ]
+				//
+				token.Token{`x`, 0, 1, token.IDENTIFIER},
+				token.Token{` `, 1, 2, token.WHITESPACE},
+				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
+				token.Token{` `, 4, 5, token.WHITESPACE},
+				token.Token{`[`, 5, 6, token.PAREN_SQUARE_OPEN},
+				token.Token{"\n", 6, 7, token.NEWLINE},
+				token.Token{`  `, 0, 2, token.WHITESPACE},
+				token.Token{`1`, 2, 3, token.LITERAL_NUMBER},
+				token.Token{"\n", 3, 4, token.NEWLINE},
+				token.Token{`  `, 0, 2, token.WHITESPACE},
+				token.Token{`2`, 2, 3, token.LITERAL_NUMBER},
+				token.Token{`,`, 3, 4, token.VALUE_DELIM},
+				token.Token{` `, 4, 5, token.WHITESPACE},
+				token.Token{`3`, 5, 6, token.LITERAL_NUMBER},
+				token.Token{"\n", 6, 7, token.NEWLINE},
+				token.Token{`]`, 0, 1, token.PAREN_SQUARE_CLOSE},
+				token.Token{"\n", 1, 2, token.NEWLINE},
+			},
+			ExpectToks: []token.Token{
+				token.Token{`x`, 0, 1, token.IDENTIFIER},
+				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
+				token.Token{`[`, 5, 6, token.PAREN_SQUARE_OPEN},
+				token.Token{`1`, 2, 3, token.LITERAL_NUMBER},
+				token.Token{"\n", 3, 4, token.END_OF_STATEMENT},
+				token.Token{`2`, 2, 3, token.LITERAL_NUMBER},
+				token.Token{`,`, 3, 4, token.VALUE_DELIM},
+				token.Token{`3`, 5, 6, token.LITERAL_NUMBER},
+				token.Token{"\n", 6, 7, token.END_OF_STATEMENT},
+				token.Token{`]`, 0, 1, token.PAREN_SQUARE_CLOSE},
+				token.Token{"\n", 1, 2, token.END_OF_STATEMENT},
+			},
+		},
 	}
 }
