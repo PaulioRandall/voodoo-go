@@ -3,8 +3,6 @@ package fault
 import (
 	"fmt"
 	"unicode"
-
-	"github.com/PaulioRandall/voodoo-go/scroll"
 )
 
 // Bug represents a fault with this program.
@@ -15,7 +13,7 @@ type Bug struct {
 }
 
 // Print satisfies the Fault interface.
-func (err Bug) Print(sc *scroll.Scroll, line int) {
+func (err Bug) Print(file string) {
 	/*
 		fmt.Println("\n[BUG]")
 

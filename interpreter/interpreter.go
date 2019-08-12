@@ -24,7 +24,7 @@ func Execute(sc *scroll.Scroll, scArgs []string) int {
 	err := scanner.Scan(r, true, scanChan)
 
 	if err != nil {
-		err.Print(sc, -1)
+		err.Print(sc.File)
 		return 1
 	}
 

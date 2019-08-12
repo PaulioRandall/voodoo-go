@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 )
 
+// TODO: This pkg is redundant, move the preety print code to the parser pkg
+
 // Scroll represents a scroll.
 type Scroll struct {
 	File string // File path to the scroll
