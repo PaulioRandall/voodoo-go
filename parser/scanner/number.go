@@ -67,7 +67,7 @@ func scanFractional(r *Runer) (string, fault.Fault) {
 	}
 
 	if len(frac) == 0 || !strings.ContainsAny(frac, "0123456789") {
-		return ``, badNumberFormat(r.Col() + 1)
+		return ``, badNumberFormat(r.Line(), r.Col()+1)
 	}
 
 	return string(ru) + frac, nil
@@ -96,9 +96,10 @@ func scanInt(r *Runer) (string, fault.Fault) {
 
 // badNumberFormat returns a new fault detailing when a number is badly
 // formatted.
-func badNumberFormat(i int) fault.Fault {
+func badNumberFormat(line, col int) fault.Fault {
 	return token.SyntaxFault{
-		Index: i,
+		Line: line,
+		Col:  col,
 		Msgs: []string{
 			"Invalid number format, either...",
 			" - fractional digits are missing",

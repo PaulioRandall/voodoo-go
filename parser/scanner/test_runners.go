@@ -36,7 +36,7 @@ type scanFuncTest struct {
 
 func newFault(i int) fault.Fault {
 	return token.SyntaxFault{
-		Index: i,
+		Col: i,
 	}
 }
 

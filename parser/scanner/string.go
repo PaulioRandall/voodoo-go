@@ -64,7 +64,7 @@ func scanStrBody(r *Runer) (string, fault.Fault) {
 		}
 
 		if ru == EOF || isNewline(ru) {
-			return ``, unclosedString(r.Col() + 1)
+			return ``, unclosedString(r.Line(), r.Col()+1)
 		}
 
 		if ru == '\\' {
@@ -82,9 +82,10 @@ func scanStrBody(r *Runer) (string, fault.Fault) {
 
 // unclosedString creates a fault for when a string literal is has not been
 // closed before the end of a line or file.
-func unclosedString(i int) fault.Fault {
+func unclosedString(line, col int) fault.Fault {
 	return token.SyntaxFault{
-		Index: i,
+		Line: line,
+		Col:  col,
 		Msgs: []string{
 			"Did someone forget to close a string literal?!",
 		},

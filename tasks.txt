@@ -1,7 +1,0 @@
-[NEXT]
-+ Implement parser
-
-[TODO]
-+ Delete the voodoo API repository
-+ Remove implicit identifier
-+ Rename explicit identifier to identifier

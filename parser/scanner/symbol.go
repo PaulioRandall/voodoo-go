@@ -66,7 +66,7 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 	case cmp(ru1, '_'):
 		return onMatch(r, token.VOID, 1)
 	default:
-		return token.EMPTY, unknownNonTerminal(ru1, r.Col()+1)
+		return token.EMPTY, unknownNonTerminal(ru1, r.Line(), r.Col()+2)
 	}
 }
 
@@ -103,9 +103,10 @@ func onMatch(r *Runer, t token.TokenType, count int) (token.Token, fault.Fault) 
 }
 
 // unknownNonTerminal creates a fault for when a symbol is not known.
-func unknownNonTerminal(ru rune, i int) fault.Fault {
+func unknownNonTerminal(ru rune, line, col int) fault.Fault {
 	return token.SyntaxFault{
-		Index: i,
+		Line: line,
+		Col:  col,
 		Msgs: []string{
 			"I don't know what this symbol means '" + string(ru) + "'",
 		},

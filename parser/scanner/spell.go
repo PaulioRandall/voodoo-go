@@ -16,7 +16,7 @@ func scanSpell(r *Runer) (token.Token, fault.Fault) {
 	}
 
 	if !isLetter(ru) {
-		return token.EMPTY, badSpellName(r.Col() + 1)
+		return token.EMPTY, badSpellName(r.Line(), r.Col()+2)
 	}
 
 	s, size, err := scanWordStr(r)
@@ -35,9 +35,10 @@ func scanSpell(r *Runer) (token.Token, fault.Fault) {
 }
 
 // badSpellName creates a syntax fault for badly defined spell names.
-func badSpellName(col int) fault.Fault {
+func badSpellName(line, col int) fault.Fault {
 	return token.SyntaxFault{
-		Index: col,
+		Line: line,
+		Col:  col,
 		Msgs: []string{
 			"Expected first rune after '@' to be a letter",
 		},
