@@ -7,8 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/PaulioRandall/voodoo-go/interpreter"
-	"github.com/PaulioRandall/voodoo-go/scroll"
+	"github.com/PaulioRandall/voodoo-go/exe"
 	"github.com/PaulioRandall/voodoo-go/shared"
 )
 
@@ -34,6 +33,28 @@ func main() {
 	stopWatch.PrintElapsed(time.Microsecond)
 
 	os.Exit(0)
+}
+
+// exeScroll loads then executes the scroll supplied as a parameter.
+func exeScroll() {
+	scPath := getScrollPath()
+	scArgs := getScrollArgs()
+
+	sc, err := exe.LoadScroll(scPath)
+	if err != nil {
+		// TODO: Handle when error returned.
+		panic(err)
+	}
+
+	exitCode := exe.Execute(sc, scArgs)
+	if err != nil {
+		// TODO: Handle when error returned.
+		panic(err)
+	}
+
+	// TODO: What to do when non-zero exit code?
+	exitMsg := fmt.Sprintf("\nExit %d", exitCode)
+	fmt.Println(exitMsg)
 }
 
 // getOption returns the argument passed that represents the operation to
@@ -66,26 +87,4 @@ func badSyntax() {
 
 	fmt.Println(syntax + "\n")
 	os.Exit(1)
-}
-
-// exeScroll loads then executes the scroll supplied as a parameter.
-func exeScroll() {
-	scPath := getScrollPath()
-	scArgs := getScrollArgs()
-
-	sc, err := scroll.LoadScroll(scPath)
-	if err != nil {
-		// TODO: Handle when error returned.
-		panic(err)
-	}
-
-	exitCode := interpreter.Execute(sc, scArgs)
-	if err != nil {
-		// TODO: Handle when error returned.
-		panic(err)
-	}
-
-	// TODO: What to do when non-zero exit code?
-	exitMsg := fmt.Sprintf("\nExit %d", exitCode)
-	fmt.Println(exitMsg)
 }

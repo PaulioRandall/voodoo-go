@@ -1,4 +1,4 @@
-package scroll
+package exe
 
 import (
 	"io/ioutil"

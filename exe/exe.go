@@ -1,4 +1,4 @@
-package interpreter
+package exe
 
 import (
 	"bufio"
@@ -7,11 +7,10 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/scanner"
 	"github.com/PaulioRandall/voodoo-go/parser/strimmer"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
-	"github.com/PaulioRandall/voodoo-go/scroll"
 )
 
 // Execute runs a Voodoo scroll.
-func Execute(sc *scroll.Scroll, scArgs []string) int {
+func Execute(sc *Scroll, scArgs []string) int {
 
 	done := make(chan bool)
 	scanChan := make(chan token.Token)
