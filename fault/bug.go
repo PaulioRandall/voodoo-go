@@ -14,20 +14,16 @@ type Bug struct {
 
 // Print satisfies the Fault interface.
 func (err Bug) Print(file string) {
-	/*
-		fmt.Println("\n[BUG]")
+	fmt.Println("\n[BUG]")
 
-		fmt.Printf("%3d: %s\n", line, sc.Lines[line])
+	fmt.Println("During:")
+	printPara([]rune(err.Stage))
 
-		fmt.Println("During:")
-		printPara([]rune(err.Stage))
+	fmt.Println("Intent:")
+	printPara([]rune(err.Intent))
 
-		fmt.Println("Intent:")
-		printPara([]rune(err.Intent))
-
-		fmt.Println("Actual:")
-		printPara([]rune(err.Intent))
-	*/
+	fmt.Println("Actual:")
+	printPara([]rune(err.Intent))
 }
 
 // printPara prints a paragraph where by each line has a limited
