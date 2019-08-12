@@ -36,7 +36,7 @@ func scanSpell(r *Runer) (token.Token, fault.Fault) {
 
 // badSpellName creates a syntax fault for badly defined spell names.
 func badSpellName(col int) fault.Fault {
-	return fault.SyntaxFault{
+	return token.SyntaxFault{
 		Index: col,
 		Msgs: []string{
 			"Expected first rune after '@' to be a letter",

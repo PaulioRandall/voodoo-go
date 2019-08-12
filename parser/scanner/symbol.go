@@ -104,7 +104,7 @@ func onMatch(r *Runer, t token.TokenType, count int) (token.Token, fault.Fault) 
 
 // unknownNonTerminal creates a fault for when a symbol is not known.
 func unknownNonTerminal(ru rune, i int) fault.Fault {
-	return fault.SyntaxFault{
+	return token.SyntaxFault{
 		Index: i,
 		Msgs: []string{
 			"I don't know what this symbol means '" + string(ru) + "'",

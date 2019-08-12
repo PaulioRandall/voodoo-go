@@ -34,8 +34,8 @@ type scanFuncTest struct {
 	Error          fault.Fault
 }
 
-func newFault(i int) fault.SyntaxFault {
-	return fault.SyntaxFault{
+func newFault(i int) fault.Fault {
+	return token.SyntaxFault{
 		Index: i,
 	}
 }

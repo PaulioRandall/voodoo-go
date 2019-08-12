@@ -97,7 +97,7 @@ func scanInt(r *Runer) (string, fault.Fault) {
 // badNumberFormat returns a new fault detailing when a number is badly
 // formatted.
 func badNumberFormat(i int) fault.Fault {
-	return fault.SyntaxFault{
+	return token.SyntaxFault{
 		Index: i,
 		Msgs: []string{
 			"Invalid number format, either...",
