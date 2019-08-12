@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/token"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // scanString scans symbols that start and end with an non-escaped `"` returning

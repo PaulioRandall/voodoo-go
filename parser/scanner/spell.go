@@ -2,7 +2,7 @@ package scanner
 
 import (
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/token"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // scanSpell scans symbols that start with a the '@' rune returning a spell

@@ -4,10 +4,10 @@ import (
 	"bufio"
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/lexer/scanner"
-	"github.com/PaulioRandall/voodoo-go/lexer/strimmer"
+	"github.com/PaulioRandall/voodoo-go/parser/scanner"
+	"github.com/PaulioRandall/voodoo-go/parser/strimmer"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/scroll"
-	"github.com/PaulioRandall/voodoo-go/token"
 )
 
 // Execute runs a Voodoo scroll.

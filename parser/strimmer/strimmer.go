@@ -3,7 +3,7 @@ package strimmer
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/token"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // Strim normalises an array of tokens ready for the the token parsing, this

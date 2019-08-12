@@ -1,9 +1,10 @@
 package scanner
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/token"
 	"strings"
+
+	"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // Scan scans tokens from a stream of code using longest match and pushes them

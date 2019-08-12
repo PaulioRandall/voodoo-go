@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
-	"github.com/PaulioRandall/voodoo-go/token"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 func TestScanString(t *testing.T) {
