@@ -16,6 +16,17 @@ type strimTest struct {
 	ExpectToks []token.Token
 }
 
+// dummyToken creates a new dummy token.
+func dummyToken(line, start, end int, val string, t token.TokenType) token.Token {
+	return token.Token{
+		Line:  line,
+		Start: start,
+		End:   end,
+		Val:   val,
+		Type:  t,
+	}
+}
+
 // stream takes an array of tokens and pushes them into a token channel.
 func stream(in []token.Token, out chan token.Token) {
 	defer close(out)
@@ -59,84 +70,84 @@ func strimTests() []strimTest {
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER},
-				token.Token{` `, 1, 2, token.WHITESPACE},
-				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-				token.Token{` `, 4, 5, token.WHITESPACE},
-				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				dummyToken(0, 0, 1, `x`, token.IDENTIFIER),
+				dummyToken(0, 1, 2, ` `, token.WHITESPACE),
+				dummyToken(0, 2, 4, `<-`, token.ASSIGNMENT),
+				dummyToken(0, 4, 5, ` `, token.WHITESPACE),
+				dummyToken(0, 5, 6, `1`, token.LITERAL_NUMBER),
 			},
 			ExpectToks: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER},
-				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-				token.Token{`1`, 5, 6, token.LITERAL_NUMBER},
+				dummyToken(0, 0, 1, `x`, token.IDENTIFIER),
+				dummyToken(0, 2, 4, `<-`, token.ASSIGNMENT),
+				dummyToken(0, 5, 6, `1`, token.LITERAL_NUMBER),
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`// 'There's a snake in my boot'`, 0, 31, token.COMMENT},
+				dummyToken(0, 0, 31, `// 'There's a snake in my boot'`, token.COMMENT),
 			},
 			ExpectToks: []token.Token{},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER},
-				token.Token{` `, 1, 2, token.WHITESPACE},
-				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-				token.Token{` `, 4, 5, token.WHITESPACE},
-				token.Token{`2`, 5, 6, token.LITERAL_NUMBER},
-				token.Token{` `, 6, 7, token.WHITESPACE},
-				token.Token{`// 'There's a snake in my boot'`, 7, 38, token.COMMENT},
+				dummyToken(0, 0, 1, `x`, token.IDENTIFIER),
+				dummyToken(0, 1, 2, ` `, token.WHITESPACE),
+				dummyToken(0, 2, 4, `<-`, token.ASSIGNMENT),
+				dummyToken(0, 4, 5, ` `, token.WHITESPACE),
+				dummyToken(0, 5, 6, `2`, token.LITERAL_NUMBER),
+				dummyToken(0, 6, 7, ` `, token.WHITESPACE),
+				dummyToken(0, 7, 38, `// 'There's a snake in my boot'`, token.COMMENT),
 			},
 			ExpectToks: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER},
-				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-				token.Token{`2`, 5, 6, token.LITERAL_NUMBER},
+				dummyToken(0, 0, 1, `x`, token.IDENTIFIER),
+				dummyToken(0, 2, 4, `<-`, token.ASSIGNMENT),
+				dummyToken(0, 5, 6, `2`, token.LITERAL_NUMBER),
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`"Howdy partner"`, 5, 20, token.LITERAL_STRING},
+				dummyToken(0, 5, 20, `"Howdy partner"`, token.LITERAL_STRING),
 			},
 			ExpectToks: []token.Token{
-				token.Token{`Howdy partner`, 5, 20, token.LITERAL_STRING},
+				dummyToken(0, 5, 20, `Howdy partner`, token.LITERAL_STRING),
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`123_456`, 0, 7, token.LITERAL_NUMBER},
+				dummyToken(0, 0, 7, `123_456`, token.LITERAL_NUMBER),
 			},
 			ExpectToks: []token.Token{
-				token.Token{`123456`, 0, 7, token.LITERAL_NUMBER},
+				dummyToken(0, 0, 7, `123456`, token.LITERAL_NUMBER),
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`1__2__3__.__4__5__6__`, 0, 21, token.LITERAL_NUMBER},
+				dummyToken(0, 0, 21, `1__2__3__.__4__5__6__`, token.LITERAL_NUMBER),
 			},
 			ExpectToks: []token.Token{
-				token.Token{`123.456`, 0, 21, token.LITERAL_NUMBER},
+				dummyToken(0, 0, 21, `123.456`, token.LITERAL_NUMBER),
 			},
 		},
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				token.Token{`func`, 0, 6, token.KEYWORD_FUNC},
-				token.Token{` `, 6, 7, token.WHITESPACE},
-				token.Token{`END`, 7, 10, token.KEYWORD_DONE},
-				token.Token{` `, 10, 11, token.WHITESPACE},
-				token.Token{`@PrInTlN`, 11, 19, token.SPELL},
-				token.Token{`語`, 19, 20, token.IDENTIFIER},
+				dummyToken(0, 0, 6, `func`, token.KEYWORD_FUNC),
+				dummyToken(0, 6, 7, ` `, token.WHITESPACE),
+				dummyToken(0, 7, 10, `END`, token.KEYWORD_DONE),
+				dummyToken(0, 10, 11, ` `, token.WHITESPACE),
+				dummyToken(0, 11, 19, `@PrInTlN`, token.SPELL),
+				dummyToken(0, 19, 20, `語`, token.IDENTIFIER),
 			},
 			ExpectToks: []token.Token{
-				token.Token{`func`, 0, 6, token.KEYWORD_FUNC},
-				token.Token{`end`, 7, 10, token.KEYWORD_DONE},
-				token.Token{`@println`, 11, 19, token.SPELL},
-				token.Token{`語`, 19, 20, token.IDENTIFIER},
+				dummyToken(0, 0, 6, `func`, token.KEYWORD_FUNC),
+				dummyToken(0, 7, 10, `end`, token.KEYWORD_DONE),
+				dummyToken(0, 11, 19, `@println`, token.SPELL),
+				dummyToken(0, 19, 20, `語`, token.IDENTIFIER),
 			},
 		},
 		strimTest{
@@ -147,36 +158,36 @@ func strimTests() []strimTest {
 				//   2, 3,
 				// ]
 				//
-				token.Token{`x`, 0, 1, token.IDENTIFIER},
-				token.Token{` `, 1, 2, token.WHITESPACE},
-				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-				token.Token{` `, 4, 5, token.WHITESPACE},
-				token.Token{`[`, 5, 6, token.PAREN_SQUARE_OPEN},
-				token.Token{"\n", 6, 7, token.NEWLINE},
-				token.Token{`  `, 0, 2, token.WHITESPACE},
-				token.Token{`1`, 2, 3, token.LITERAL_NUMBER},
-				token.Token{"\n", 3, 4, token.NEWLINE},
-				token.Token{`  `, 0, 2, token.WHITESPACE},
-				token.Token{`2`, 2, 3, token.LITERAL_NUMBER},
-				token.Token{`,`, 3, 4, token.VALUE_DELIM},
-				token.Token{` `, 4, 5, token.WHITESPACE},
-				token.Token{`3`, 5, 6, token.LITERAL_NUMBER},
-				token.Token{"\n", 6, 7, token.NEWLINE},
-				token.Token{`]`, 0, 1, token.PAREN_SQUARE_CLOSE},
-				token.Token{"\n", 1, 2, token.NEWLINE},
+				dummyToken(0, 0, 1, `x`, token.IDENTIFIER),
+				dummyToken(0, 1, 2, ` `, token.WHITESPACE),
+				dummyToken(0, 2, 4, `<-`, token.ASSIGNMENT),
+				dummyToken(0, 4, 5, ` `, token.WHITESPACE),
+				dummyToken(0, 5, 6, `[`, token.PAREN_SQUARE_OPEN),
+				dummyToken(0, 6, 7, "\n", token.NEWLINE),
+				dummyToken(0, 0, 2, `  `, token.WHITESPACE),
+				dummyToken(0, 2, 3, `1`, token.LITERAL_NUMBER),
+				dummyToken(0, 3, 4, "\n", token.NEWLINE),
+				dummyToken(0, 0, 2, `  `, token.WHITESPACE),
+				dummyToken(0, 2, 3, `2`, token.LITERAL_NUMBER),
+				dummyToken(0, 3, 4, `,`, token.VALUE_DELIM),
+				dummyToken(0, 4, 5, ` `, token.WHITESPACE),
+				dummyToken(0, 5, 6, `3`, token.LITERAL_NUMBER),
+				dummyToken(0, 6, 7, "\n", token.NEWLINE),
+				dummyToken(0, 0, 1, `]`, token.PAREN_SQUARE_CLOSE),
+				dummyToken(0, 1, 2, "\n", token.NEWLINE),
 			},
 			ExpectToks: []token.Token{
-				token.Token{`x`, 0, 1, token.IDENTIFIER},
-				token.Token{`<-`, 2, 4, token.ASSIGNMENT},
-				token.Token{`[`, 5, 6, token.PAREN_SQUARE_OPEN},
-				token.Token{`1`, 2, 3, token.LITERAL_NUMBER},
-				token.Token{"\n", 3, 4, token.END_OF_STATEMENT},
-				token.Token{`2`, 2, 3, token.LITERAL_NUMBER},
-				token.Token{`,`, 3, 4, token.VALUE_DELIM},
-				token.Token{`3`, 5, 6, token.LITERAL_NUMBER},
-				token.Token{"\n", 6, 7, token.END_OF_STATEMENT},
-				token.Token{`]`, 0, 1, token.PAREN_SQUARE_CLOSE},
-				token.Token{"\n", 1, 2, token.END_OF_STATEMENT},
+				dummyToken(0, 0, 1, `x`, token.IDENTIFIER),
+				dummyToken(0, 2, 4, `<-`, token.ASSIGNMENT),
+				dummyToken(0, 5, 6, `[`, token.PAREN_SQUARE_OPEN),
+				dummyToken(0, 2, 3, `1`, token.LITERAL_NUMBER),
+				dummyToken(0, 3, 4, "\n", token.END_OF_STATEMENT),
+				dummyToken(0, 2, 3, `2`, token.LITERAL_NUMBER),
+				dummyToken(0, 3, 4, `,`, token.VALUE_DELIM),
+				dummyToken(0, 5, 6, `3`, token.LITERAL_NUMBER),
+				dummyToken(0, 6, 7, "\n", token.END_OF_STATEMENT),
+				dummyToken(0, 0, 1, `]`, token.PAREN_SQUARE_CLOSE),
+				dummyToken(0, 1, 2, "\n", token.END_OF_STATEMENT),
 			},
 		},
 	}

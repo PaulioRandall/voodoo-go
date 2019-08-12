@@ -43,7 +43,7 @@ func newFault(i int) fault.Fault {
 // dummyToken creates a new dummy token.
 func dummyToken(line, start, end int, val string, t token.TokenType) token.Token {
 	return token.Token{
-		//Line: line,
+		Line:  line,
 		Start: start,
 		End:   end,
 		Val:   val,
