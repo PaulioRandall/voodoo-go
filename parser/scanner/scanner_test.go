@@ -12,8 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// scanTest represents a test case for the Scan()
-// function.
+// scanTest represents a test case for the Scan() function.
 type scanTest struct {
 	TestLine int
 	Input    string

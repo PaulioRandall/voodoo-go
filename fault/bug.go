@@ -26,8 +26,8 @@ func (err Bug) Print(file string) {
 	printPara([]rune(err.Intent))
 }
 
-// printPara prints a paragraph where by each line has a limited
-// rune count and indented with a single tab.
+// printPara prints a paragraph where by each line has a limited rune count and
+// indented with a single tab.
 func printPara(in []rune) {
 	maxSize := 72
 	size := maxSize
@@ -50,8 +50,8 @@ func printPara(in []rune) {
 	fmt.Println()
 }
 
-// splitSpace splits a string on the whitespace removing
-// empty and whitespace tokens.
+// splitSpace splits a string on the whitespace removing empty and whitespace
+// tokens.
 func splitSpace(in []rune) []string {
 	out := []string{}
 	f := 0
