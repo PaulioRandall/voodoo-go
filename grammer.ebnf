@@ -1,0 +1,47 @@
+
+newline                  = ? unicode newline ?
+unicode character        = ? any unicode value ?
+letter                   = ? any unicode category L value ?
+whitespace character     = ? any unicode value with the whitespace property ?
+                         - newline
+whitespace               = single whitespace, { single whitespace }
+
+natural digit            = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+digit                    = "0" | natural digit
+word letter              = letter | digit | "_"
+word                     = letter, { word letter }
+
+identifier               = [ whitespace ], word, [ whitespace ]
+spell                    = [ whitespace ], "@", word, [ whitespace ]
+
+boolean literal          = "true" | "false"
+boolean                  = identifier | boolean literal
+
+whole number part        = [ "-" ], natural digit, { digit | "_" }
+fractional number part   = ".", { digit | "_" }
+number literal           = whole number part, [ fractional number part ]
+number                   = identifier | number literal
+
+string value             = ( unicode character | '\"' ) - ( newline | '"' )
+string literal           = '"', { string value }, '"'
+string                   = identifier | string literal
+
+value                    = [ whitespace ], (boolean | number | string),
+                         [ whitespace ]
+
+add                      = value, "+", value
+subtract                 = value, "-", value
+multiply                 = value, "*", value
+divide                   = value, "/", value
+modulo                   = value, "%", value
+number operation         = add | subtract | multiply | divide | modulo
+
+identifier list          = [ identifier, { ",", identifier } ]
+value list               = [ value, { ",", value } ]
+function parameters      = "(", { value list }, ")"
+function definition      = "func", [ whitespace ], function parameters,
+                         identifier list
+
+//assignable               = identifier | literal | function definition
+//assignment               = identifier, [ whitespace ], "<-", [ whitespace ],
+//                         assignable
