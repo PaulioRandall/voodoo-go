@@ -70,7 +70,7 @@ func isAlphabeticType(t token.TokenType) bool {
 	case token.TT_WORD_DONE:
 	case token.TT_WORD_TRUE:
 	case token.TT_WORD_FALSE:
-	case token.SPELL:
+	case token.TT_SPELL:
 	default:
 		return false
 	}

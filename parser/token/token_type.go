@@ -17,7 +17,7 @@ const (
 	TT_WORD_TRUE              // "true"
 	TT_WORD_FALSE             // "false"
 	TT_ID                     // Identifier
-	SPELL                     // EBNF: "@", IDENTIFIER
+	TT_SPELL                  // EBNF: "@", IDENTIFIER
 	LITERAL_NUMBER            // EBNF: whole part, [ fractional part ]
 	LITERAL_STRING            // EBNF: '"', { string character }, '"'
 	WHITESPACE                // All whitespace characters except newlines
@@ -76,7 +76,7 @@ func TokenName(t TokenType) string {
 		return `FALSE`
 	case TT_ID:
 		return `ID`
-	case SPELL:
+	case TT_SPELL:
 		return `SPELL`
 	case LITERAL_NUMBER:
 		return `LITERAL_NUMBER`

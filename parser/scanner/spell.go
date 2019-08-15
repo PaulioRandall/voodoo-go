@@ -28,7 +28,7 @@ func scanSpell(r *Runer) (token.Token, fault.Fault) {
 		Val:   string(first) + s,
 		Start: r.Col() - size,
 		End:   r.Col() + 1,
-		Type:  token.SPELL,
+		Type:  token.TT_SPELL,
 	}
 
 	return tk, nil

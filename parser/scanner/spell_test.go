@@ -16,19 +16,19 @@ func scanSpellTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `@Println`,
-			Expect:         dummyToken(0, 0, 8, `@Println`, token.SPELL),
+			Expect:         dummyToken(0, 0, 8, `@Println`, token.TT_SPELL),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `@a__12__xy__`,
-			Expect:         dummyToken(0, 0, 12, `@a__12__xy__`, token.SPELL),
+			Expect:         dummyToken(0, 0, 12, `@a__12__xy__`, token.TT_SPELL),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `@Println(msg)`,
-			Expect:         dummyToken(0, 0, 8, `@Println`, token.SPELL),
+			Expect:         dummyToken(0, 0, 8, `@Println`, token.TT_SPELL),
 			NextUnreadRune: '(',
 		},
 		scanFuncTest{
