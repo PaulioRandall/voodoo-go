@@ -16,37 +16,37 @@ func scanNumberTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `123`,
-			Expect:         dummyToken(0, 0, 3, `123`, token.LITERAL_NUMBER),
+			Expect:         dummyToken(0, 0, 3, `123`, token.TT_NUMBER),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `123 + 456`,
-			Expect:         dummyToken(0, 0, 3, `123`, token.LITERAL_NUMBER),
+			Expect:         dummyToken(0, 0, 3, `123`, token.TT_NUMBER),
 			NextUnreadRune: ' ',
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `123_456`,
-			Expect:         dummyToken(0, 0, 7, `123_456`, token.LITERAL_NUMBER),
+			Expect:         dummyToken(0, 0, 7, `123_456`, token.TT_NUMBER),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `123.456`,
-			Expect:         dummyToken(0, 0, 7, `123.456`, token.LITERAL_NUMBER),
+			Expect:         dummyToken(0, 0, 7, `123.456`, token.TT_NUMBER),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `123.456_789`,
-			Expect:         dummyToken(0, 0, 11, `123.456_789`, token.LITERAL_NUMBER),
+			Expect:         dummyToken(0, 0, 11, `123.456_789`, token.TT_NUMBER),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `1__2__3__.__4__5__6__`,
-			Expect:         dummyToken(0, 0, 21, `1__2__3__.__4__5__6__`, token.LITERAL_NUMBER),
+			Expect:         dummyToken(0, 0, 21, `1__2__3__.__4__5__6__`, token.TT_NUMBER),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{

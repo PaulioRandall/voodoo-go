@@ -19,7 +19,7 @@ func scanString(r *Runer) (token.Token, fault.Fault) {
 		Val:   s,
 		Start: r.Col() - size + 1,
 		End:   r.Col() + 1,
-		Type:  token.LITERAL_STRING,
+		Type:  token.TT_STRING,
 	}
 
 	return tk, nil

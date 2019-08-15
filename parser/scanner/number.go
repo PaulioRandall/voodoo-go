@@ -27,7 +27,7 @@ func scanNumber(r *Runer) (token.Token, fault.Fault) {
 		Val:   s,
 		Start: r.Col() - size + 1,
 		End:   r.Col() + 1,
-		Type:  token.LITERAL_NUMBER,
+		Type:  token.TT_NUMBER,
 	}
 
 	return tk, nil

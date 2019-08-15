@@ -18,8 +18,8 @@ const (
 	TT_WORD_FALSE             // "false"
 	TT_ID                     // Identifier
 	TT_SPELL                  // EBNF: "@", IDENTIFIER
-	LITERAL_NUMBER            // EBNF: whole part, [ fractional part ]
-	LITERAL_STRING            // EBNF: '"', { string character }, '"'
+	TT_NUMBER                 // EBNF: whole part, [ fractional part ]
+	TT_STRING                 // EBNF: '"', { string character }, '"'
 	WHITESPACE                // All whitespace characters except newlines
 	COMMENT                   // Same as Go line comment
 	ASSIGNMENT                // <-
@@ -78,10 +78,10 @@ func TokenName(t TokenType) string {
 		return `ID`
 	case TT_SPELL:
 		return `SPELL`
-	case LITERAL_NUMBER:
-		return `LITERAL_NUMBER`
-	case LITERAL_STRING:
-		return `LITERAL_STRING`
+	case TT_NUMBER:
+		return `NUMBER`
+	case TT_STRING:
+		return `STRING`
 	case COMMENT:
 		return `COMMENT`
 	case ASSIGNMENT:

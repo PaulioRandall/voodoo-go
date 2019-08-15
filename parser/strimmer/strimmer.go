@@ -34,9 +34,9 @@ func Strim(in chan token.Token, out chan token.Token) {
 			keep = false
 		case tk.Type == token.TT_NEWLINE:
 			tk, keep = whenNewline(tk, prevType)
-		case tk.Type == token.LITERAL_STRING:
+		case tk.Type == token.TT_STRING:
 			tk.Val = trimQuotes(tk.Val)
-		case tk.Type == token.LITERAL_NUMBER:
+		case tk.Type == token.TT_NUMBER:
 			tk.Val = stripUnderscores(tk.Val)
 		case isAlphabeticType(tk.Type):
 			tk.Val = strings.ToLower(tk.Val)
