@@ -22,7 +22,7 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 
 	switch {
 	case cmpPair(ru1, ru2, '<', '-'):
-		return onMatch(r, token.TT_ASSIGNMENT, 2)
+		return onMatch(r, token.TT_ASSIGN, 2)
 	case cmpPair(ru1, ru2, '<', '='):
 		return onMatch(r, token.CMP_LESS_THAN_OR_EQUAL, 2)
 	case cmp(ru1, '<'):

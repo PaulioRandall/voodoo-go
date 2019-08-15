@@ -92,7 +92,7 @@ func scanTests() []scanTest {
 			Expect: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 4, 5, ` `, token.TT_SPACE),
 				dummyToken(0, 5, 6, `1`, token.TT_NUMBER),
 			},
@@ -103,7 +103,7 @@ func scanTests() []scanTest {
 			Expect: []token.Token{
 				dummyToken(0, 0, 1, `y`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 4, 5, ` `, token.TT_SPACE),
 				dummyToken(0, 5, 6, `-`, token.CALC_SUBTRACT),
 				dummyToken(0, 6, 9, `1.1`, token.TT_NUMBER),
@@ -115,9 +115,9 @@ func scanTests() []scanTest {
 			Expect: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 4, 5, ` `, token.TT_SPACE),
-				dummyToken(0, 5, 9, `true`, token.TT_WORD_TRUE),
+				dummyToken(0, 5, 9, `true`, token.TT_TRUE),
 			},
 		},
 		scanTest{
@@ -137,9 +137,9 @@ func scanTests() []scanTest {
 				dummyToken(0, 0, 1, "\t", token.TT_SPACE),
 				dummyToken(0, 1, 7, `result`, token.TT_ID),
 				dummyToken(0, 7, 8, ` `, token.TT_SPACE),
-				dummyToken(0, 8, 10, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 8, 10, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 10, 11, ` `, token.TT_SPACE),
-				dummyToken(0, 11, 15, `func`, token.TT_WORD_FUNC),
+				dummyToken(0, 11, 15, `func`, token.TT_FUNC),
 				dummyToken(0, 15, 16, `(`, token.PAREN_CURVY_OPEN),
 				dummyToken(0, 16, 17, `a`, token.TT_ID),
 				dummyToken(0, 17, 18, `,`, token.VALUE_DELIM),
@@ -160,7 +160,7 @@ func scanTests() []scanTest {
 			Expect: []token.Token{
 				dummyToken(0, 0, 8, `alphabet`, token.TT_ID),
 				dummyToken(0, 8, 9, ` `, token.TT_SPACE),
-				dummyToken(0, 9, 11, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 9, 11, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 11, 12, ` `, token.TT_SPACE),
 				dummyToken(0, 12, 13, `[`, token.PAREN_SQUARE_OPEN),
 				dummyToken(0, 13, 16, `"a"`, token.TT_STRING),
@@ -178,7 +178,7 @@ func scanTests() []scanTest {
 			Input:    `x<-2 // The value of x is now 2`,
 			Expect: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
-				dummyToken(0, 1, 3, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 1, 3, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 3, 4, `2`, token.TT_NUMBER),
 				dummyToken(0, 4, 5, ` `, token.TT_SPACE),
 				dummyToken(0, 5, 31, `// The value of x is now 2`, token.TT_COMMENT),
@@ -189,7 +189,7 @@ func scanTests() []scanTest {
 			Input:    `isLandscape<-length<height`,
 			Expect: []token.Token{
 				dummyToken(0, 0, 11, `isLandscape`, token.TT_ID),
-				dummyToken(0, 11, 13, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 11, 13, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 13, 19, `length`, token.TT_ID),
 				dummyToken(0, 19, 20, `<`, token.CMP_LESS_THAN),
 				dummyToken(0, 20, 26, `height`, token.TT_ID),
@@ -200,7 +200,7 @@ func scanTests() []scanTest {
 			Input:    `x<-3.14*(1-2+3)`,
 			Expect: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
-				dummyToken(0, 1, 3, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 1, 3, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 3, 7, `3.14`, token.TT_NUMBER),
 				dummyToken(0, 7, 8, `*`, token.CALC_MULTIPLY),
 				dummyToken(0, 8, 9, `(`, token.PAREN_CURVY_OPEN),
@@ -223,7 +223,7 @@ func scanTests() []scanTest {
 				dummyToken(0, 5, 6, ` `, token.TT_SPACE),
 				dummyToken(0, 6, 7, `y`, token.TT_ID),
 				dummyToken(0, 7, 8, ` `, token.TT_SPACE),
-				dummyToken(0, 8, 10, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 8, 10, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 10, 11, ` `, token.TT_SPACE),
 				dummyToken(0, 11, 12, `_`, token.VOID),
 			},

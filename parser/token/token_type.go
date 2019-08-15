@@ -10,19 +10,19 @@ const (
 	TT_NEWLINE                // '\n', often converts to END_OF_STATEMENT token
 	TT_SHEBANG                // Always the first line in a file
 	TT_EOS                    // END OF STATEMENT
-	TT_WORD_FUNC              // "func"
-	TT_WORD_LOOP              // "loop"
-	TT_WORD_WHEN              // "when"
-	TT_WORD_DONE              // "done"
-	TT_WORD_TRUE              // "true"
-	TT_WORD_FALSE             // "false"
+	TT_FUNC                   // "func"
+	TT_LOOP                   // "loop"
+	TT_WHEN                   // "when"
+	TT_DONE                   // "done"
+	TT_TRUE                   // "true"
+	TT_FALSE                  // "false"
 	TT_ID                     // Identifier
 	TT_SPELL                  // EBNF: "@", IDENTIFIER
 	TT_NUMBER                 // EBNF: whole part, [ fractional part ]
 	TT_STRING                 // EBNF: '"', { string character }, '"'
 	TT_SPACE                  // All whitespace characters except newlines
 	TT_COMMENT                // Same as Go line comment
-	TT_ASSIGNMENT             // <-
+	TT_ASSIGN                 // <-
 	CMP_EQUAL                 // ==
 	CMP_NOT_EQUAL             // !=
 	CMP_LESS_THAN             // <
@@ -62,17 +62,17 @@ func TokenName(t TokenType) string {
 		return `NEWLINE`
 	case TT_EOS:
 		return `EOS`
-	case TT_WORD_FUNC:
+	case TT_FUNC:
 		return `FUNC`
-	case TT_WORD_LOOP:
+	case TT_LOOP:
 		return `LOOP`
-	case TT_WORD_WHEN:
+	case TT_WHEN:
 		return `WHEN`
-	case TT_WORD_DONE:
+	case TT_DONE:
 		return `DONE`
-	case TT_WORD_TRUE:
+	case TT_TRUE:
 		return `TRUE`
-	case TT_WORD_FALSE:
+	case TT_FALSE:
 		return `FALSE`
 	case TT_ID:
 		return `ID`
@@ -86,8 +86,8 @@ func TokenName(t TokenType) string {
 		return `SPACE`
 	case TT_COMMENT:
 		return `COMMENT`
-	case TT_ASSIGNMENT:
-		return `ASSIGNMENT`
+	case TT_ASSIGN:
+		return `ASSIGN`
 	case CMP_EQUAL:
 		return `CMP_EQUAL`
 	case CMP_NOT_EQUAL:

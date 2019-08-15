@@ -40,37 +40,37 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `func`,
-			Expect:         dummyToken(0, 0, 4, `func`, token.TT_WORD_FUNC),
+			Expect:         dummyToken(0, 0, 4, `func`, token.TT_FUNC),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `loop`,
-			Expect:         dummyToken(0, 0, 4, `loop`, token.TT_WORD_LOOP),
+			Expect:         dummyToken(0, 0, 4, `loop`, token.TT_LOOP),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `when`,
-			Expect:         dummyToken(0, 0, 4, `when`, token.TT_WORD_WHEN),
+			Expect:         dummyToken(0, 0, 4, `when`, token.TT_WHEN),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `done`,
-			Expect:         dummyToken(0, 0, 4, `done`, token.TT_WORD_DONE),
+			Expect:         dummyToken(0, 0, 4, `done`, token.TT_DONE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `true`,
-			Expect:         dummyToken(0, 0, 4, `true`, token.TT_WORD_TRUE),
+			Expect:         dummyToken(0, 0, 4, `true`, token.TT_TRUE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `false`,
-			Expect:         dummyToken(0, 0, 5, `false`, token.TT_WORD_FALSE),
+			Expect:         dummyToken(0, 0, 5, `false`, token.TT_FALSE),
 			NextUnreadRune: EOF,
 		},
 	}

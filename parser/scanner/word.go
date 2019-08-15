@@ -29,17 +29,17 @@ func scanWord(r *Runer) (token.Token, fault.Fault) {
 func findWordType(s string) token.TokenType {
 	switch strings.ToLower(s) {
 	case `func`:
-		return token.TT_WORD_FUNC
+		return token.TT_FUNC
 	case `loop`:
-		return token.TT_WORD_LOOP
+		return token.TT_LOOP
 	case `when`:
-		return token.TT_WORD_WHEN
+		return token.TT_WHEN
 	case `done`:
-		return token.TT_WORD_DONE
+		return token.TT_DONE
 	case `true`:
-		return token.TT_WORD_TRUE
+		return token.TT_TRUE
 	case `false`:
-		return token.TT_WORD_FALSE
+		return token.TT_FALSE
 	default:
 		return token.TT_ID
 	}

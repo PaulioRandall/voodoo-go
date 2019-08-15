@@ -72,13 +72,13 @@ func strimTests() []strimTest {
 			Input: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 4, 5, ` `, token.TT_SPACE),
 				dummyToken(0, 5, 6, `1`, token.TT_NUMBER),
 			},
 			ExpectToks: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 5, 6, `1`, token.TT_NUMBER),
 			},
 		},
@@ -94,7 +94,7 @@ func strimTests() []strimTest {
 			Input: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 4, 5, ` `, token.TT_SPACE),
 				dummyToken(0, 5, 6, `2`, token.TT_NUMBER),
 				dummyToken(0, 6, 7, ` `, token.TT_SPACE),
@@ -102,7 +102,7 @@ func strimTests() []strimTest {
 			},
 			ExpectToks: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 5, 6, `2`, token.TT_NUMBER),
 			},
 		},
@@ -136,16 +136,16 @@ func strimTests() []strimTest {
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				dummyToken(0, 0, 6, `func`, token.TT_WORD_FUNC),
+				dummyToken(0, 0, 6, `func`, token.TT_FUNC),
 				dummyToken(0, 6, 7, ` `, token.TT_SPACE),
-				dummyToken(0, 7, 10, `END`, token.TT_WORD_DONE),
+				dummyToken(0, 7, 10, `END`, token.TT_DONE),
 				dummyToken(0, 10, 11, ` `, token.TT_SPACE),
 				dummyToken(0, 11, 19, `@PrInTlN`, token.TT_SPELL),
 				dummyToken(0, 19, 20, `語`, token.TT_ID),
 			},
 			ExpectToks: []token.Token{
-				dummyToken(0, 0, 6, `func`, token.TT_WORD_FUNC),
-				dummyToken(0, 7, 10, `end`, token.TT_WORD_DONE),
+				dummyToken(0, 0, 6, `func`, token.TT_FUNC),
+				dummyToken(0, 7, 10, `end`, token.TT_DONE),
 				dummyToken(0, 11, 19, `@println`, token.TT_SPELL),
 				dummyToken(0, 19, 20, `語`, token.TT_ID),
 			},
@@ -160,7 +160,7 @@ func strimTests() []strimTest {
 				//
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 4, 5, ` `, token.TT_SPACE),
 				dummyToken(0, 5, 6, `[`, token.PAREN_SQUARE_OPEN),
 				dummyToken(0, 6, 7, "\n", token.TT_NEWLINE),
@@ -178,7 +178,7 @@ func strimTests() []strimTest {
 			},
 			ExpectToks: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
-				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGNMENT),
+				dummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 5, 6, `[`, token.PAREN_SQUARE_OPEN),
 				dummyToken(0, 2, 3, `1`, token.TT_NUMBER),
 				dummyToken(0, 3, 4, "\n", token.TT_EOS),
