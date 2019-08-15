@@ -7,43 +7,43 @@ const (
 	UNDEFINED         TokenType = iota
 	TT_ERROR_UPSTREAM           // An error occurred upstream so close gracefully
 	//
-	TT_NEWLINE         // '\n', often converts to END_OF_STATEMENT token
-	TT_SHEBANG         // Always the first line in a file
-	TT_EOS             // END OF STATEMENT
-	TT_FUNC            // "func"
-	TT_LOOP            // "loop"
-	TT_WHEN            // "when"
-	TT_DONE            // "done"
-	TT_TRUE            // "true"
-	TT_FALSE           // "false"
-	TT_ID              // Identifier
-	TT_SPELL           // EBNF: "@", IDENTIFIER
-	TT_NUMBER          // EBNF: whole part, [ fractional part ]
-	TT_STRING          // EBNF: '"', { string character }, '"'
-	TT_SPACE           // All whitespace characters except newlines
-	TT_COMMENT         // Same as Go line comment
-	TT_ASSIGN          // <-
-	TT_CMP_EQ          // ==
-	TT_CMP_NOT_EQ      // !=
-	TT_CMP_LT          // <
-	TT_CMP_LT_OR_EQ    // <=
-	TT_CMP_MT          // >
-	TT_CMP_MT_OR_EQ    // >=
-	TT_OR              // ||
-	TT_AND             // &&
-	TT_NOT             // !
-	TT_MATCH           // =>
-	TT_ADD             // +
-	TT_SUBTRACT        // -
-	TT_MULTIPLY        // *
-	TT_DIVIDE          // /
-	TT_MODULO          // %
-	PAREN_CURVY_OPEN   // (
-	PAREN_CURVY_CLOSE  // )
-	PAREN_SQUARE_OPEN  // [
-	PAREN_SQUARE_CLOSE // ]
-	VALUE_DELIM        // ,
-	VOID               // _
+	TT_NEWLINE      // '\n', often converts to END_OF_STATEMENT token
+	TT_SHEBANG      // Always the first line in a file
+	TT_EOS          // END OF STATEMENT
+	TT_FUNC         // "func"
+	TT_LOOP         // "loop"
+	TT_WHEN         // "when"
+	TT_DONE         // "done"
+	TT_TRUE         // "true"
+	TT_FALSE        // "false"
+	TT_ID           // Identifier
+	TT_SPELL        // EBNF: "@", IDENTIFIER
+	TT_NUMBER       // EBNF: whole part, [ fractional part ]
+	TT_STRING       // EBNF: '"', { string character }, '"'
+	TT_SPACE        // All whitespace characters except newlines
+	TT_COMMENT      // Same as Go line comment
+	TT_ASSIGN       // <-
+	TT_CMP_EQ       // ==
+	TT_CMP_NOT_EQ   // !=
+	TT_CMP_LT       // <
+	TT_CMP_LT_OR_EQ // <=
+	TT_CMP_MT       // >
+	TT_CMP_MT_OR_EQ // >=
+	TT_OR           // ||
+	TT_AND          // &&
+	TT_NOT          // !
+	TT_MATCH        // =>
+	TT_ADD          // +
+	TT_SUBTRACT     // -
+	TT_MULTIPLY     // *
+	TT_DIVIDE       // /
+	TT_MODULO       // %
+	TT_CURVY_OPEN   // (
+	TT_CURVY_CLOSE  // )
+	TT_SQUARE_OPEN  // [
+	TT_SQUARE_CLOSE // ]
+	VALUE_DELIM     // ,
+	VOID            // _
 )
 
 // IsOperator returns true if the input type is an operator.
@@ -118,14 +118,14 @@ func TokenName(t TokenType) string {
 		return `DIVIDE`
 	case TT_MODULO:
 		return `MODULO`
-	case PAREN_CURVY_OPEN:
-		return `PAREN_CURVY_OPEN`
-	case PAREN_CURVY_CLOSE:
-		return `PAREN_CURVY_CLOSE`
-	case PAREN_SQUARE_OPEN:
-		return `PAREN_SQUARE_OPEN`
-	case PAREN_SQUARE_CLOSE:
-		return `PAREN_SQUARE_CLOSE`
+	case TT_CURVY_OPEN:
+		return `CURVY OPEN`
+	case TT_CURVY_CLOSE:
+		return `CURVY CLOSE`
+	case TT_SQUARE_OPEN:
+		return `SQUARE OPEN`
+	case TT_SQUARE_CLOSE:
+		return `SQUARE CLOSE`
 	case VALUE_DELIM:
 		return `VALUE_DELIM`
 	case VOID:

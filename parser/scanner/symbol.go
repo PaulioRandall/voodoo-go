@@ -54,13 +54,13 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 	case cmp(ru1, '%'):
 		return onMatch(r, token.TT_MODULO, 1)
 	case cmp(ru1, '('):
-		return onMatch(r, token.PAREN_CURVY_OPEN, 1)
+		return onMatch(r, token.TT_CURVY_OPEN, 1)
 	case cmp(ru1, ')'):
-		return onMatch(r, token.PAREN_CURVY_CLOSE, 1)
+		return onMatch(r, token.TT_CURVY_CLOSE, 1)
 	case cmp(ru1, '['):
-		return onMatch(r, token.PAREN_SQUARE_OPEN, 1)
+		return onMatch(r, token.TT_SQUARE_OPEN, 1)
 	case cmp(ru1, ']'):
-		return onMatch(r, token.PAREN_SQUARE_CLOSE, 1)
+		return onMatch(r, token.TT_SQUARE_CLOSE, 1)
 	case cmp(ru1, ','):
 		return onMatch(r, token.VALUE_DELIM, 1)
 	case cmp(ru1, '_'):

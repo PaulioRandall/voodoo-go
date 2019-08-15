@@ -87,8 +87,8 @@ func isMultiLineType(t token.TokenType) bool {
 	case token.VALUE_DELIM:
 	case token.TT_NEWLINE:
 	case token.TT_EOS:
-	case token.PAREN_CURVY_OPEN:
-	case token.PAREN_SQUARE_OPEN:
+	case token.TT_CURVY_OPEN:
+	case token.TT_SQUARE_OPEN:
 	default:
 		return false
 	}

@@ -118,25 +118,25 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `(`,
-			Expect:         dummyToken(0, 0, 1, `(`, token.PAREN_CURVY_OPEN),
+			Expect:         dummyToken(0, 0, 1, `(`, token.TT_CURVY_OPEN),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `)`,
-			Expect:         dummyToken(0, 0, 1, `)`, token.PAREN_CURVY_CLOSE),
+			Expect:         dummyToken(0, 0, 1, `)`, token.TT_CURVY_CLOSE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `[`,
-			Expect:         dummyToken(0, 0, 1, `[`, token.PAREN_SQUARE_OPEN),
+			Expect:         dummyToken(0, 0, 1, `[`, token.TT_SQUARE_OPEN),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `]`,
-			Expect:         dummyToken(0, 0, 1, `]`, token.PAREN_SQUARE_CLOSE),
+			Expect:         dummyToken(0, 0, 1, `]`, token.TT_SQUARE_CLOSE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
