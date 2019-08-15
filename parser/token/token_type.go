@@ -7,8 +7,8 @@ const (
 	UNDEFINED      TokenType = iota
 	ERROR_UPSTREAM           // An error occurred upstream so close gracefully
 	//
-	NEWLINE                   // '\n', often converts to END_OF_STATEMENT token
-	SHEBANG                   // Always the first line in a file
+	TT_NEWLINE                // '\n', often converts to END_OF_STATEMENT token
+	TT_SHEBANG                // Always the first line in a file
 	TT_EOS                    // END OF STATEMENT
 	KEYWORD_FUNC              // "func"
 	KEYWORD_LOOP              // "loop"
@@ -56,9 +56,9 @@ func TokenName(t TokenType) string {
 	switch t {
 	case ERROR_UPSTREAM:
 		return `ERROR_UPSTREAM`
-	case SHEBANG:
+	case TT_SHEBANG:
 		return `SHEBANG`
-	case NEWLINE:
+	case TT_NEWLINE:
 		return `NEWLINE`
 	case TT_EOS:
 		return `END_OF_STATEMENT`

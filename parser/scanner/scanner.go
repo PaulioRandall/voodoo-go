@@ -85,7 +85,7 @@ func scanShebang(r *Runer) (token.Token, fault.Fault) {
 		Val:   sb.String(),
 		Start: r.Col() - size + 1,
 		End:   r.Col() + 1,
-		Type:  token.SHEBANG,
+		Type:  token.TT_SHEBANG,
 	}
 
 	return tk, nil
@@ -98,6 +98,6 @@ func newlineToken(r *Runer) token.Token {
 		Val:   "\n",
 		Start: r.Col(),
 		End:   r.Col() + 1,
-		Type:  token.NEWLINE,
+		Type:  token.TT_NEWLINE,
 	}
 }

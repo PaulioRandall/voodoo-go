@@ -26,13 +26,13 @@ func Strim(in chan token.Token, out chan token.Token) {
 		keep = true
 
 		switch {
-		case tk.Type == token.SHEBANG:
+		case tk.Type == token.TT_SHEBANG:
 			keep = false
 		case tk.Type == token.WHITESPACE:
 			keep = false
 		case tk.Type == token.COMMENT:
 			keep = false
-		case tk.Type == token.NEWLINE:
+		case tk.Type == token.TT_NEWLINE:
 			tk, keep = whenNewline(tk, prevType)
 		case tk.Type == token.LITERAL_STRING:
 			tk.Val = trimQuotes(tk.Val)
@@ -82,10 +82,10 @@ func isAlphabeticType(t token.TokenType) bool {
 // to be a newline without ending the statement.
 func isMultiLineType(t token.TokenType) bool {
 	switch t {
-	case token.SHEBANG:
+	case token.TT_SHEBANG:
 	case token.UNDEFINED:
 	case token.VALUE_DELIM:
-	case token.NEWLINE:
+	case token.TT_NEWLINE:
 	case token.TT_EOS:
 	case token.PAREN_CURVY_OPEN:
 	case token.PAREN_SQUARE_OPEN:
