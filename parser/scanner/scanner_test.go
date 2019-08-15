@@ -117,7 +117,7 @@ func scanTests() []scanTest {
 				dummyToken(0, 1, 2, ` `, token.WHITESPACE),
 				dummyToken(0, 2, 4, `<-`, token.ASSIGNMENT),
 				dummyToken(0, 4, 5, ` `, token.WHITESPACE),
-				dummyToken(0, 5, 9, `true`, token.BOOLEAN_TRUE),
+				dummyToken(0, 5, 9, `true`, token.TT_WORD_TRUE),
 			},
 		},
 		scanTest{

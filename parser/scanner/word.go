@@ -37,9 +37,9 @@ func findWordType(s string) token.TokenType {
 	case `done`:
 		return token.TT_WORD_DONE
 	case `true`:
-		return token.BOOLEAN_TRUE
+		return token.TT_WORD_TRUE
 	case `false`:
-		return token.BOOLEAN_FALSE
+		return token.TT_WORD_FALSE
 	default:
 		return token.TT_ID
 	}

@@ -14,9 +14,9 @@ const (
 	TT_WORD_LOOP              // "loop"
 	TT_WORD_WHEN              // "when"
 	TT_WORD_DONE              // "done"
+	TT_WORD_TRUE              // "true"
+	TT_WORD_FALSE             // "false"
 	TT_ID                     // Identifier
-	BOOLEAN_TRUE              // "true"
-	BOOLEAN_FALSE             // "false"
 	SPELL                     // EBNF: "@", IDENTIFIER
 	LITERAL_NUMBER            // EBNF: whole part, [ fractional part ]
 	LITERAL_STRING            // EBNF: '"', { string character }, '"'
@@ -61,21 +61,21 @@ func TokenName(t TokenType) string {
 	case TT_NEWLINE:
 		return `NEWLINE`
 	case TT_EOS:
-		return `END OF STATEMENT`
+		return `EOS`
 	case TT_WORD_FUNC:
-		return `KEYWORD FUNC`
+		return `FUNC`
 	case TT_WORD_LOOP:
-		return `KEYWORD LOOP`
+		return `LOOP`
 	case TT_WORD_WHEN:
-		return `KEYWORD WHEN`
+		return `WHEN`
 	case TT_WORD_DONE:
-		return `KEYWORD DONE`
+		return `DONE`
+	case TT_WORD_TRUE:
+		return `TRUE`
+	case TT_WORD_FALSE:
+		return `FALSE`
 	case TT_ID:
-		return `IDENTIFIER`
-	case BOOLEAN_TRUE:
-		return `BOOLEAN_TRUE`
-	case BOOLEAN_FALSE:
-		return `BOOLEAN_FALSE`
+		return `ID`
 	case SPELL:
 		return `SPELL`
 	case LITERAL_NUMBER:

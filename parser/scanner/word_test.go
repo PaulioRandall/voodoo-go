@@ -64,13 +64,13 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `true`,
-			Expect:         dummyToken(0, 0, 4, `true`, token.BOOLEAN_TRUE),
+			Expect:         dummyToken(0, 0, 4, `true`, token.TT_WORD_TRUE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `false`,
-			Expect:         dummyToken(0, 0, 5, `false`, token.BOOLEAN_FALSE),
+			Expect:         dummyToken(0, 0, 5, `false`, token.TT_WORD_FALSE),
 			NextUnreadRune: EOF,
 		},
 	}
