@@ -16,37 +16,37 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `==`,
-			Expect:         dummyToken(0, 0, 2, `==`, token.CMP_EQUAL),
+			Expect:         dummyToken(0, 0, 2, `==`, token.TT_CMP_EQ),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `!=`,
-			Expect:         dummyToken(0, 0, 2, `!=`, token.CMP_NOT_EQUAL),
+			Expect:         dummyToken(0, 0, 2, `!=`, token.TT_CMP_NOT_EQ),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `<`,
-			Expect:         dummyToken(0, 0, 1, `<`, token.CMP_LESS_THAN),
+			Expect:         dummyToken(0, 0, 1, `<`, token.TT_CMP_LT),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `<=`,
-			Expect:         dummyToken(0, 0, 2, `<=`, token.CMP_LESS_THAN_OR_EQUAL),
+			Expect:         dummyToken(0, 0, 2, `<=`, token.TT_CMP_LT_OR_EQ),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `>`,
-			Expect:         dummyToken(0, 0, 1, `>`, token.CMP_GREATER_THAN),
+			Expect:         dummyToken(0, 0, 1, `>`, token.TT_CMP_GT),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `>=`,
-			Expect:         dummyToken(0, 0, 2, `>=`, token.CMP_GREATER_THAN_OR_EQUAL),
+			Expect:         dummyToken(0, 0, 2, `>=`, token.TT_CMP_GT_OR_EQ),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{

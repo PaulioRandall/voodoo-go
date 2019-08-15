@@ -191,7 +191,7 @@ func scanTests() []scanTest {
 				dummyToken(0, 0, 11, `isLandscape`, token.TT_ID),
 				dummyToken(0, 11, 13, `<-`, token.TT_ASSIGN),
 				dummyToken(0, 13, 19, `length`, token.TT_ID),
-				dummyToken(0, 19, 20, `<`, token.CMP_LESS_THAN),
+				dummyToken(0, 19, 20, `<`, token.TT_CMP_LT),
 				dummyToken(0, 20, 26, `height`, token.TT_ID),
 			},
 		},
