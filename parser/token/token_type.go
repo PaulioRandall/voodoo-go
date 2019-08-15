@@ -29,10 +29,10 @@ const (
 	TT_CMP_LT_OR_EQ    // <=
 	TT_CMP_MT          // >
 	TT_CMP_MT_OR_EQ    // >=
-	LOGICAL_OR         // ||
-	LOGICAL_AND        // &&
-	LOGICAL_NOT        // !
-	LOGICAL_MATCH      // =>
+	TT_LOGIC_OR        // ||
+	TT_LOGIC_AND       // &&
+	TT_LOGIC_NOT       // !
+	TT_LOGIC_MATCH     // =>
 	CALC_ADD           // +
 	CALC_SUBTRACT      // -
 	CALC_MULTIPLY      // *
@@ -100,14 +100,14 @@ func TokenName(t TokenType) string {
 		return `MORE THAN`
 	case TT_CMP_MT_OR_EQ:
 		return `MORE THAN OR EQUAL`
-	case LOGICAL_OR:
+	case TT_LOGIC_OR:
 		return `OR`
-	case LOGICAL_AND:
+	case TT_LOGIC_AND:
 		return `AND`
-	case LOGICAL_NOT:
+	case TT_LOGIC_NOT:
 		return `NOT`
-	case LOGICAL_MATCH:
-		return `LOGICAL_MATCH`
+	case TT_LOGIC_MATCH:
+		return `MATCH`
 	case CALC_ADD:
 		return `CALC_ADD`
 	case CALC_SUBTRACT:
