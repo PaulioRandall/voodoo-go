@@ -36,13 +36,13 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 	case cmpPair(ru1, ru2, '!', '='):
 		return onMatch(r, token.TT_CMP_NOT_EQ, 2)
 	case cmpPair(ru1, ru2, '=', '>'):
-		return onMatch(r, token.TT_LOGIC_MATCH, 2)
+		return onMatch(r, token.TT_MATCH, 2)
 	case cmp(ru1, '!'):
-		return onMatch(r, token.TT_LOGIC_NOT, 1)
+		return onMatch(r, token.TT_NOT, 1)
 	case cmpPair(ru1, ru2, '|', '|'):
-		return onMatch(r, token.TT_LOGIC_OR, 2)
+		return onMatch(r, token.TT_OR, 2)
 	case cmpPair(ru1, ru2, '&', '&'):
-		return onMatch(r, token.TT_LOGIC_AND, 2)
+		return onMatch(r, token.TT_AND, 2)
 	case cmp(ru1, '+'):
 		return onMatch(r, token.TT_ADD, 1)
 	case cmp(ru1, '-'):

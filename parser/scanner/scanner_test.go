@@ -216,10 +216,10 @@ func scanTests() []scanTest {
 			TestLine: fault.CurrLine(),
 			Input:    `!x => y <- _`,
 			Expect: []token.Token{
-				dummyToken(0, 0, 1, `!`, token.TT_LOGIC_NOT),
+				dummyToken(0, 0, 1, `!`, token.TT_NOT),
 				dummyToken(0, 1, 2, `x`, token.TT_ID),
 				dummyToken(0, 2, 3, ` `, token.TT_SPACE),
-				dummyToken(0, 3, 5, `=>`, token.TT_LOGIC_MATCH),
+				dummyToken(0, 3, 5, `=>`, token.TT_MATCH),
 				dummyToken(0, 5, 6, ` `, token.TT_SPACE),
 				dummyToken(0, 6, 7, `y`, token.TT_ID),
 				dummyToken(0, 7, 8, ` `, token.TT_SPACE),
