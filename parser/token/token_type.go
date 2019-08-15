@@ -20,9 +20,9 @@ const (
 	TT_SPELL                  // EBNF: "@", IDENTIFIER
 	TT_NUMBER                 // EBNF: whole part, [ fractional part ]
 	TT_STRING                 // EBNF: '"', { string character }, '"'
-	WHITESPACE                // All whitespace characters except newlines
-	COMMENT                   // Same as Go line comment
-	ASSIGNMENT                // <-
+	TT_SPACE                  // All whitespace characters except newlines
+	TT_COMMENT                // Same as Go line comment
+	TT_ASSIGNMENT             // <-
 	CMP_EQUAL                 // ==
 	CMP_NOT_EQUAL             // !=
 	CMP_LESS_THAN             // <
@@ -82,9 +82,11 @@ func TokenName(t TokenType) string {
 		return `NUMBER`
 	case TT_STRING:
 		return `STRING`
-	case COMMENT:
+	case TT_SPACE:
+		return `SPACE`
+	case TT_COMMENT:
 		return `COMMENT`
-	case ASSIGNMENT:
+	case TT_ASSIGNMENT:
 		return `ASSIGNMENT`
 	case CMP_EQUAL:
 		return `CMP_EQUAL`
@@ -126,8 +128,6 @@ func TokenName(t TokenType) string {
 		return `PAREN_SQUARE_CLOSE`
 	case VALUE_DELIM:
 		return `VALUE_DELIM`
-	case WHITESPACE:
-		return `WHITESPACE`
 	case VOID:
 		return `VOID`
 	}

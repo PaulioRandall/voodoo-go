@@ -36,7 +36,7 @@ func scanComment(r *Runer) (token.Token, fault.Fault) {
 		Val:   s,
 		Start: r.Col() - size + 1,
 		End:   r.Col() + 1,
-		Type:  token.COMMENT,
+		Type:  token.TT_COMMENT,
 	}
 
 	return tk, nil

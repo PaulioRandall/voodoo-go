@@ -16,13 +16,13 @@ func scanCommentTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `// 123`,
-			Expect:         dummyToken(0, 0, 6, `// 123`, token.COMMENT),
+			Expect:         dummyToken(0, 0, 6, `// 123`, token.TT_COMMENT),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "// 123\n456",
-			Expect:         dummyToken(0, 0, 6, `// 123`, token.COMMENT),
+			Expect:         dummyToken(0, 0, 6, `// 123`, token.TT_COMMENT),
 			NextUnreadRune: '\n',
 		},
 	}

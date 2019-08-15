@@ -16,25 +16,25 @@ func scanSpaceTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          ` `,
-			Expect:         dummyToken(0, 0, 1, ` `, token.WHITESPACE),
+			Expect:         dummyToken(0, 0, 1, ` `, token.TT_SPACE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "\t",
-			Expect:         dummyToken(0, 0, 1, "\t", token.WHITESPACE),
+			Expect:         dummyToken(0, 0, 1, "\t", token.TT_SPACE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "   abc",
-			Expect:         dummyToken(0, 0, 3, "   ", token.WHITESPACE),
+			Expect:         dummyToken(0, 0, 3, "   ", token.TT_SPACE),
 			NextUnreadRune: 'a',
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "\t\f \n\v\r",
-			Expect:         dummyToken(0, 0, 3, "\t\f ", token.WHITESPACE),
+			Expect:         dummyToken(0, 0, 3, "\t\f ", token.TT_SPACE),
 			NextUnreadRune: '\n',
 		},
 	}

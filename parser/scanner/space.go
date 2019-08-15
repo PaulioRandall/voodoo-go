@@ -32,7 +32,7 @@ func scanSpace(r *Runer) (token.Token, fault.Fault) {
 		Val:   sb.String(),
 		Start: start,
 		End:   r.Col() + 1,
-		Type:  token.WHITESPACE,
+		Type:  token.TT_SPACE,
 	}
 
 	return tk, nil

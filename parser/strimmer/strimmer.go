@@ -28,9 +28,9 @@ func Strim(in chan token.Token, out chan token.Token) {
 		switch {
 		case tk.Type == token.TT_SHEBANG:
 			keep = false
-		case tk.Type == token.WHITESPACE:
+		case tk.Type == token.TT_SPACE:
 			keep = false
-		case tk.Type == token.COMMENT:
+		case tk.Type == token.TT_COMMENT:
 			keep = false
 		case tk.Type == token.TT_NEWLINE:
 			tk, keep = whenNewline(tk, prevType)

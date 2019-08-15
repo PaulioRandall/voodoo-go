@@ -64,7 +64,7 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `<-`,
-			Expect:         dummyToken(0, 0, 2, `<-`, token.ASSIGNMENT),
+			Expect:         dummyToken(0, 0, 2, `<-`, token.TT_ASSIGNMENT),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
