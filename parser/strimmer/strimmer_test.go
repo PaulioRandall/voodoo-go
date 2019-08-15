@@ -136,16 +136,16 @@ func strimTests() []strimTest {
 		strimTest{
 			TestLine: fault.CurrLine(),
 			Input: []token.Token{
-				dummyToken(0, 0, 6, `func`, token.KEYWORD_FUNC),
+				dummyToken(0, 0, 6, `func`, token.TT_WORD_FUNC),
 				dummyToken(0, 6, 7, ` `, token.WHITESPACE),
-				dummyToken(0, 7, 10, `END`, token.KEYWORD_DONE),
+				dummyToken(0, 7, 10, `END`, token.TT_WORD_DONE),
 				dummyToken(0, 10, 11, ` `, token.WHITESPACE),
 				dummyToken(0, 11, 19, `@PrInTlN`, token.SPELL),
 				dummyToken(0, 19, 20, `語`, token.IDENTIFIER),
 			},
 			ExpectToks: []token.Token{
-				dummyToken(0, 0, 6, `func`, token.KEYWORD_FUNC),
-				dummyToken(0, 7, 10, `end`, token.KEYWORD_DONE),
+				dummyToken(0, 0, 6, `func`, token.TT_WORD_FUNC),
+				dummyToken(0, 7, 10, `end`, token.TT_WORD_DONE),
 				dummyToken(0, 11, 19, `@println`, token.SPELL),
 				dummyToken(0, 19, 20, `語`, token.IDENTIFIER),
 			},

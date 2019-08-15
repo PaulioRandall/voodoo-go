@@ -139,7 +139,7 @@ func scanTests() []scanTest {
 				dummyToken(0, 7, 8, ` `, token.WHITESPACE),
 				dummyToken(0, 8, 10, `<-`, token.ASSIGNMENT),
 				dummyToken(0, 10, 11, ` `, token.WHITESPACE),
-				dummyToken(0, 11, 15, `func`, token.KEYWORD_FUNC),
+				dummyToken(0, 11, 15, `func`, token.TT_WORD_FUNC),
 				dummyToken(0, 15, 16, `(`, token.PAREN_CURVY_OPEN),
 				dummyToken(0, 16, 17, `a`, token.IDENTIFIER),
 				dummyToken(0, 17, 18, `,`, token.VALUE_DELIM),

@@ -64,10 +64,10 @@ func trimQuotes(s string) string {
 // tokens that may have alphabetic values.
 func isAlphabeticType(t token.TokenType) bool {
 	switch t {
-	case token.KEYWORD_FUNC:
-	case token.KEYWORD_LOOP:
-	case token.KEYWORD_WHEN:
-	case token.KEYWORD_DONE:
+	case token.TT_WORD_FUNC:
+	case token.TT_WORD_LOOP:
+	case token.TT_WORD_WHEN:
+	case token.TT_WORD_DONE:
 	case token.BOOLEAN_TRUE:
 	case token.BOOLEAN_FALSE:
 	case token.SPELL:

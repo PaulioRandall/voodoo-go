@@ -4,16 +4,16 @@ package token
 type TokenType int
 
 const (
-	UNDEFINED      TokenType = iota
-	ERROR_UPSTREAM           // An error occurred upstream so close gracefully
+	UNDEFINED         TokenType = iota
+	TT_ERROR_UPSTREAM           // An error occurred upstream so close gracefully
 	//
 	TT_NEWLINE                // '\n', often converts to END_OF_STATEMENT token
 	TT_SHEBANG                // Always the first line in a file
 	TT_EOS                    // END OF STATEMENT
-	KEYWORD_FUNC              // "func"
-	KEYWORD_LOOP              // "loop"
-	KEYWORD_WHEN              // "when"
-	KEYWORD_DONE              // "done"
+	TT_WORD_FUNC              // "func"
+	TT_WORD_LOOP              // "loop"
+	TT_WORD_WHEN              // "when"
+	TT_WORD_DONE              // "done"
 	IDENTIFIER                // EBNF: letter, { word letter }
 	BOOLEAN_TRUE              // "true"
 	BOOLEAN_FALSE             // "false"
@@ -54,22 +54,22 @@ func IsOperator(t TokenType) bool {
 // TokenName returns the name of the token type.
 func TokenName(t TokenType) string {
 	switch t {
-	case ERROR_UPSTREAM:
-		return `ERROR_UPSTREAM`
+	case TT_ERROR_UPSTREAM:
+		return `ERROR UPSTREAM`
 	case TT_SHEBANG:
 		return `SHEBANG`
 	case TT_NEWLINE:
 		return `NEWLINE`
 	case TT_EOS:
-		return `END_OF_STATEMENT`
-	case KEYWORD_FUNC:
-		return `KEYWORD_FUNC`
-	case KEYWORD_LOOP:
-		return `KEYWORD_LOOP`
-	case KEYWORD_WHEN:
-		return `KEYWORD_WHEN`
-	case KEYWORD_DONE:
-		return `KEYWORD_DONE`
+		return `END OF STATEMENT`
+	case TT_WORD_FUNC:
+		return `KEYWORD FUNC`
+	case TT_WORD_LOOP:
+		return `KEYWORD LOOP`
+	case TT_WORD_WHEN:
+		return `KEYWORD WHEN`
+	case TT_WORD_DONE:
+		return `KEYWORD DONE`
 	case IDENTIFIER:
 		return `IDENTIFIER`
 	case BOOLEAN_TRUE:

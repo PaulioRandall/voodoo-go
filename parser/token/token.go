@@ -32,22 +32,25 @@ func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
 	defer close(done)
 
 	fmt.Println(`[`)
-	first := true
+	newline := true
 
 	for tk := range in {
 
-		if first {
-			first = false
-			fmt.Print(`  `)
-		} else {
-			fmt.Print(` `)
-		}
-
 		s := f(tk)
-		fmt.Print(s)
 
-		if strings.ContainsRune(s, '\n') {
-			fmt.Print(` `)
+		if newline {
+			newline = false
+			fmt.Print(`  `)
+			fmt.Print(s)
+
+		} else if strings.ContainsRune(s, '\n') {
+			fmt.Print(`, `)
+			fmt.Print(s)
+			newline = true
+
+		} else {
+			fmt.Print(`, `)
+			fmt.Print(s)
 		}
 	}
 
