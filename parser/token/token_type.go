@@ -27,8 +27,8 @@ const (
 	TT_CMP_NOT_EQ      // !=
 	TT_CMP_LT          // <
 	TT_CMP_LT_OR_EQ    // <=
-	TT_CMP_GT          // >
-	TT_CMP_GT_OR_EQ    // >=
+	TT_CMP_MT          // >
+	TT_CMP_MT_OR_EQ    // >=
 	LOGICAL_OR         // ||
 	LOGICAL_AND        // &&
 	LOGICAL_NOT        // !
@@ -96,10 +96,10 @@ func TokenName(t TokenType) string {
 		return `LESS THAN`
 	case TT_CMP_LT_OR_EQ:
 		return `LESS THAN OR EQUAL`
-	case TT_CMP_GT:
-		return `GREATER THAN`
-	case TT_CMP_GT_OR_EQ:
-		return `GREATER THAN OR EQUAL`
+	case TT_CMP_MT:
+		return `MORE THAN`
+	case TT_CMP_MT_OR_EQ:
+		return `MORE THAN OR EQUAL`
 	case LOGICAL_OR:
 		return `OR`
 	case LOGICAL_AND:

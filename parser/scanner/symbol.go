@@ -28,9 +28,9 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 	case cmp(ru1, '<'):
 		return onMatch(r, token.TT_CMP_LT, 1)
 	case cmpPair(ru1, ru2, '>', '='):
-		return onMatch(r, token.TT_CMP_GT_OR_EQ, 2)
+		return onMatch(r, token.TT_CMP_MT_OR_EQ, 2)
 	case cmp(ru1, '>'):
-		return onMatch(r, token.TT_CMP_GT, 1)
+		return onMatch(r, token.TT_CMP_MT, 1)
 	case cmpPair(ru1, ru2, '=', '='):
 		return onMatch(r, token.TT_CMP_EQ, 2)
 	case cmpPair(ru1, ru2, '!', '='):
