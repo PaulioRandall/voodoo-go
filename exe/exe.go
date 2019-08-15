@@ -42,7 +42,7 @@ func newRuner(text string) *scanner.Runer {
 // tokenToVal is used by token.PrintlnTokenChan() to determine what should
 // be printed for each supplied token.
 func tokenToVal(tk token.Token) string {
-	if tk.Type == token.END_OF_STATEMENT {
+	if tk.Type == token.TT_EOS {
 		return `\n`
 	}
 
@@ -54,7 +54,7 @@ func tokenToVal(tk token.Token) string {
 func tokenToType(tk token.Token) string {
 	n := token.TokenName(tk.Type)
 
-	if tk.Type == token.END_OF_STATEMENT {
+	if tk.Type == token.TT_EOS {
 		return n + "\n"
 	}
 

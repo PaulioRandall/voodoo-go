@@ -86,7 +86,7 @@ func isMultiLineType(t token.TokenType) bool {
 	case token.UNDEFINED:
 	case token.VALUE_DELIM:
 	case token.NEWLINE:
-	case token.END_OF_STATEMENT:
+	case token.TT_EOS:
 	case token.PAREN_CURVY_OPEN:
 	case token.PAREN_SQUARE_OPEN:
 	default:
@@ -102,6 +102,6 @@ func whenNewline(tk token.Token, prevType token.TokenType) (token.Token, bool) {
 		return tk, false
 	}
 
-	tk.Type = token.END_OF_STATEMENT
+	tk.Type = token.TT_EOS
 	return tk, true
 }

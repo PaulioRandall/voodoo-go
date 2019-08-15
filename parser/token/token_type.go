@@ -9,7 +9,7 @@ const (
 	//
 	NEWLINE                   // '\n', often converts to END_OF_STATEMENT token
 	SHEBANG                   // Always the first line in a file
-	END_OF_STATEMENT          // Converted from NEWLINE token
+	TT_EOS                    // END OF STATEMENT
 	KEYWORD_FUNC              // "func"
 	KEYWORD_LOOP              // "loop"
 	KEYWORD_WHEN              // "when"
@@ -57,10 +57,10 @@ func TokenName(t TokenType) string {
 	case ERROR_UPSTREAM:
 		return `ERROR_UPSTREAM`
 	case SHEBANG:
+		return `SHEBANG`
 	case NEWLINE:
 		return `NEWLINE`
-		return `SHEBANG`
-	case END_OF_STATEMENT:
+	case TT_EOS:
 		return `END_OF_STATEMENT`
 	case KEYWORD_FUNC:
 		return `KEYWORD_FUNC`
