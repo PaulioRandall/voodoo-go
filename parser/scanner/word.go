@@ -41,6 +41,6 @@ func findWordType(s string) token.TokenType {
 	case `false`:
 		return token.BOOLEAN_FALSE
 	default:
-		return token.IDENTIFIER
+		return token.TT_ID
 	}
 }

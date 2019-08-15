@@ -14,7 +14,7 @@ const (
 	TT_WORD_LOOP              // "loop"
 	TT_WORD_WHEN              // "when"
 	TT_WORD_DONE              // "done"
-	IDENTIFIER                // EBNF: letter, { word letter }
+	TT_ID                     // Identifier
 	BOOLEAN_TRUE              // "true"
 	BOOLEAN_FALSE             // "false"
 	SPELL                     // EBNF: "@", IDENTIFIER
@@ -70,7 +70,7 @@ func TokenName(t TokenType) string {
 		return `KEYWORD WHEN`
 	case TT_WORD_DONE:
 		return `KEYWORD DONE`
-	case IDENTIFIER:
+	case TT_ID:
 		return `IDENTIFIER`
 	case BOOLEAN_TRUE:
 		return `BOOLEAN_TRUE`

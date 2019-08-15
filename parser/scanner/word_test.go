@@ -16,25 +16,25 @@ func scanWordTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `a`,
-			Expect:         dummyToken(0, 0, 1, `a`, token.IDENTIFIER),
+			Expect:         dummyToken(0, 0, 1, `a`, token.TT_ID),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `abc_123`,
-			Expect:         dummyToken(0, 0, 7, `abc_123`, token.IDENTIFIER),
+			Expect:         dummyToken(0, 0, 7, `abc_123`, token.TT_ID),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `a__________123456789`,
-			Expect:         dummyToken(0, 0, 20, `a__________123456789`, token.IDENTIFIER),
+			Expect:         dummyToken(0, 0, 20, `a__________123456789`, token.TT_ID),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `abc efg`,
-			Expect:         dummyToken(0, 0, 3, `abc`, token.IDENTIFIER),
+			Expect:         dummyToken(0, 0, 3, `abc`, token.TT_ID),
 			NextUnreadRune: ' ',
 		},
 		scanFuncTest{
