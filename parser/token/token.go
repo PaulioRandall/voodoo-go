@@ -25,63 +25,30 @@ func (tk Token) String() string {
 	return fmt.Sprintf("[%s->%-3d] `%s`", start, tk.End, tk.Val)
 }
 
-// PrintlnTokenValues prints the value of an array of tokens.
-func PrintlnTokenValues(tks []Token) {
-	f := func(tk Token) string {
-		return tk.Val
-	}
-	printlnTokens(tks, f)
-}
-
-// PrintlnTokenTypes prints the types of an array of tokens.
-func PrintlnTokenTypes(tks []Token) {
-	f := func(tk Token) string {
-		return TokenName(tk.Type)
-	}
-	printlnTokens(tks, f)
-}
-
-// printlnTokens prints an array of tokens where the
-// value to print for each token is obtained via the
-// supplied function.
-func printlnTokens(tks []Token, f func(Token) string) {
-	l := len(tks)
-	if l == 0 {
-		fmt.Println(`[]`)
-		return
-	}
-
-	fmt.Print(`[`)
-	for i, v := range tks {
-		s := f(v)
-		fmt.Print(s)
-
-		if i < l-1 {
-			fmt.Print(` `)
-		}
-	}
-
-	fmt.Println(`]`)
-}
-
 // PrintlnTokenChan prints each token arriving on the channel until the channel
 // is closed. The value to print is obtained via calling the supplied function
 // with each token.
 func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
 	defer close(done)
 
-	fmt.Print(`[`)
+	fmt.Println(`[`)
 	first := true
 
 	for tk := range in {
 
-		if !first {
+		if first {
+			first = false
+			fmt.Print(`  `)
+		} else {
 			fmt.Print(` `)
 		}
-		first = false
 
 		s := f(tk)
 		fmt.Print(s)
+
+		if strings.ContainsRune(s, '\n') {
+			fmt.Print(` `)
+		}
 	}
 
 	fmt.Println(`]`)

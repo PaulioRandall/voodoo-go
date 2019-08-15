@@ -4,59 +4,46 @@ package token
 type TokenType int
 
 const (
-	UNDEFINED TokenType = iota
-	// Shebang
-	SHEBANG
-	// Flag tokens
-	END_OF_STATEMENT
-	// Keywords
-	KEYWORD_FUNC // func
-	KEYWORD_LOOP // loop
-	KEYWORD_WHEN // when
-	KEYWORD_DONE // done, end of block
-	// Identifiers
-	IDENTIFIER
-	// Booleans
-	BOOLEAN_TRUE  // true
-	BOOLEAN_FALSE // false
-	// Spells
-	SPELL // @Blahblah
-	// Literals
-	LITERAL_NUMBER // ##.###
-	LITERAL_STRING // "blahblah"
-	COMMENT        // // blahblah
-	// Assignment
-	ASSIGNMENT // <-
-	// Comparison operators
+	UNDEFINED      TokenType = iota
+	ERROR_UPSTREAM           // An error occurred upstream so close gracefully
+	//
+	NEWLINE                   // '\n', often converts to END_OF_STATEMENT token
+	SHEBANG                   // Always the first line in a file
+	END_OF_STATEMENT          // Converted from NEWLINE token
+	KEYWORD_FUNC              // "func"
+	KEYWORD_LOOP              // "loop"
+	KEYWORD_WHEN              // "when"
+	KEYWORD_DONE              // "done"
+	IDENTIFIER                // EBNF: letter, { word letter }
+	BOOLEAN_TRUE              // "true"
+	BOOLEAN_FALSE             // "false"
+	SPELL                     // EBNF: "@", IDENTIFIER
+	LITERAL_NUMBER            // EBNF: whole part, [ fractional part ]
+	LITERAL_STRING            // EBNF: '"', { string character }, '"'
+	WHITESPACE                // All whitespace characters except newlines
+	COMMENT                   // Same as Go line comment
+	ASSIGNMENT                // <-
 	CMP_EQUAL                 // ==
 	CMP_NOT_EQUAL             // !=
 	CMP_LESS_THAN             // <
 	CMP_LESS_THAN_OR_EQUAL    // <=
 	CMP_GREATER_THAN          // >
 	CMP_GREATER_THAN_OR_EQUAL // >=
-	// Logical operators
-	LOGICAL_OR    // ||
-	LOGICAL_AND   // &&
-	LOGICAL_NOT   // !
-	LOGICAL_MATCH // =>
-	// Arithmetic operators
-	CALC_ADD      // +
-	CALC_SUBTRACT // -
-	CALC_MULTIPLY // *
-	CALC_DIVIDE   // /
-	CALC_MODULO   // %
-	// Context boundries
-	PAREN_CURVY_OPEN   // (
-	PAREN_CURVY_CLOSE  // )
-	PAREN_SQUARE_OPEN  // [
-	PAREN_SQUARE_CLOSE // ]
-	// Punctuation
-	VALUE_DELIM // ,
-	// Whitespace
-	NEWLINE // \n
-	WHITESPACE
-	// Ignoramuses
-	VOID // _
+	LOGICAL_OR                // ||
+	LOGICAL_AND               // &&
+	LOGICAL_NOT               // !
+	LOGICAL_MATCH             // =>
+	CALC_ADD                  // +
+	CALC_SUBTRACT             // -
+	CALC_MULTIPLY             // *
+	CALC_DIVIDE               // /
+	CALC_MODULO               // %
+	PAREN_CURVY_OPEN          // (
+	PAREN_CURVY_CLOSE         // )
+	PAREN_SQUARE_OPEN         // [
+	PAREN_SQUARE_CLOSE        // ]
+	VALUE_DELIM               // ,
+	VOID                      // _
 )
 
 // IsOperator returns true if the input type is an operator.
@@ -67,7 +54,11 @@ func IsOperator(t TokenType) bool {
 // TokenName returns the name of the token type.
 func TokenName(t TokenType) string {
 	switch t {
+	case ERROR_UPSTREAM:
+		return `ERROR_UPSTREAM`
 	case SHEBANG:
+	case NEWLINE:
+		return `NEWLINE`
 		return `SHEBANG`
 	case END_OF_STATEMENT:
 		return `END_OF_STATEMENT`
@@ -135,8 +126,6 @@ func TokenName(t TokenType) string {
 		return `PAREN_SQUARE_CLOSE`
 	case VALUE_DELIM:
 		return `VALUE_DELIM`
-	case NEWLINE:
-		return `NEWLINE`
 	case WHITESPACE:
 		return `WHITESPACE`
 	case VOID:

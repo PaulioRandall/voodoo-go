@@ -4,7 +4,7 @@ unicode character        = ? any unicode value ?
 letter                   = ? any unicode category L value ?
 whitespace character     = ? any unicode value with the whitespace property ?
                          - newline
-whitespace               = single whitespace, { single whitespace }
+whitespace               = whitespace character, { whitespace character }
 
 natural digit            = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 digit                    = "0" | natural digit
