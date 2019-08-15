@@ -33,11 +33,11 @@ const (
 	TT_LOGIC_AND       // &&
 	TT_LOGIC_NOT       // !
 	TT_LOGIC_MATCH     // =>
-	CALC_ADD           // +
-	CALC_SUBTRACT      // -
-	CALC_MULTIPLY      // *
-	CALC_DIVIDE        // /
-	CALC_MODULO        // %
+	TT_ADD             // +
+	TT_SUBTRACT        // -
+	TT_MULTIPLY        // *
+	TT_DIVIDE          // /
+	TT_MODULO          // %
 	PAREN_CURVY_OPEN   // (
 	PAREN_CURVY_CLOSE  // )
 	PAREN_SQUARE_OPEN  // [
@@ -48,7 +48,7 @@ const (
 
 // IsOperator returns true if the input type is an operator.
 func IsOperator(t TokenType) bool {
-	return t >= TT_CMP_EQ && t <= CALC_MODULO
+	return t >= TT_CMP_EQ && t <= TT_MODULO
 }
 
 // TokenName returns the name of the token type.
@@ -107,17 +107,17 @@ func TokenName(t TokenType) string {
 	case TT_LOGIC_NOT:
 		return `NOT`
 	case TT_LOGIC_MATCH:
-		return `MATCH`
-	case CALC_ADD:
-		return `CALC_ADD`
-	case CALC_SUBTRACT:
-		return `CALC_SUBTRACT`
-	case CALC_MULTIPLY:
-		return `CALC_MULTIPLY`
-	case CALC_DIVIDE:
-		return `CALC_DIVIDE`
-	case CALC_MODULO:
-		return `CALC_MODULO`
+		return `MATCH THEN`
+	case TT_ADD:
+		return `ADD`
+	case TT_SUBTRACT:
+		return `SUBTRACT`
+	case TT_MULTIPLY:
+		return `MULTIPLY`
+	case TT_DIVIDE:
+		return `DIVIDE`
+	case TT_MODULO:
+		return `MODULO`
 	case PAREN_CURVY_OPEN:
 		return `PAREN_CURVY_OPEN`
 	case PAREN_CURVY_CLOSE:

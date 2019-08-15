@@ -88,31 +88,31 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `+`,
-			Expect:         dummyToken(0, 0, 1, `+`, token.CALC_ADD),
+			Expect:         dummyToken(0, 0, 1, `+`, token.TT_ADD),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `-`,
-			Expect:         dummyToken(0, 0, 1, `-`, token.CALC_SUBTRACT),
+			Expect:         dummyToken(0, 0, 1, `-`, token.TT_SUBTRACT),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `*`,
-			Expect:         dummyToken(0, 0, 1, `*`, token.CALC_MULTIPLY),
+			Expect:         dummyToken(0, 0, 1, `*`, token.TT_MULTIPLY),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `/`,
-			Expect:         dummyToken(0, 0, 1, `/`, token.CALC_DIVIDE),
+			Expect:         dummyToken(0, 0, 1, `/`, token.TT_DIVIDE),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `%`,
-			Expect:         dummyToken(0, 0, 1, `%`, token.CALC_MODULO),
+			Expect:         dummyToken(0, 0, 1, `%`, token.TT_MODULO),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
@@ -148,7 +148,7 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `+ 69`,
-			Expect:         dummyToken(0, 0, 1, `+`, token.CALC_ADD),
+			Expect:         dummyToken(0, 0, 1, `+`, token.TT_ADD),
 			NextUnreadRune: ' ',
 		},
 		scanFuncTest{

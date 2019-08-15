@@ -44,15 +44,15 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 	case cmpPair(ru1, ru2, '&', '&'):
 		return onMatch(r, token.TT_LOGIC_AND, 2)
 	case cmp(ru1, '+'):
-		return onMatch(r, token.CALC_ADD, 1)
+		return onMatch(r, token.TT_ADD, 1)
 	case cmp(ru1, '-'):
-		return onMatch(r, token.CALC_SUBTRACT, 1)
+		return onMatch(r, token.TT_SUBTRACT, 1)
 	case cmp(ru1, '*'):
-		return onMatch(r, token.CALC_MULTIPLY, 1)
+		return onMatch(r, token.TT_MULTIPLY, 1)
 	case cmp(ru1, '/'):
-		return onMatch(r, token.CALC_DIVIDE, 1)
+		return onMatch(r, token.TT_DIVIDE, 1)
 	case cmp(ru1, '%'):
-		return onMatch(r, token.CALC_MODULO, 1)
+		return onMatch(r, token.TT_MODULO, 1)
 	case cmp(ru1, '('):
 		return onMatch(r, token.PAREN_CURVY_OPEN, 1)
 	case cmp(ru1, ')'):
