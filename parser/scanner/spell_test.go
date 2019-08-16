@@ -34,6 +34,7 @@ func scanSpellTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `@2`,
+			Expect:   token.ERROR,
 			Error:    newFault(1),
 		},
 	}

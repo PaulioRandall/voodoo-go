@@ -52,16 +52,19 @@ func scanNumberTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `123.`,
+			Expect:   token.ERROR,
 			Error:    newFault(4),
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `123..456`,
+			Expect:   token.ERROR,
 			Error:    newFault(4),
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `123.___`,
+			Expect:   token.ERROR,
 			Error:    newFault(4),
 		},
 	}

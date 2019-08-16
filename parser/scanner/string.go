@@ -12,7 +12,7 @@ import (
 func scanString(r *Runer) (token.Token, fault.Fault) {
 	s, size, err := scanStr(r)
 	if err != nil {
-		return token.EMPTY, err
+		return token.ERROR, err
 	}
 
 	tk := token.Token{

@@ -33,7 +33,11 @@ func NewRuner(reader *bufio.Reader) *Runer {
 
 // Line returns the line index, number of newline runes incountered.
 func (r *Runer) Line() int {
-	return r.line
+	l := r.line
+	if l == -1 {
+		return 0
+	}
+	return l
 }
 
 // Col returns the column index of the last rune returned or -1 if no calls to

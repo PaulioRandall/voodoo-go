@@ -44,16 +44,16 @@ func scanStringTests() []scanFuncTest {
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
-			TestLine:       fault.CurrLine(),
-			Input:          `"`,
-			NextUnreadRune: '"',
-			Error:          newFault(1),
+			TestLine: fault.CurrLine(),
+			Input:    `"`,
+			Expect:   token.ERROR,
+			Error:    newFault(1),
 		},
 		scanFuncTest{
-			TestLine:       fault.CurrLine(),
-			Input:          `"escaped \"`,
-			NextUnreadRune: '"',
-			Error:          newFault(11),
+			TestLine: fault.CurrLine(),
+			Input:    `"escaped \"`,
+			Expect:   token.ERROR,
+			Error:    newFault(11),
 		},
 	}
 }

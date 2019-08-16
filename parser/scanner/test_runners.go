@@ -67,16 +67,24 @@ func runScanTest(
 		tk, err := f(r)
 
 		if tc.Error != nil {
-			assert.Empty(t, tk)
 			assert.NotNil(t, err)
 		}
 
-		if tc.Expect != token.EMPTY {
-			assert.Nil(t, err)
-			assert.Equal(t, tc.Expect, tk)
+		assertToken(t, tc.Expect, tk)
 
+		if tk.Type != token.TT_ERROR_UPSTREAM {
 			next := readRequireNoErr(t, r)
 			assert.Equal(t, tc.NextUnreadRune, next)
 		}
 	}
+}
+
+// assertToken asserts that the actual token equals the expected token except
+// for the error messages.
+func assertToken(t *testing.T, exp token.Token, act token.Token) {
+	assert.Equal(t, exp.Val, act.Val)
+	assert.Equal(t, exp.Line, act.Line)
+	assert.Equal(t, exp.Start, act.Start)
+	assert.Equal(t, exp.End, act.End)
+	assert.Equal(t, exp.Type, act.Type)
 }

@@ -152,10 +152,10 @@ func scanSymbolTests() []scanFuncTest {
 			NextUnreadRune: ' ',
 		},
 		scanFuncTest{
-			TestLine:       fault.CurrLine(),
-			Input:          `=`,
-			NextUnreadRune: '=',
-			Error:          newFault(1),
+			TestLine: fault.CurrLine(),
+			Input:    `=`,
+			Expect:   dummyToken(0, 0, 1, `=`, token.TT_ERROR_UPSTREAM),
+			Error:    newFault(1),
 		},
 	}
 }

@@ -7,15 +7,19 @@ import (
 )
 
 var EMPTY Token = Token{}
+var ERROR Token = Token{
+	Type: TT_ERROR_UPSTREAM,
+}
 
 // Token represents a token produced by lexical analysis.
 // I.e. identifier, operator, punctionation, etc.
 type Token struct {
-	Val   string    // Token value
-	Line  int       // Line number in scroll
-	Start int       // Index of first rune
-	End   int       // Index after last rune
-	Type  TokenType // Type of token
+	Val    string    // Token value
+	Line   int       // Line number in scroll
+	Start  int       // Index of first rune
+	End    int       // Index after last rune
+	Type   TokenType // Type of token
+	Errors []string  // List of error messages, nil unless error
 }
 
 // String creates a string representation of the token.

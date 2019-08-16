@@ -17,7 +17,7 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 
 	ru1, ru2, err := r.LookAhead()
 	if err != nil {
-		return token.EMPTY, err
+		return token.ERROR, err
 	}
 
 	switch {
@@ -65,9 +65,9 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 		return onMatch(r, token.VALUE_DELIM, 1)
 	case cmp(ru1, '_'):
 		return onMatch(r, token.VOID, 1)
-	default:
-		return token.EMPTY, unknownNonTerminal(ru1, r.Line(), r.Col()+2)
 	}
+
+	return unknownNonTerminal(ru1, r.Line(), r.Col()+2)
 }
 
 // cmpPair compares the first terminal with the third and the second with the
@@ -103,12 +103,22 @@ func onMatch(r *Runer, t token.TokenType, count int) (token.Token, fault.Fault) 
 }
 
 // unknownNonTerminal creates a fault for when a symbol is not known.
-func unknownNonTerminal(ru rune, line, col int) fault.Fault {
-	return token.SyntaxFault{
+func unknownNonTerminal(ru rune, line, col int) (token.Token, fault.Fault) {
+	tk := token.Token{
+		Val:   string(ru),
+		Line:  line,
+		Start: col - 1,
+		End:   col,
+		Type:  token.TT_ERROR_UPSTREAM,
+	}
+
+	err := token.SyntaxFault{
 		Line: line,
 		Col:  col,
 		Msgs: []string{
 			"I don't know what this symbol means '" + string(ru) + "'",
 		},
 	}
+
+	return tk, err
 }

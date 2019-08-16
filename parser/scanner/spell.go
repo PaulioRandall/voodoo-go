@@ -12,16 +12,16 @@ func scanSpell(r *Runer) (token.Token, fault.Fault) {
 	first, err := r.ReadRune()
 	ru, _, err := r.LookAhead()
 	if err != nil {
-		return token.EMPTY, err
+		return token.ERROR, err
 	}
 
 	if !isLetter(ru) {
-		return token.EMPTY, badSpellName(r.Line(), r.Col()+2)
+		return token.ERROR, badSpellName(r.Line(), r.Col()+2)
 	}
 
 	s, size, err := scanWordStr(r)
 	if err != nil {
-		return token.EMPTY, err
+		return token.ERROR, err
 	}
 
 	tk := token.Token{

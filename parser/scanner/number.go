@@ -12,12 +12,12 @@ import (
 func scanNumber(r *Runer) (token.Token, fault.Fault) {
 	sig, err := scanSignificant(r)
 	if err != nil {
-		return token.EMPTY, err
+		return token.ERROR, err
 	}
 
 	frac, err := scanFractional(r)
 	if err != nil {
-		return token.EMPTY, err
+		return token.ERROR, err
 	}
 
 	s := sig + frac

@@ -67,7 +67,6 @@ func TestScan(t *testing.T) {
 		}
 
 		if tc.Expect != nil {
-			require.Nil(t, err)
 			assert.Equal(t, tc.Expect, act)
 		}
 	}
@@ -80,6 +79,11 @@ func scanTests() []scanTest {
 			TestLine: fault.CurrLine(),
 			Input:    `x # 1`,
 			Error:    newFault(3),
+			Expect: []token.Token{
+				dummyToken(0, 0, 1, `x`, token.TT_ID),
+				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
+				dummyToken(0, 2, 3, `#`, token.TT_ERROR_UPSTREAM),
+			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
