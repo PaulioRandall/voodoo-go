@@ -4,7 +4,7 @@ package token
 type TokenType int
 
 const (
-	UNDEFINED         TokenType = iota
+	TT_UNDEFINED      TokenType = iota
 	TT_ERROR_UPSTREAM           // An error occurred upstream so close gracefully
 	//
 	TT_NEWLINE      // '\n', often converts to END_OF_STATEMENT token
@@ -42,8 +42,8 @@ const (
 	TT_CURVY_CLOSE  // )
 	TT_SQUARE_OPEN  // [
 	TT_SQUARE_CLOSE // ]
-	VALUE_DELIM     // ,
-	VOID            // _
+	TT_VALUE_DELIM  // ,
+	TT_VOID         // _
 )
 
 // IsOperator returns true if the input type is an operator.
@@ -126,9 +126,9 @@ func TokenName(t TokenType) string {
 		return `SQUARE OPEN`
 	case TT_SQUARE_CLOSE:
 		return `SQUARE CLOSE`
-	case VALUE_DELIM:
-		return `VALUE_DELIM`
-	case VOID:
+	case TT_VALUE_DELIM:
+		return `VALUE DELIM`
+	case TT_VOID:
 		return `VOID`
 	}
 

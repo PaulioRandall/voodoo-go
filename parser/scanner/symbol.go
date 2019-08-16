@@ -62,9 +62,9 @@ func scanSymbol(r *Runer) (token.Token, fault.Fault) {
 	case cmp(ru1, ']'):
 		return onMatch(r, token.TT_SQUARE_CLOSE, 1)
 	case cmp(ru1, ','):
-		return onMatch(r, token.VALUE_DELIM, 1)
+		return onMatch(r, token.TT_VALUE_DELIM, 1)
 	case cmp(ru1, '_'):
-		return onMatch(r, token.VOID, 1)
+		return onMatch(r, token.TT_VOID, 1)
 	}
 
 	return unknownNonTerminal(ru1, r.Line(), r.Col()+2)

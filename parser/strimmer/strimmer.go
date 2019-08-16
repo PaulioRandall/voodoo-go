@@ -86,8 +86,8 @@ func isAlphabeticType(t token.TokenType) bool {
 func isMultiLineType(t token.TokenType) bool {
 	switch t {
 	case token.TT_SHEBANG:
-	case token.UNDEFINED:
-	case token.VALUE_DELIM:
+	case token.TT_UNDEFINED:
+	case token.TT_VALUE_DELIM:
 	case token.TT_NEWLINE:
 	case token.TT_EOS:
 	case token.TT_CURVY_OPEN:

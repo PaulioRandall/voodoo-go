@@ -82,7 +82,7 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `_`,
-			Expect:         dummyToken(0, 0, 1, `_`, token.VOID),
+			Expect:         dummyToken(0, 0, 1, `_`, token.TT_VOID),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
@@ -142,7 +142,7 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `,`,
-			Expect:         dummyToken(0, 0, 1, `,`, token.VALUE_DELIM),
+			Expect:         dummyToken(0, 0, 1, `,`, token.TT_VALUE_DELIM),
 			NextUnreadRune: EOF,
 		},
 		scanFuncTest{
