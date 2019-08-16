@@ -42,15 +42,13 @@ func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
 			newline = false
 			fmt.Print(`  `)
 			fmt.Print(s)
-
-		} else if strings.ContainsRune(s, '\n') {
-			fmt.Print(`, `)
-			fmt.Print(s)
-			newline = true
-
 		} else {
 			fmt.Print(`, `)
 			fmt.Print(s)
+		}
+
+		if strings.ContainsRune(s, '\n') {
+			newline = true
 		}
 	}
 
