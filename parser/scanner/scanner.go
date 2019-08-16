@@ -52,6 +52,10 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 			tk, err = scanSymbol(r)
 		}
 
+		if tk.Type == token.TT_ERROR_UPSTREAM {
+			return err
+		}
+
 		if err != nil {
 			return err
 		}

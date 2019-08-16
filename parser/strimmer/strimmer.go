@@ -26,6 +26,9 @@ func Strim(in chan token.Token, out chan token.Token) {
 		keep = true
 
 		switch {
+		case tk.Type == token.TT_ERROR_UPSTREAM:
+			out <- tk
+			return
 		case tk.Type == token.TT_SHEBANG:
 			keep = false
 		case tk.Type == token.TT_SPACE:

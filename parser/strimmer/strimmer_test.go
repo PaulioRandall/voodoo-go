@@ -190,5 +190,19 @@ func strimTests() []strimTest {
 				dummyToken(0, 1, 2, "\n", token.TT_EOS),
 			},
 		},
+		strimTest{
+			TestLine: fault.CurrLine(),
+			Input: []token.Token{
+				dummyToken(0, 0, 1, `x`, token.TT_ID),
+				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
+				dummyToken(0, 2, 3, `=`, token.TT_ERROR_UPSTREAM),
+				dummyToken(0, 3, 4, ` `, token.TT_SPACE),
+				dummyToken(0, 4, 5, `2`, token.TT_NUMBER),
+			},
+			ExpectToks: []token.Token{
+				dummyToken(0, 0, 1, `x`, token.TT_ID),
+				dummyToken(0, 2, 3, `=`, token.TT_ERROR_UPSTREAM),
+			},
+		},
 	}
 }
