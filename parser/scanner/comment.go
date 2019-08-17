@@ -18,7 +18,7 @@ func scanComment(r *Runer) (token.Token, fault.Fault) {
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return token.EMPTY, err
+			return readerFaultToToken(err)
 		}
 
 		if isNewline(ru) || ru == EOF {

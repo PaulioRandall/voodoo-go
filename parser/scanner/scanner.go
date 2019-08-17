@@ -7,6 +7,15 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
+// TEMP: Removing return fault from scanner
+func readerFaultToToken(err fault.Fault) (token.Token, fault.Fault) {
+	rErr := err.(fault.ReaderFault)
+	sErr := string(rErr)
+	errTk := token.ERROR
+	errTk.Errors = []string{sErr}
+	return errTk, err
+}
+
 // Scan scans tokens from a stream of code using longest match and pushes them
 // onto a channel for processing.
 func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
