@@ -59,7 +59,7 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 		case isNaturalDigit(ru1):
 			tk = scanNumber(r)
 		case isSpace(ru1):
-			tk, err = scanSpace(r)
+			tk = scanSpace(r)
 		case isSpellPrefix(ru1):
 			tk, err = scanSpell(r)
 		case isStringPrefix(ru1):
