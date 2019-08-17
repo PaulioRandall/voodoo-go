@@ -3,22 +3,20 @@ package scanner
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // scanComment scans comments. Comments can start anywhere and continue to the
 // end of the line
-func scanComment(r *Runer) (token.Token, fault.Fault) {
-
-	// TODO: Needs testing
-
+func scanComment(r *Runer) token.Token {
+	start := r.Col() + 1
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return readerFaultToToken(err)
+			errs := readerFaultToStringArray(err)
+			return errorToken(r, start, errs)
 		}
 
 		if isNewline(ru) || ru == EOF {
@@ -29,15 +27,15 @@ func scanComment(r *Runer) (token.Token, fault.Fault) {
 		sb.WriteRune(ru)
 	}
 
-	s := sb.String()
-	size := len(s)
+	return commentToken(r, start, sb.String())
+}
 
-	tk := token.Token{
-		Val:   s,
-		Start: r.Col() - size + 1,
+// commentToken creates a new comment token.
+func commentToken(r *Runer, start int, val string) token.Token {
+	return token.Token{
+		Val:   val,
+		Start: start,
 		End:   r.Col() + 1,
 		Type:  token.TT_COMMENT,
 	}
-
-	return tk, nil
 }

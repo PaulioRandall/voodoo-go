@@ -7,13 +7,22 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
+// errorToken creates a new error token.
+func errorToken(r *Runer, start int, err []string) token.Token {
+	return token.Token{
+		Line:   r.Line(),
+		Start:  start,
+		End:    r.Col() + 1,
+		Type:   token.TT_ERROR_UPSTREAM,
+		Errors: err,
+	}
+}
+
 // TEMP: Removing return fault from scanner
-func readerFaultToToken(err fault.Fault) (token.Token, fault.Fault) {
+func readerFaultToStringArray(err fault.Fault) []string {
 	rErr := err.(fault.ReaderFault)
 	sErr := string(rErr)
-	errTk := token.ERROR
-	errTk.Errors = []string{sErr}
-	return errTk, err
+	return []string{sErr}
 }
 
 // Scan scans tokens from a stream of code using longest match and pushes them
@@ -48,7 +57,7 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 		case isLetter(ru1):
 			tk, err = scanWord(r)
 		case isNaturalDigit(ru1):
-			tk, err = scanNumber(r)
+			tk = scanNumber(r)
 		case isSpace(ru1):
 			tk, err = scanSpace(r)
 		case isSpellPrefix(ru1):
@@ -56,7 +65,7 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 		case isStringPrefix(ru1):
 			tk, err = scanString(r)
 		case isCommentPrefix(ru1, ru2):
-			tk, err = scanComment(r)
+			tk = scanComment(r)
 		default:
 			tk, err = scanSymbol(r)
 		}

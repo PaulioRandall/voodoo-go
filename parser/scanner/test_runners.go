@@ -51,6 +51,41 @@ func dummyToken(line, start, end int, val string, t token.TokenType) token.Token
 	}
 }
 
+// errDummyToken creates a new error dummy token.
+func errDummyToken(line, start, end int) token.Token {
+	return token.Token{
+		Line:  line,
+		Start: start,
+		End:   end,
+		Type:  token.TT_ERROR_UPSTREAM,
+	}
+}
+
+// runScanTest runs the input test cases on the input function.
+func runScanTest_NEW(
+	t *testing.T,
+	fileName string,
+	f func(*Runer) token.Token,
+	tests []scanFuncTest) {
+
+	for _, tc := range tests {
+
+		testLine := strconv.Itoa(tc.TestLine)
+		t.Log("-> " + fileName + " : " + testLine)
+
+		r := dummyRuner(tc.Input)
+		tk := f(r)
+
+		assertToken(t, tc.Expect, tk)
+
+		if tk.Type != token.TT_ERROR_UPSTREAM {
+			next := readRequireNoErr(t, r)
+			assert.Equal(t, tc.NextUnreadRune, next)
+		}
+	}
+}
+
+// OUTDATED
 // runScanTest runs the input test cases on the input function.
 func runScanTest(
 	t *testing.T,
