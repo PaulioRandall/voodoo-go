@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/parser/token"
@@ -13,7 +14,7 @@ func scanString(r *Runer) token.Token {
 
 	s, err := scanStr(r)
 	if err != nil {
-		return errorToken(r, start, err)
+		return errorToToken(r, start, err)
 	}
 
 	tk := token.Token{
@@ -29,11 +30,11 @@ func scanString(r *Runer) token.Token {
 
 // scanStr extracts a string literal from a string iterator returning true if
 // the last rune was escaped.
-func scanStr(r *Runer) (string, []string) {
+func scanStr(r *Runer) (string, error) {
 
 	open, err := r.ReadRune()
 	if err != nil {
-		return ``, readerFaultToStringArray(err)
+		return ``, err
 	}
 
 	body, errs := scanStrBody(r)
@@ -43,7 +44,7 @@ func scanStr(r *Runer) (string, []string) {
 
 	close, err := r.ReadRune()
 	if err != nil {
-		return ``, readerFaultToStringArray(err)
+		return ``, err
 	}
 
 	s := string(open) + body + string(close)
@@ -51,14 +52,14 @@ func scanStr(r *Runer) (string, []string) {
 }
 
 // scanStrBody scans the body of a string literal.
-func scanStrBody(r *Runer) (string, []string) {
+func scanStrBody(r *Runer) (string, error) {
 	sb := strings.Builder{}
 	isEscaped := false
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return ``, readerFaultToStringArray(err)
+			return ``, err
 		}
 
 		if !isEscaped && ru == '"' {
@@ -66,9 +67,7 @@ func scanStrBody(r *Runer) (string, []string) {
 		}
 
 		if ru == EOF || isNewline(ru) {
-			return ``, []string{
-				"Did someone forget to close a string literal?!",
-			}
+			return ``, errors.New(`Did someone forget to close a string literal?!`)
 		}
 
 		if ru == '\\' {

@@ -17,7 +17,7 @@ func scanSymbol(r *Runer) token.Token {
 	ru1, ru2, err := r.LookAhead()
 	if err != nil {
 		start := r.Col() + 1
-		return faultToToken(r, start, err)
+		return errorToToken(r, start, err)
 	}
 
 	switch {

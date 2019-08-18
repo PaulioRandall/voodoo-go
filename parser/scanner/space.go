@@ -16,8 +16,7 @@ func scanSpace(r *Runer) token.Token {
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			sErr := readerFaultToStringArray(err)
-			return errorToken(r, start, sErr)
+			return errorToToken(r, start, err)
 		}
 
 		if !isSpace(ru) {

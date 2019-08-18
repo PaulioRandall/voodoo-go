@@ -4,7 +4,6 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -19,23 +18,19 @@ func errorToken(r *Runer, start int, err []string) token.Token {
 	}
 }
 
-// TEMP: Removing return fault from scanner
-func readerFaultToStringArray(err fault.Fault) []string {
-	rErr := err.(fault.ReaderFault)
-	sErr := string(rErr)
-	return []string{sErr}
-}
-
-// TEMP: Removing return fault from scanner
-func faultToToken(r *Runer, start int, err fault.Fault) token.Token {
-	rErr := err.(fault.ReaderFault)
-	sErr := string(rErr)
-	errs := []string{sErr}
-	return errorToken(r, start, errs)
+// errorToToken creates a new error token from an error.
+func errorToToken(r *Runer, start int, err error) token.Token {
+	return token.Token{
+		Line:   r.Line(),
+		Start:  start,
+		End:    r.Col() + 1,
+		Type:   token.TT_ERROR_UPSTREAM,
+		Errors: []string{err.Error()},
+	}
 }
 
 // scanWordStr reads a full word from a Runer.
-func scanWordStr(r *Runer) (string, fault.Fault) {
+func scanWordStr(r *Runer) (string, error) {
 	sb := strings.Builder{}
 
 	for {

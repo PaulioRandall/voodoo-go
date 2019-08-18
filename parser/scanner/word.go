@@ -12,7 +12,7 @@ func scanWord(r *Runer) token.Token {
 
 	s, err := scanWordStr(r)
 	if err != nil {
-		return faultToToken(r, start, err)
+		return errorToToken(r, start, err)
 	}
 
 	return token.Token{

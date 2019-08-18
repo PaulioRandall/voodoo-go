@@ -3,8 +3,6 @@ package scanner
 import (
 	"bufio"
 	"io"
-
-	"github.com/PaulioRandall/voodoo-go/fault"
 )
 
 const NUL = rune(0)
@@ -48,7 +46,7 @@ func (r *Runer) Col() int {
 
 // ReadRune reads the next rune from the reader. EOF is returned if the end of
 // the file has been reached.
-func (r *Runer) ReadRune() (rune, fault.Fault) {
+func (r *Runer) ReadRune() (rune, error) {
 	if r.newLine {
 		r.newLine = false
 		r.line++
@@ -67,7 +65,7 @@ func (r *Runer) ReadRune() (rune, fault.Fault) {
 
 // SkipRune skips the next rune in the reader. It still may produce an error as
 // the reader may still be read in order to do this.
-func (r *Runer) SkipRune() fault.Fault {
+func (r *Runer) SkipRune() error {
 	_, err := r.ReadRune()
 	return err
 }
@@ -75,8 +73,8 @@ func (r *Runer) SkipRune() fault.Fault {
 // LookAhead returns the next two runes in the sequence without incrementing the
 // 'cursor'. After a call to LookAhead() it is safe to ignore the error returned
 // on the next two calls to ReadRune() or SkipRune().
-func (r *Runer) LookAhead() (rune, rune, fault.Fault) {
-	var err fault.Fault
+func (r *Runer) LookAhead() (rune, rune, error) {
+	var err error
 
 	if r.buf[0] == NUL {
 		r.buf[0], err = r.readRune()
@@ -97,7 +95,7 @@ func (r *Runer) LookAhead() (rune, rune, fault.Fault) {
 
 // nextRune returns the next rune in the sequence. It will check the temp buffer
 // before trying the reader.
-func (r *Runer) nextRune() (rune, fault.Fault) {
+func (r *Runer) nextRune() (rune, error) {
 	ru := r.buf[0]
 	if ru == NUL {
 		return r.readRune()
@@ -110,7 +108,7 @@ func (r *Runer) nextRune() (rune, fault.Fault) {
 
 // readRune reads the next rune in the sequence returning EOF if the end of the
 // reader has been reached.
-func (r *Runer) readRune() (rune, fault.Fault) {
+func (r *Runer) readRune() (rune, error) {
 	ru, _, err := r.reader.ReadRune()
 
 	if err == io.EOF {
@@ -118,7 +116,7 @@ func (r *Runer) readRune() (rune, fault.Fault) {
 	}
 
 	if err != nil {
-		return NUL, fault.ReaderFault(err.Error())
+		return NUL, err
 	}
 
 	return ru, nil

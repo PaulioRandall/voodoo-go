@@ -10,9 +10,13 @@ func scanSpell(r *Runer) token.Token {
 	start := r.Col() + 1
 
 	first, err := r.ReadRune()
+	if err != nil {
+		return errorToToken(r, start, err)
+	}
+
 	ru, _, err := r.LookAhead()
 	if err != nil {
-		return faultToToken(r, start, err)
+		return errorToToken(r, start, err)
 	}
 
 	if !isLetter(ru) {
@@ -24,7 +28,7 @@ func scanSpell(r *Runer) token.Token {
 
 	s, err := scanWordStr(r)
 	if err != nil {
-		return faultToToken(r, start, err)
+		return errorToToken(r, start, err)
 	}
 
 	s = string(first) + s

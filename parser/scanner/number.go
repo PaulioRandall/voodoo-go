@@ -40,7 +40,7 @@ func numberToken(r *Runer, start int, val string) token.Token {
 func scanSignificant(r *Runer) (string, []string) {
 	first, err := r.ReadRune()
 	if err != nil {
-		return ``, readerFaultToStringArray(err)
+		return ``, []string{err.Error()}
 	}
 
 	sig, errs := scanInt(r)
@@ -56,7 +56,7 @@ func scanSignificant(r *Runer) (string, []string) {
 func scanFractional(r *Runer) (string, []string) {
 	ru, _, err := r.LookAhead()
 	if err != nil {
-		return ``, readerFaultToStringArray(err)
+		return ``, []string{err.Error()}
 	}
 
 	if !isDecimalDelim(ru) {
@@ -87,7 +87,7 @@ func scanInt(r *Runer) (string, []string) {
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return ``, readerFaultToStringArray(err)
+			return ``, []string{err.Error()}
 		}
 
 		if !isDigit(ru) && !isUnderscore(ru) {

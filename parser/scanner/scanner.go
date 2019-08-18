@@ -13,20 +13,19 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 	defer close(out)
 
 	var tk token.Token
-	var err fault.Fault
 
 	if shebang {
-		tk, err = scanShebang(r)
-		if err != nil {
-			return err
-		}
+		tk = scanShebang(r)
 		out <- tk
+		if tk.Type == token.TT_ERROR_UPSTREAM {
+			return nil
+		}
 	}
 
 	for {
 		ru1, ru2, err := r.LookAhead()
 		if err != nil {
-			return err
+			return fault.ReaderFault(err.Error())
 		}
 
 		if ru1 == EOF {
@@ -54,11 +53,11 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 
 		if tk.Type == token.TT_ERROR_UPSTREAM {
 			out <- tk
-			return err
+			return nil
 		}
 
 		if err != nil {
-			return err
+			return fault.ReaderFault(err.Error())
 		}
 
 		out <- tk
@@ -66,13 +65,14 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 }
 
 // scanShebang scans the shebang line.
-func scanShebang(r *Runer) (token.Token, fault.Fault) {
+func scanShebang(r *Runer) token.Token {
+	start := r.Col() + 1
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return token.EMPTY, err
+			return errorToToken(r, start, err)
 		}
 
 		if isNewline(ru) || ru == EOF {
@@ -83,17 +83,12 @@ func scanShebang(r *Runer) (token.Token, fault.Fault) {
 		sb.WriteRune(ru)
 	}
 
-	s := sb.String()
-	size := len(s)
-
-	tk := token.Token{
+	return token.Token{
 		Val:   sb.String(),
-		Start: r.Col() - size + 1,
+		Start: start,
 		End:   r.Col() + 1,
 		Type:  token.TT_SHEBANG,
 	}
-
-	return tk, nil
 }
 
 // newlineToken creates a newline token.
