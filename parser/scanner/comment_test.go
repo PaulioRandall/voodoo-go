@@ -8,18 +8,18 @@ import (
 )
 
 func TestScanComment(t *testing.T) {
-	runScanTest(t, "comment_test.go", scanComment, scanCommentTests())
+	runScanTokenTests(t, "comment_test.go", scanComment, scanCommentTests())
 }
 
-func scanCommentTests() []scanFuncTest {
-	return []scanFuncTest{
-		scanFuncTest{
+func scanCommentTests() []tfTest {
+	return []tfTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `// 123`,
 			Expect:         dummyToken(0, 0, 6, `// 123`, token.TT_COMMENT),
 			NextUnreadRune: EOF,
 		},
-		scanFuncTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "// 123\n456",
 			Expect:         dummyToken(0, 0, 6, `// 123`, token.TT_COMMENT),

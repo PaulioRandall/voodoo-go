@@ -8,30 +8,30 @@ import (
 )
 
 func TestScanSpell(t *testing.T) {
-	runScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
+	runScanTokenTests(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 
-func scanSpellTests() []scanFuncTest {
-	return []scanFuncTest{
-		scanFuncTest{
+func scanSpellTests() []tfTest {
+	return []tfTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `@Println`,
 			Expect:         dummyToken(0, 0, 8, `@Println`, token.TT_SPELL),
 			NextUnreadRune: EOF,
 		},
-		scanFuncTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `@a__12__xy__`,
 			Expect:         dummyToken(0, 0, 12, `@a__12__xy__`, token.TT_SPELL),
 			NextUnreadRune: EOF,
 		},
-		scanFuncTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          `@Println(msg)`,
 			Expect:         dummyToken(0, 0, 8, `@Println`, token.TT_SPELL),
 			NextUnreadRune: '(',
 		},
-		scanFuncTest{
+		tfTest{
 			TestLine: fault.CurrLine(),
 			Input:    `@2`,
 			Expect:   errDummyToken(0, 0, 2),

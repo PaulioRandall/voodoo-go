@@ -8,30 +8,30 @@ import (
 )
 
 func TestScanSpace(t *testing.T) {
-	runScanTest(t, "space_test.go", scanSpace, scanSpaceTests())
+	runScanTokenTests(t, "space_test.go", scanSpace, scanSpaceTests())
 }
 
-func scanSpaceTests() []scanFuncTest {
-	return []scanFuncTest{
-		scanFuncTest{
+func scanSpaceTests() []tfTest {
+	return []tfTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          ` `,
 			Expect:         dummyToken(0, 0, 1, ` `, token.TT_SPACE),
 			NextUnreadRune: EOF,
 		},
-		scanFuncTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "\t",
 			Expect:         dummyToken(0, 0, 1, "\t", token.TT_SPACE),
 			NextUnreadRune: EOF,
 		},
-		scanFuncTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "   abc",
 			Expect:         dummyToken(0, 0, 3, "   ", token.TT_SPACE),
 			NextUnreadRune: 'a',
 		},
-		scanFuncTest{
+		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "\t\f \n\v\r",
 			Expect:         dummyToken(0, 0, 3, "\t\f ", token.TT_SPACE),
