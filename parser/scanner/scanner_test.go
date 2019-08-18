@@ -17,23 +17,37 @@ type scanTest struct {
 	TestLine int
 	Input    string
 	Expect   []token.Token
-	Error    fault.Fault
 }
 
-// collateLine collates a single line from a channel of tokens.
-func collateLine(in chan token.Token, out chan []token.Token) {
-	defer close(out)
-	tks := []token.Token{}
-	for tk := range in {
-		tks = append(tks, tk)
+// TestScan runs the test cases for the Scan() function.
+func TestScan(t *testing.T) {
+	for _, tc := range scanTests() {
+		logTestTitle(t, tc.TestLine)
+		act := runScanTest(tc)
+		assertTokens(t, tc.Expect, act)
 	}
-	out <- tks
 }
 
-// printTestTitle prints the title and line number of the test.
-func printTestTitle(t *testing.T, lineNum int) {
-	testLine := strconv.Itoa(lineNum)
-	t.Log("-> scanner_test.go : " + testLine)
+// assertTokens asserts the actual tokens match the expected ones.
+func assertTokens(t *testing.T, exp []token.Token, act []token.Token) {
+	for i, expTk := range exp {
+		require.True(t, i < len(act))
+		actTk := act[i]
+		assertToken(t, expTk, actTk)
+	}
+
+	assert.Equal(t, len(exp), len(act))
+}
+
+// runScanTest runs a single test case for the Scan() function.
+func runScanTest(tc scanTest) []token.Token {
+	inChan, outChan := makeChans()
+	r := newRuner(tc.Input)
+
+	go collateLine(inChan, outChan)
+	Scan(r, false, inChan)
+
+	return <-outChan
 }
 
 // newRuner returns a new Runer instance.
@@ -50,26 +64,20 @@ func makeChans() (chan token.Token, chan []token.Token) {
 	return inChan, outChan
 }
 
-// TestScan runs the test cases for the Scan() function.
-func TestScan(t *testing.T) {
-	for _, tc := range scanTests() {
-		printTestTitle(t, tc.TestLine)
-
-		inChan, outChan := makeChans()
-		go collateLine(inChan, outChan)
-
-		r := newRuner(tc.Input)
-		Scan(r, false, inChan)
-		act := <-outChan
-
-		for i, expTk := range tc.Expect {
-			require.True(t, i < len(act))
-			actTk := act[i]
-			assertToken(t, expTk, actTk)
-		}
-
-		assert.Equal(t, len(tc.Expect), len(act))
+// collateLine collates a single line from a channel of tokens.
+func collateLine(in chan token.Token, out chan []token.Token) {
+	defer close(out)
+	tks := []token.Token{}
+	for tk := range in {
+		tks = append(tks, tk)
 	}
+	out <- tks
+}
+
+// logTestTitle prints the title and line number of the test.
+func logTestTitle(t *testing.T, lineNum int) {
+	testLine := strconv.Itoa(lineNum)
+	t.Log("-> scanner_test.go : " + testLine)
 }
 
 // scanTests creates a list of Scan() function tests.
