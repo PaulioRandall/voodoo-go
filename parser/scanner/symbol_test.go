@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanSymbol(t *testing.T) {
-	runScanTest(t, "symbol_test.go", scanSymbol, scanSymbolTests())
+	runScanTest_NEW(t, "symbol_test.go", scanSymbol, scanSymbolTests())
 }
 
 func scanSymbolTests() []scanFuncTest {
@@ -154,8 +154,7 @@ func scanSymbolTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `=`,
-			Expect:   dummyToken(0, 0, 1, `=`, token.TT_ERROR_UPSTREAM),
-			Error:    newFault(1),
+			Expect:   dummyToken(0, 0, 1, ``, token.TT_ERROR_UPSTREAM),
 		},
 	}
 }

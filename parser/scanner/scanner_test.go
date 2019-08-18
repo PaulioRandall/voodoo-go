@@ -59,16 +59,16 @@ func TestScan(t *testing.T) {
 		go collateLine(inChan, outChan)
 
 		r := newRuner(tc.Input)
-		err := Scan(r, false, inChan)
+		_ = Scan(r, false, inChan)
 		act := <-outChan
 
-		if tc.Error != nil {
-			require.NotNil(t, err)
+		for i, expTk := range tc.Expect {
+			require.True(t, i < len(act))
+			actTk := act[i]
+			assertToken(t, expTk, actTk)
 		}
 
-		if tc.Expect != nil {
-			assert.Equal(t, tc.Expect, act)
-		}
+		assert.Equal(t, len(tc.Expect), len(act))
 	}
 }
 
@@ -78,17 +78,19 @@ func scanTests() []scanTest {
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `x # 1`,
-			Error:    newFault(3),
 			Expect: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				dummyToken(0, 2, 3, `#`, token.TT_ERROR_UPSTREAM),
+				errDummyToken(0, 2, 3),
 			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),
 			Input:    `123.456.789`,
-			Error:    newFault(8),
+			Expect: []token.Token{
+				dummyToken(0, 0, 7, `123.456`, token.TT_NUMBER),
+				errDummyToken(0, 7, 8),
+			},
 		},
 		scanTest{
 			TestLine: fault.CurrLine(),

@@ -1,7 +1,6 @@
 package scanner
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -13,11 +12,12 @@ import (
 // - value or key-value separator
 // - void identifier
 // - number range generator
-func scanSymbol(r *Runer) (token.Token, fault.Fault) {
+func scanSymbol(r *Runer) token.Token {
 
 	ru1, ru2, err := r.LookAhead()
 	if err != nil {
-		return token.ERROR, err
+		start := r.Col() + 1
+		return faultToToken(r, start, err)
 	}
 
 	switch {
@@ -82,7 +82,7 @@ func cmp(a, b rune) bool {
 }
 
 // onMatch creates the new token when a symbol match is found.
-func onMatch(r *Runer, t token.TokenType, count int) (token.Token, fault.Fault) {
+func onMatch(r *Runer, t token.TokenType, count int) token.Token {
 
 	ru, _ := r.ReadRune()
 	s := string(ru)
@@ -99,26 +99,18 @@ func onMatch(r *Runer, t token.TokenType, count int) (token.Token, fault.Fault) 
 		Type:  t,
 	}
 
-	return tk, nil
+	return tk
 }
 
 // unknownNonTerminal creates a fault for when a symbol is not known.
-func unknownNonTerminal(ru rune, line, col int) (token.Token, fault.Fault) {
-	tk := token.Token{
-		Val:   string(ru),
+func unknownNonTerminal(ru rune, line, col int) token.Token {
+	return token.Token{
 		Line:  line,
 		Start: col - 1,
 		End:   col,
 		Type:  token.TT_ERROR_UPSTREAM,
-	}
-
-	err := token.SyntaxFault{
-		Line: line,
-		Col:  col,
-		Msgs: []string{
+		Errors: []string{
 			"I don't know what this symbol means '" + string(ru) + "'",
 		},
 	}
-
-	return tk, err
 }

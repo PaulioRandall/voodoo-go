@@ -49,7 +49,7 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 		case isCommentPrefix(ru1, ru2):
 			tk = scanComment(r)
 		default:
-			tk, err = scanSymbol(r)
+			tk = scanSymbol(r)
 		}
 
 		if tk.Type == token.TT_ERROR_UPSTREAM {
