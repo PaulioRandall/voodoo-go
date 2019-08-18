@@ -5,17 +5,43 @@ import (
 	"unicode"
 
 	"github.com/PaulioRandall/voodoo-go/fault"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
+// errorToken creates a new error token.
+func errorToken(r *Runer, start int, err []string) token.Token {
+	return token.Token{
+		Line:   r.Line(),
+		Start:  start,
+		End:    r.Col() + 1,
+		Type:   token.TT_ERROR_UPSTREAM,
+		Errors: err,
+	}
+}
+
+// TEMP: Removing return fault from scanner
+func readerFaultToStringArray(err fault.Fault) []string {
+	rErr := err.(fault.ReaderFault)
+	sErr := string(rErr)
+	return []string{sErr}
+}
+
+// TEMP: Removing return fault from scanner
+func faultToToken(r *Runer, start int, err fault.Fault) token.Token {
+	rErr := err.(fault.ReaderFault)
+	sErr := string(rErr)
+	errs := []string{sErr}
+	return errorToken(r, start, errs)
+}
+
 // scanWordStr reads a full word from a Runer.
-func scanWordStr(r *Runer) (string, int, fault.Fault) {
+func scanWordStr(r *Runer) (string, fault.Fault) {
 	sb := strings.Builder{}
-	size := 0
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return ``, -1, err
+			return ``, err
 		}
 
 		if !isWordLetter(ru) {
@@ -23,11 +49,10 @@ func scanWordStr(r *Runer) (string, int, fault.Fault) {
 		}
 
 		r.SkipRune()
-		size++
 		sb.WriteRune(ru)
 	}
 
-	return sb.String(), size, nil
+	return sb.String(), nil
 }
 
 // isDecimalDelim returns true if the language considers the rune to be a

@@ -1,46 +1,42 @@
 package scanner
 
 import (
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // scanSpell scans symbols that start with a the '@' rune returning a spell
 // identifier. Spells are inbuilt functions.
-func scanSpell(r *Runer) (token.Token, fault.Fault) {
+func scanSpell(r *Runer) token.Token {
+	start := r.Col() + 1
 
 	first, err := r.ReadRune()
 	ru, _, err := r.LookAhead()
 	if err != nil {
-		return token.ERROR, err
+		return faultToToken(r, start, err)
 	}
 
 	if !isLetter(ru) {
-		return token.ERROR, badSpellName(r.Line(), r.Col()+2)
+		r.SkipRune()
+		return errorToken(r, start, []string{
+			"Expected first rune after '@' to be a letter",
+		})
 	}
 
-	s, size, err := scanWordStr(r)
+	s, err := scanWordStr(r)
 	if err != nil {
-		return token.ERROR, err
+		return faultToToken(r, start, err)
 	}
 
-	tk := token.Token{
-		Val:   string(first) + s,
-		Start: r.Col() - size,
-		End:   r.Col() + 1,
-		Type:  token.TT_SPELL,
-	}
-
-	return tk, nil
+	s = string(first) + s
+	return spellToken(r, start, s)
 }
 
-// badSpellName creates a syntax fault for badly defined spell names.
-func badSpellName(line, col int) fault.Fault {
-	return token.SyntaxFault{
-		Line: line,
-		Col:  col,
-		Msgs: []string{
-			"Expected first rune after '@' to be a letter",
-		},
+// spellToken creates a new spell token.
+func spellToken(r *Runer, start int, val string) token.Token {
+	return token.Token{
+		Val:   val,
+		Start: start,
+		End:   r.Col() + 1,
+		Type:  token.TT_SPELL,
 	}
 }

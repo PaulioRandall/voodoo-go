@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanSpell(t *testing.T) {
-	runScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
+	runScanTest_NEW(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 
 func scanSpellTests() []scanFuncTest {
@@ -34,8 +34,7 @@ func scanSpellTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `@2`,
-			Expect:   token.ERROR,
-			Error:    newFault(1),
+			Expect:   errDummyToken(0, 0, 2),
 		},
 	}
 }

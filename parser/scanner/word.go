@@ -3,26 +3,24 @@ package scanner
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // scanWord scans word tokens returning a keyword or identifier.
-func scanWord(r *Runer) (token.Token, fault.Fault) {
+func scanWord(r *Runer) token.Token {
+	start := r.Col() + 1
 
-	s, size, err := scanWordStr(r)
+	s, err := scanWordStr(r)
 	if err != nil {
-		return token.EMPTY, err
+		return faultToToken(r, start, err)
 	}
 
-	tk := token.Token{
+	return token.Token{
 		Val:   s,
-		Start: r.Col() - size + 1,
+		Start: start,
 		End:   r.Col() + 1,
 		Type:  findWordType(s),
 	}
-
-	return tk, nil
 }
 
 // findWordType finds the type of the word.
