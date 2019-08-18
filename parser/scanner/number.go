@@ -29,6 +29,7 @@ func scanNumber(r *Runer) token.Token {
 func numberToken(r *Runer, start int, val string) token.Token {
 	return token.Token{
 		Val:   val,
+		Line:  r.Line(),
 		Start: start,
 		End:   r.Col() + 1,
 		Type:  token.TT_NUMBER,

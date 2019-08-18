@@ -45,7 +45,7 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 		case isSpellPrefix(ru1):
 			tk = scanSpell(r)
 		case isStringPrefix(ru1):
-			tk, err = scanString(r)
+			tk = scanString(r)
 		case isCommentPrefix(ru1, ru2):
 			tk = scanComment(r)
 		default:

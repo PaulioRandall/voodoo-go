@@ -17,6 +17,7 @@ func scanWord(r *Runer) token.Token {
 
 	return token.Token{
 		Val:   s,
+		Line:  r.Line(),
 		Start: start,
 		End:   r.Col() + 1,
 		Type:  findWordType(s),

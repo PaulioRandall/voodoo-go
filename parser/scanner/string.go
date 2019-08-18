@@ -3,60 +3,62 @@ package scanner
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // scanString scans symbols that start and end with an non-escaped `"` returning
 // a string literal token.
-func scanString(r *Runer) (token.Token, fault.Fault) {
-	s, size, err := scanStr(r)
+func scanString(r *Runer) token.Token {
+	start := r.Col() + 1
+
+	s, err := scanStr(r)
 	if err != nil {
-		return token.ERROR, err
+		return errorToken(r, start, err)
 	}
 
 	tk := token.Token{
 		Val:   s,
-		Start: r.Col() - size + 1,
+		Line:  r.Line(),
+		Start: start,
 		End:   r.Col() + 1,
 		Type:  token.TT_STRING,
 	}
 
-	return tk, nil
+	return tk
 }
 
 // scanStr extracts a string literal from a string iterator returning true if
 // the last rune was escaped.
-func scanStr(r *Runer) (string, int, fault.Fault) {
+func scanStr(r *Runer) (string, []string) {
 
 	open, err := r.ReadRune()
 	if err != nil {
-		return ``, -1, err
+		return ``, readerFaultToStringArray(err)
 	}
 
-	body, err := scanStrBody(r)
-	if err != nil {
-		return ``, -1, err
+	body, errs := scanStrBody(r)
+	if errs != nil {
+		return ``, errs
 	}
 
 	close, err := r.ReadRune()
 	if err != nil {
-		return ``, -1, err
+		return ``, readerFaultToStringArray(err)
 	}
 
 	s := string(open) + body + string(close)
-	return s, len(s), nil
+	return s, nil
 }
 
 // scanStrBody scans the body of a string literal.
-func scanStrBody(r *Runer) (string, fault.Fault) {
+func scanStrBody(r *Runer) (string, []string) {
 	sb := strings.Builder{}
 	isEscaped := false
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return ``, err
+			return ``, readerFaultToStringArray(err)
 		}
 
 		if !isEscaped && ru == '"' {
@@ -64,7 +66,9 @@ func scanStrBody(r *Runer) (string, fault.Fault) {
 		}
 
 		if ru == EOF || isNewline(ru) {
-			return ``, unclosedString(r.Line(), r.Col()+1)
+			return ``, []string{
+				"Did someone forget to close a string literal?!",
+			}
 		}
 
 		if ru == '\\' {
@@ -78,16 +82,4 @@ func scanStrBody(r *Runer) (string, fault.Fault) {
 	}
 
 	return sb.String(), nil
-}
-
-// unclosedString creates a fault for when a string literal is has not been
-// closed before the end of a line or file.
-func unclosedString(line, col int) fault.Fault {
-	return token.SyntaxFault{
-		Line: line,
-		Col:  col,
-		Msgs: []string{
-			"Did someone forget to close a string literal?!",
-		},
-	}
 }

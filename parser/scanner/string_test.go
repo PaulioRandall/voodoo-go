@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanString(t *testing.T) {
-	runScanTest(t, "string_test.go", scanString, scanStringTests())
+	runScanTest_NEW(t, "string_test.go", scanString, scanStringTests())
 }
 
 func scanStringTests() []scanFuncTest {
@@ -46,14 +46,12 @@ func scanStringTests() []scanFuncTest {
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `"`,
-			Expect:   token.ERROR,
-			Error:    newFault(1),
+			Expect:   errDummyToken(0, 0, 1),
 		},
 		scanFuncTest{
 			TestLine: fault.CurrLine(),
 			Input:    `"escaped \"`,
-			Expect:   token.ERROR,
-			Error:    newFault(11),
+			Expect:   errDummyToken(0, 0, 11),
 		},
 	}
 }
