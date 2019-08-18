@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanSymbol(t *testing.T) {
-	runScanTest_NEW(t, "symbol_test.go", scanSymbol, scanSymbolTests())
+	runScanTest(t, "symbol_test.go", scanSymbol, scanSymbolTests())
 }
 
 func scanSymbolTests() []scanFuncTest {

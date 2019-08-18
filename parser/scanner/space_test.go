@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanSpace(t *testing.T) {
-	runScanTest_NEW(t, "space_test.go", scanSpace, scanSpaceTests())
+	runScanTest(t, "space_test.go", scanSpace, scanSpaceTests())
 }
 
 func scanSpaceTests() []scanFuncTest {

@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanSpell(t *testing.T) {
-	runScanTest_NEW(t, "spell_test.go", scanSpell, scanSpellTests())
+	runScanTest(t, "spell_test.go", scanSpell, scanSpellTests())
 }
 
 func scanSpellTests() []scanFuncTest {

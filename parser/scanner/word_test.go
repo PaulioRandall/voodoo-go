@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanWord(t *testing.T) {
-	runScanTest_NEW(t, "word_test.go", scanWord, scanWordTests())
+	runScanTest(t, "word_test.go", scanWord, scanWordTests())
 }
 
 func scanWordTests() []scanFuncTest {

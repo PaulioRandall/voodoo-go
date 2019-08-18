@@ -8,7 +8,7 @@ import (
 )
 
 func TestScanComment(t *testing.T) {
-	runScanTest_NEW(t, "comment_test.go", scanComment, scanCommentTests())
+	runScanTest(t, "comment_test.go", scanComment, scanCommentTests())
 }
 
 func scanCommentTests() []scanFuncTest {
