@@ -20,12 +20,7 @@ func Execute(sc *Scroll, scArgs []string) int {
 	go strimmer.Strim(scanChan, strimChan)
 
 	r := newRuner(sc.Data)
-	err := scanner.Scan(r, true, scanChan)
-
-	if err != nil {
-		err.Print(sc.File)
-		return 1
-	}
+	scanner.Scan(r, true, scanChan)
 
 	<-done
 

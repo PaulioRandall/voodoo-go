@@ -22,7 +22,7 @@ func scanSpell(r *Runer) token.Token {
 	if !isLetter(ru) {
 		r.SkipRune()
 		return errorToken(r, start, []string{
-			"Expected first rune after '@' to be a letter",
+			"Expected letter after '@'",
 		})
 	}
 

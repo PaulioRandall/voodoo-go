@@ -59,7 +59,7 @@ func TestScan(t *testing.T) {
 		go collateLine(inChan, outChan)
 
 		r := newRuner(tc.Input)
-		_ = Scan(r, false, inChan)
+		Scan(r, false, inChan)
 		act := <-outChan
 
 		for i, expTk := range tc.Expect {

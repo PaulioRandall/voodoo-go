@@ -3,13 +3,12 @@ package scanner
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // Scan scans tokens from a stream of code using longest match and pushes them
 // onto a channel for processing.
-func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
+func Scan(r *Runer, shebang bool, out chan token.Token) {
 	defer close(out)
 
 	var tk token.Token
@@ -18,18 +17,19 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 		tk = scanShebang(r)
 		out <- tk
 		if tk.Type == token.TT_ERROR_UPSTREAM {
-			return nil
+			return
 		}
 	}
 
 	for {
 		ru1, ru2, err := r.LookAhead()
 		if err != nil {
-			return fault.ReaderFault(err.Error())
+			return
 		}
 
 		if ru1 == EOF {
-			return nil
+			// TODO: Should an EOS be sent first?
+			return
 		}
 
 		switch {
@@ -53,11 +53,7 @@ func Scan(r *Runer, shebang bool, out chan token.Token) fault.Fault {
 
 		if tk.Type == token.TT_ERROR_UPSTREAM {
 			out <- tk
-			return nil
-		}
-
-		if err != nil {
-			return fault.ReaderFault(err.Error())
+			return
 		}
 
 		out <- tk
