@@ -9,13 +9,13 @@ import (
 // scanComment scans comments. Comments can start anywhere and continue to the
 // end of the line
 func scanComment(r *Runer) token.Token {
-	start := r.Col() + 1
+	start := r.NextCol()
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return errorToToken(r, start, err)
+			return *runerErrorToken(r, err)
 		}
 
 		if isNewline(ru) || ru == EOF {
@@ -30,12 +30,12 @@ func scanComment(r *Runer) token.Token {
 }
 
 // commentToken creates a new comment token.
-func commentToken(r *Runer, start int, val string) token.Token {
+func commentToken(r *Runer, start int, v string) token.Token {
 	return token.Token{
-		Val:   val,
+		Val:   v,
 		Line:  r.Line(),
 		Start: start,
-		End:   r.Col() + 1,
+		End:   r.NextCol(),
 		Type:  token.TT_COMMENT,
 	}
 }

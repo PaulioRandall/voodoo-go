@@ -29,6 +29,17 @@ func errorToToken(r *Runer, start int, err error) token.Token {
 	}
 }
 
+// runerErrorToken creates a new error token from an error returned by a Runer.
+func runerErrorToken(r *Runer, err error) *token.Token {
+	return &token.Token{
+		Line:   r.Line(),
+		Start:  -1,
+		End:    r.NextCol(),
+		Type:   token.TT_ERROR_UPSTREAM,
+		Errors: []string{err.Error()},
+	}
+}
+
 // scanWordStr reads a full word from a Runer.
 func scanWordStr(r *Runer) (string, error) {
 	sb := strings.Builder{}

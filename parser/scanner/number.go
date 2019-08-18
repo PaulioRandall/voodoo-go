@@ -9,16 +9,16 @@ import (
 // scanNumber scans symbols that start with a unicode category Nd rune returning
 // a literal number token.
 func scanNumber(r *Runer) token.Token {
-	start := r.Col() + 1
+	start := r.NextCol()
 
 	sig, err := scanSignificant(r)
 	if err != nil {
-		return errorToken(r, start, err)
+		return *err
 	}
 
 	frac, err := scanFractional(r)
 	if err != nil {
-		return errorToken(r, start, err)
+		return *err
 	}
 
 	s := sig + frac
@@ -26,37 +26,22 @@ func scanNumber(r *Runer) token.Token {
 }
 
 // numberToken creates a new number token.
-func numberToken(r *Runer, start int, val string) token.Token {
+func numberToken(r *Runer, start int, v string) token.Token {
 	return token.Token{
-		Val:   val,
+		Val:   v,
 		Line:  r.Line(),
 		Start: start,
-		End:   r.Col() + 1,
+		End:   r.NextCol(),
 		Type:  token.TT_NUMBER,
 	}
 }
 
-// scanSignificant scans the significant part of a number.
-func scanSignificant(r *Runer) (string, []string) {
-	first, err := r.ReadRune()
-	if err != nil {
-		return ``, []string{err.Error()}
-	}
-
-	sig, errs := scanInt(r)
-	if errs != nil {
-		return ``, errs
-	}
-
-	return string(first) + sig, nil
-}
-
 // scanFractional scans the fractional part of a number including the decimal
 // separator.
-func scanFractional(r *Runer) (string, []string) {
+func scanFractional(r *Runer) (string, *token.Token) {
 	ru, _, err := r.LookAhead()
 	if err != nil {
-		return ``, []string{err.Error()}
+		return ``, runerErrorToken(r, err)
 	}
 
 	if !isDecimalDelim(ru) {
@@ -64,30 +49,73 @@ func scanFractional(r *Runer) (string, []string) {
 	}
 
 	r.SkipRune()
-	frac, errs := scanInt(r)
-	if errs != nil {
-		return ``, errs
+	return scanFractionalDigits(r, string(ru))
+}
+
+// scanFractionalDigits scans the digits of the fractional part of a number
+// returning the full fractional part.
+func scanFractionalDigits(r *Runer, delim string) (string, *token.Token) {
+	n, err := scanInt(r)
+	if err != nil {
+		return ``, runerErrorToken(r, err)
 	}
 
-	if len(frac) == 0 || !strings.ContainsAny(frac, "0123456789") {
-		return ``, []string{
+	if len(n) == 0 || onlyContainsUnderscores(n) {
+		return ``, badFractionalToken(r)
+	}
+
+	return delim + n, nil
+}
+
+// badFractionalToken creates a new error token for invalid fractional syntax.
+func badFractionalToken(r *Runer) *token.Token {
+	return &token.Token{
+		Line: r.Line(),
+		End:  r.NextCol(),
+		Type: token.TT_ERROR_UPSTREAM,
+		Errors: []string{
 			"Invalid number format, either...",
 			" - fractional digits are missing",
 			" - or the decimal separator is a typo",
-		}
+		},
 	}
-
-	return string(ru) + frac, nil
 }
 
-// scanInt scans an integer.
-func scanInt(r *Runer) (string, []string) {
+// onlyContainsUnderscores returns true if the string only contains underscores.
+func onlyContainsUnderscores(s string) bool {
+	for _, ru := range s {
+		if !isUnderscore(ru) {
+			return false
+		}
+	}
+	return true
+}
+
+// scanSignificant scans the significant part of a number. E.g. `123` from the
+// number `123.456`.
+func scanSignificant(r *Runer) (string, *token.Token) {
+	head, err := r.ReadRune()
+	if err != nil {
+		return ``, runerErrorToken(r, err)
+	}
+
+	tail, err := scanInt(r)
+	if err != nil {
+		return ``, runerErrorToken(r, err)
+	}
+
+	return string(head) + tail, nil
+}
+
+// scanInt scans all digits that make up an integer. Underscores are allowed as
+// separators.
+func scanInt(r *Runer) (string, error) {
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return ``, []string{err.Error()}
+			return ``, err
 		}
 
 		if !isDigit(ru) && !isUnderscore(ru) {

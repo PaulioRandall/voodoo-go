@@ -44,6 +44,12 @@ func (r *Runer) Col() int {
 	return r.col
 }
 
+// NextCol returns the column index after the last rune returned or 0 if no
+// calls to read runes has been made yet.
+func (r *Runer) NextCol() int {
+	return r.col + 1
+}
+
 // ReadRune reads the next rune from the reader. EOF is returned if the end of
 // the file has been reached.
 func (r *Runer) ReadRune() (rune, error) {
