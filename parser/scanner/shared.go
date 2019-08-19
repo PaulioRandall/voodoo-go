@@ -8,11 +8,10 @@ import (
 )
 
 // errorToken creates a new error token.
-func errorToken(r *Runer, start int, err []string) token.Token {
+func errorToken(r *Runer, err []string) token.Token {
 	return token.Token{
 		Line:   r.Line(),
-		Start:  start,
-		End:    r.Col() + 1,
+		End:    r.NextCol(),
 		Type:   token.TT_ERROR_UPSTREAM,
 		Errors: err,
 	}
