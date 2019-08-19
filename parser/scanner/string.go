@@ -1,7 +1,6 @@
 package scanner
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/parser/token"
@@ -10,64 +9,58 @@ import (
 // scanString scans symbols that start and end with an non-escaped `"` returning
 // a string literal token.
 func scanString(r *Runer) token.Token {
-	start := r.Col() + 1
+	start := r.NextCol()
 
-	s, err := scanStr(r)
-	if err != nil {
-		return errorToToken(r, start, err)
+	s, errTk := scanStr(r)
+	if errTk != nil {
+		return *errTk
 	}
 
-	tk := token.Token{
+	return token.Token{
 		Val:   s,
 		Line:  r.Line(),
 		Start: start,
-		End:   r.Col() + 1,
+		End:   r.NextCol(),
 		Type:  token.TT_STRING,
 	}
-
-	return tk
 }
 
-// scanStr extracts a string literal from a string iterator returning true if
-// the last rune was escaped.
-func scanStr(r *Runer) (string, error) {
+// scanStr extracts a string literal, including the quotes, from a Runer.
+func scanStr(r *Runer) (string, *token.Token) {
 
 	open, err := r.ReadRune()
 	if err != nil {
-		return ``, err
+		return ``, runerErrorToken(r, err)
 	}
 
-	body, errs := scanStrBody(r)
-	if errs != nil {
-		return ``, errs
+	body, errTk := scanStrBody(r)
+	if errTk != nil {
+		return ``, errTk
 	}
 
 	close, err := r.ReadRune()
 	if err != nil {
-		return ``, err
+		return ``, runerErrorToken(r, err)
 	}
 
 	s := string(open) + body + string(close)
 	return s, nil
 }
 
-// scanStrBody scans the body of a string literal.
-func scanStrBody(r *Runer) (string, error) {
+// scanStrBody scans the body of a string literal, everything between the
+// quotes.
+func scanStrBody(r *Runer) (string, *token.Token) {
 	sb := strings.Builder{}
 	isEscaped := false
 
 	for {
-		ru, _, err := r.LookAhead()
-		if err != nil {
-			return ``, err
+		ru, errTk := lookAhead(r)
+		if errTk != nil {
+			return ``, errTk
 		}
 
 		if !isEscaped && ru == '"' {
 			break
-		}
-
-		if ru == EOF || isNewline(ru) {
-			return ``, errors.New(`Did someone forget to close a string literal?!`)
 		}
 
 		if ru == '\\' {
@@ -81,4 +74,21 @@ func scanStrBody(r *Runer) (string, error) {
 	}
 
 	return sb.String(), nil
+}
+
+// lookAhead returns the next rune in the Runer without incrementing its
+// internal rune index counter and checks the EOF has not been reached.
+func lookAhead(r *Runer) (rune, *token.Token) {
+	ru, _, err := r.LookAhead()
+	if err != nil {
+		return ru, runerErrorToken(r, err)
+	}
+
+	if ru == EOF || isNewline(ru) {
+		return ru, errorToken(r, []string{
+			`Did someone forget to close a string literal?!`,
+		})
+	}
+
+	return ru, nil
 }
