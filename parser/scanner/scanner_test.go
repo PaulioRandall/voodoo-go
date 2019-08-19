@@ -89,7 +89,7 @@ func scanTests() []scanTest {
 			Expect: []token.Token{
 				dummyToken(0, 0, 1, `x`, token.TT_ID),
 				dummyToken(0, 1, 2, ` `, token.TT_SPACE),
-				errDummyToken(0, 2, 3),
+				errDummyToken(0, 0, 2),
 			},
 		},
 		scanTest{
@@ -97,7 +97,7 @@ func scanTests() []scanTest {
 			Input:    `123.456.789`,
 			Expect: []token.Token{
 				dummyToken(0, 0, 7, `123.456`, token.TT_NUMBER),
-				errDummyToken(0, 7, 8),
+				errDummyToken(0, 0, 7),
 			},
 		},
 		scanTest{
