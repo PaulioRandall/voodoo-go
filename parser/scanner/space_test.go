@@ -11,30 +11,34 @@ func TestScanSpace(t *testing.T) {
 	runScanTokenTests(t, "space_test.go", scanSpace, scanSpaceTests())
 }
 
+func dummySpaceToken(end int, s string) token.Token {
+	return dummyToken(0, 0, end, s, token.TT_SPACE)
+}
+
 func scanSpaceTests() []tfTest {
 	return []tfTest{
 		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          ` `,
-			Expect:         dummyToken(0, 0, 1, ` `, token.TT_SPACE),
+			Expect:         dummySpaceToken(1, ` `),
 			NextUnreadRune: EOF,
 		},
 		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "\t",
-			Expect:         dummyToken(0, 0, 1, "\t", token.TT_SPACE),
+			Expect:         dummySpaceToken(1, "\t"),
 			NextUnreadRune: EOF,
 		},
 		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "   abc",
-			Expect:         dummyToken(0, 0, 3, "   ", token.TT_SPACE),
+			Expect:         dummySpaceToken(3, "   "),
 			NextUnreadRune: 'a',
 		},
 		tfTest{
 			TestLine:       fault.CurrLine(),
 			Input:          "\t\f \n\v\r",
-			Expect:         dummyToken(0, 0, 3, "\t\f ", token.TT_SPACE),
+			Expect:         dummySpaceToken(3, "\t\f "),
 			NextUnreadRune: '\n',
 		},
 	}

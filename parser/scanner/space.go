@@ -8,15 +8,16 @@ import (
 
 // scanSpace scans tokens that start with a unicode whitespace property rune
 // returning a token representing all whitespace between two non-whitespace
-// tokens. Newlines are the exception as they have a token of there own.
+// tokens. Newlines are an exception here and considered as a non-whitespace
+// character; they have a token of their own.
 func scanSpace(r *Runer) token.Token {
 	sb := strings.Builder{}
-	start := r.Col() + 1
+	start := r.NextCol()
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return errorToToken(r, start, err)
+			return *runerErrorToken(r, err)
 		}
 
 		if !isSpace(ru) {
@@ -30,13 +31,13 @@ func scanSpace(r *Runer) token.Token {
 	return spaceToken(r, start, sb.String())
 }
 
-// spaceToken creates a new number token.
-func spaceToken(r *Runer, start int, val string) token.Token {
+// spaceToken creates a new space token.
+func spaceToken(r *Runer, start int, v string) token.Token {
 	return token.Token{
-		Val:   val,
+		Val:   v,
 		Line:  r.Line(),
 		Start: start,
-		End:   r.Col() + 1,
+		End:   r.NextCol(),
 		Type:  token.TT_SPACE,
 	}
 }
