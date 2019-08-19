@@ -8,18 +8,18 @@ import (
 
 // scanWord scans word tokens returning a keyword or identifier.
 func scanWord(r *Runer) token.Token {
-	start := r.Col() + 1
+	start := r.NextCol()
 
 	s, err := scanWordStr(r)
 	if err != nil {
-		return errorToToken(r, start, err)
+		return *runerErrorToken(r, err)
 	}
 
 	return token.Token{
 		Val:   s,
 		Line:  r.Line(),
 		Start: start,
-		End:   r.Col() + 1,
+		End:   r.NextCol(),
 		Type:  findWordType(s),
 	}
 }
