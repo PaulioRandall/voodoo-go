@@ -31,7 +31,7 @@ func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 	switch {
 	case ru1 == EOF:
 	case r.Line() == 0:
-		//f = scanShebang
+		f = scanShebang
 	case isNewline(ru1):
 		f = scanNewline
 	case isLetter(ru1):
@@ -39,15 +39,15 @@ func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 	case isNaturalDigit(ru1):
 		f = scanNumber
 	case isSpace(ru1):
-		//f = scanSpace
+		f = scanSpace
 	case isSpellPrefix(ru1):
-		//f = scanSpell
+		f = scanSpell
 	case isStringPrefix(ru1):
-		//f = scanString
+		f = scanString
 	case isCommentPrefix(ru1, ru2):
 		f = scanComment
 	default:
-		//f = scanSymbol
+		f = scanSymbol
 	}
 
 	return
