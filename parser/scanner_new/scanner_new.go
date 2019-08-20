@@ -14,7 +14,7 @@ type ParseToken func(*Runer) token.Token
 
 // Scan finds an appropriate function to parse the next token producable from
 // the Runer.
-func NEW_Scan(r *Runer) (f ParseToken, errTk *token.Token) {
+func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 
 	ru1, ru2, err := r.LookAhead()
 	if err != nil {
@@ -25,7 +25,7 @@ func NEW_Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 	switch {
 	case ru1 == EOF:
 	case r.Line() == 0:
-		f = NEW_scanShebang
+		f = scanShebang
 	case isNewline(ru1):
 		f = scanNewline
 	case isLetter(ru1):
@@ -48,7 +48,7 @@ func NEW_Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 }
 
 // scanShebang scans a shebang line.
-func NEW_scanShebang(r *Runer) token.Token {
+func scanShebang(r *Runer) token.Token {
 	start := r.NextCol()
 	sb := strings.Builder{}
 
