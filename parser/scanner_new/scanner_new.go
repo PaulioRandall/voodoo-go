@@ -41,7 +41,7 @@ func Scan(r *Runer) (errTk *token.Token, f ParseToken) {
 	case isStringPrefix(ru1):
 		//f = scanString
 	case isCommentPrefix(ru1, ru2):
-		//f = scanComment
+		f = scanComment
 	default:
 		//f = scanSymbol
 	}

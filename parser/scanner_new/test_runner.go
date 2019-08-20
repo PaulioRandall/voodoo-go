@@ -16,7 +16,7 @@ type parseTokenTest struct {
 	TestLine int
 	Input    string
 	Expect   token.Token
-	NextFunc ParseToken
+	NilFunc  bool
 }
 
 // parserTokenTester runs the input test cases on the input scan function.
@@ -29,12 +29,7 @@ func parserTokenTester(t *testing.T, file string, f ParseToken, tests []parseTok
 		tk, f := f(r)
 
 		assertToken(t, tc.Expect, *tk)
-		if tc.NextFunc == nil {
-			assert.Nil(t, f)
-		} else {
-			assert.Equal(t, tc.NextFunc, f)
-		}
-
+		assert.Equal(t, tc.NilFunc, f == nil)
 	}
 }
 

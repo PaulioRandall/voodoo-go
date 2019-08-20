@@ -21,51 +21,61 @@ func scanWordTests() []parseTokenTest {
 			TestLine: fault.CurrLine(),
 			Input:    `a`,
 			Expect:   dummyWordToken(1, `a`, token.TT_ID),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `abc_123`,
 			Expect:   dummyWordToken(7, `abc_123`, token.TT_ID),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `a__________123456789`,
 			Expect:   dummyWordToken(20, `a__________123456789`, token.TT_ID),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `abc efg`,
 			Expect:   dummyWordToken(3, `abc`, token.TT_ID),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `func`,
 			Expect:   dummyWordToken(4, `func`, token.TT_FUNC),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `loop`,
 			Expect:   dummyWordToken(4, `loop`, token.TT_LOOP),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `when`,
 			Expect:   dummyWordToken(4, `when`, token.TT_WHEN),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `done`,
 			Expect:   dummyWordToken(4, `done`, token.TT_DONE),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `true`,
 			Expect:   dummyWordToken(4, `true`, token.TT_TRUE),
+			NilFunc:  true,
 		},
 		parseTokenTest{
 			TestLine: fault.CurrLine(),
 			Input:    `false`,
 			Expect:   dummyWordToken(5, `false`, token.TT_FALSE),
+			NilFunc:  true,
 		},
 	}
 }
