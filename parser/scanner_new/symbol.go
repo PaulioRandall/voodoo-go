@@ -69,7 +69,7 @@ func scanSymbol(r *Runer) (*token.Token, ParseToken, *token.Token) {
 		return nil, nil, unknownSymbol(r, ru1)
 	}
 
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // symbolToken creates the new token when a symbol match is found.

@@ -36,7 +36,7 @@ func scanSpell(r *Runer) (tk *token.Token, _ ParseToken, errTk *token.Token) {
 	s = string(first) + s
 	tk = spellToken(r, start, s)
 
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // spellToken creates a new spell token.

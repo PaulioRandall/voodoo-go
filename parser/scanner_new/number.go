@@ -24,7 +24,7 @@ func scanNumber(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	s := sig + frac
 	tk := numberToken(r, start, s)
 
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // numberToken creates a new number token.

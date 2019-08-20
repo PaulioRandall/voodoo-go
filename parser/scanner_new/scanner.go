@@ -53,9 +53,9 @@ func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 	return
 }
 
-// ScanNext invokes Scan() returning the input token and the next ParseToken
+// scanNext invokes Scan() returning the input token and the next ParseToken
 // function to execute. If Scan() fails then an error Token is returned instead.
-func ScanNext(r *Runer, tk *token.Token) (*token.Token, ParseToken, *token.Token) {
+func scanNext(r *Runer, tk *token.Token) (*token.Token, ParseToken, *token.Token) {
 	f, errTk := Scan(r)
 	if errTk != nil {
 		return nil, nil, errTk
@@ -89,7 +89,7 @@ func scanShebang(r *Runer) (*token.Token, ParseToken, *token.Token) {
 		Type:  token.TT_SHEBANG,
 	}
 
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // scanNewline scans a newline token.
@@ -102,5 +102,5 @@ func scanNewline(r *Runer) (*token.Token, ParseToken, *token.Token) {
 		Type:  token.TT_NEWLINE,
 	}
 
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }

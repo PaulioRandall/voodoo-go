@@ -27,7 +27,7 @@ func scanComment(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	}
 
 	tk := commentToken(r, start, sb.String())
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // commentToken creates a new comment token.

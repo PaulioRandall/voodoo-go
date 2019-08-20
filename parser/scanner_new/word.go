@@ -23,7 +23,7 @@ func scanWord(r *Runer) (*token.Token, ParseToken, *token.Token) {
 		Type:  findWordType(s),
 	}
 
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // findWordType finds the type of the word.

@@ -24,7 +24,7 @@ func scanString(r *Runer) (*token.Token, ParseToken, *token.Token) {
 		Type:  token.TT_STRING,
 	}
 
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // scanStr extracts a string literal, including the quotes, from a Runer.

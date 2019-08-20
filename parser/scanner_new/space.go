@@ -29,7 +29,7 @@ func scanSpace(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	}
 
 	tk := spaceToken(r, start, sb.String())
-	return ScanNext(r, tk)
+	return scanNext(r, tk)
 }
 
 // spaceToken creates a new space token.
