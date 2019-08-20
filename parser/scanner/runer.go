@@ -76,6 +76,7 @@ func (r *Runer) SkipRune() error {
 	return err
 }
 
+// TODO: Doesn't need to return two runes, only needs the first!
 // LookAhead returns the next two runes in the sequence without incrementing the
 // 'cursor'. After a call to LookAhead() it is safe to ignore the error returned
 // on the next two calls to ReadRune() or SkipRune().
