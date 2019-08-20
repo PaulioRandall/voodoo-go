@@ -2,7 +2,6 @@ package scanner_new
 
 import (
 	"bufio"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -10,34 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-// parseTokenTest represents a test case for any ParseToken scanning function.
-type parseTokenTest struct {
-	TestLine int
-	Input    string
-	Expect   token.Token
-	NilFunc  bool
-}
-
-// parserTokenTester runs the input test cases on the input scan function.
-func parserTokenTester(t *testing.T, file string, f ParseToken, tests []parseTokenTest) {
-
-	for _, tc := range tests {
-		logTestLine(t, file, tc)
-
-		r := dummyRuner(tc.Input)
-		tk, f := f(r)
-
-		assertToken(t, tc.Expect, *tk)
-		assert.Equal(t, tc.NilFunc, f == nil)
-	}
-}
-
-// logTestLine prints the line in the test file where the test was declared.
-func logTestLine(t *testing.T, file string, tc parseTokenTest) {
-	testLine := strconv.Itoa(tc.TestLine)
-	t.Log("-> " + file + " : " + testLine)
-}
 
 // dummyRuner creates a new Runer from the input string.
 func dummyRuner(s string) *Runer {
