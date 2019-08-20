@@ -33,7 +33,7 @@ func Scan(r *Runer) (errTk *token.Token, f ParseToken) {
 	case isLetter(ru1):
 		f = scanWord
 	case isNaturalDigit(ru1):
-		//f = scanNumber
+		f = scanNumber
 	case isSpace(ru1):
 		//f = scanSpace
 	case isSpellPrefix(ru1):
