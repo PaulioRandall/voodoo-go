@@ -1,4 +1,4 @@
-package scanner
+package scanner_new
 
 import (
 	"strings"
@@ -29,19 +29,19 @@ func NEW_Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 	case isNewline(ru1):
 		f = scanNewline
 	case isLetter(ru1):
-		f = scanWord
+		//f = scanWord
 	case isNaturalDigit(ru1):
-		f = scanNumber
+		//f = scanNumber
 	case isSpace(ru1):
-		f = scanSpace
+		//f = scanSpace
 	case isSpellPrefix(ru1):
-		f = scanSpell
+		//f = scanSpell
 	case isStringPrefix(ru1):
-		f = scanString
+		//f = scanString
 	case isCommentPrefix(ru1, ru2):
-		f = scanComment
+		//f = scanComment
 	default:
-		f = scanSymbol
+		//f = scanSymbol
 	}
 
 	return
