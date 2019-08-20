@@ -7,16 +7,6 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-// ScanNext invokes Scan() returning the input token and the next ParseToken
-// function to execute. If Scan() fails then an error Token is returned instead.
-func ScanNext(r *Runer, tk *token.Token) (*token.Token, ParseToken) {
-	errTk, f := Scan(r)
-	if errTk != nil {
-		return errTk, nil
-	}
-	return tk, f
-}
-
 // errorToken creates a new error token.
 func errorToken(r *Runer, err []string) *token.Token {
 	return &token.Token{

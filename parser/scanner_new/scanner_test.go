@@ -36,7 +36,7 @@ func assertTokens(t *testing.T, exp []token.Token, act []token.Token) {
 	for i, expTk := range exp {
 		require.True(t, i < len(act))
 		actTk := act[i]
-		assertToken(t, expTk, actTk)
+		assertToken(t, &expTk, &actTk)
 	}
 
 	assert.Equal(t, len(exp), len(act))
@@ -47,15 +47,19 @@ func runScanTest(tc scanTest) []token.Token {
 	r := newRuner(tc.Input)
 	tks := []token.Token{}
 
-	tk, f := Scan(r)
-	if tk != nil {
-		tks = append(tks, *tk)
+	f, errTk := Scan(r)
+	if errTk != nil {
+		tks = append(tks, *errTk)
 		return tks
 	}
 
-	for f != nil && tk.Type != token.TT_ERROR_UPSTREAM {
-		tk, f = f(r)
-		tks = append(tks, *tk)
+	for f != nil {
+		tk, _, errTk := f(r)
+		if tk != nil {
+			tks = append(tks, *tk)
+		} else if errTk != nil {
+			tks = append(tks, *errTk)
+		}
 	}
 
 	return tks

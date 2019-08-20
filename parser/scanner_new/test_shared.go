@@ -48,10 +48,15 @@ func readRequireNoErr(t *testing.T, r *Runer) rune {
 
 // assertToken asserts that the actual token equals the expected token except
 // for the error messages.
-func assertToken(t *testing.T, exp token.Token, act token.Token) {
-	assert.Equal(t, exp.Val, act.Val)
-	assert.Equal(t, exp.Line, act.Line)
-	assert.Equal(t, exp.Start, act.Start)
-	assert.Equal(t, exp.End, act.End)
-	assert.Equal(t, exp.Type, act.Type)
+func assertToken(t *testing.T, exp *token.Token, act *token.Token) {
+	if exp == nil {
+		assert.Nil(t, act)
+	} else {
+		require.NotNil(t, act)
+		assert.Equal(t, exp.Val, act.Val)
+		assert.Equal(t, exp.Line, act.Line)
+		assert.Equal(t, exp.Start, act.Start)
+		assert.Equal(t, exp.End, act.End)
+		assert.Equal(t, exp.Type, act.Type)
+	}
 }

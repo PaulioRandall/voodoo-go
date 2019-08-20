@@ -6,10 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-func doTestScanNumber(t *testing.T, in string, exp token.Token) {
+func doTestScanNumber(t *testing.T, in string, exp, expErr *token.Token) {
 	r := dummyRuner(in)
-	tk, _ := scanNumber(r)
-	assertToken(t, exp, *tk)
+	tk, _, errTk := scanNumber(r)
+	assertToken(t, exp, tk)
+	assertToken(t, expErr, errTk)
 }
 
 func dummyNumToken(end int, s string) token.Token {
@@ -23,53 +24,53 @@ func dummyNumErrToken(end int) token.Token {
 func TestScanNumber_1(t *testing.T) {
 	in := `123`
 	exp := dummyNumToken(3, `123`)
-	doTestScanNumber(t, in, exp)
+	doTestScanNumber(t, in, &exp, nil)
 }
 
 func TestScanNumber_2(t *testing.T) {
 	in := `123 + 456`
 	exp := dummyNumToken(3, `123`)
-	doTestScanNumber(t, in, exp)
+	doTestScanNumber(t, in, &exp, nil)
 }
 
 func TestScanNumber_3(t *testing.T) {
 	in := `123_456`
 	exp := dummyNumToken(7, `123_456`)
-	doTestScanNumber(t, in, exp)
+	doTestScanNumber(t, in, &exp, nil)
 }
 
 func TestScanNumber_4(t *testing.T) {
 	in := `123.456`
 	exp := dummyNumToken(7, `123.456`)
-	doTestScanNumber(t, in, exp)
+	doTestScanNumber(t, in, &exp, nil)
 }
 
 func TestScanNumber_5(t *testing.T) {
 	in := `123.456_789`
 	exp := dummyNumToken(11, `123.456_789`)
-	doTestScanNumber(t, in, exp)
+	doTestScanNumber(t, in, &exp, nil)
 }
 
 func TestScanNumber_6(t *testing.T) {
 	in := `1__2__3__.__4__5__6__`
 	exp := dummyNumToken(21, `1__2__3__.__4__5__6__`)
-	doTestScanNumber(t, in, exp)
+	doTestScanNumber(t, in, &exp, nil)
 }
 
 func TestScanNumber_7(t *testing.T) {
 	in := `123.`
-	exp := dummyNumErrToken(4)
-	doTestScanNumber(t, in, exp)
+	expErr := dummyNumErrToken(4)
+	doTestScanNumber(t, in, nil, &expErr)
 }
 
 func TestScanNumber_8(t *testing.T) {
 	in := `123..456`
-	exp := dummyNumErrToken(4)
-	doTestScanNumber(t, in, exp)
+	expErr := dummyNumErrToken(4)
+	doTestScanNumber(t, in, nil, &expErr)
 }
 
 func TestScanNumber_9(t *testing.T) {
 	in := `123.___`
-	exp := dummyNumErrToken(7)
-	doTestScanNumber(t, in, exp)
+	expErr := dummyNumErrToken(7)
+	doTestScanNumber(t, in, nil, &expErr)
 }

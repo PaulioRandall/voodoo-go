@@ -12,11 +12,15 @@ import (
 // from an input stream. Only the first part of the stream that provides longest
 // match against the production rules of the specific Token will be read. If an
 // error occurs then an error token will be returned instead.
-type ParseToken func(*Runer) (*token.Token, ParseToken)
+//
+// The first returned token alwyas represents a valid parsed token while the
+// last always represents an error. On return, one should be nil and the other
+// non-nil.
+type ParseToken func(*Runer) (tk *token.Token, f ParseToken, errTk *token.Token)
 
 // Scan finds an appropriate function to parse the next token producable from
-// the Runer. It is also an implementation of ParseToken function type.
-func Scan(r *Runer) (errTk *token.Token, f ParseToken) {
+// the Runer.
+func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 
 	ru1, ru2, err := r.LookAhead()
 	if err != nil {
@@ -49,15 +53,25 @@ func Scan(r *Runer) (errTk *token.Token, f ParseToken) {
 	return
 }
 
+// ScanNext invokes Scan() returning the input token and the next ParseToken
+// function to execute. If Scan() fails then an error Token is returned instead.
+func ScanNext(r *Runer, tk *token.Token) (*token.Token, ParseToken, *token.Token) {
+	f, errTk := Scan(r)
+	if errTk != nil {
+		return nil, nil, errTk
+	}
+	return tk, f, nil
+}
+
 // scanShebang scans a shebang line.
-func scanShebang(r *Runer) (*token.Token, ParseToken) {
+func scanShebang(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return runerErrorToken(r, err), nil
+			return nil, nil, runerErrorToken(r, err)
 		}
 
 		if isNewline(ru) || ru == EOF {
@@ -79,7 +93,7 @@ func scanShebang(r *Runer) (*token.Token, ParseToken) {
 }
 
 // scanNewline scans a newline token.
-func scanNewline(r *Runer) (*token.Token, ParseToken) {
+func scanNewline(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	r.SkipRune()
 	tk := &token.Token{
 		Val:   "\n",

@@ -8,14 +8,14 @@ import (
 
 // scanComment scans comments. Comments can start anywhere and continue to the
 // end of the line
-func scanComment(r *Runer) (*token.Token, ParseToken) {
+func scanComment(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return runerErrorToken(r, err), nil
+			return nil, nil, runerErrorToken(r, err)
 		}
 
 		if isNewline(ru) || ru == EOF {

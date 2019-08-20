@@ -6,10 +6,11 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-func doTestScanComment(t *testing.T, in string, exp token.Token) {
+func doTestScanComment(t *testing.T, in string, exp *token.Token) {
 	r := dummyRuner(in)
-	tk, _ := scanComment(r)
-	assertToken(t, exp, *tk)
+	tk, _, errTk := scanComment(r)
+	assertToken(t, exp, tk)
+	assertToken(t, nil, errTk)
 }
 
 func dummyCommentToken(end int, s string) token.Token {
@@ -19,11 +20,11 @@ func dummyCommentToken(end int, s string) token.Token {
 func TestScanComment_1(t *testing.T) {
 	in := `// 123`
 	exp := dummyCommentToken(6, `// 123`)
-	doTestScanComment(t, in, exp)
+	doTestScanComment(t, in, &exp)
 }
 
 func TestScanComment_2(t *testing.T) {
 	in := "// 123\n456"
 	exp := dummyCommentToken(6, `// 123`)
-	doTestScanComment(t, in, exp)
+	doTestScanComment(t, in, &exp)
 }

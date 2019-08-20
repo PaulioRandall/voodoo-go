@@ -7,12 +7,12 @@ import (
 )
 
 // scanWord scans word tokens returning a keyword or identifier.
-func scanWord(r *Runer) (*token.Token, ParseToken) {
+func scanWord(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 
 	s, err := scanWordStr(r)
 	if err != nil {
-		return runerErrorToken(r, err), nil
+		return nil, nil, runerErrorToken(r, err)
 	}
 
 	tk := &token.Token{

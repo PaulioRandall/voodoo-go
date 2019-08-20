@@ -8,17 +8,17 @@ import (
 
 // scanNumber scans symbols that start with a unicode category Nd rune returning
 // a literal number token.
-func scanNumber(r *Runer) (*token.Token, ParseToken) {
+func scanNumber(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 
 	sig, err := scanSignificant(r)
 	if err != nil {
-		return err, nil
+		return nil, nil, err
 	}
 
 	frac, err := scanFractional(r)
 	if err != nil {
-		return err, nil
+		return nil, nil, err
 	}
 
 	s := sig + frac
