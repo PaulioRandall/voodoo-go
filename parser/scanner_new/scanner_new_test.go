@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
+	//"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -47,19 +47,15 @@ func runScanTest(tc scanTest) []token.Token {
 	r := newRuner(tc.Input)
 	tks := []token.Token{}
 
-	for {
-		f, errTk := Scan(r)
-		if errTk != nil {
-			tks = append(tks, *errTk)
-			break
-		}
+	tk, f := Scan(r)
+	if tk != nil {
+		tks = append(tks, *tk)
+		return tks
+	}
 
-		if f == nil {
-			break
-		}
-
-		tk := f(r)
-		tks = append(tks, tk)
+	for f != nil && tk.Type != token.TT_ERROR_UPSTREAM {
+		tk, f = f(r)
+		tks = append(tks, *tk)
 	}
 
 	return tks

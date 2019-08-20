@@ -11,35 +11,35 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// tf is the erasure for a scan token function.
-type tf func(*Runer) token.Token
-
-// tfTest represents a test case for any of the delegate scanning functions.
-type tfTest struct {
-	TestLine       int
-	Input          string
-	Expect         token.Token
-	NextUnreadRune rune
+// parseTokenTest represents a test case for any ParseToken scanning function.
+type parseTokenTest struct {
+	TestLine int
+	Input    string
+	Expect   token.Token
+	NextFunc ParseToken
 }
 
-// runScanTokenTests runs the input test cases on the input scan function.
-func runScanTokenTests(t *testing.T, file string, f tf, tests []tfTest) {
+// parserTokenTester runs the input test cases on the input scan function.
+func parserTokenTester(t *testing.T, file string, f ParseToken, tests []parseTokenTest) {
 
 	for _, tc := range tests {
 		logTestLine(t, file, tc)
 
 		r := dummyRuner(tc.Input)
-		tk := f(r)
+		tk, f := f(r)
 
-		assertToken(t, tc.Expect, tk)
-		if tk.Type != token.TT_ERROR_UPSTREAM {
-			assertNextRune(t, r, tc.NextUnreadRune)
+		assertToken(t, tc.Expect, *tk)
+		if tc.NextFunc == nil {
+			assert.Nil(t, f)
+		} else {
+			assert.Equal(t, tc.NextFunc, f)
 		}
+
 	}
 }
 
 // logTestLine prints the line in the test file where the test was declared.
-func logTestLine(t *testing.T, file string, tc tfTest) {
+func logTestLine(t *testing.T, file string, tc parseTokenTest) {
 	testLine := strconv.Itoa(tc.TestLine)
 	t.Log("-> " + file + " : " + testLine)
 }
@@ -88,11 +88,4 @@ func assertToken(t *testing.T, exp token.Token, act token.Token) {
 	assert.Equal(t, exp.Start, act.Start)
 	assert.Equal(t, exp.End, act.End)
 	assert.Equal(t, exp.Type, act.Type)
-}
-
-// assertNextRune asserts that the next rune returned by the Runer, after the
-// scan function has run, is the one expected.
-func assertNextRune(t *testing.T, r *Runer, nextUnreadRune rune) {
-	next := readRequireNoErr(t, r)
-	assert.Equal(t, nextUnreadRune, next)
 }

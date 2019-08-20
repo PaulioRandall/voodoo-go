@@ -6,15 +6,17 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
+// TODO: Maybe Token should be an interface?
+
 // ParseToken represents a function produces a single specific type of Token
 // from an input stream. Only the first part of the stream that provides longest
 // match against the production rules of the specific Token will be read. If an
 // error occurs then an error token will be returned instead.
-type ParseToken func(*Runer) token.Token
+type ParseToken func(*Runer) (*token.Token, ParseToken)
 
 // Scan finds an appropriate function to parse the next token producable from
-// the Runer.
-func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
+// the Runer. It is also an implementation of ParseToken function type.
+func Scan(r *Runer) (errTk *token.Token, f ParseToken) {
 
 	ru1, ru2, err := r.LookAhead()
 	if err != nil {
@@ -25,11 +27,11 @@ func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 	switch {
 	case ru1 == EOF:
 	case r.Line() == 0:
-		f = scanShebang
+		//f = scanShebang
 	case isNewline(ru1):
 		f = scanNewline
 	case isLetter(ru1):
-		//f = scanWord
+		f = scanWord
 	case isNaturalDigit(ru1):
 		//f = scanNumber
 	case isSpace(ru1):
@@ -48,14 +50,14 @@ func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
 }
 
 // scanShebang scans a shebang line.
-func scanShebang(r *Runer) token.Token {
+func scanShebang(r *Runer) (*token.Token, ParseToken) {
 	start := r.NextCol()
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return *runerErrorToken(r, err)
+			return runerErrorToken(r, err), nil
 		}
 
 		if isNewline(ru) || ru == EOF {
@@ -66,21 +68,25 @@ func scanShebang(r *Runer) token.Token {
 		sb.WriteRune(ru)
 	}
 
-	return token.Token{
+	tk := &token.Token{
 		Val:   sb.String(),
 		Start: start,
 		End:   r.NextCol(),
 		Type:  token.TT_SHEBANG,
 	}
+
+	return ScanNext(r, tk)
 }
 
 // scanNewline scans a newline token.
-func scanNewline(r *Runer) token.Token {
+func scanNewline(r *Runer) (*token.Token, ParseToken) {
 	r.SkipRune()
-	return token.Token{
+	tk := &token.Token{
 		Val:   "\n",
 		Start: r.Col(),
 		End:   r.NextCol(),
 		Type:  token.TT_NEWLINE,
 	}
+
+	return ScanNext(r, tk)
 }
