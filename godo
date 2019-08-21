@@ -3,6 +3,8 @@
 clear
 rm -f cmd/voodoo
 
+# contains returns 1 if any argument string (except the first) is a subset of
+# the first argument string, else 0 is returned.
 contains() {
 	local arg=$1
 	for option in "${@:2}"
@@ -14,52 +16,64 @@ contains() {
 	return 0
 }
 
+# exitIfNotZero exits the script with error code 1 if the first argument is not
+# 0 (zero).
 exitIfNotZero() {
 	if [[ "$1" != "0" ]]; then
+		echo
+		echo "Exit code $1: $2"
 		exit 1
 	fi
 }
 
+# Check that the first argument was supplied and is not empty, exit if not.
 if [[ "$1" == "" ]]; then
 	echo "No parameter supplied, I don't know what to do!"
-	echo "You can choose from 'build', 'test', or 'run'."
+	echo "I accept 'test' or 'run'."
 	exit 1
 fi
 
-contains "$1" "build" "test" "run"
+# Check that the first arguement is in the list of valid options, exit if not.
+contains "$1" "test" "run"
 if [[ $? != 1 ]]; then
 	echo "I don't understand the option '$1'..."
-	echo "I only deal with 'build', 'test', or 'run' commands, take it leave it."
+	echo "I only deal with 'test' or 'run' commands, take it leave it."
 	exit 1
 fi
 
-contains "$1" "build" "test" "run"
+# If the option requires the code be built then build the code.
+contains "$1" "test" "run"
 if [[ $? == 1 ]]; then
 	echo Building...
 	cd cmd
 	go build -o voodoo voodoo.go
+	exitIfNotZero $? "Go building failed"
 	cd ..
 fi
 
-exitIfNotZero "$?"
-contains "$1" "build" "test" "run"
+# If the option requires the code be formatted then format the code.
+contains "$1" "test" "run"
 if [[ $? == 1 ]]; then
 	echo Formatting...
 	go fmt ./...
+	exitIfNotZero $? "Go formatting failed"
 fi
 
-exitIfNotZero $?
+# If the option requires the code be tested the test the code.
 contains "$1" "test" "run"
 if [[ $? == 1 ]]; then
 	echo Testing...
 	go test ./...
+	exitIfNotZero $? "Go tests failed"
 fi
 
-exitIfNotZero $?
+# If the option requests the code be run then run the code with the first test
+# scroll.
 contains "$1" "run"
 if [[ $? == 1 ]]; then
 	echo Running...
 	cd cmd
 	./voodoo run test_1.voo
+	exitIfNotZero $? "Running './voodoo run test_1.voo' failed"
 	cd ..
 fi
