@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/parser/scanner"
-	strimmer "github.com/PaulioRandall/voodoo-go/parser/strimmer_new"
+	"github.com/PaulioRandall/voodoo-go/parser/strimmer"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
