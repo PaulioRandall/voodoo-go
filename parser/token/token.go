@@ -32,13 +32,14 @@ func (tk Token) String() string {
 // PrintlnTokenChan prints each token arriving on the channel until the channel
 // is closed. The value to print is obtained via calling the supplied function
 // with each token.
-func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
+func PrintlnTokenChan(done chan *Token, in chan Token, f func(Token) string) {
 	defer close(done)
 
 	fmt.Println(`[`)
 	newline := true
+	var tk Token
 
-	for tk := range in {
+	for tk = range in {
 
 		s := f(tk)
 
@@ -56,5 +57,11 @@ func PrintlnTokenChan(done chan bool, in chan Token, f func(Token) string) {
 		}
 	}
 
-	fmt.Println(`]`)
+	if tk.Type == TT_ERROR_UPSTREAM {
+		fmt.Println("\n]")
+		done <- &tk
+	} else {
+		fmt.Println(`]`)
+		done <- nil
+	}
 }

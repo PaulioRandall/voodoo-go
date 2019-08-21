@@ -14,7 +14,7 @@ const EOF = rune(3)
 type Runer struct {
 	line    int
 	col     int
-	newLine bool
+	newline bool
 	reader  *bufio.Reader
 	buf     [2]rune
 }
@@ -25,15 +25,15 @@ func NewRuner(reader *bufio.Reader) *Runer {
 		reader:  reader,
 		line:    -1,
 		col:     -1,
-		newLine: true,
+		newline: true,
 	}
 }
 
 // Line returns the line index, number of newline runes incountered.
 func (r *Runer) Line() int {
 	l := r.line
-	if l == -1 {
-		return 0
+	if r.newline {
+		l++
 	}
 	return l
 }
@@ -41,20 +41,26 @@ func (r *Runer) Line() int {
 // Col returns the column index of the last rune returned or -1 if no calls to
 // read runes has been made yet.
 func (r *Runer) Col() int {
+	if r.newline {
+		return 0
+	}
 	return r.col
 }
 
 // NextCol returns the column index after the last rune returned or 0 if no
 // calls to read runes has been made yet.
 func (r *Runer) NextCol() int {
+	if r.newline {
+		return 0
+	}
 	return r.col + 1
 }
 
 // ReadRune reads the next rune from the reader. EOF is returned if the end of
 // the file has been reached.
 func (r *Runer) ReadRune() (rune, error) {
-	if r.newLine {
-		r.newLine = false
+	if r.newline {
+		r.newline = false
 		r.line++
 		r.col = -1
 	}
@@ -63,7 +69,7 @@ func (r *Runer) ReadRune() (rune, error) {
 	r.col++
 
 	if ru == '\n' {
-		r.newLine = true
+		r.newline = true
 	}
 
 	return ru, err

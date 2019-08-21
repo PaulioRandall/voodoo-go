@@ -12,12 +12,17 @@ import (
 // Execute runs a Voodoo scroll.
 func Execute(sc *Scroll, scArgs []string) int {
 
-	done := make(chan bool)
+	done := make(chan *token.Token)
 	scanChan := make(chan token.Token)
 
 	go token.PrintlnTokenChan(done, scanChan, tokenToType)
 	scan(sc.Data, scanChan)
-	<-done
+	errTk := <-done
+
+	if errTk != nil {
+		token.PrintErrorToken(sc.File, *errTk)
+		return 1
+	}
 
 	return 0
 }

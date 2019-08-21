@@ -7,38 +7,40 @@ import (
 	"strings"
 )
 
-// SyntaxFault represents a generic fault with syntax.
-type SyntaxFault struct {
-	Line int      // Line where the error occurred
-	Col  int      // Index where the error actually occurred on the line
-	Msgs []string // Description of the error
-}
-
-// Print satisfies the Fault interface.
-func (flt SyntaxFault) Print(file string) {
+// PrintErrorToken prints an error token including the lines of code where the
+// occurrs.
+func PrintErrorToken(file string, tk Token) {
 	f, err := os.Open(file)
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 
-	err = flt.prettyPrintError(f)
+	err = prettyPrintErrorToken(f, tk)
 	if err != nil {
 		panic(err)
 	}
 }
 
-// prettyPrintError prints an informative error message for a specific line
+// prettyPrintErrorToken prints an informative error message for a specific line
 // within the scroll.
-func (flt SyntaxFault) prettyPrintError(f *os.File) error {
+func prettyPrintErrorToken(f *os.File, tk Token) error {
 	sb := &strings.Builder{}
 
+	prePrint := 5
+	postPrint := 6
+
 	addHeader(f, sb)
-	err := addLines(f, sb, flt.Line-4, flt.Line+1)
+	err := addLines(f, sb, tk.Line-prePrint, tk.Line+1)
 	if err != nil {
 		return err
 	}
-	addMessages(sb, flt.Col, flt.Msgs...)
+
+	addMessages(sb, tk.End, tk.Errors...)
+	err = addLines(f, sb, tk.Line+1, tk.Line+postPrint)
+	if err != nil {
+		return err
+	}
 
 	fmt.Println(sb.String())
 	return nil
@@ -49,6 +51,9 @@ func addHeader(f *os.File, sb *strings.Builder) {
 	sb.WriteString("\n[SYNTAX ERROR] `")
 	sb.WriteString(f.Name())
 	sb.WriteRune('`')
+
+	sb.WriteRune('\n')
+	sb.WriteString(`Line:`)
 	sb.WriteRune('\n')
 }
 
@@ -100,12 +105,13 @@ func readNextLine(f *os.File) (string, error) {
 	var err error
 
 	for {
-		_, err = f.Read(b)
+		var n int
+		n, err = f.Read(b)
 		if err != io.EOF && err != nil {
 			return ``, err
 		}
 
-		if b[0] == utfLineFeed {
+		if b[0] == utfLineFeed || n == 0 {
 			break
 		}
 
@@ -126,7 +132,7 @@ func addLines(f *os.File, sb *strings.Builder, start, end int) (err error) {
 			break
 		}
 
-		s = fmt.Sprintf("%3d: %s\n", i, s)
+		s = fmt.Sprintf("%4d: %s\n", i+1, s)
 		sb.WriteString(s)
 	}
 
@@ -137,7 +143,7 @@ func addLines(f *os.File, sb *strings.Builder, start, end int) (err error) {
 func addMessages(sb *strings.Builder, col int, msgs ...string) {
 	first := true
 	for _, s := range msgs {
-		addIndent(sb, 4, col)
+		addIndent(sb, 6, col)
 
 		if first {
 			first = false

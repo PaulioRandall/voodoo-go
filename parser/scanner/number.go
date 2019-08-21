@@ -77,8 +77,8 @@ func badFractionalToken(r *Runer) *token.Token {
 		Type: token.TT_ERROR_UPSTREAM,
 		Errors: []string{
 			"Invalid number format, either...",
-			" - fractional digits are missing",
-			" - or the decimal separator is a typo",
+			"- fractional digits are missing",
+			"- or the decimal separator is a typo",
 		},
 	}
 }

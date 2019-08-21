@@ -22,8 +22,7 @@ func scanSpell(r *Runer) (tk *token.Token, _ ParseToken, errTk *token.Token) {
 	}
 
 	if !isLetter(ru) {
-		r.SkipRune()
-		errTk = errorToken(r, []string{"Expected letter after '@'"})
+		errTk = errorToken(r, []string{"Expected letter after spell symbol '@'"})
 		return
 	}
 

@@ -37,6 +37,6 @@ func TestScanSpell_3(t *testing.T) {
 
 func TestScanSpell_4(t *testing.T) {
 	in := `@2`
-	expErr := token.ErrDummyToken(0, 0, 2)
+	expErr := token.ErrDummyToken(0, 0, 1)
 	doTestScanSpell(t, in, nil, &expErr)
 }
