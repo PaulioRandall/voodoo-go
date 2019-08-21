@@ -1,9 +1,0 @@
-#!/bin/bash
-
-read -p "Do: $*"
-
-while true
-do
-	$*
-  read -p "Do again: $*"
-done
