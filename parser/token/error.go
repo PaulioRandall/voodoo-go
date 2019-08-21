@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+const (
+	leadingLines  = 5
+	trailingLines = 5
+	// Modify carefully
+	leadLines  = 0 - leadingLines
+	trailLines = 1 + trailingLines
+)
+
 // PrintErrorToken prints an error token including the lines of code where the
 // occurrs.
 func PrintErrorToken(file string, tk Token) {
@@ -27,17 +35,14 @@ func PrintErrorToken(file string, tk Token) {
 func prettyPrintErrorToken(f *os.File, tk Token) error {
 	sb := &strings.Builder{}
 
-	prePrint := 5
-	postPrint := 6
-
 	addHeader(f, sb)
-	err := addLines(f, sb, tk.Line-prePrint, tk.Line+1)
+	err := addLines(f, sb, tk.Line+leadLines, tk.Line+1)
 	if err != nil {
 		return err
 	}
 
 	addMessages(sb, tk.End, tk.Errors...)
-	err = addLines(f, sb, tk.Line+1, tk.Line+postPrint)
+	err = addLines(f, sb, tk.Line+1, tk.Line+trailLines)
 	if err != nil {
 		return err
 	}
@@ -48,12 +53,19 @@ func prettyPrintErrorToken(f *os.File, tk Token) error {
 
 // addHeader adds a header to the print message.
 func addHeader(f *os.File, sb *strings.Builder) {
-	sb.WriteString("\n[SYNTAX ERROR] `")
+	sb.WriteString("\n[SYNTAX ERROR]\n")
+
+	sb.WriteString(`Line: `)
+	sb.WriteRune('`')
 	sb.WriteString(f.Name())
 	sb.WriteRune('`')
-
 	sb.WriteRune('\n')
-	sb.WriteString(`Line:`)
+
+	pad := strings.Repeat(`-`, 4)
+	sb.WriteString(pad)
+	sb.WriteString(`:`)
+	pad = strings.Repeat(`-`, len(f.Name())+3)
+	sb.WriteString(pad)
 	sb.WriteRune('\n')
 }
 
@@ -124,6 +136,9 @@ func readNextLine(f *os.File) (string, error) {
 // addLines adds the specified number of lines to the builder. It will stop if
 // EOF is encountered.
 func addLines(f *os.File, sb *strings.Builder, start, end int) (err error) {
+	if start < 0 {
+		start = 0
+	}
 	seekLine(f, start)
 
 	for i := start; i < end; i++ {
