@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/parser/scanner"
-	"github.com/PaulioRandall/voodoo-go/parser/strimmer"
+	strimmer "github.com/PaulioRandall/voodoo-go/parser/strimmer_new"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -14,13 +14,9 @@ func Execute(sc *Scroll, scArgs []string) int {
 
 	done := make(chan bool)
 	scanChan := make(chan token.Token)
-	strimChan := make(chan token.Token)
 
-	go token.PrintlnTokenChan(done, strimChan, tokenToType)
-	go strimmer.Strim(scanChan, strimChan)
-
+	go token.PrintlnTokenChan(done, scanChan, tokenToType)
 	scan(sc.Data, scanChan)
-
 	<-done
 
 	return 0
@@ -31,28 +27,54 @@ func scan(data string, out chan token.Token) {
 	defer close(out)
 
 	r := newRuner(data)
-	f := scanToken(r, scanner.ScanShebang, out)
+	f, ok := parseShebang(r, out)
+	if !ok {
+		return
+	}
+
+	var tk *token.Token
+	t := token.TT_UNDEFINED
 
 	for f != nil {
-		f = scanToken(r, f, out)
+		tk, f, ok = scanToken(r, f, out)
+		if !ok {
+			return
+		}
+
+		t = strimToken(tk, t, out)
 	}
 }
 
-// scanToken scans the next token handling any errors and returning the next
-// token parsing function. If nil is returned then an error occurred or no more
-// tokens are left to parse.
-func scanToken(r *scanner.Runer, f scanner.ParseToken, out chan token.Token) scanner.ParseToken {
-	tk, f, errTk := f(r)
-	if errTk != nil {
-		out <- *errTk
-		return nil
-	}
+// strimToken strims the token and places the result on the output channel.
+func strimToken(tk *token.Token, prevType token.TokenType, out chan token.Token) token.TokenType {
+	tk = strimmer.Strim(*tk, prevType)
 
 	if tk != nil {
 		out <- *tk
+		return tk.Type
 	}
 
-	return f
+	return token.TT_UNDEFINED
+}
+
+// scanToken gets the next token from the runer.
+func scanToken(r *scanner.Runer, f scanner.ParseToken, out chan token.Token) (*token.Token, scanner.ParseToken, bool) {
+	tk, f, errTk := f(r)
+	if errTk != nil {
+		out <- *errTk
+		return nil, nil, false
+	}
+	return tk, f, true
+}
+
+// parseShebang scans the first line of the scroll returning a SHEBANG token.
+func parseShebang(r *scanner.Runer, out chan token.Token) (scanner.ParseToken, bool) {
+	_, f, errTk := scanner.ScanShebang(r)
+	if errTk != nil {
+		out <- *errTk
+		return nil, false
+	}
+	return f, true
 }
 
 // newRuner makes a new Runer instance.
