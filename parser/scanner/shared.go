@@ -17,17 +17,6 @@ func errorToken(r *Runer, err []string) *token.Token {
 	}
 }
 
-// errorToToken creates a new error token from an error.
-func errorToToken(r *Runer, start int, err error) token.Token {
-	return token.Token{
-		Line:   r.Line(),
-		Start:  start,
-		End:    r.Col() + 1,
-		Type:   token.TT_ERROR_UPSTREAM,
-		Errors: []string{err.Error()},
-	}
-}
-
 // runerErrorToken creates a new error token from an error returned by a Runer.
 func runerErrorToken(r *Runer, err error) *token.Token {
 	return &token.Token{

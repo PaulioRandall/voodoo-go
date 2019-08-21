@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"strings"
 
-	scanner "github.com/PaulioRandall/voodoo-go/parser/scanner_new"
+	"github.com/PaulioRandall/voodoo-go/parser/scanner"
 	"github.com/PaulioRandall/voodoo-go/parser/strimmer"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )

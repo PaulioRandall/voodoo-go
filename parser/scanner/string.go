@@ -8,21 +8,23 @@ import (
 
 // scanString scans symbols that start and end with an non-escaped `"` returning
 // a string literal token.
-func scanString(r *Runer) token.Token {
+func scanString(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 
 	s, errTk := scanStr(r)
 	if errTk != nil {
-		return *errTk
+		return nil, nil, errTk
 	}
 
-	return token.Token{
+	tk := &token.Token{
 		Val:   s,
 		Line:  r.Line(),
 		Start: start,
 		End:   r.NextCol(),
 		Type:  token.TT_STRING,
 	}
+
+	return scanNext(r, tk)
 }
 
 // scanStr extracts a string literal, including the quotes, from a Runer.

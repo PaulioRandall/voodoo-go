@@ -3,31 +3,28 @@ package scanner
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-func TestScanComment(t *testing.T) {
-	runScanTokenTests(t, "comment_test.go", scanComment, scanCommentTests())
+func doTestScanComment(t *testing.T, in string, exp *token.Token) {
+	r := dummyRuner(in)
+	tk, _, errTk := scanComment(r)
+	assertToken(t, exp, tk)
+	assertToken(t, nil, errTk)
 }
 
 func dummyCommentToken(end int, s string) token.Token {
 	return dummyToken(0, 0, end, s, token.TT_COMMENT)
 }
 
-func scanCommentTests() []tfTest {
-	return []tfTest{
-		tfTest{
-			TestLine:       fault.CurrLine(),
-			Input:          `// 123`,
-			Expect:         dummyCommentToken(6, `// 123`),
-			NextUnreadRune: EOF,
-		},
-		tfTest{
-			TestLine:       fault.CurrLine(),
-			Input:          "// 123\n456",
-			Expect:         dummyCommentToken(6, `// 123`),
-			NextUnreadRune: '\n',
-		},
-	}
+func TestScanComment_1(t *testing.T) {
+	in := `// 123`
+	exp := dummyCommentToken(6, `// 123`)
+	doTestScanComment(t, in, &exp)
+}
+
+func TestScanComment_2(t *testing.T) {
+	in := "// 123\n456"
+	exp := dummyCommentToken(6, `// 123`)
+	doTestScanComment(t, in, &exp)
 }

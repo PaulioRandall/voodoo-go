@@ -7,21 +7,23 @@ import (
 )
 
 // scanWord scans word tokens returning a keyword or identifier.
-func scanWord(r *Runer) token.Token {
+func scanWord(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 
 	s, err := scanWordStr(r)
 	if err != nil {
-		return *runerErrorToken(r, err)
+		return nil, nil, runerErrorToken(r, err)
 	}
 
-	return token.Token{
+	tk := &token.Token{
 		Val:   s,
 		Line:  r.Line(),
 		Start: start,
 		End:   r.NextCol(),
 		Type:  findWordType(s),
 	}
+
+	return scanNext(r, tk)
 }
 
 // findWordType finds the type of the word.

@@ -1,4 +1,4 @@
-package scanner_new
+package scanner
 
 import (
 	"bufio"

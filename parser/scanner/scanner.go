@@ -6,69 +6,73 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-// Scan scans tokens from a stream of code using longest match and pushes them
-// onto a channel for processing.
-func Scan(r *Runer, shebang bool, out chan token.Token) {
-	defer close(out)
+// ParseToken represents a function produces a single specific type of Token
+// from an input stream. Only the first part of the stream that provides longest
+// match against the production rules of the specific Token will be read. If an
+// error occurs then an error token will be returned instead.
+//
+// The first returned token alwyas represents a valid parsed token while the
+// last always represents an error. On return, one should be nil and the other
+// non-nil.
+type ParseToken func(*Runer) (tk *token.Token, f ParseToken, errTk *token.Token)
 
-	var tk token.Token
+// Scan finds an appropriate function to parse the next token producable from
+// the Runer.
+func Scan(r *Runer) (ParseToken, *token.Token) {
 
-	if shebang {
-		tk = scanShebang(r)
-		out <- tk
-		if tk.Type == token.TT_ERROR_UPSTREAM {
-			return
-		}
+	ru1, ru2, err := r.LookAhead()
+	if err != nil {
+		return nil, runerErrorToken(r, err)
 	}
 
-	for {
-		ru1, ru2, err := r.LookAhead()
-		if err != nil {
-			return
-		}
-
-		if ru1 == EOF {
-			// TODO: Should an EOS be sent first?
-			return
-		}
-
-		switch {
-		case isNewline(ru1):
-			tk = newlineToken(r)
-		case isLetter(ru1):
-			tk = scanWord(r)
-		case isNaturalDigit(ru1):
-			tk = scanNumber(r)
-		case isSpace(ru1):
-			tk = scanSpace(r)
-		case isSpellPrefix(ru1):
-			tk = scanSpell(r)
-		case isStringPrefix(ru1):
-			tk = scanString(r)
-		case isCommentPrefix(ru1, ru2):
-			tk = scanComment(r)
-		default:
-			tk = scanSymbol(r)
-		}
-
-		if tk.Type == token.TT_ERROR_UPSTREAM {
-			out <- tk
-			return
-		}
-
-		out <- tk
+	switch {
+	case ru1 == EOF:
+		return nil, nil
+	case isNewline(ru1):
+		return scanNewline, nil
+	case isLetter(ru1):
+		return scanWord, nil
+	case isNaturalDigit(ru1):
+		return scanNumber, nil
+	case isSpace(ru1):
+		return scanSpace, nil
+	case isSpellPrefix(ru1):
+		return scanSpell, nil
+	case isStringPrefix(ru1):
+		return scanString, nil
+	case isCommentPrefix(ru1, ru2):
+		return scanComment, nil
+	default:
+		return scanSymbol, nil
 	}
 }
 
-// scanShebang scans the shebang line.
-func scanShebang(r *Runer) token.Token {
-	start := r.Col() + 1
+// ScanFirst scans the input Runer to identify the first ParseToken function to
+// execute.
+func ScanFirst(r *Runer) (ParseToken, *token.Token) {
+	_, f, errTk := scanNext(r, nil)
+	return f, errTk
+}
+
+// scanNext invokes Scan() returning the input token and the next ParseToken
+// function to execute. If Scan() fails then an error Token is returned instead.
+func scanNext(r *Runer, tk *token.Token) (*token.Token, ParseToken, *token.Token) {
+	f, errTk := Scan(r)
+	if errTk != nil {
+		return nil, nil, errTk
+	}
+	return tk, f, nil
+}
+
+// ScanShebang scans a shebang line.
+func ScanShebang(r *Runer) (*token.Token, ParseToken, *token.Token) {
+	start := r.NextCol()
 	sb := strings.Builder{}
 
 	for {
 		ru, _, err := r.LookAhead()
 		if err != nil {
-			return errorToToken(r, start, err)
+			return nil, nil, runerErrorToken(r, err)
 		}
 
 		if isNewline(ru) || ru == EOF {
@@ -79,21 +83,25 @@ func scanShebang(r *Runer) token.Token {
 		sb.WriteRune(ru)
 	}
 
-	return token.Token{
+	tk := &token.Token{
 		Val:   sb.String(),
 		Start: start,
-		End:   r.Col() + 1,
+		End:   r.NextCol(),
 		Type:  token.TT_SHEBANG,
 	}
+
+	return scanNext(r, tk)
 }
 
-// newlineToken creates a newline token.
-func newlineToken(r *Runer) token.Token {
+// scanNewline scans a newline token.
+func scanNewline(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	r.SkipRune()
-	return token.Token{
+	tk := &token.Token{
 		Val:   "\n",
 		Start: r.Col(),
-		End:   r.Col() + 1,
+		End:   r.NextCol(),
 		Type:  token.TT_NEWLINE,
 	}
+
+	return scanNext(r, tk)
 }
