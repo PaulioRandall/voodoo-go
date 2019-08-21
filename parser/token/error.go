@@ -108,7 +108,7 @@ func jumpToNextLine(f *os.File) (err error) {
 }
 
 // readNextLine jumps to the next new line in the file.
-func readNextLine(f *os.File) (string, error) {
+func readNextLine(f *os.File) (string, bool, error) {
 
 	sb := strings.Builder{}
 	utfLineFeed := byte(10)
@@ -117,41 +117,44 @@ func readNextLine(f *os.File) (string, error) {
 	var err error
 
 	for {
-		var n int
-		n, err = f.Read(b)
-		if err != io.EOF && err != nil {
-			return ``, err
+		_, err = f.Read(b)
+		if err == io.EOF {
+			return ``, true, nil
 		}
 
-		if b[0] == utfLineFeed || n == 0 {
+		if err != nil {
+			return ``, false, err
+		}
+
+		if b[0] == utfLineFeed {
 			break
 		}
 
 		sb.WriteByte(b[0])
 	}
 
-	return sb.String(), nil
+	return sb.String(), false, nil
 }
 
 // addLines adds the specified number of lines to the builder. It will stop if
 // EOF is encountered.
-func addLines(f *os.File, sb *strings.Builder, start, end int) (err error) {
+func addLines(f *os.File, sb *strings.Builder, start, end int) error {
 	if start < 0 {
 		start = 0
 	}
 	seekLine(f, start)
 
 	for i := start; i < end; i++ {
-		s, err := readNextLine(f)
-		if err != nil {
-			break
+		s, eof, err := readNextLine(f)
+		if eof || err != nil {
+			return err
 		}
 
 		s = fmt.Sprintf("%4d: %s\n", i+1, s)
 		sb.WriteString(s)
 	}
 
-	return
+	return nil
 }
 
 // addMessages adds each input message to the print message.
