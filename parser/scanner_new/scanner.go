@@ -6,8 +6,6 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-// TODO: Maybe Token should be an interface?
-
 // ParseToken represents a function produces a single specific type of Token
 // from an input stream. Only the first part of the stream that provides longest
 // match against the production rules of the specific Token will be read. If an
@@ -20,37 +18,33 @@ type ParseToken func(*Runer) (tk *token.Token, f ParseToken, errTk *token.Token)
 
 // Scan finds an appropriate function to parse the next token producable from
 // the Runer.
-func Scan(r *Runer) (f ParseToken, errTk *token.Token) {
+func Scan(r *Runer) (ParseToken, *token.Token) {
 
 	ru1, ru2, err := r.LookAhead()
 	if err != nil {
-		errTk = runerErrorToken(r, err)
-		return
+		return nil, runerErrorToken(r, err)
 	}
 
 	switch {
 	case ru1 == EOF:
-	case r.Line() == 0:
-		f = scanShebang
+		return nil, nil
 	case isNewline(ru1):
-		f = scanNewline
+		return scanNewline, nil
 	case isLetter(ru1):
-		f = scanWord
+		return scanWord, nil
 	case isNaturalDigit(ru1):
-		f = scanNumber
+		return scanNumber, nil
 	case isSpace(ru1):
-		f = scanSpace
+		return scanSpace, nil
 	case isSpellPrefix(ru1):
-		f = scanSpell
+		return scanSpell, nil
 	case isStringPrefix(ru1):
-		f = scanString
+		return scanString, nil
 	case isCommentPrefix(ru1, ru2):
-		f = scanComment
+		return scanComment, nil
 	default:
-		f = scanSymbol
+		return scanSymbol, nil
 	}
-
-	return
 }
 
 // scanNext invokes Scan() returning the input token and the next ParseToken
