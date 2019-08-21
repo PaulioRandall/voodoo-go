@@ -47,6 +47,13 @@ func Scan(r *Runer) (ParseToken, *token.Token) {
 	}
 }
 
+// ScanFirst scans the input Runer to identify the first ParseToken function to
+// execute.
+func ScanFirst(r *Runer) (ParseToken, *token.Token) {
+	_, f, errTk := scanNext(r, nil)
+	return f, errTk
+}
+
 // scanNext invokes Scan() returning the input token and the next ParseToken
 // function to execute. If Scan() fails then an error Token is returned instead.
 func scanNext(r *Runer, tk *token.Token) (*token.Token, ParseToken, *token.Token) {
@@ -57,8 +64,8 @@ func scanNext(r *Runer, tk *token.Token) (*token.Token, ParseToken, *token.Token
 	return tk, f, nil
 }
 
-// scanShebang scans a shebang line.
-func scanShebang(r *Runer) (*token.Token, ParseToken, *token.Token) {
+// ScanShebang scans a shebang line.
+func ScanShebang(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 	sb := strings.Builder{}
 

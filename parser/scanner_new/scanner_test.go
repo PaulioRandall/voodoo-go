@@ -13,7 +13,7 @@ func doTestScanner(t *testing.T, in string, exp []token.Token) {
 	r := newRuner(in)
 	var act []token.Token
 
-	_, f, errTk := scanNext(r, nil)
+	f, errTk := ScanFirst(r)
 	if errTk != nil {
 		act = []token.Token{*errTk}
 	} else {

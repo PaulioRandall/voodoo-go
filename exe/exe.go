@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scanner"
+	scanner "github.com/PaulioRandall/voodoo-go/parser/scanner_new"
 	"github.com/PaulioRandall/voodoo-go/parser/strimmer"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
@@ -19,12 +19,40 @@ func Execute(sc *Scroll, scArgs []string) int {
 	go token.PrintlnTokenChan(done, strimChan, tokenToType)
 	go strimmer.Strim(scanChan, strimChan)
 
-	r := newRuner(sc.Data)
-	scanner.Scan(r, true, scanChan)
+	scan(sc.Data, scanChan)
 
 	<-done
 
 	return 0
+}
+
+// scan scans the input string for tokens and places them onto the channel.
+func scan(data string, out chan token.Token) {
+	defer close(out)
+
+	r := newRuner(data)
+	f := scanToken(r, scanner.ScanShebang, out)
+
+	for f != nil {
+		f = scanToken(r, f, out)
+	}
+}
+
+// scanToken scans the next token handling any errors and returning the next
+// token parsing function. If nil is returned then an error occurred or no more
+// tokens are left to parse.
+func scanToken(r *scanner.Runer, f scanner.ParseToken, out chan token.Token) scanner.ParseToken {
+	tk, f, errTk := f(r)
+	if errTk != nil {
+		out <- *errTk
+		return nil
+	}
+
+	if tk != nil {
+		out <- *tk
+	}
+
+	return f
 }
 
 // newRuner makes a new Runer instance.
