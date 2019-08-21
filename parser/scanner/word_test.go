@@ -9,12 +9,12 @@ import (
 func doTestScanWord(t *testing.T, in string, exp *token.Token) {
 	r := dummyRuner(in)
 	tk, _, errTk := scanWord(r)
-	assertToken(t, exp, tk)
-	assertToken(t, nil, errTk)
+	token.AssertToken(t, exp, tk)
+	token.AssertToken(t, nil, errTk)
 }
 
 func dummyWordToken(end int, s string, t token.TokenType) token.Token {
-	return dummyToken(0, 0, end, s, t)
+	return token.DummyToken(0, 0, end, s, t)
 }
 
 func TestScanWord_1(t *testing.T) {

@@ -1,11 +1,28 @@
 package scanner
 
 import (
+	"bufio"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+// dummyRuner creates a new Runer from the input string.
+func dummyRuner(s string) *Runer {
+	sr := strings.NewReader(s)
+	br := bufio.NewReader(sr)
+	return NewRuner(br)
+}
+
+// readRequireNoErr reads the next rune from the Runer and asserts that no error
+// occurred while reading. If an error was returned the test immediately exits.
+func readRequireNoErr(t *testing.T, r *Runer) rune {
+	ru, err := r.ReadRune()
+	require.Nil(t, err)
+	return ru
+}
 
 func TestRuner_ReadRune(t *testing.T) {
 	r := dummyRuner(`abc`)

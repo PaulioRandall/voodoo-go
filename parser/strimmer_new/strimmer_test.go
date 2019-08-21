@@ -1,70 +1,44 @@
 package strimmer_new
 
 import (
-	"strconv"
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/fault"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
-type strimTest struct {
-	TestLine   int
-	Input      []token.Token
-	ExpectToks []token.Token
-}
+func doTestStrim(t *testing.T, in, exp []token.Token) {
 
-// dummyToken creates a new dummy token.
-func dummyToken(line, start, end int, val string, t token.TokenType) token.Token {
-	return token.Token{
-		Line:  line,
-		Start: start,
-		End:   end,
-		Val:   val,
-		Type:  t,
+	act := []token.Token{}
+	tt := token.TT_UNDEFINED
+
+	for _, inTk := range in {
+		outTk := Strim(inTk, tt)
+		if outTk != nil {
+			act = append(act, *outTk)
+		}
+		tt = inTk.Type
 	}
+
+	token.AssertTokens(t, exp, act)
 }
 
-// stream takes an array of tokens and pushes them into a token channel.
-func stream(in []token.Token, out chan token.Token) {
-	defer close(out)
-	for _, tk := range in {
-		out <- tk
+func TestStrimmer_1(t *testing.T) {
+	in := []token.Token{
+		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
+		token.DummyToken(0, 1, 2, ` `, token.TT_SPACE),
+		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.DummyToken(0, 4, 5, ` `, token.TT_SPACE),
+		token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER),
 	}
-}
-
-// collect collects all tokens coming from a channel into an array.
-func collect(in chan token.Token, out chan []token.Token) {
-	defer close(out)
-	tks := []token.Token{}
-	for tk := range in {
-		tks = append(tks, tk)
+	exp := []token.Token{
+		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
+		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER),
 	}
-	out <- tks
+	doTestStrim(t, in, exp)
 }
 
-func TestStrim(t *testing.T) {
-	for _, tc := range strimTests() {
-		testLine := strconv.Itoa(tc.TestLine)
-		t.Log("-> strimmer_test.go : " + testLine)
-
-		inChan := make(chan token.Token)
-		outChan := make(chan token.Token)
-		collectChan := make(chan []token.Token)
-
-		go stream(tc.Input, inChan)
-		go collect(outChan, collectChan)
-
-		Strim(inChan, outChan)
-		tks := <-collectChan
-
-		require.NotNil(t, tks)
-		assert.Equal(t, tc.ExpectToks, tks)
-	}
-}
-
+/*
 func strimTests() []strimTest {
 	return []strimTest{
 		strimTest{
@@ -206,3 +180,4 @@ func strimTests() []strimTest {
 		},
 	}
 }
+*/

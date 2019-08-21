@@ -9,16 +9,16 @@ import (
 func doTestScanNumber(t *testing.T, in string, exp, expErr *token.Token) {
 	r := dummyRuner(in)
 	tk, _, errTk := scanNumber(r)
-	assertToken(t, exp, tk)
-	assertToken(t, expErr, errTk)
+	token.AssertToken(t, exp, tk)
+	token.AssertToken(t, expErr, errTk)
 }
 
 func dummyNumToken(end int, s string) token.Token {
-	return dummyToken(0, 0, end, s, token.TT_NUMBER)
+	return token.DummyToken(0, 0, end, s, token.TT_NUMBER)
 }
 
 func dummyNumErrToken(end int) token.Token {
-	return dummyToken(0, 0, end, ``, token.TT_ERROR_UPSTREAM)
+	return token.DummyToken(0, 0, end, ``, token.TT_ERROR_UPSTREAM)
 }
 
 func TestScanNumber_1(t *testing.T) {

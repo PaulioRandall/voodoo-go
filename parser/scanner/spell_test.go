@@ -9,12 +9,12 @@ import (
 func doTestScanSpell(t *testing.T, in string, exp, expErr *token.Token) {
 	r := dummyRuner(in)
 	tk, _, errTk := scanSpell(r)
-	assertToken(t, exp, tk)
-	assertToken(t, expErr, errTk)
+	token.AssertToken(t, exp, tk)
+	token.AssertToken(t, expErr, errTk)
 }
 
 func dummySpellToken(end int, s string) token.Token {
-	return dummyToken(0, 0, end, s, token.TT_SPELL)
+	return token.DummyToken(0, 0, end, s, token.TT_SPELL)
 }
 
 func TestScanSpell_1(t *testing.T) {
@@ -37,6 +37,6 @@ func TestScanSpell_3(t *testing.T) {
 
 func TestScanSpell_4(t *testing.T) {
 	in := `@2`
-	expErr := errDummyToken(0, 0, 2)
+	expErr := token.ErrDummyToken(0, 0, 2)
 	doTestScanSpell(t, in, nil, &expErr)
 }

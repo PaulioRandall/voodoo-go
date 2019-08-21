@@ -9,12 +9,12 @@ import (
 func doTestScanSymbol(t *testing.T, in string, exp, expErr *token.Token) {
 	r := dummyRuner(in)
 	tk, _, errTk := scanSymbol(r)
-	assertToken(t, exp, tk)
-	assertToken(t, expErr, errTk)
+	token.AssertToken(t, exp, tk)
+	token.AssertToken(t, expErr, errTk)
 }
 
 func dummySymToken(end int, s string, t token.TokenType) token.Token {
-	return dummyToken(0, 0, end, s, t)
+	return token.DummyToken(0, 0, end, s, t)
 }
 
 func TestScanSymbol_1(t *testing.T) {
@@ -157,6 +157,6 @@ func TestScanSymbol_23(t *testing.T) {
 
 func TestScanSymbol_24(t *testing.T) {
 	in := `=`
-	expErr := errDummyToken(0, 0, 0)
+	expErr := token.ErrDummyToken(0, 0, 0)
 	doTestScanSymbol(t, in, nil, &expErr)
 }
