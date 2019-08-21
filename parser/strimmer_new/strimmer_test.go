@@ -99,18 +99,37 @@ func TestStrimmer_6(t *testing.T) {
 
 func TestStrimmer_7(t *testing.T) {
 	in := []token.Token{
-		token.DummyToken(0, 0, 6, `func`, token.TT_FUNC),
-		token.DummyToken(0, 6, 7, ` `, token.TT_SPACE),
-		token.DummyToken(0, 7, 10, `END`, token.TT_DONE),
-		token.DummyToken(0, 10, 11, ` `, token.TT_SPACE),
-		token.DummyToken(0, 11, 19, `@PrInTlN`, token.TT_SPELL),
-		token.DummyToken(0, 19, 20, `語`, token.TT_ID),
+		// f <- fUnC()
+		//   @PrintKanji(語)
+		// DONE
+		token.DummyToken(0, 0, 1, `f`, token.TT_ID),
+		token.DummyToken(0, 1, 2, ` `, token.TT_SPACE),
+		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.DummyToken(0, 4, 5, ` `, token.TT_SPACE),
+		token.DummyToken(0, 5, 9, `fUnC`, token.TT_FUNC),
+		token.DummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 10, 11, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 11, 12, "\n", token.TT_NEWLINE),
+		token.DummyToken(0, 12, 23, `@PrintKanji`, token.TT_SPELL),
+		token.DummyToken(0, 23, 24, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 24, 25, `語`, token.TT_ID),
+		token.DummyToken(0, 25, 26, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 26, 27, "\n", token.TT_NEWLINE),
+		token.DummyToken(0, 27, 31, `DONE`, token.TT_DONE),
 	}
 	exp := []token.Token{
-		token.DummyToken(0, 0, 6, `func`, token.TT_FUNC),
-		token.DummyToken(0, 7, 10, `end`, token.TT_DONE),
-		token.DummyToken(0, 11, 19, `@println`, token.TT_SPELL),
-		token.DummyToken(0, 19, 20, `語`, token.TT_ID),
+		token.DummyToken(0, 0, 1, `f`, token.TT_ID),
+		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.DummyToken(0, 5, 9, `func`, token.TT_FUNC),
+		token.DummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 10, 11, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 11, 12, "\n", token.TT_EOS),
+		token.DummyToken(0, 12, 23, `@printkanji`, token.TT_SPELL),
+		token.DummyToken(0, 23, 24, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 24, 25, `語`, token.TT_ID),
+		token.DummyToken(0, 25, 26, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 26, 27, "\n", token.TT_EOS),
+		token.DummyToken(0, 27, 31, `done`, token.TT_DONE),
 	}
 	doTestStrim(t, in, exp)
 }
@@ -121,7 +140,6 @@ func TestStrimmer_8(t *testing.T) {
 		//   1,
 		//   2, 3,
 		// ]
-		//
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
 		token.DummyToken(0, 1, 2, ` `, token.TT_SPACE),
 		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
@@ -152,23 +170,6 @@ func TestStrimmer_8(t *testing.T) {
 		token.DummyToken(0, 6, 7, "\n", token.TT_EOS),
 		token.DummyToken(0, 0, 1, `]`, token.TT_SQUARE_CLOSE),
 		token.DummyToken(0, 1, 2, "\n", token.TT_EOS),
-	}
-	doTestStrim(t, in, exp)
-}
-
-func TestStrimmer_9(t *testing.T) {
-	strimTestID = 9
-	in := []token.Token{
-		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-		token.DummyToken(0, 1, 2, ` `, token.TT_SPACE),
-		token.DummyToken(0, 2, 3, `=`, token.TT_ERROR_UPSTREAM),
-		token.DummyToken(0, 3, 4, ` `, token.TT_SPACE),
-		token.DummyToken(0, 4, 5, `2`, token.TT_NUMBER),
-	}
-	exp := []token.Token{
-		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-		token.DummyToken(0, 2, 3, `=`, token.TT_ERROR_UPSTREAM),
-		token.DummyToken(0, 4, 5, `2`, token.TT_NUMBER),
 	}
 	doTestStrim(t, in, exp)
 }
