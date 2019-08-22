@@ -34,43 +34,19 @@ func TestScanNumber_2(t *testing.T) {
 }
 
 func TestScanNumber_3(t *testing.T) {
-	in := `123_456`
-	exp := dummyNumToken(7, `123_456`)
-	doTestScanNumber(t, in, &exp, nil)
-}
-
-func TestScanNumber_4(t *testing.T) {
 	in := `123.456`
 	exp := dummyNumToken(7, `123.456`)
 	doTestScanNumber(t, in, &exp, nil)
 }
 
-func TestScanNumber_5(t *testing.T) {
-	in := `123.456_789`
-	exp := dummyNumToken(11, `123.456_789`)
-	doTestScanNumber(t, in, &exp, nil)
-}
-
-func TestScanNumber_6(t *testing.T) {
-	in := `1__2__3__.__4__5__6__`
-	exp := dummyNumToken(21, `1__2__3__.__4__5__6__`)
-	doTestScanNumber(t, in, &exp, nil)
-}
-
-func TestScanNumber_7(t *testing.T) {
+func TestScanNumber_4(t *testing.T) {
 	in := `123.`
 	expErr := dummyNumErrToken(4)
 	doTestScanNumber(t, in, nil, &expErr)
 }
 
-func TestScanNumber_8(t *testing.T) {
+func TestScanNumber_5(t *testing.T) {
 	in := `123..456`
 	expErr := dummyNumErrToken(4)
-	doTestScanNumber(t, in, nil, &expErr)
-}
-
-func TestScanNumber_9(t *testing.T) {
-	in := `123.___`
-	expErr := dummyNumErrToken(7)
 	doTestScanNumber(t, in, nil, &expErr)
 }

@@ -11,7 +11,7 @@ import (
 func scanNumber(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	start := r.NextCol()
 
-	sig, err := scanSignificant(r)
+	sig, err := scanInt(r)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -27,15 +27,26 @@ func scanNumber(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	return scanNext(r, tk)
 }
 
-// numberToken creates a new number token.
-func numberToken(r *Runer, start int, v string) *token.Token {
-	return &token.Token{
-		Val:   v,
-		Line:  r.Line(),
-		Start: start,
-		End:   r.NextCol(),
-		Type:  token.TT_NUMBER,
+// scanInt scans all digits that make up an integer. Underscores are allowed as
+// separators.
+func scanInt(r *Runer) (string, *token.Token) {
+	sb := strings.Builder{}
+
+	for {
+		ru, _, err := r.LookAhead()
+		if err != nil {
+			return ``, runerErrorToken(r, err)
+		}
+
+		if !isDigit(ru) {
+			break
+		}
+
+		r.SkipRune()
+		sb.WriteRune(ru)
 	}
+
+	return sb.String(), nil
 }
 
 // scanFractional scans the fractional part of a number including the decimal
@@ -51,22 +62,17 @@ func scanFractional(r *Runer) (string, *token.Token) {
 	}
 
 	r.SkipRune()
-	return scanFractionalDigits(r, string(ru))
-}
+	n, errTk := scanInt(r)
 
-// scanFractionalDigits scans the digits of the fractional part of a number
-// returning the full fractional part.
-func scanFractionalDigits(r *Runer, delim string) (string, *token.Token) {
-	n, err := scanInt(r)
-	if err != nil {
-		return ``, runerErrorToken(r, err)
+	if errTk != nil {
+		return ``, errTk
 	}
 
-	if len(n) == 0 || onlyContainsUnderscores(n) {
+	if len(n) == 0 {
 		return ``, badFractionalToken(r)
 	}
 
-	return delim + n, nil
+	return string(ru) + n, nil
 }
 
 // badFractionalToken creates a new error token for invalid fractional syntax.
@@ -83,50 +89,13 @@ func badFractionalToken(r *Runer) *token.Token {
 	}
 }
 
-// onlyContainsUnderscores returns true if the string only contains underscores.
-func onlyContainsUnderscores(s string) bool {
-	for _, ru := range s {
-		if !isUnderscore(ru) {
-			return false
-		}
+// numberToken creates a new number token.
+func numberToken(r *Runer, start int, v string) *token.Token {
+	return &token.Token{
+		Val:   v,
+		Line:  r.Line(),
+		Start: start,
+		End:   r.NextCol(),
+		Type:  token.TT_NUMBER,
 	}
-	return true
-}
-
-// scanSignificant scans the significant part of a number. E.g. `123` from the
-// number `123.456`.
-func scanSignificant(r *Runer) (string, *token.Token) {
-	head, err := r.ReadRune()
-	if err != nil {
-		return ``, runerErrorToken(r, err)
-	}
-
-	tail, err := scanInt(r)
-	if err != nil {
-		return ``, runerErrorToken(r, err)
-	}
-
-	return string(head) + tail, nil
-}
-
-// scanInt scans all digits that make up an integer. Underscores are allowed as
-// separators.
-func scanInt(r *Runer) (string, error) {
-	sb := strings.Builder{}
-
-	for {
-		ru, _, err := r.LookAhead()
-		if err != nil {
-			return ``, err
-		}
-
-		if !isDigit(ru) && !isUnderscore(ru) {
-			break
-		}
-
-		r.SkipRune()
-		sb.WriteRune(ru)
-	}
-
-	return sb.String(), nil
 }
