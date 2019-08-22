@@ -16,3 +16,10 @@ list <- [
   "b",
   "c",
 ]
+
+loop _, v, more <- list
+  when
+    more => @Print("${v}${delim} ")
+    _    => @Print("${v}")
+  done
+done
