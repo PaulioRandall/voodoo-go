@@ -77,9 +77,21 @@ func TestScanSymbol_10(t *testing.T) {
 	doTestScanSymbol(t, in, &exp, nil)
 }
 
-func TestScanSymbol_11(t *testing.T) {
+func TestScanSymbol_11_1(t *testing.T) {
 	in := `=>`
 	exp := dummySymToken(2, `=>`, token.TT_MATCH)
+	doTestScanSymbol(t, in, &exp, nil)
+}
+
+func TestScanSymbol_11_2(t *testing.T) {
+	in := `=`
+	exp := dummySymToken(1, `=`, token.TT_ASSIGN)
+	doTestScanSymbol(t, in, &exp, nil)
+}
+
+func TestScanSymbol_11_3(t *testing.T) {
+	in := `:=`
+	exp := dummySymToken(2, `:=`, token.TT_ASSIGN)
 	doTestScanSymbol(t, in, &exp, nil)
 }
 
@@ -153,10 +165,4 @@ func TestScanSymbol_23(t *testing.T) {
 	in := `+ 69`
 	exp := dummySymToken(1, `+`, token.TT_ADD)
 	doTestScanSymbol(t, in, &exp, nil)
-}
-
-func TestScanSymbol_24(t *testing.T) {
-	in := `=`
-	expErr := token.ErrDummyToken(0, 0, 0)
-	doTestScanSymbol(t, in, nil, &expErr)
 }

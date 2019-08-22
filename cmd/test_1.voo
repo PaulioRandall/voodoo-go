@@ -1,7 +1,8 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
-x <- 1
-x <- 1 + 2
+// Three assignment symbols are interchangable
+x = 1
+x := 1 + 2
 x <- 1 + 3 - 2
 
 y <- 123.456

@@ -37,6 +37,10 @@ func scanSymbol(r *Runer) (*token.Token, ParseToken, *token.Token) {
 		tk = symbolToken(r, token.TT_CMP_NOT_EQ, 2)
 	case ru1 == '=' && ru2 == '>':
 		tk = symbolToken(r, token.TT_MATCH, 2)
+	case ru1 == '=':
+		tk = symbolToken(r, token.TT_ASSIGN, 1)
+	case ru1 == ':' && ru2 == '=':
+		tk = symbolToken(r, token.TT_ASSIGN, 2)
 	case ru1 == '!':
 		tk = symbolToken(r, token.TT_NOT, 1)
 	case ru1 == '|' && ru2 == '|':

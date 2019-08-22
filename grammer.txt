@@ -28,7 +28,5 @@ Letter          = ? any unicode category L character ?
 Integer         = Digit, { Digit }
 Digit           = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
-Assign          = "<-"
-Void            = "_"
-Not             = "!"
+Assign          = "<-", "=", ":="
 Operator        = "+", "-", "*", "/", "%", "==", "!=", "<", "<=", ">", ">=", "||", "&&", "=>"
