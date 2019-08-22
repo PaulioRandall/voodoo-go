@@ -127,7 +127,7 @@ func TokenName(t TokenType) string {
 	case TT_SQUARE_CLOSE:
 		return `SQUARE CLOSE`
 	case TT_VALUE_DELIM:
-		return `VALUE DELIM`
+		return `DELIM`
 	case TT_VOID:
 		return `VOID`
 	}
