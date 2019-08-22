@@ -48,6 +48,17 @@ func DummyToken(line, start, end int, v string, t TokenType) Token {
 	}
 }
 
+// PtrDummyToken creates a new pointer to a new dummy token.
+func PtrDummyToken(line, start, end int, v string, t TokenType) *Token {
+	return &Token{
+		Line:  line,
+		Start: start,
+		End:   end,
+		Val:   v,
+		Type:  t,
+	}
+}
+
 // ErrDummyToken creates a new error dummy token.
 func ErrDummyToken(line, start, end int) Token {
 	return Token{
