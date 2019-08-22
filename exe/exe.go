@@ -110,3 +110,14 @@ func tokenToType(tk token.Token) string {
 
 	return n
 }
+
+// AppendToken appends the token to the token array if it forms part of the next
+// statement and returns true only if the token array now represents a full
+// statement.
+func AppendToken(a []token.Token, tk *token.Token) ([]token.Token, bool) {
+	if tk.Type != token.TT_EOS {
+		a = append(a, *tk)
+		return a, false
+	}
+	return a, true
+}
