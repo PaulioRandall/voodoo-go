@@ -1,4 +1,4 @@
-package strimmer
+package preparser
 
 import (
 	"strings"
@@ -6,15 +6,13 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-// Strim normalises an array of tokens ready for the the token parsing, this
-// involves:
-// -> Removing shebang token
-// -> Removing whitespace tokens
-// -> Removing comment tokens
-// -> Removing quote marks from string literals
-// -> Removing underscores from numbers
-// -> Removing newlines or converting them to end of statement tokens
-// -> Converting all letters to lowercase (except literals)
+// Statement represents a statement of strimmed tokens.
+type Statement struct {
+	Tokens []token.Token
+}
+
+// Strim normalises a token. This may involve removing the token or modifying it
+// ready for parsing.
 func Strim(in token.Token, prevType token.TokenType) *token.Token {
 
 	var out *token.Token

@@ -1,4 +1,4 @@
-package strimmer
+package preparser
 
 import (
 	"testing"

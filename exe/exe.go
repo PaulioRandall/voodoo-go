@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/PaulioRandall/voodoo-go/parser/preparser"
 	"github.com/PaulioRandall/voodoo-go/parser/scanner"
-	"github.com/PaulioRandall/voodoo-go/parser/strimmer"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -44,7 +44,7 @@ func scan(data string) *token.Token {
 			return tk
 		}
 
-		tk, t = strimToken(tk, t)
+		tk, t = preparseToken(tk, t)
 		if tk == nil {
 			continue
 		}
@@ -61,10 +61,10 @@ func scan(data string) *token.Token {
 	return nil
 }
 
-// strimToken strims the token and places the result on the output channel.
-func strimToken(tk *token.Token, prevType token.TokenType) (*token.Token, token.TokenType) {
+// preparseToken pre-parses the token and places the result on the output channel.
+func preparseToken(tk *token.Token, prevType token.TokenType) (*token.Token, token.TokenType) {
 	t := tk.Type
-	tk = strimmer.Strim(*tk, prevType)
+	tk = preparser.Strim(*tk, prevType)
 	if tk != nil {
 		t = tk.Type
 	}
