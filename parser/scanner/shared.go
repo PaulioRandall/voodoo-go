@@ -55,9 +55,14 @@ func isDecimalDelim(ru rune) bool {
 	return ru == '.'
 }
 
-// isNewline returns true if the language considers the rune to be a newline.
+// isNewline returns true if the rune is a line feed.
 func isNewline(ru rune) bool {
 	return ru == '\n'
+}
+
+// isCarriageReturn returns true if the rune is a carriage return.
+func isCarriageReturn(ru rune) bool {
+	return ru == '\r'
 }
 
 // isSpace returns true if the language considers the rune to be whitespace.

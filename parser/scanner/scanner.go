@@ -29,7 +29,9 @@ func Scan(r *Runer) (ParseToken, *token.Token) {
 	case ru1 == EOF:
 		return nil, nil
 	case isNewline(ru1):
-		return scanNewline, nil
+		return scanLF, nil
+	case isCarriageReturn(ru1) && isNewline(ru2):
+		return scanCRLF, nil
 	case isLetter(ru1):
 		return scanWord, nil
 	case isNaturalDigit(ru1):
@@ -93,11 +95,23 @@ func ScanShebang(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	return scanNext(r, tk)
 }
 
-// scanNewline scans a newline token.
-func scanNewline(r *Runer) (*token.Token, ParseToken, *token.Token) {
+// scanLF scans a newline token.
+func scanLF(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	r.SkipRune()
+	return scanNewline(r, "\n")
+}
+
+// scanCRLF scans a newline token which includes a carriage return.
+func scanCRLF(r *Runer) (*token.Token, ParseToken, *token.Token) {
+	r.SkipRune()
+	r.SkipRune()
+	return scanNewline(r, "\r\n")
+}
+
+// scanNewline scans a newline token.
+func scanNewline(r *Runer, v string) (*token.Token, ParseToken, *token.Token) {
 	tk := &token.Token{
-		Val:   "\n",
+		Val:   v,
 		Start: r.Col(),
 		End:   r.NextCol(),
 		Type:  token.TT_NEWLINE,
