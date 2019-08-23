@@ -57,3 +57,23 @@ func TestStatement_Add_2(t *testing.T) {
 	}
 	doTestStatement(t, in, exp, false)
 }
+
+func TestStatement_Add_3(t *testing.T) {
+	in := []*token.Token{
+		token.PtrDummyToken(0, 0, 1, `x`, token.TT_ID),
+		token.PtrDummyToken(0, 1, 2, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.PtrDummyToken(0, 4, 5, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 5, 6, `1`, token.TT_NUMBER),
+		token.PtrDummyToken(0, 6, 7, "\n", token.TT_EOS),
+	}
+	exp := []*token.Token{
+		token.PtrDummyToken(0, 0, 1, `x`, token.TT_ID),
+		nil,
+		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		nil,
+		token.PtrDummyToken(0, 5, 6, `1`, token.TT_NUMBER),
+		nil,
+	}
+	doTestStatement(t, in, exp, true)
+}
