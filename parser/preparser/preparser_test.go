@@ -41,6 +41,33 @@ func TestStatement_Add_1(t *testing.T) {
 }
 
 func TestStatement_Add_2(t *testing.T) {
+	stat := New()
+
+	in := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	exp := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	doTestAdd(t, stat, &in, &exp, false)
+
+	in = token.DummyToken(0, 1, 2, "\n", token.TT_EOS)
+	doTestAdd(t, stat, &in, nil, true)
+}
+
+func TestStatement_Add_3(t *testing.T) {
+	stat := New()
+
+	in := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	exp := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	doTestAdd(t, stat, &in, &exp, false)
+
+	in = token.DummyToken(0, 1, 2, "\n", token.TT_EOS)
+	doTestAdd(t, stat, &in, nil, true)
+
+	assert.Panics(t, func() {
+		in = token.DummyToken(0, 2, 3, `y`, token.TT_ID)
+		doTestAdd(t, stat, &in, nil, false)
+	})
+}
+
+func TestStatement_Add_4(t *testing.T) {
 	in := []*token.Token{
 		token.PtrDummyToken(0, 0, 1, `x`, token.TT_ID),
 		token.PtrDummyToken(0, 1, 2, ` `, token.TT_SPACE),
@@ -58,7 +85,7 @@ func TestStatement_Add_2(t *testing.T) {
 	doTestStatement(t, in, exp, false)
 }
 
-func TestStatement_Add_3(t *testing.T) {
+func TestStatement_Add_5(t *testing.T) {
 	in := []*token.Token{
 		token.PtrDummyToken(0, 0, 1, `x`, token.TT_ID),
 		token.PtrDummyToken(0, 1, 2, ` `, token.TT_SPACE),
