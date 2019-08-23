@@ -31,44 +31,33 @@ func scan(data string) *token.Token {
 		return errTk
 	}
 
+	stat := preparser.New()
+	stats := []*preparser.Statement{}
 	var tk *token.Token
-	stats := [][]token.Token{}
-	stat := []token.Token{}
-	var eos bool
-	t := token.TT_UNDEFINED
+	var ok bool
 
 	for f != nil {
-		var ok bool
+
 		tk, f, ok = scanToken(r, f)
 		if !ok {
 			return tk
 		}
 
-		tk, t = preparseToken(tk, t)
-		if tk == nil {
-			continue
-		}
+		complete := stat.Add(tk)
 
-		stat, eos = appendToken(stat, tk)
-
-		if eos {
+		if complete {
 			stats = append(stats, stat)
-			stat = []token.Token{}
+			stat = preparser.New()
 		}
+	}
+
+	if !stat.IsEmpty() {
+		stat.Complete()
+		stats = append(stats, stat)
 	}
 
 	printStatements(stats)
 	return nil
-}
-
-// preparseToken pre-parses the token and places the result on the output channel.
-func preparseToken(tk *token.Token, prevType token.TokenType) (*token.Token, token.TokenType) {
-	t := tk.Type
-	tk = preparser.Strim(*tk, prevType)
-	if tk != nil {
-		t = tk.Type
-	}
-	return tk, t
 }
 
 // scanToken gets the next token from the runer.
@@ -118,18 +107,18 @@ func appendToken(a []token.Token, tk *token.Token) ([]token.Token, bool) {
 }
 
 // printStatements prints each statmant.
-func printStatements(stats [][]token.Token) {
+func printStatements(stats []*preparser.Statement) {
 	fmt.Print(`[`)
 
 	for _, stat := range stats {
-		if len(stat) < 1 {
+		if stat.IsEmpty() {
 			continue
 		}
 
 		fmt.Print("\n  ")
-		size := len(stat) - 1
+		size := stat.Len() - 1
 
-		for i, tk := range stat {
+		for i, tk := range stat.Tokens {
 			s := token.TokenName(tk.Type)
 			fmt.Print(s)
 

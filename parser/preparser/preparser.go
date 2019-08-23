@@ -29,7 +29,7 @@ func New() *Statement {
 func (s *Statement) Add(tk *token.Token) bool {
 	s.check(`Can't add more tokens to a complete statement`)
 
-	tk = s.callStrim(tk)
+	tk = s.strim(tk)
 	if tk == nil {
 		return s.complete
 	}
@@ -43,13 +43,20 @@ func (s *Statement) Add(tk *token.Token) bool {
 	return s.complete
 }
 
-// callStrim calls the Strim function while keeping a track of the previous
-// token types within the statement structure.
-func (s *Statement) callStrim(tk *token.Token) *token.Token {
-	t := tk.Type
-	tk = Strim(*tk, s.prevType)
-	s.prevType = t
-	return tk
+// IsEmpty returns true if the statement is empty.
+func (s *Statement) IsEmpty() bool {
+	return len(s.Tokens) < 1
+}
+
+// Len returns the number of tokens within the statement.
+func (s *Statement) Len() int {
+	return len(s.Tokens)
+}
+
+// Complete sets the complete flag to true preventing any more tokens being
+// added and flagging the statement as ready to parse.
+func (s *Statement) Complete() {
+	s.complete = true
 }
 
 // check checks the statement is not complete, if it is an panic is generated
@@ -60,43 +67,41 @@ func (s *Statement) check(m string) {
 	}
 }
 
-// Strim normalises a token. This may involve removing the token or modifying it
+// strim normalises a token. This may involve removing the token or modifying it
 // ready for parsing.
-func Strim(in token.Token, prevType token.TokenType) *token.Token {
+func (s *Statement) strim(tk *token.Token) *token.Token {
 
-	var out *token.Token
-	t := in.Type
+	t := tk.Type
 
 	switch {
 	case t == token.TT_SHEBANG:
-		out = nil
+		tk = nil
 	case t == token.TT_SPACE:
-		out = nil
+		tk = nil
 	case t == token.TT_COMMENT:
-		out = nil
+		tk = nil
 	case t == token.TT_NEWLINE:
-		out = whenNewline(in, prevType)
+		tk = whenNewline(tk, s.prevType)
 	case t == token.TT_STRING:
-		out = trimQuotes(in)
+		tk = trimQuotes(tk)
 	case t == token.TT_NUMBER:
-		out = stripUnderscores(in)
+		tk = stripUnderscores(tk)
 	case isAlphabeticType(t):
-		out = toLower(in)
-	default:
-		out = &in
+		tk = toLower(tk)
 	}
 
-	return out
+	s.prevType = t
+	return tk
 }
 
 // whenNewline handles newline tokens.
-func whenNewline(tk token.Token, prevType token.TokenType) *token.Token {
+func whenNewline(tk *token.Token, prevType token.TokenType) *token.Token {
 	if isMultiLineType(prevType) {
 		return nil
 	}
 
 	tk.Type = token.TT_EOS
-	return &tk
+	return tk
 }
 
 // isMultiLineType returns true if the input type allows for the following type
@@ -118,15 +123,15 @@ func isMultiLineType(t token.TokenType) bool {
 }
 
 // trimQuotes removes the leading and trailing quotes on string literals.
-func trimQuotes(tk token.Token) *token.Token {
+func trimQuotes(tk *token.Token) *token.Token {
 	tk.Val = tk.Val[1 : len(tk.Val)-1]
-	return &tk
+	return tk
 }
 
 // stripUnderscores removes redudant underscores from numbers.
-func stripUnderscores(tk token.Token) *token.Token {
+func stripUnderscores(tk *token.Token) *token.Token {
 	tk.Val = strings.ReplaceAll(tk.Val, `_`, ``)
-	return &tk
+	return tk
 }
 
 // isAlphabeticType returns true if input token type is for
@@ -149,7 +154,7 @@ func isAlphabeticType(t token.TokenType) bool {
 
 // toLower returns the input token but with all the characters in the value
 // field converted to lowercase.
-func toLower(tk token.Token) *token.Token {
+func toLower(tk *token.Token) *token.Token {
 	tk.Val = strings.ToLower(tk.Val)
-	return &tk
+	return tk
 }
