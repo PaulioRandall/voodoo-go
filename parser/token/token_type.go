@@ -31,7 +31,7 @@ const (
 	TT_OR           // ||
 	TT_AND          // &&
 	TT_NOT          // !
-	TT_MATCH        // =>
+	TT_IF_THEN      // =>
 	TT_ADD          // +
 	TT_SUBTRACT     // -
 	TT_MULTIPLY     // *
@@ -105,8 +105,8 @@ func TokenName(t TokenType) string {
 		return `AND`
 	case TT_NOT:
 		return `NOT`
-	case TT_MATCH:
-		return `MATCH THEN`
+	case TT_IF_THEN:
+		return `IF THEN`
 	case TT_ADD:
 		return `ADD`
 	case TT_SUBTRACT:

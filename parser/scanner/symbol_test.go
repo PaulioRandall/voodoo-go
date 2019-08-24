@@ -79,7 +79,7 @@ func TestScanSymbol_10(t *testing.T) {
 
 func TestScanSymbol_11_1(t *testing.T) {
 	in := `=>`
-	exp := dummySymToken(2, `=>`, token.TT_MATCH)
+	exp := dummySymToken(2, `=>`, token.TT_IF_THEN)
 	doTestScanSymbol(t, in, &exp, nil)
 }
 
