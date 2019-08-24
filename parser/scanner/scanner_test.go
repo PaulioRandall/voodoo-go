@@ -119,9 +119,9 @@ func TestScanner_6(t *testing.T) {
 	in := `@Println("Whelp")`
 	exp := []token.Token{
 		token.DummyToken(0, 0, 8, `@Println`, token.TT_SPELL),
-		token.DummyToken(0, 8, 9, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 8, 9, `(`, token.TT_CURVED_OPEN),
 		token.DummyToken(0, 9, 16, `"Whelp"`, token.TT_STRING),
-		token.DummyToken(0, 16, 17, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 16, 17, `)`, token.TT_CURVED_CLOSE),
 	}
 	doTestScanner(t, in, exp)
 }
@@ -135,12 +135,12 @@ func TestScanner_7(t *testing.T) {
 		token.DummyToken(0, 8, 10, `<-`, token.TT_ASSIGN),
 		token.DummyToken(0, 10, 11, ` `, token.TT_SPACE),
 		token.DummyToken(0, 11, 15, `func`, token.TT_FUNC),
-		token.DummyToken(0, 15, 16, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 15, 16, `(`, token.TT_CURVED_OPEN),
 		token.DummyToken(0, 16, 17, `a`, token.TT_ID),
 		token.DummyToken(0, 17, 18, `,`, token.TT_VALUE_DELIM),
 		token.DummyToken(0, 18, 19, ` `, token.TT_SPACE),
 		token.DummyToken(0, 19, 20, `b`, token.TT_ID),
-		token.DummyToken(0, 20, 21, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 20, 21, `)`, token.TT_CURVED_CLOSE),
 		token.DummyToken(0, 21, 22, ` `, token.TT_SPACE),
 		token.DummyToken(0, 22, 23, `r`, token.TT_ID),
 		token.DummyToken(0, 23, 24, `,`, token.TT_VALUE_DELIM),
@@ -204,13 +204,13 @@ func TestScanner_11(t *testing.T) {
 		token.DummyToken(0, 1, 3, `<-`, token.TT_ASSIGN),
 		token.DummyToken(0, 3, 7, `3.14`, token.TT_NUMBER),
 		token.DummyToken(0, 7, 8, `*`, token.TT_MULTIPLY),
-		token.DummyToken(0, 8, 9, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 8, 9, `(`, token.TT_CURVED_OPEN),
 		token.DummyToken(0, 9, 10, `1`, token.TT_NUMBER),
 		token.DummyToken(0, 10, 11, `-`, token.TT_SUBTRACT),
 		token.DummyToken(0, 11, 12, `2`, token.TT_NUMBER),
 		token.DummyToken(0, 12, 13, `+`, token.TT_ADD),
 		token.DummyToken(0, 13, 14, `3`, token.TT_NUMBER),
-		token.DummyToken(0, 14, 15, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 14, 15, `)`, token.TT_CURVED_CLOSE),
 	}
 	doTestScanner(t, in, exp)
 }
@@ -244,12 +244,12 @@ func TestScanner_13(t *testing.T) {
 		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 		token.DummyToken(0, 4, 5, ` `, token.TT_SPACE),
 		token.DummyToken(0, 5, 9, `func`, token.TT_FUNC),
-		token.DummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 9, 10, `(`, token.TT_CURVED_OPEN),
 		token.DummyToken(0, 10, 11, `a`, token.TT_ID),
 		token.DummyToken(0, 11, 12, `,`, token.TT_VALUE_DELIM),
 		token.DummyToken(0, 12, 13, ` `, token.TT_SPACE),
 		token.DummyToken(0, 13, 14, `b`, token.TT_ID),
-		token.DummyToken(0, 14, 15, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 14, 15, `)`, token.TT_CURVED_CLOSE),
 		token.DummyToken(0, 15, 16, ` `, token.TT_SPACE),
 		token.DummyToken(0, 16, 17, `r`, token.TT_ID),
 		token.DummyToken(0, 17, 18, `,`, token.TT_VALUE_DELIM),

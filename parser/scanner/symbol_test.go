@@ -133,13 +133,13 @@ func TestScanSymbol_17(t *testing.T) {
 
 func TestScanSymbol_18(t *testing.T) {
 	in := `(`
-	exp := dummySymToken(1, `(`, token.TT_CURVY_OPEN)
+	exp := dummySymToken(1, `(`, token.TT_CURVED_OPEN)
 	doTestScanSymbol(t, in, &exp, nil)
 }
 
 func TestScanSymbol_19(t *testing.T) {
 	in := `)`
-	exp := dummySymToken(1, `)`, token.TT_CURVY_CLOSE)
+	exp := dummySymToken(1, `)`, token.TT_CURVED_CLOSE)
 	doTestScanSymbol(t, in, &exp, nil)
 }
 

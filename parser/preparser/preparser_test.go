@@ -161,8 +161,8 @@ func TestStatement_Add_9(t *testing.T) {
 		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 		token.PtrDummyToken(0, 4, 5, ` `, token.TT_SPACE),
 		token.PtrDummyToken(0, 5, 9, `fUnC`, token.TT_FUNC),
-		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
-		token.PtrDummyToken(0, 10, 11, `)`, token.TT_CURVY_CLOSE),
+		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVED_OPEN),
+		token.PtrDummyToken(0, 10, 11, `)`, token.TT_CURVED_CLOSE),
 		token.PtrDummyToken(0, 11, 12, "\n", token.TT_NEWLINE),
 	}
 	exp := []*token.Token{
@@ -171,24 +171,24 @@ func TestStatement_Add_9(t *testing.T) {
 		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 		nil,
 		token.PtrDummyToken(0, 5, 9, `func`, token.TT_FUNC),
-		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
-		token.PtrDummyToken(0, 10, 11, `)`, token.TT_CURVY_CLOSE),
+		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVED_OPEN),
+		token.PtrDummyToken(0, 10, 11, `)`, token.TT_CURVED_CLOSE),
 		nil,
 	}
 	doTestStatement(t, in, exp, true)
 
 	in = []*token.Token{
 		token.PtrDummyToken(0, 12, 23, `@PrintKanji`, token.TT_SPELL),
-		token.PtrDummyToken(0, 23, 24, `(`, token.TT_CURVY_OPEN),
+		token.PtrDummyToken(0, 23, 24, `(`, token.TT_CURVED_OPEN),
 		token.PtrDummyToken(0, 24, 25, `語`, token.TT_ID),
-		token.PtrDummyToken(0, 25, 26, `)`, token.TT_CURVY_CLOSE),
+		token.PtrDummyToken(0, 25, 26, `)`, token.TT_CURVED_CLOSE),
 		token.PtrDummyToken(0, 26, 27, "\n", token.TT_NEWLINE),
 	}
 	exp = []*token.Token{
 		token.PtrDummyToken(0, 12, 23, `@printkanji`, token.TT_SPELL),
-		token.PtrDummyToken(0, 23, 24, `(`, token.TT_CURVY_OPEN),
+		token.PtrDummyToken(0, 23, 24, `(`, token.TT_CURVED_OPEN),
 		token.PtrDummyToken(0, 24, 25, `語`, token.TT_ID),
-		token.PtrDummyToken(0, 25, 26, `)`, token.TT_CURVY_CLOSE),
+		token.PtrDummyToken(0, 25, 26, `)`, token.TT_CURVED_CLOSE),
 		nil,
 	}
 	doTestStatement(t, in, exp, true)
@@ -257,12 +257,12 @@ func TestStatement_Add_11(t *testing.T) {
 		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 		token.PtrDummyToken(0, 4, 5, ` `, token.TT_SPACE),
 		token.PtrDummyToken(0, 5, 9, `func`, token.TT_FUNC),
-		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVED_OPEN),
 		token.PtrDummyToken(0, 10, 11, `a`, token.TT_ID),
 		token.PtrDummyToken(0, 11, 12, `,`, token.TT_VALUE_DELIM),
 		token.PtrDummyToken(0, 12, 13, ` `, token.TT_SPACE),
 		token.PtrDummyToken(0, 13, 14, `b`, token.TT_ID),
-		token.PtrDummyToken(0, 14, 15, `)`, token.TT_CURVY_CLOSE),
+		token.PtrDummyToken(0, 14, 15, `)`, token.TT_CURVED_CLOSE),
 		token.PtrDummyToken(0, 15, 16, ` `, token.TT_SPACE),
 		token.PtrDummyToken(0, 16, 17, `r`, token.TT_ID),
 		token.PtrDummyToken(0, 17, 18, `,`, token.TT_VALUE_DELIM),
@@ -279,12 +279,12 @@ func TestStatement_Add_11(t *testing.T) {
 		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 		nil,
 		token.PtrDummyToken(0, 5, 9, `func`, token.TT_FUNC),
-		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVED_OPEN),
 		token.PtrDummyToken(0, 10, 11, `a`, token.TT_ID),
 		token.PtrDummyToken(0, 11, 12, `,`, token.TT_VALUE_DELIM),
 		nil,
 		token.PtrDummyToken(0, 13, 14, `b`, token.TT_ID),
-		token.PtrDummyToken(0, 14, 15, `)`, token.TT_CURVY_CLOSE),
+		token.PtrDummyToken(0, 14, 15, `)`, token.TT_CURVED_CLOSE),
 		nil,
 		token.PtrDummyToken(0, 16, 17, `r`, token.TT_ID),
 		token.PtrDummyToken(0, 17, 18, `,`, token.TT_VALUE_DELIM),

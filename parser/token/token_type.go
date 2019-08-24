@@ -39,8 +39,8 @@ const (
 	TT_MODULO       // %
 	TT_CURLY_OPEN   // {
 	TT_CURLY_CLOSE  // }
-	TT_CURVY_OPEN   // (
-	TT_CURVY_CLOSE  // )
+	TT_CURVED_OPEN  // (
+	TT_CURVED_CLOSE // )
 	TT_SQUARE_OPEN  // [
 	TT_SQUARE_CLOSE // ]
 	TT_VALUE_DELIM  // ,
@@ -121,10 +121,10 @@ func TokenName(t TokenType) string {
 		return `CURLY OPEN`
 	case TT_CURLY_CLOSE:
 		return `CURLY CLOSE`
-	case TT_CURVY_OPEN:
-		return `CURVY OPEN`
-	case TT_CURVY_CLOSE:
-		return `CURVY CLOSE`
+	case TT_CURVED_OPEN:
+		return `CURVED OPEN`
+	case TT_CURVED_CLOSE:
+		return `CURVED CLOSE`
 	case TT_SQUARE_OPEN:
 		return `SQUARE OPEN`
 	case TT_SQUARE_CLOSE:

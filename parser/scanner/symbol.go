@@ -62,9 +62,9 @@ func scanSymbol(r *Runer) (*token.Token, ParseToken, *token.Token) {
 	case ru1 == '}':
 		tk = symbolToken(r, token.TT_CURLY_CLOSE, 1)
 	case ru1 == '(':
-		tk = symbolToken(r, token.TT_CURVY_OPEN, 1)
+		tk = symbolToken(r, token.TT_CURVED_OPEN, 1)
 	case ru1 == ')':
-		tk = symbolToken(r, token.TT_CURVY_CLOSE, 1)
+		tk = symbolToken(r, token.TT_CURVED_CLOSE, 1)
 	case ru1 == '[':
 		tk = symbolToken(r, token.TT_SQUARE_OPEN, 1)
 	case ru1 == ']':
