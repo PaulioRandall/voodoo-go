@@ -68,7 +68,8 @@ func (s *Statement) check(m string) {
 }
 
 // strim normalises a token. This may involve removing the token or modifying it
-// ready for parsing.
+// ready for parsing. Sometimes an extra token needs to be inserted before or
+// after the normal one.
 func (s *Statement) strim(tk *token.Token) *token.Token {
 
 	t := tk.Type
@@ -133,7 +134,6 @@ func isAlphabeticType(t token.TokenType) bool {
 	case token.TT_FUNC:
 	case token.TT_LOOP:
 	case token.TT_WHEN:
-	case token.TT_DONE:
 	case token.TT_TRUE:
 	case token.TT_FALSE:
 	case token.TT_SPELL:

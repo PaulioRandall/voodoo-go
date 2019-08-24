@@ -29,7 +29,7 @@ func NewRuner(reader *bufio.Reader) *Runer {
 	}
 }
 
-// Line returns the line index, number of newline runes incountered.
+// Line returns the line index, number of line feeds encountered.
 func (r *Runer) Line() int {
 	l := r.line
 	if r.newline {
@@ -38,7 +38,7 @@ func (r *Runer) Line() int {
 	return l
 }
 
-// Col returns the column index of the last rune returned or -1 if no calls to
+// Col returns the column index of the last rune returned or 0 if no calls to
 // read runes has been made yet.
 func (r *Runer) Col() int {
 	if r.newline {
@@ -54,6 +54,15 @@ func (r *Runer) NextCol() int {
 		return 0
 	}
 	return r.col + 1
+}
+
+// RawCol returns the column index of the last rune returned panicing if no
+// runes have been returned yet.
+func (r *Runer) RawCol() int {
+	if r.col == -1 {
+		panic(`Can't return the previous column because there isn't one`)
+	}
+	return r.col
 }
 
 // ReadRune reads the next rune from the reader. EOF is returned if the end of

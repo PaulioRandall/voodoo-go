@@ -1,6 +1,7 @@
 package preparser
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/parser/token"
@@ -12,18 +13,19 @@ func doTestAdd(t *testing.T, stat *Statement, in, exp *token.Token, expComplete 
 	i := len(stat.Tokens)
 	complete := stat.Add(in)
 
-	assert.Equal(t, expComplete, complete)
+	v := strconv.QuoteToGraphic(in.Val)
+	assert.Equal(t, expComplete, complete, "%s cause statement completion?", v)
 
 	if exp == nil {
-		assert.Equal(t, i, len(stat.Tokens))
+		assert.Equal(t, i, len(stat.Tokens), "Unexpected removal of token[%d]", i)
 	} else {
-		require.Equal(t, i+1, len(stat.Tokens))
+		require.Equal(t, i+1, len(stat.Tokens), "Unexpected additional token[%d]", i)
 		token.AssertToken(t, exp, &stat.Tokens[i])
 	}
 }
 
 func doTestStatement(t *testing.T, in, exp []*token.Token, expComplete bool) {
-	require.Equal(t, len(in), len(exp))
+	require.Equal(t, len(in), len(exp), `Test requirment: len(in) == len(exp)`)
 	last := len(in) - 1
 	stat := New()
 
@@ -152,7 +154,6 @@ func TestStatement_Add_8(t *testing.T) {
 func TestStatement_Add_9(t *testing.T) {
 	// f <- fUnC()
 	//   @PrintKanji(語)
-	// DONE
 
 	in := []*token.Token{
 		token.PtrDummyToken(0, 0, 1, `f`, token.TT_ID),
@@ -188,16 +189,6 @@ func TestStatement_Add_9(t *testing.T) {
 		token.PtrDummyToken(0, 23, 24, `(`, token.TT_CURVY_OPEN),
 		token.PtrDummyToken(0, 24, 25, `語`, token.TT_ID),
 		token.PtrDummyToken(0, 25, 26, `)`, token.TT_CURVY_CLOSE),
-		nil,
-	}
-	doTestStatement(t, in, exp, true)
-
-	in = []*token.Token{
-		token.PtrDummyToken(0, 27, 31, `DONE`, token.TT_DONE),
-		token.PtrDummyToken(0, 31, 32, "\n", token.TT_NEWLINE),
-	}
-	exp = []*token.Token{
-		token.PtrDummyToken(0, 27, 31, `done`, token.TT_DONE),
 		nil,
 	}
 	doTestStatement(t, in, exp, true)
@@ -249,6 +240,154 @@ func TestStatement_Add_10(t *testing.T) {
 		token.PtrDummyToken(0, 6, 7, `,`, token.TT_VALUE_DELIM),
 		nil,
 		token.PtrDummyToken(0, 0, 1, `]`, token.TT_SQUARE_CLOSE),
+		nil,
+	}
+	doTestStatement(t, in, exp, true)
+}
+
+func TestStatement_Add_11(t *testing.T) {
+	// f <- func(a, b) r, err {
+	// 	 b == 0 => err := "Can't divide by zero"
+	//   b != 0 => r := a / b
+	// }
+	in := []*token.Token{
+		// f <- func(a, b) r, err {
+		token.PtrDummyToken(0, 0, 1, `f`, token.TT_ID),
+		token.PtrDummyToken(0, 1, 2, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.PtrDummyToken(0, 4, 5, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 5, 9, `func`, token.TT_FUNC),
+		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.PtrDummyToken(0, 10, 11, `a`, token.TT_ID),
+		token.PtrDummyToken(0, 11, 12, `,`, token.TT_VALUE_DELIM),
+		token.PtrDummyToken(0, 12, 13, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 13, 14, `b`, token.TT_ID),
+		token.PtrDummyToken(0, 14, 15, `)`, token.TT_CURVY_CLOSE),
+		token.PtrDummyToken(0, 15, 16, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 16, 17, `r`, token.TT_ID),
+		token.PtrDummyToken(0, 17, 18, `,`, token.TT_VALUE_DELIM),
+		token.PtrDummyToken(0, 18, 19, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 19, 22, `err`, token.TT_ID),
+		token.PtrDummyToken(0, 22, 23, ` `, token.TT_SPACE),
+		token.PtrDummyToken(0, 23, 24, `{`, token.TT_CURLY_OPEN),
+		token.PtrDummyToken(0, 24, 25, "\n", token.TT_NEWLINE),
+	}
+	exp := []*token.Token{
+		// f <- func(a, b) r, err {
+		token.PtrDummyToken(0, 0, 1, `f`, token.TT_ID),
+		nil,
+		token.PtrDummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		nil,
+		token.PtrDummyToken(0, 5, 9, `func`, token.TT_FUNC),
+		token.PtrDummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.PtrDummyToken(0, 10, 11, `a`, token.TT_ID),
+		token.PtrDummyToken(0, 11, 12, `,`, token.TT_VALUE_DELIM),
+		nil,
+		token.PtrDummyToken(0, 13, 14, `b`, token.TT_ID),
+		token.PtrDummyToken(0, 14, 15, `)`, token.TT_CURVY_CLOSE),
+		nil,
+		token.PtrDummyToken(0, 16, 17, `r`, token.TT_ID),
+		token.PtrDummyToken(0, 17, 18, `,`, token.TT_VALUE_DELIM),
+		nil,
+		token.PtrDummyToken(0, 19, 22, `err`, token.TT_ID),
+		nil,
+		token.PtrDummyToken(0, 23, 24, `{`, token.TT_CURLY_OPEN),
+		nil,
+	}
+	doTestStatement(t, in, exp, true)
+
+	in = []*token.Token{
+		// 	 b == 0 => err := "Can't divide by zero"
+		token.PtrDummyToken(1, 0, 1, "\t", token.TT_SPACE),
+		token.PtrDummyToken(1, 1, 2, `b`, token.TT_ID),
+		token.PtrDummyToken(1, 2, 3, ` `, token.TT_SPACE),
+		token.PtrDummyToken(1, 3, 5, `==`, token.TT_CMP_EQ),
+		token.PtrDummyToken(1, 5, 6, ` `, token.TT_SPACE),
+		token.PtrDummyToken(1, 6, 7, `0`, token.TT_NUMBER),
+		token.PtrDummyToken(1, 7, 8, ` `, token.TT_SPACE),
+		token.PtrDummyToken(1, 8, 10, `=>`, token.TT_MATCH),
+		token.PtrDummyToken(1, 10, 11, ` `, token.TT_SPACE),
+		token.PtrDummyToken(1, 11, 14, `err`, token.TT_ID),
+		token.PtrDummyToken(1, 14, 15, ` `, token.TT_SPACE),
+		token.PtrDummyToken(1, 15, 17, `:=`, token.TT_ASSIGN),
+		token.PtrDummyToken(1, 17, 18, ` `, token.TT_SPACE),
+		token.PtrDummyToken(1, 18, 40, `"Can't divide by zero"`, token.TT_STRING),
+		token.PtrDummyToken(1, 40, 41, "\n", token.TT_NEWLINE),
+	}
+	exp = []*token.Token{
+		// 	 b == 0 => err := "Can't divide by zero"
+		nil,
+		token.PtrDummyToken(1, 1, 2, `b`, token.TT_ID),
+		nil,
+		token.PtrDummyToken(1, 3, 5, `==`, token.TT_CMP_EQ),
+		nil,
+		token.PtrDummyToken(1, 6, 7, `0`, token.TT_NUMBER),
+		nil,
+		token.PtrDummyToken(1, 8, 10, `=>`, token.TT_MATCH),
+		nil,
+		token.PtrDummyToken(1, 11, 14, `err`, token.TT_ID),
+		nil,
+		token.PtrDummyToken(1, 15, 17, `:=`, token.TT_ASSIGN),
+		nil,
+		token.PtrDummyToken(1, 18, 40, `Can't divide by zero`, token.TT_STRING),
+		nil,
+	}
+	doTestStatement(t, in, exp, true)
+
+	in = []*token.Token{
+		//   b != 0 => r := a / b
+		token.PtrDummyToken(2, 0, 1, "\t", token.TT_SPACE),
+		token.PtrDummyToken(2, 1, 2, `b`, token.TT_ID),
+		token.PtrDummyToken(2, 2, 3, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 3, 5, `!=`, token.TT_CMP_NOT_EQ),
+		token.PtrDummyToken(2, 5, 6, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 6, 7, `0`, token.TT_NUMBER),
+		token.PtrDummyToken(2, 7, 8, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 8, 10, `=>`, token.TT_MATCH),
+		token.PtrDummyToken(2, 10, 11, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 11, 12, `r`, token.TT_ID),
+		token.PtrDummyToken(2, 12, 13, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 13, 15, `:=`, token.TT_ASSIGN),
+		token.PtrDummyToken(2, 15, 16, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 16, 17, "a", token.TT_ID),
+		token.PtrDummyToken(2, 17, 18, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 18, 19, "/", token.TT_DIVIDE),
+		token.PtrDummyToken(2, 19, 20, ` `, token.TT_SPACE),
+		token.PtrDummyToken(2, 20, 21, "b", token.TT_ID),
+		token.PtrDummyToken(2, 21, 22, "\n", token.TT_NEWLINE),
+	}
+	exp = []*token.Token{
+		//   b != 0 => r := a / b
+		nil,
+		token.PtrDummyToken(2, 1, 2, `b`, token.TT_ID),
+		nil,
+		token.PtrDummyToken(2, 3, 5, `!=`, token.TT_CMP_NOT_EQ),
+		nil,
+		token.PtrDummyToken(2, 6, 7, `0`, token.TT_NUMBER),
+		nil,
+		token.PtrDummyToken(2, 8, 10, `=>`, token.TT_MATCH),
+		nil,
+		token.PtrDummyToken(2, 11, 12, `r`, token.TT_ID),
+		nil,
+		token.PtrDummyToken(2, 13, 15, `:=`, token.TT_ASSIGN),
+		nil,
+		token.PtrDummyToken(2, 16, 17, "a", token.TT_ID),
+		nil,
+		token.PtrDummyToken(2, 18, 19, "/", token.TT_DIVIDE),
+		nil,
+		token.PtrDummyToken(2, 20, 21, "b", token.TT_ID),
+		nil,
+	}
+	doTestStatement(t, in, exp, true)
+
+	in = []*token.Token{
+		// }
+		token.PtrDummyToken(3, 0, 1, "}", token.TT_CURLY_CLOSE),
+		token.PtrDummyToken(3, 1, 2, "\n", token.TT_NEWLINE),
+	}
+	exp = []*token.Token{
+		// }
+		token.PtrDummyToken(3, 0, 1, "}", token.TT_CURLY_CLOSE),
 		nil,
 	}
 	doTestStatement(t, in, exp, true)

@@ -231,3 +231,72 @@ func TestScanner_12(t *testing.T) {
 	}
 	doTestScanner(t, in, exp)
 }
+
+func TestScanner_13(t *testing.T) {
+	in := "f <- func(a, b) r, err {\n" +
+		"\tb == 0 => err := \"Can't divide by zero\"\n" +
+		"\tb != 0 => r := a / b\n" +
+		"}\n"
+	exp := []token.Token{
+		// "f <- func(a, b) r, err {\n"
+		token.DummyToken(0, 0, 1, `f`, token.TT_ID),
+		token.DummyToken(0, 1, 2, ` `, token.TT_SPACE),
+		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.DummyToken(0, 4, 5, ` `, token.TT_SPACE),
+		token.DummyToken(0, 5, 9, `func`, token.TT_FUNC),
+		token.DummyToken(0, 9, 10, `(`, token.TT_CURVY_OPEN),
+		token.DummyToken(0, 10, 11, `a`, token.TT_ID),
+		token.DummyToken(0, 11, 12, `,`, token.TT_VALUE_DELIM),
+		token.DummyToken(0, 12, 13, ` `, token.TT_SPACE),
+		token.DummyToken(0, 13, 14, `b`, token.TT_ID),
+		token.DummyToken(0, 14, 15, `)`, token.TT_CURVY_CLOSE),
+		token.DummyToken(0, 15, 16, ` `, token.TT_SPACE),
+		token.DummyToken(0, 16, 17, `r`, token.TT_ID),
+		token.DummyToken(0, 17, 18, `,`, token.TT_VALUE_DELIM),
+		token.DummyToken(0, 18, 19, ` `, token.TT_SPACE),
+		token.DummyToken(0, 19, 22, `err`, token.TT_ID),
+		token.DummyToken(0, 22, 23, ` `, token.TT_SPACE),
+		token.DummyToken(0, 23, 24, `{`, token.TT_CURLY_OPEN),
+		token.DummyToken(0, 24, 25, "\n", token.TT_NEWLINE),
+		// "\tb == 0 => err := \"Can't divide by zero\""
+		token.DummyToken(1, 0, 1, "\t", token.TT_SPACE),
+		token.DummyToken(1, 1, 2, `b`, token.TT_ID),
+		token.DummyToken(1, 2, 3, ` `, token.TT_SPACE),
+		token.DummyToken(1, 3, 5, `==`, token.TT_CMP_EQ),
+		token.DummyToken(1, 5, 6, ` `, token.TT_SPACE),
+		token.DummyToken(1, 6, 7, `0`, token.TT_NUMBER),
+		token.DummyToken(1, 7, 8, ` `, token.TT_SPACE),
+		token.DummyToken(1, 8, 10, `=>`, token.TT_MATCH),
+		token.DummyToken(1, 10, 11, ` `, token.TT_SPACE),
+		token.DummyToken(1, 11, 14, `err`, token.TT_ID),
+		token.DummyToken(1, 14, 15, ` `, token.TT_SPACE),
+		token.DummyToken(1, 15, 17, `:=`, token.TT_ASSIGN),
+		token.DummyToken(1, 17, 18, ` `, token.TT_SPACE),
+		token.DummyToken(1, 18, 40, `"Can't divide by zero"`, token.TT_STRING),
+		token.DummyToken(1, 40, 41, "\n", token.TT_NEWLINE),
+		// "\tb != 0 => r := a / b\n"
+		token.DummyToken(2, 0, 1, "\t", token.TT_SPACE),
+		token.DummyToken(2, 1, 2, `b`, token.TT_ID),
+		token.DummyToken(2, 2, 3, ` `, token.TT_SPACE),
+		token.DummyToken(2, 3, 5, `!=`, token.TT_CMP_NOT_EQ),
+		token.DummyToken(2, 5, 6, ` `, token.TT_SPACE),
+		token.DummyToken(2, 6, 7, `0`, token.TT_NUMBER),
+		token.DummyToken(2, 7, 8, ` `, token.TT_SPACE),
+		token.DummyToken(2, 8, 10, `=>`, token.TT_MATCH),
+		token.DummyToken(2, 10, 11, ` `, token.TT_SPACE),
+		token.DummyToken(2, 11, 12, `r`, token.TT_ID),
+		token.DummyToken(2, 12, 13, ` `, token.TT_SPACE),
+		token.DummyToken(2, 13, 15, `:=`, token.TT_ASSIGN),
+		token.DummyToken(2, 15, 16, ` `, token.TT_SPACE),
+		token.DummyToken(2, 16, 17, "a", token.TT_ID),
+		token.DummyToken(2, 17, 18, ` `, token.TT_SPACE),
+		token.DummyToken(2, 18, 19, "/", token.TT_DIVIDE),
+		token.DummyToken(2, 19, 20, ` `, token.TT_SPACE),
+		token.DummyToken(2, 20, 21, "b", token.TT_ID),
+		token.DummyToken(2, 21, 22, "\n", token.TT_NEWLINE),
+		// "}\n"
+		token.DummyToken(3, 0, 1, "}", token.TT_CURLY_CLOSE),
+		token.DummyToken(3, 1, 2, "\n", token.TT_NEWLINE),
+	}
+	doTestScanner(t, in, exp)
+}

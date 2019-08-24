@@ -13,7 +13,6 @@ const (
 	TT_FUNC         // "func"
 	TT_LOOP         // "loop"
 	TT_WHEN         // "when"
-	TT_DONE         // "done"
 	TT_TRUE         // "true"
 	TT_FALSE        // "false"
 	TT_ID           // Identifier
@@ -38,6 +37,8 @@ const (
 	TT_MULTIPLY     // *
 	TT_DIVIDE       // /
 	TT_MODULO       // %
+	TT_CURLY_OPEN   // {
+	TT_CURLY_CLOSE  // }
 	TT_CURVY_OPEN   // (
 	TT_CURVY_CLOSE  // )
 	TT_SQUARE_OPEN  // [
@@ -68,8 +69,6 @@ func TokenName(t TokenType) string {
 		return `LOOP`
 	case TT_WHEN:
 		return `WHEN`
-	case TT_DONE:
-		return `DONE`
 	case TT_TRUE:
 		return `TRUE`
 	case TT_FALSE:
@@ -118,6 +117,10 @@ func TokenName(t TokenType) string {
 		return `DIVIDE`
 	case TT_MODULO:
 		return `MODULO`
+	case TT_CURLY_OPEN:
+		return `CURLY OPEN`
+	case TT_CURLY_CLOSE:
+		return `CURLY CLOSE`
 	case TT_CURVY_OPEN:
 		return `CURVY OPEN`
 	case TT_CURVY_CLOSE:

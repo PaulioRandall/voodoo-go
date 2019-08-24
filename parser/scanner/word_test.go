@@ -60,18 +60,12 @@ func TestScanWord_7(t *testing.T) {
 }
 
 func TestScanWord_8(t *testing.T) {
-	in := `done`
-	exp := dummyWordToken(4, `done`, token.TT_DONE)
-	doTestScanWord(t, in, &exp)
-}
-
-func TestScanWord_9(t *testing.T) {
 	in := `true`
 	exp := dummyWordToken(4, `true`, token.TT_TRUE)
 	doTestScanWord(t, in, &exp)
 }
 
-func TestScanWord_10(t *testing.T) {
+func TestScanWord_9(t *testing.T) {
 	in := `false`
 	exp := dummyWordToken(5, `false`, token.TT_FALSE)
 	doTestScanWord(t, in, &exp)

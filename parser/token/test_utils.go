@@ -1,6 +1,8 @@
 package token
 
 import (
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,7 +13,7 @@ import (
 // array.
 func AssertTokens(t *testing.T, exp []Token, act []Token) {
 	for i, expTk := range exp {
-		if !assert.True(t, i < len(act)) {
+		if !assert.True(t, i < len(act), `Token %d missing`, i) {
 			break
 		}
 
@@ -19,7 +21,7 @@ func AssertTokens(t *testing.T, exp []Token, act []Token) {
 		AssertToken(t, &expTk, &actTk)
 	}
 
-	assert.Equal(t, len(exp), len(act))
+	assert.Equal(t, len(exp), len(act), `Expected len(tokens) == %d`, len(exp))
 }
 
 // AssertToken asserts that the actual token equals the expected token except
@@ -29,12 +31,63 @@ func AssertToken(t *testing.T, exp *Token, act *Token) {
 		assert.Nil(t, act)
 	} else {
 		require.NotNil(t, act)
-		assert.Equal(t, exp.Val, act.Val)
-		assert.Equal(t, exp.Line, act.Line)
-		assert.Equal(t, exp.Start, act.Start)
-		assert.Equal(t, exp.End, act.End)
-		assert.Equal(t, exp.Type, act.Type)
+		assert.Equal(t, exp.Val, act.Val, TokenErrorString(act, exp, 0))
+		assert.Equal(t, exp.Line, act.Line, TokenErrorString(act, exp, 1))
+		assert.Equal(t, exp.Start, act.Start, TokenErrorString(act, exp, 2))
+		assert.Equal(t, exp.End, act.End, TokenErrorString(act, exp, 3))
+		assert.Equal(t, exp.Type, act.Type, TokenErrorString(act, exp, 4))
 	}
+}
+
+// TokenErrorString creates a string representation of a failed token assertion.
+func TokenErrorString(tk *Token, exp *Token, errField int) string {
+
+	sb := strings.Builder{}
+	printErr := func(field int, exp string) {
+		if exp != `` && field == errField {
+			sb.WriteString("\n  ^------ Expected: ")
+			sb.WriteString(exp)
+		}
+	}
+
+	sb.WriteString("Token{")
+
+	sb.WriteString("\n")
+	sb.WriteString("  Val: ")
+	sb.WriteString(strconv.QuoteToGraphic(tk.Val))
+	printErr(0, strconv.QuoteToGraphic(exp.Val))
+
+	sb.WriteString("\n")
+	sb.WriteString("  Line: ")
+	sb.WriteString(strconv.Itoa(tk.Line))
+	printErr(1, strconv.Itoa(exp.Line))
+
+	sb.WriteString("\n")
+	sb.WriteString("  Start: ")
+	sb.WriteString(strconv.Itoa(tk.Start))
+	printErr(2, strconv.Itoa(exp.Start))
+
+	sb.WriteString("\n")
+	sb.WriteString("  End: ")
+	sb.WriteString(strconv.Itoa(tk.End))
+	printErr(3, strconv.Itoa(exp.End))
+
+	sb.WriteString("\n")
+	sb.WriteString("  Type: ")
+	sb.WriteString(TokenName(tk.Type))
+	printErr(4, TokenName(exp.Type))
+
+	sb.WriteString("\n")
+	sb.WriteString("  Errors: [")
+	for _, v := range tk.Errors {
+		sb.WriteString("\n    ")
+		sb.WriteString(strconv.QuoteToGraphic(v))
+	}
+	sb.WriteString("\n  ]")
+	printErr(5, "")
+
+	sb.WriteString("\n}")
+	return sb.String()
 }
 
 // DummyToken creates a new dummy token.

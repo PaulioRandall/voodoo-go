@@ -112,8 +112,9 @@ func scanCRLF(r *Runer) (*token.Token, ParseToken, *token.Token) {
 func scanNewline(r *Runer, v string) (*token.Token, ParseToken, *token.Token) {
 	tk := &token.Token{
 		Val:   v,
-		Start: r.Col(),
-		End:   r.NextCol(),
+		Line:  r.Line() - 1,
+		Start: r.RawCol() - len(v) + 1,
+		End:   r.RawCol() + 1,
 		Type:  token.TT_NEWLINE,
 	}
 

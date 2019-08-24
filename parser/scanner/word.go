@@ -35,8 +35,6 @@ func findWordType(s string) token.TokenType {
 		return token.TT_LOOP
 	case `when`:
 		return token.TT_WHEN
-	case `done`:
-		return token.TT_DONE
 	case `true`:
 		return token.TT_TRUE
 	case `false`:

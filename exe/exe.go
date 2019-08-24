@@ -85,16 +85,6 @@ func newRuner(text string) *scanner.Runer {
 	return scanner.NewRuner(br)
 }
 
-// tokenToVal is used by token.PrintlnTokenChan() to determine what should
-// be printed for each supplied token.
-func tokenToVal(tk token.Token) string {
-	if tk.Type == token.TT_EOS {
-		return `\n`
-	}
-
-	return tk.Val //token.TokenName(tk.Type)
-}
-
 // appendToken appends the token to the token array if it forms part of the next
 // statement and returns true only if the token array now represents a full
 // statement.

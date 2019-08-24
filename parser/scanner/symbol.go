@@ -57,6 +57,10 @@ func scanSymbol(r *Runer) (*token.Token, ParseToken, *token.Token) {
 		tk = symbolToken(r, token.TT_DIVIDE, 1)
 	case ru1 == '%':
 		tk = symbolToken(r, token.TT_MODULO, 1)
+	case ru1 == '{':
+		tk = symbolToken(r, token.TT_CURLY_OPEN, 1)
+	case ru1 == '}':
+		tk = symbolToken(r, token.TT_CURLY_CLOSE, 1)
 	case ru1 == '(':
 		tk = symbolToken(r, token.TT_CURVY_OPEN, 1)
 	case ru1 == ')':
@@ -89,6 +93,7 @@ func symbolToken(r *Runer, t token.TokenType, runes int) *token.Token {
 
 	return &token.Token{
 		Val:   s,
+		Line:  r.Line(),
 		Start: r.NextCol() - runes,
 		End:   r.NextCol(),
 		Type:  t,

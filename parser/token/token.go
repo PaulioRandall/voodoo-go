@@ -24,9 +24,31 @@ type Token struct {
 
 // String creates a string representation of the token.
 func (tk Token) String() string {
-	start := strconv.Itoa(tk.Start)
-	start = strings.Repeat(` `, 3-len(start)) + start
-	return fmt.Sprintf("[%s->%-3d] `%s`", start, tk.End, tk.Val)
+	sb := strings.Builder{}
+	sb.WriteString("Token{")
+
+	sb.WriteString("\n\t")
+	sb.WriteString("Val: ")
+	sb.WriteString(strconv.QuoteToGraphic(tk.Val))
+
+	sb.WriteString("\n\t")
+	sb.WriteString("Line: ")
+	sb.WriteString(strconv.Itoa(tk.Line))
+
+	sb.WriteString("\n\t")
+	sb.WriteString("Start: ")
+	sb.WriteString(strconv.Itoa(tk.Start))
+
+	sb.WriteString("\n\t")
+	sb.WriteString("End: ")
+	sb.WriteString(strconv.Itoa(tk.End))
+
+	sb.WriteString("\n\t")
+	sb.WriteString("Type: ")
+	sb.WriteString(TokenName(tk.Type))
+
+	sb.WriteString("\n}")
+	return sb.String()
 }
 
 // PrintlnTokenChan prints each token arriving on the channel until the channel
