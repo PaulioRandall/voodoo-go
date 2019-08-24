@@ -84,8 +84,6 @@ func (s *Statement) strim(tk *token.Token) *token.Token {
 		tk = whenNewline(tk, s.prevType)
 	case t == token.TT_STRING:
 		tk = trimQuotes(tk)
-	case t == token.TT_NUMBER:
-		tk = stripUnderscores(tk)
 	case isAlphabeticType(t):
 		tk = toLower(tk)
 	}
@@ -125,12 +123,6 @@ func isMultiLineType(t token.TokenType) bool {
 // trimQuotes removes the leading and trailing quotes on string literals.
 func trimQuotes(tk *token.Token) *token.Token {
 	tk.Val = tk.Val[1 : len(tk.Val)-1]
-	return tk
-}
-
-// stripUnderscores removes redudant underscores from numbers.
-func stripUnderscores(tk *token.Token) *token.Token {
-	tk.Val = strings.ReplaceAll(tk.Val, `_`, ``)
 	return tk
 }
 

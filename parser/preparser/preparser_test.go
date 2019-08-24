@@ -150,16 +150,6 @@ func TestStatement_Add_8(t *testing.T) {
 }
 
 func TestStatement_Add_9(t *testing.T) {
-	in := []*token.Token{
-		token.PtrDummyToken(0, 0, 7, `123_456`, token.TT_NUMBER),
-	}
-	exp := []*token.Token{
-		token.PtrDummyToken(0, 0, 7, `123456`, token.TT_NUMBER),
-	}
-	doTestStatement(t, in, exp, false)
-}
-
-func TestStatement_Add_10(t *testing.T) {
 	// f <- fUnC()
 	//   @PrintKanji(語)
 	// DONE
@@ -213,7 +203,7 @@ func TestStatement_Add_10(t *testing.T) {
 	doTestStatement(t, in, exp, true)
 }
 
-func TestStrimmer_9(t *testing.T) {
+func TestStatement_Add_10(t *testing.T) {
 	// x <- [
 	//   1,
 	//   2, 3,
