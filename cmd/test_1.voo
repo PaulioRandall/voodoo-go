@@ -1,15 +1,15 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
-// Three assignment symbols are interchangable
-x = 1
-x := 1 + 2
-x <- 1 + 3 - 2
+s <- "abc"
+x = 1 + 2
 
-y <- 123.456
-z <- "abc"
+a, b, c := 1, 2, 3
+y <- a + c - b
+z <- 123.456
 
-f <- func(x) r {
-  @Println(x)
+print <- func(x, newline) r {
+  @Print(x)
+  newline => @Println()
 }
 
 list <- [
@@ -18,9 +18,11 @@ list <- [
   "c",
 ]
 
-loop _, v, more <- list {
+loop i, v, more <- list {
+  i == 0 => print("[")
+
   match {
-    more => @Print("${v}${delim} ")
-    _    => @Print("${v}")
+    more => print("${v}, ")
+    _    => print("${v}]")
   }
 }
