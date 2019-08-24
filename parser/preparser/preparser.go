@@ -133,7 +133,7 @@ func isAlphabeticType(t token.TokenType) bool {
 	switch t {
 	case token.TT_FUNC:
 	case token.TT_LOOP:
-	case token.TT_WHEN:
+	case token.TT_MATCH:
 	case token.TT_TRUE:
 	case token.TT_FALSE:
 	case token.TT_SPELL:

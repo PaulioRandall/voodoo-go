@@ -54,8 +54,8 @@ func TestScanWord_6(t *testing.T) {
 }
 
 func TestScanWord_7(t *testing.T) {
-	in := `when`
-	exp := dummyWordToken(4, `when`, token.TT_WHEN)
+	in := `match`
+	exp := dummyWordToken(5, `match`, token.TT_MATCH)
 	doTestScanWord(t, in, &exp)
 }
 

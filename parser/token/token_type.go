@@ -12,7 +12,7 @@ const (
 	TT_EOS          // END OF STATEMENT
 	TT_FUNC         // "func"
 	TT_LOOP         // "loop"
-	TT_WHEN         // "when"
+	TT_MATCH        // "match"
 	TT_TRUE         // "true"
 	TT_FALSE        // "false"
 	TT_ID           // Identifier
@@ -67,8 +67,8 @@ func TokenName(t TokenType) string {
 		return `FUNC`
 	case TT_LOOP:
 		return `LOOP`
-	case TT_WHEN:
-		return `WHEN`
+	case TT_MATCH:
+		return `MATCH`
 	case TT_TRUE:
 		return `TRUE`
 	case TT_FALSE:

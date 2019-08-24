@@ -19,7 +19,7 @@ list <- [
 ]
 
 loop _, v, more <- list {
-  when {
+  match {
     more => @Print("${v}${delim} ")
     _    => @Print("${v}")
   }
