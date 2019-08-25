@@ -43,7 +43,7 @@ func scan(data string) *token.Token {
 			return tk
 		}
 
-		complete := stat.Add(tk)
+		complete := preparser.Add(stat, tk)
 
 		if complete {
 			stats = append(stats, stat)

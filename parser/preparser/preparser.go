@@ -26,10 +26,12 @@ func New() *Statement {
 // then the complete flag will be set to true and true will be returned.
 // Attempting to add after the complete flag has been set will result in a
 // panic.
-func (s *Statement) Add(tk *token.Token) bool {
-	s.check(`Can't add more tokens to a complete statement`)
+func Add(s *Statement, tk *token.Token) bool {
+	if s.IsComplete() {
+		panic(`Can't add more tokens to a complete statement`)
+	}
 
-	tk = s.strim(tk)
+	tk = strim(s, tk)
 	if tk == nil {
 		return s.complete
 	}
@@ -53,24 +55,21 @@ func (s *Statement) Len() int {
 	return len(s.Tokens)
 }
 
+// IsComplete returns the completion flag.
+func (s *Statement) IsComplete() bool {
+	return s.complete
+}
+
 // Complete sets the complete flag to true preventing any more tokens being
 // added and flagging the statement as ready to parse.
 func (s *Statement) Complete() {
 	s.complete = true
 }
 
-// check checks the statement is not complete, if it is an panic is generated
-// using the supplied error message.
-func (s *Statement) check(m string) {
-	if s.complete {
-		panic(m)
-	}
-}
-
 // strim normalises a token. This may involve removing the token or modifying it
 // ready for parsing. Sometimes an extra token needs to be inserted before or
 // after the normal one.
-func (s *Statement) strim(tk *token.Token) *token.Token {
+func strim(s *Statement, tk *token.Token) *token.Token {
 
 	t := tk.Type
 

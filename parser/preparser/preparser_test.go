@@ -11,7 +11,7 @@ import (
 
 func doTestAdd(t *testing.T, stat *Statement, in, exp *token.Token, expComplete bool) {
 	i := len(stat.Tokens)
-	complete := stat.Add(in)
+	complete := Add(stat, in)
 
 	v := strconv.QuoteToGraphic(in.Val)
 	assert.Equal(t, expComplete, complete, "%s cause statement completion?", v)
