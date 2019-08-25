@@ -19,4 +19,4 @@ Rule 3:
                AND the current node has the ASSIGNMENT kind
                AND the subject token has the NUMBER type.
   Consequence: Place the subject token in the right node
-               AND assign the right node the OPERAND flag. 
+               AND assign the right node the OPERAND kind. 

@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"errors"
+
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/parser/tree"
 )
@@ -11,5 +13,13 @@ import (
 
 // Parse parses the input statement into a parse tree.
 func Parse(in []token.Token) (*tree.Tree, error) {
+	for i, _ := range in {
+		switch {
+		default:
+			m := "Token `" + in[i].Val + "` does not match any parsing rules"
+			return nil, errors.New(m)
+		}
+	}
+
 	return nil, nil
 }
