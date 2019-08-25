@@ -9,63 +9,74 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func doTestAdd(t *testing.T, stat *Statement, in, exp *token.Token, expComplete bool) {
-	i := len(stat.Tokens)
-	complete := Add(stat, in)
+func doTestAdd(
+	t *testing.T,
+	strimmer *Strimmer,
+	stat *Statement,
+	in, exp *token.Token,
+	expComplete bool) {
+
+	i := stat.Len()
+	strimmer.Strim(stat, in)
 
 	v := strconv.QuoteToGraphic(in.Val)
-	assert.Equal(t, expComplete, complete, "%s cause statement completion?", v)
+	assert.Equal(t, expComplete, stat.IsComplete(), "%s cause statement completion?", v)
 
 	if exp == nil {
-		assert.Equal(t, i, len(stat.Tokens), "Unexpected removal of token[%d]", i)
+		assert.Equal(t, i, stat.Len(), "Unexpected removal of token[%d]", i)
 	} else {
-		require.Equal(t, i+1, len(stat.Tokens), "Unexpected additional token[%d]", i)
-		token.AssertToken(t, exp, &stat.Tokens[i])
+		require.Equal(t, i+1, stat.Len(), "Unexpected additional token[%d]", i)
+		token.AssertToken(t, exp, stat.token(i))
 	}
 }
 
 func doTestStatement(t *testing.T, in, exp []*token.Token, expComplete bool) {
 	require.Equal(t, len(in), len(exp), `Test requirment: len(in) == len(exp)`)
 	last := len(in) - 1
-	stat := New()
+
+	strimmer := NewStrimmer()
+	stat := NewStatement()
 
 	for i := 0; i <= last; i++ {
 		expFinished := expComplete && last == i
-		doTestAdd(t, stat, in[i], exp[i], expFinished)
+		doTestAdd(t, strimmer, stat, in[i], exp[i], expFinished)
 	}
 }
 
 func TestStatement_Add_1(t *testing.T) {
-	stat := New()
+	strimmer := NewStrimmer()
+	stat := NewStatement()
 	in := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
 	exp := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
-	doTestAdd(t, stat, &in, &exp, false)
+	doTestAdd(t, strimmer, stat, &in, &exp, false)
 }
 
 func TestStatement_Add_2(t *testing.T) {
-	stat := New()
+	strimmer := NewStrimmer()
+	stat := NewStatement()
 
 	in := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
 	exp := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
-	doTestAdd(t, stat, &in, &exp, false)
+	doTestAdd(t, strimmer, stat, &in, &exp, false)
 
 	in = token.DummyToken(0, 1, 2, "\n", token.TT_EOS)
-	doTestAdd(t, stat, &in, nil, true)
+	doTestAdd(t, strimmer, stat, &in, nil, true)
 }
 
 func TestStatement_Add_3(t *testing.T) {
-	stat := New()
+	strimmer := NewStrimmer()
+	stat := NewStatement()
 
 	in := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
 	exp := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
-	doTestAdd(t, stat, &in, &exp, false)
+	doTestAdd(t, strimmer, stat, &in, &exp, false)
 
 	in = token.DummyToken(0, 1, 2, "\n", token.TT_EOS)
-	doTestAdd(t, stat, &in, nil, true)
+	doTestAdd(t, strimmer, stat, &in, nil, true)
 
 	assert.Panics(t, func() {
 		in = token.DummyToken(0, 2, 3, `y`, token.TT_ID)
-		doTestAdd(t, stat, &in, nil, false)
+		doTestAdd(t, strimmer, stat, &in, nil, false)
 	})
 }
 

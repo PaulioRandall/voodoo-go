@@ -6,70 +6,36 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
-// Statement represents a statement of strimmed tokens ready for parsing.
-type Statement struct {
-	Tokens   []token.Token
+// Strimmer strims tokens.
+type Strimmer struct {
 	prevType token.TokenType
-	complete bool
 }
 
-// New creates a new statement.
-func New() *Statement {
-	return &Statement{
-		Tokens:   []token.Token{},
-		prevType: token.TT_UNDEFINED,
-	}
+// NewStrimmer creates a new strimmer.
+func NewStrimmer() *Strimmer {
+	return &Strimmer{}
 }
 
-// Add strims a token. If the token is not removed by the strimmer it is
+// Strim strims a token. If the token is not removed by the strimmer it is
 // appended to the statement. If the token represents the end of the statement
 // then the complete flag will be set to true and true will be returned.
-// Attempting to add after the complete flag has been set will result in a
-// panic.
-func Add(s *Statement, tk *token.Token) bool {
-	if s.IsComplete() {
-		panic(`Can't add more tokens to a complete statement`)
-	}
-
-	tk = strim(s, tk)
+func (s *Strimmer) Strim(stat *Statement, tk *token.Token) {
+	tk = s.strim(tk)
 	if tk == nil {
-		return s.complete
+		return
 	}
 
 	if tk.Type == token.TT_EOS {
-		s.complete = true
+		stat.SetComplete()
 	} else {
-		s.Tokens = append(s.Tokens, *tk)
+		stat.Append(*tk)
 	}
-
-	return s.complete
-}
-
-// IsEmpty returns true if the statement is empty.
-func (s *Statement) IsEmpty() bool {
-	return len(s.Tokens) < 1
-}
-
-// Len returns the number of tokens within the statement.
-func (s *Statement) Len() int {
-	return len(s.Tokens)
-}
-
-// IsComplete returns the completion flag.
-func (s *Statement) IsComplete() bool {
-	return s.complete
-}
-
-// Complete sets the complete flag to true preventing any more tokens being
-// added and flagging the statement as ready to parse.
-func (s *Statement) Complete() {
-	s.complete = true
 }
 
 // strim normalises a token. This may involve removing the token or modifying it
 // ready for parsing. Sometimes an extra token needs to be inserted before or
 // after the normal one.
-func strim(s *Statement, tk *token.Token) *token.Token {
+func (s *Strimmer) strim(tk *token.Token) *token.Token {
 
 	t := tk.Type
 

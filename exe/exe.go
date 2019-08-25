@@ -31,8 +31,9 @@ func scan(data string) *token.Token {
 		return errTk
 	}
 
-	stat := preparser.New()
-	stats := []*preparser.Statement{}
+	strimmer := preparser.NewStrimmer()
+	stat := preparser.NewStatement()
+	stats := [][]token.Token{}
 	var tk *token.Token
 	var ok bool
 
@@ -43,17 +44,17 @@ func scan(data string) *token.Token {
 			return tk
 		}
 
-		complete := preparser.Add(stat, tk)
+		strimmer.Strim(stat, tk)
 
-		if complete {
-			stats = append(stats, stat)
-			stat = preparser.New()
+		if stat.IsComplete() {
+			stats = append(stats, stat.Tokens())
+			stat.Reset()
 		}
 	}
 
 	if !stat.IsEmpty() {
-		stat.Complete()
-		stats = append(stats, stat)
+		stat.SetComplete()
+		stats = append(stats, stat.Tokens())
 	}
 
 	printStatements(stats)
@@ -97,22 +98,21 @@ func appendToken(a []token.Token, tk *token.Token) ([]token.Token, bool) {
 }
 
 // printStatements prints each statmant.
-func printStatements(stats []*preparser.Statement) {
+func printStatements(stats [][]token.Token) {
 	fmt.Print(`[`)
 
 	for _, stat := range stats {
-		if stat.IsEmpty() {
+		last := len(stat) - 1
+		if last < 0 {
 			continue
 		}
 
 		fmt.Print("\n  ")
-		size := stat.Len() - 1
-
-		for i, tk := range stat.Tokens {
+		for i, tk := range stat {
 			s := token.TokenName(tk.Type)
 			fmt.Print(s)
 
-			if i < size {
+			if i < last {
 				fmt.Print(`, `)
 			}
 		}
