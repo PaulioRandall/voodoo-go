@@ -8,6 +8,7 @@ const (
 	KD_UNDEFINED
 	KD_ASSIGN
 	KD_ID
+	KD_OPERAND
 )
 
 // KindName returns the name of the input kind.
@@ -17,6 +18,8 @@ func KindName(t Kind) string {
 		return "ASSIGNMENT"
 	case KD_ID:
 		return "IDENTIFIER"
+	case KD_OPERAND:
+		return "OPERAND"
 	}
 
 	return "UNDEFINED"

@@ -52,13 +52,13 @@ func (tr *Tree) SetRight(tk token.Token, kind Kind) {
 	}
 }
 
-// Match checks to see if the input kind matches the tree's kind.
-func (tr *Tree) Match(k Kind) bool {
+// Is checks to see if the input kind matches the tree's kind.
+func (tr *Tree) Is(k Kind) bool {
 	return k == KD_DONT_CARE || k == tr.Kind
 }
 
-// MatchLeft checks to see if the input kind matches the left tree's kind.
-func (tr *Tree) MatchLeft(l Kind) bool {
+// IsLeft checks to see if the input kind matches the left tree's kind.
+func (tr *Tree) IsLeft(l Kind) bool {
 	switch {
 	case l == KD_DONT_CARE:
 		return true
@@ -69,8 +69,8 @@ func (tr *Tree) MatchLeft(l Kind) bool {
 	}
 }
 
-// MatchRight checks to see if the input kind matches the right tree's kind.
-func (tr *Tree) MatchRight(r Kind) bool {
+// IsRight checks to see if the input kind matches the right tree's kind.
+func (tr *Tree) IsRight(r Kind) bool {
 	switch {
 	case r == KD_DONT_CARE:
 		return true
@@ -81,7 +81,7 @@ func (tr *Tree) MatchRight(r Kind) bool {
 	}
 }
 
-// MatchAll checks to see if the input kinds match the tree's field kinds.
-func (tr *Tree) MatchAll(k, l, r Kind) bool {
-	return tr.Match(k) && tr.MatchLeft(l) && tr.MatchRight(r)
+// Are checks to see if the input kinds match the tree's field kinds.
+func (tr *Tree) Are(l, k, r Kind) bool {
+	return tr.IsLeft(l) && tr.Is(k) && tr.IsRight(r)
 }
