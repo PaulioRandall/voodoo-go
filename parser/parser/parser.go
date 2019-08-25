@@ -17,10 +17,10 @@ func Parse(in []token.Token) (*tree.Tree, error) {
 
 	for i, tk := range in {
 		switch {
-		case tr.Left == nil && tk.Type == token.TT_ID:
-			tr.Left = tree.New()
-			tr.Left.Token = tk
-			tr.Left.Kind = tree.KD_ID
+		case tr.MatchLeft(tree.KD_UNDEFINED) && tk.Type == token.TT_ID:
+			tr.SetLeft(tk, tree.KD_ID)
+		case tr.MatchLeft(tree.KD_ID) && tk.Type == token.TT_ASSIGN:
+			tr.Set(tk, tree.KD_ASSIGN)
 		default:
 			m := "Token `" + in[i].Val + "` does not match any parsing rules"
 			return nil, errors.New(m)
