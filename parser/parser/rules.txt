@@ -1,0 +1,22 @@
+
+OPERAND := IDENTIFIER | NUMBER
+
+Rule 0:
+  Predicate:   The subject token does not match another rule.
+  Consequence: Abandon parsing and generate an error.
+Rule 1:
+  Predicate:   The left node has no kind
+               AND the subject token has the IDENTIFIER type.
+  Consequence: Place the subject token in the left node
+               AND assign the left node the IDENTIFIER kind.
+Rule 2:
+  Predicate:   The left node has the IDENTIFIER kind
+               AND the subject token has the ASSIGNMENT type.
+  Consequence: Place the subject token in the current node
+               AND assign the current node the ASSIGNMENT kind.
+Rule 3:
+  Predicate:   The left node has the IDENTIFIER kind
+               AND the current node has the ASSIGNMENT kind
+               AND the subject token has the NUMBER type.
+  Consequence: Place the subject token in the right node
+               AND assign the right node the OPERAND flag. 
