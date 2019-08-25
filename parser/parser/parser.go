@@ -13,13 +13,19 @@ import (
 
 // Parse parses the input statement into a parse tree.
 func Parse(in []token.Token) (*tree.Tree, error) {
-	for i, _ := range in {
+	tr := tree.New()
+
+	for i, tk := range in {
 		switch {
+		case tr.Left == nil && tk.Type == token.TT_ID:
+			tr.Left = tree.New()
+			tr.Left.Token = tk
+			tr.Left.Kind = tree.KD_ID
 		default:
 			m := "Token `" + in[i].Val + "` does not match any parsing rules"
 			return nil, errors.New(m)
 		}
 	}
 
-	return nil, nil
+	return tr, nil
 }
