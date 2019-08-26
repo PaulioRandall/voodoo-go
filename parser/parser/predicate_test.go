@@ -113,3 +113,20 @@ func TestRule_4a_predicate(t *testing.T) {
 	r = rule_4_predicate(tree.Copy(tr), tk)
 	assert.False(t, r)
 }
+
+func TestRule_4b_predicate(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+		},
+	}
+
+	tk := token.OfType(token.TT_NUMBER)
+	r := rule_4_predicate(tree.Copy(tr), tk)
+	assert.True(t, r)
+
+	tk = token.OfType(token.TT_SPACE)
+	r = rule_4_predicate(tree.Copy(tr), tk)
+	assert.False(t, r)
+}

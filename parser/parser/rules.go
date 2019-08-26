@@ -35,7 +35,8 @@ func rule_1_consequence(tr *tree.Tree, tk token.Token) {
 func rule_2_predicate(tr *tree.Tree, tk token.Token) bool {
 	ok := tr.IsLeft(tree.KD_ID) ||
 		tr.IsLeft(tree.KD_UNION)
-	return ok && tk.Type == token.TT_VALUE_DELIM
+	return ok &&
+		tk.Type == token.TT_VALUE_DELIM
 }
 
 //  Consequence: Place the subject token in the current node
@@ -49,7 +50,8 @@ func rule_2_consequence(tr *tree.Tree, tk token.Token) {
 func rule_3_predicate(tr *tree.Tree, tk token.Token) bool {
 	ok := tr.IsLeft(tree.KD_ID) ||
 		tr.IsLeft(tree.KD_UNION)
-	return ok && tk.Type == token.TT_ASSIGN
+	return ok &&
+		tk.Type == token.TT_ASSIGN
 }
 
 //  Consequence: Place the subject token in the current node
@@ -58,11 +60,13 @@ func rule_3_consequence(tr *tree.Tree, tk token.Token) {
 	tr.Set(tk, tree.KD_ASSIGN)
 }
 
-//  Predicate: The left node has the IDENTIFIER kind
+//  Predicate: The left node has the IDENTIFIER or UNION kind
 //             AND the current node has the ASSIGNMENT kind
 //             AND the subject token has the NUMBER type.
 func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
-	return tr.IsLeft(tree.KD_ID) &&
+	ok := tr.IsLeft(tree.KD_ID) ||
+		tr.IsLeft(tree.KD_UNION)
+	return ok &&
 		tr.Is(tree.KD_ASSIGN) &&
 		tk.Type == token.TT_NUMBER
 }

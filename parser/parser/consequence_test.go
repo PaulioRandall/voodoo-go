@@ -5,6 +5,7 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/parser/tree"
+	"github.com/stretchr/testify/require"
 )
 
 func TestRule_1_consequence(t *testing.T) {
@@ -18,6 +19,7 @@ func TestRule_1_consequence(t *testing.T) {
 		Token: tk,
 	}
 
+	require.True(t, rule_1_predicate(tr, tk))
 	rule_1_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
@@ -35,6 +37,7 @@ func TestRule_2a_consequence(t *testing.T) {
 	exp.Kind = tree.KD_UNION
 	exp.Token = tk
 
+	require.True(t, rule_2_predicate(tr, tk))
 	rule_2_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
@@ -58,6 +61,7 @@ func TestRule_2b_consequence(t *testing.T) {
 	exp.Kind = tree.KD_UNION
 	exp.Token = tk
 
+	require.True(t, rule_2_predicate(tr, tk))
 	rule_2_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
@@ -76,6 +80,7 @@ func TestRule_3a_consequence(t *testing.T) {
 	exp.Kind = tree.KD_ASSIGN
 	exp.Token = tk
 
+	require.True(t, rule_3_predicate(tr, tk))
 	rule_3_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
@@ -99,6 +104,7 @@ func TestRule_3b_consequence(t *testing.T) {
 	exp.Kind = tree.KD_ASSIGN
 	exp.Token = tk
 
+	require.True(t, rule_3_predicate(tr, tk))
 	rule_3_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
@@ -119,30 +125,28 @@ func TestRule_4a_consequence(t *testing.T) {
 		Token: tk,
 	}
 
+	require.True(t, rule_4_predicate(tr, tk))
 	rule_4_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
 
-/*
-func TestParse_Rule_4b(t *testing.T) {
+func TestRule_4b_consequence(t *testing.T) {
 	tr := &tree.Tree{
 		Kind: tree.KD_ASSIGN,
 		Left: &tree.Tree{
 			Kind: tree.KD_UNION,
-			Left: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-			Right: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
 		},
 	}
 
-	in := token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER)
+	tk := token.OfType(token.TT_NUMBER)
 
 	exp := tree.Copy(tr)
-	exp.Right = dummyTree(tree.KD_OPERAND, in, nil, nil)
+	exp.Right = &tree.Tree{
+		Kind:  tree.KD_OPERAND,
+		Token: tk,
+	}
 
-	doTestParseToken(t, tr, in, true, exp)
+	require.True(t, rule_4_predicate(tr, tk))
+	rule_4_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
 }
-*/
