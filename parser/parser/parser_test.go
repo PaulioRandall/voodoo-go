@@ -46,9 +46,6 @@ func dummyTree(k tree.Kind, t token.Token, l *tree.Tree, r *tree.Tree) *tree.Tre
 	}
 }
 
-// Rule 0:
-//  Predicate:   The subject token does not match another rule.
-//  Consequence: Abandon parsing and generate an error.
 func TestParse_Rule_0(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 0, ``, token.TT_SPACE),
@@ -56,11 +53,6 @@ func TestParse_Rule_0(t *testing.T) {
 	doTestParseError(t, in)
 }
 
-//Rule 1:
-//  Predicate:   The left node has no kind
-//               AND the subject token has the IDENTIFIER type.
-//  Consequence: Place the subject token in the left node
-//               AND assign the left node the IDENTIFIER kind.
 func TestParse_Rule_1(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
@@ -70,11 +62,6 @@ func TestParse_Rule_1(t *testing.T) {
 	doTestParse(t, in, exp)
 }
 
-//Rule 2:
-//  Predicate:   The left node has the IDENTIFIER or UNION kind
-//               AND the subject token has the ASSIGNMENT type.
-//  Consequence: Place the subject token in the current node
-//               AND assign the current node the ASSIGNMENT kind.
 func TestParse_Rule_2(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
@@ -85,12 +72,6 @@ func TestParse_Rule_2(t *testing.T) {
 	doTestParse(t, in, exp)
 }
 
-//Rule 3:
-//  Predicate:   The left node has the IDENTIFIER kind
-//               AND the current node has the ASSIGNMENT kind
-//               AND the subject token has the NUMBER type.
-//  Consequence: Place the subject token in the right node
-//               AND assign the right node the OPERAND kind.
 func TestParse_Rule_3(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
@@ -102,3 +83,21 @@ func TestParse_Rule_3(t *testing.T) {
 	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, expRight)
 	doTestParse(t, in, exp)
 }
+
+// Rule 4:
+//  Predicate:   The left node has the IDENTIFIER kind
+//               AND the subject token has the VALUE_DELIM type.
+//  Consequence: Place the subject token in the current node
+//               AND assign the current node the UNION kind.
+
+/*
+func TestParse_Rule_4(t *testing.T) {
+	in := []token.Token{
+		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
+		token.DummyToken(0, 2, 3, `,`, token.TT_VALUE_DELIM),
+	}
+	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
+	exp := dummyTree(tree.KD_UNION, in[1], expLeft, nil)
+	doTestParse(t, in, exp)
+}
+*/
