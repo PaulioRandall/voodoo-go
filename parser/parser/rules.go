@@ -46,24 +46,9 @@ func rule_2_consequence(tr *tree.Tree, tk token.Token) {
 }
 
 //  Predicate: The left node has the IDENTIFIER or UNION kind
-//             AND the subject token has the ASSIGNMENT type.
-func rule_3_predicate(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.IsLeft(tree.KD_ID) ||
-		tr.IsLeft(tree.KD_UNION)
-	return ok &&
-		tk.Type == token.TT_ASSIGN
-}
-
-//  Consequence: Place the subject token in the current node
-//               AND assign the current node the ASSIGNMENT kind.
-func rule_3_consequence(tr *tree.Tree, tk token.Token) {
-	tr.Set(tk, tree.KD_ASSIGN)
-}
-
-//  Predicate: The left node has the IDENTIFIER or UNION kind
 //             AND the current node has the UNION kind
 //             AND the subject token has the IDENTIFIER type.
-func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
+func rule_3_predicate(tr *tree.Tree, tk token.Token) bool {
 	a := tr.IsLeft(tree.KD_ID) ||
 		tr.IsLeft(tree.KD_UNION)
 	return a &&
@@ -73,8 +58,23 @@ func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
 
 //  Consequence: Place the subject token in the right node
 //               AND assign the right node the IDENTIFIER kind.
-func rule_4_consequence(tr *tree.Tree, tk token.Token) {
+func rule_3_consequence(tr *tree.Tree, tk token.Token) {
 	tr.SetRight(tk, tree.KD_ID)
+}
+
+//  Predicate: The left node has the IDENTIFIER or UNION kind
+//             AND the subject token has the ASSIGNMENT type.
+func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
+	ok := tr.IsLeft(tree.KD_ID) ||
+		tr.IsLeft(tree.KD_UNION)
+	return ok &&
+		tk.Type == token.TT_ASSIGN
+}
+
+//  Consequence: Place the subject token in the current node
+//               AND assign the current node the ASSIGNMENT kind.
+func rule_4_consequence(tr *tree.Tree, tk token.Token) {
+	tr.Set(tk, tree.KD_ASSIGN)
 }
 
 //  Predicate: The left node has the IDENTIFIER or UNION kind

@@ -60,13 +60,13 @@ func TestRule_2b_predicate(t *testing.T) {
 
 func TestRule_3a_predicate(t *testing.T) {
 	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
+		Kind: tree.KD_UNION,
 		Left: &tree.Tree{
 			Kind: tree.KD_ID,
 		},
 	}
 
-	tk := token.OfType(token.TT_ASSIGN)
+	tk := token.OfType(token.TT_ID)
 	r := rule_3_predicate(tree.Copy(tr), tk)
 	assert.True(t, r)
 
@@ -76,6 +76,40 @@ func TestRule_3a_predicate(t *testing.T) {
 }
 
 func TestRule_3b_predicate(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_UNION,
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+		},
+	}
+
+	tk := token.OfType(token.TT_ID)
+	r := rule_3_predicate(tree.Copy(tr), tk)
+	assert.True(t, r)
+
+	tk = token.OfType(token.TT_SPACE)
+	r = rule_3_predicate(tree.Copy(tr), tk)
+	assert.False(t, r)
+}
+
+func TestRule_4a_predicate(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
+
+	tk := token.OfType(token.TT_ASSIGN)
+	r := rule_4_predicate(tree.Copy(tr), tk)
+	assert.True(t, r)
+
+	tk = token.OfType(token.TT_SPACE)
+	r = rule_4_predicate(tree.Copy(tr), tk)
+	assert.False(t, r)
+}
+
+func TestRule_4b_predicate(t *testing.T) {
 	tr := &tree.Tree{
 		Left: &tree.Tree{
 			Kind: tree.KD_UNION,
@@ -89,40 +123,6 @@ func TestRule_3b_predicate(t *testing.T) {
 	}
 
 	tk := token.OfType(token.TT_ASSIGN)
-	r := rule_3_predicate(tree.Copy(tr), tk)
-	assert.True(t, r)
-
-	tk = token.OfType(token.TT_SPACE)
-	r = rule_3_predicate(tree.Copy(tr), tk)
-	assert.False(t, r)
-}
-
-func TestRule_4a_predicate(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_UNION,
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
-	}
-
-	tk := token.OfType(token.TT_ID)
-	r := rule_4_predicate(tree.Copy(tr), tk)
-	assert.True(t, r)
-
-	tk = token.OfType(token.TT_SPACE)
-	r = rule_4_predicate(tree.Copy(tr), tk)
-	assert.False(t, r)
-}
-
-func TestRule_4b_predicate(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_UNION,
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-		},
-	}
-
-	tk := token.OfType(token.TT_ID)
 	r := rule_4_predicate(tree.Copy(tr), tk)
 	assert.True(t, r)
 
