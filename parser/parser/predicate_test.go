@@ -6,7 +6,6 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/parser/tree"
 	"github.com/stretchr/testify/assert"
-	//"github.com/stretchr/testify/require"
 )
 
 func TestRule_1_predicate(t *testing.T) {

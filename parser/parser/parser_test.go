@@ -32,13 +32,6 @@ func doTestParse(t *testing.T, in []token.Token, exp *tree.Tree) {
 	assertTree(t, exp, tr, `Trunk`)
 }
 
-// MARK: Can be removed?
-func doTestParseError(t *testing.T, in []token.Token) {
-	tr, err := Parse(in)
-	assert.True(t, err != nil, `Expected 'err != nil'`)
-	assert.True(t, tr == nil, `Expected error but 'tree != nil'`)
-}
-
 func assertTree(t *testing.T, exp *tree.Tree, act *tree.Tree, node string) {
 	if exp == nil {
 		assert.Nil(t, act, `Expected '%s == nil'`, node)
@@ -63,21 +56,10 @@ func dummyTree(k tree.Kind, t token.Token, l *tree.Tree, r *tree.Tree) *tree.Tre
 	}
 }
 
-func TestParse_Rule_0(t *testing.T) {
+func TestParse_1(t *testing.T) {
 	tr := tree.New()
 	in := token.DummyToken(0, 0, 0, ``, token.TT_SPACE)
 	doTestParseToken(t, tr, in, false, nil)
-}
-
-func TestParse_Rule_1(t *testing.T) {
-	tr := tree.New()
-
-	in := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
-
-	exp := tree.Copy(tr)
-	exp.Left = dummyTree(tree.KD_ID, in, nil, nil)
-
-	doTestParseToken(t, tr, in, true, exp)
 }
 
 func TestParse_Rule_2a(t *testing.T) {
