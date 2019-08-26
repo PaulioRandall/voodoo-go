@@ -16,9 +16,10 @@ func Parse(in []token.Token) (*tree.Tree, error) {
 	tr := tree.New()
 
 	for i, tk := range in {
-		err := parseToken(tr, i, tk)
-		if err != nil {
-			return nil, err
+		ok := parseToken(tr, tk)
+		if !ok {
+			m := "Token[" + strconv.Itoa(i) + "] does not match any parsing rules"
+			return nil, errors.New(m)
 		}
 	}
 
@@ -27,7 +28,7 @@ func Parse(in []token.Token) (*tree.Tree, error) {
 
 // parseToken applies the first matching parse rule --with token as subject--
 // to the tree.
-func parseToken(tr *tree.Tree, i int, tk token.Token) (err error) {
+func parseToken(tr *tree.Tree, tk token.Token) bool {
 	switch findRule(tr, tk) {
 	case 1:
 		tr.SetLeft(tk, tree.KD_ID)
@@ -38,9 +39,8 @@ func parseToken(tr *tree.Tree, i int, tk token.Token) (err error) {
 	case 4:
 		tr.SetRight(tk, tree.KD_OPERAND)
 	default:
-		m := "Token[" + strconv.Itoa(i) + "] does not match any parsing rules"
-		err = errors.New(m)
+		return false
 	}
 
-	return
+	return true
 }

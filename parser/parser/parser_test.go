@@ -9,6 +9,22 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func doTestParseToken(
+	t *testing.T,
+	tr *tree.Tree,
+	in token.Token,
+	expOk bool,
+	exp *tree.Tree) {
+
+	ok := parseToken(tr, in)
+	if expOk {
+		require.True(t, ok, `Expected 'parseToken(..) == true'`)
+		assertTree(t, exp, tr, `Trunk`)
+	} else {
+		require.False(t, ok, `Expected 'parseToken(..) == false'`)
+	}
+}
+
 func doTestParse(t *testing.T, in []token.Token, exp *tree.Tree) {
 	tr, err := Parse(in)
 	require.Nil(t, err)
@@ -16,6 +32,7 @@ func doTestParse(t *testing.T, in []token.Token, exp *tree.Tree) {
 	assertTree(t, exp, tr, `Trunk`)
 }
 
+// MARK: Can be removed?
 func doTestParseError(t *testing.T, in []token.Token) {
 	tr, err := Parse(in)
 	assert.True(t, err != nil, `Expected 'err != nil'`)
@@ -47,53 +64,61 @@ func dummyTree(k tree.Kind, t token.Token, l *tree.Tree, r *tree.Tree) *tree.Tre
 }
 
 func TestParse_Rule_0(t *testing.T) {
-	in := []token.Token{
-		token.DummyToken(0, 0, 0, ``, token.TT_SPACE),
-	}
-	doTestParseError(t, in)
+	tr := dummyTree(tree.KD_UNDEFINED, token.EMPTY, nil, nil)
+
+	in := token.DummyToken(0, 0, 0, ``, token.TT_SPACE)
+	doTestParseToken(t, tr, in, false, nil)
 }
 
 func TestParse_Rule_1(t *testing.T) {
-	in := []token.Token{
-		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-	}
-	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
+	tr := dummyTree(tree.KD_UNDEFINED, token.EMPTY, nil, nil)
+
+	in := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	expLeft := dummyTree(tree.KD_ID, in, nil, nil)
 	exp := dummyTree(tree.KD_UNDEFINED, token.EMPTY, expLeft, nil)
-	doTestParse(t, in, exp)
+	doTestParseToken(t, tr, in, true, exp)
 }
 
 func TestParse_Rule_2(t *testing.T) {
-	in := []token.Token{
-		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-		token.DummyToken(0, 2, 3, `,`, token.TT_VALUE_DELIM),
-	}
-	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
-	exp := dummyTree(tree.KD_UNION, in[1], expLeft, nil)
-	doTestParse(t, in, exp)
+	tr := dummyTree(tree.KD_UNDEFINED, token.EMPTY, nil, nil)
+
+	inLeft := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	parseToken(tr, inLeft)
+
+	in := token.DummyToken(0, 2, 3, `,`, token.TT_VALUE_DELIM)
+	expLeft := dummyTree(tree.KD_ID, inLeft, nil, nil)
+	exp := dummyTree(tree.KD_UNION, in, expLeft, nil)
+	doTestParseToken(t, tr, in, true, exp)
 
 	// TODO: Test UNION
 }
 
 func TestParse_Rule_3(t *testing.T) {
-	in := []token.Token{
-		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
-	}
-	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
-	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, nil)
-	doTestParse(t, in, exp)
+	tr := dummyTree(tree.KD_UNDEFINED, token.EMPTY, nil, nil)
+
+	inLeft := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	parseToken(tr, inLeft)
+
+	in := token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN)
+	expLeft := dummyTree(tree.KD_ID, inLeft, nil, nil)
+	exp := dummyTree(tree.KD_ASSIGN, in, expLeft, nil)
+	doTestParseToken(t, tr, in, true, exp)
 
 	// TODO: Test UNION
 }
 
 func TestParse_Rule_4(t *testing.T) {
-	in := []token.Token{
-		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
-		token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER),
-	}
-	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
-	expRight := dummyTree(tree.KD_OPERAND, in[2], nil, nil)
-	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, expRight)
-	doTestParse(t, in, exp)
+	tr := dummyTree(tree.KD_UNDEFINED, token.EMPTY, nil, nil)
+
+	inLeft := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
+	parseToken(tr, inLeft)
+
+	in := token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN)
+	parseToken(tr, in)
+
+	inRight := token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER)
+	expLeft := dummyTree(tree.KD_ID, inLeft, nil, nil)
+	expRight := dummyTree(tree.KD_OPERAND, inRight, nil, nil)
+	exp := dummyTree(tree.KD_ASSIGN, in, expLeft, expRight)
+	doTestParseToken(t, tr, inRight, true, exp)
 }
