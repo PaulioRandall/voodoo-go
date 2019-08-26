@@ -111,17 +111,17 @@ func TestRule_3b_consequence(t *testing.T) {
 
 func TestRule_4a_consequence(t *testing.T) {
 	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
+		Kind: tree.KD_UNION,
 		Left: &tree.Tree{
 			Kind: tree.KD_ID,
 		},
 	}
 
-	tk := token.OfType(token.TT_NUMBER)
+	tk := token.OfType(token.TT_ID)
 
 	exp := tree.Copy(tr)
 	exp.Right = &tree.Tree{
-		Kind:  tree.KD_OPERAND,
+		Kind:  tree.KD_ID,
 		Token: tk,
 	}
 
@@ -132,9 +132,30 @@ func TestRule_4a_consequence(t *testing.T) {
 
 func TestRule_4b_consequence(t *testing.T) {
 	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
+		Kind: tree.KD_UNION,
 		Left: &tree.Tree{
 			Kind: tree.KD_UNION,
+		},
+	}
+
+	tk := token.OfType(token.TT_ID)
+
+	exp := tree.Copy(tr)
+	exp.Right = &tree.Tree{
+		Kind:  tree.KD_ID,
+		Token: tk,
+	}
+
+	require.True(t, rule_4_predicate(tr, tk))
+	rule_4_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func TestRule_5a_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
 		},
 	}
 
@@ -146,27 +167,6 @@ func TestRule_4b_consequence(t *testing.T) {
 		Token: tk,
 	}
 
-	require.True(t, rule_4_predicate(tr, tk))
-	rule_4_consequence(tr, tk)
-	assertTree(t, exp, tr, `Trunk`)
-}
-
-func TestRule_5a_consequence(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_UNION,
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
-	}
-
-	tk := token.OfType(token.TT_ID)
-
-	exp := tree.Copy(tr)
-	exp.Right = &tree.Tree{
-		Kind:  tree.KD_ID,
-		Token: tk,
-	}
-
 	require.True(t, rule_5_predicate(tr, tk))
 	rule_5_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
@@ -174,17 +174,17 @@ func TestRule_5a_consequence(t *testing.T) {
 
 func TestRule_5b_consequence(t *testing.T) {
 	tr := &tree.Tree{
-		Kind: tree.KD_UNION,
+		Kind: tree.KD_ASSIGN,
 		Left: &tree.Tree{
 			Kind: tree.KD_UNION,
 		},
 	}
 
-	tk := token.OfType(token.TT_ID)
+	tk := token.OfType(token.TT_NUMBER)
 
 	exp := tree.Copy(tr)
 	exp.Right = &tree.Tree{
-		Kind:  tree.KD_ID,
+		Kind:  tree.KD_OPERAND,
 		Token: tk,
 	}
 
