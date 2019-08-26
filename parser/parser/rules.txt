@@ -10,7 +10,7 @@ Rule 1:
   Consequence: Place the subject token in the left node
                AND assign the left node the IDENTIFIER kind.
 Rule 2:
-  Predicate:   The left node has the IDENTIFIER kind
+  Predicate:   The left node has the IDENTIFIER or UNION kind
                AND the subject token has the ASSIGNMENT type.
   Consequence: Place the subject token in the current node
                AND assign the current node the ASSIGNMENT kind.
@@ -19,4 +19,9 @@ Rule 3:
                AND the current node has the ASSIGNMENT kind
                AND the subject token has the NUMBER type.
   Consequence: Place the subject token in the right node
-               AND assign the right node the OPERAND kind. 
+               AND assign the right node the OPERAND kind.
+Rule 4:
+  Predicate:   The left node has the IDENTIFIER kind
+               AND the subject token has the VALUE_DELIM type.
+  Consequence: Place the subject token in the current node
+               AND assign the current node the UNION kind.

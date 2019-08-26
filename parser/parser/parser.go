@@ -8,9 +8,8 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/tree"
 )
 
-// TODO: Make a simple parser for `x <- 1`
-// TODO: It requires:
-// TODO: - a tree structure with nodes
+// DONE: Make a simple parser for `x <- 1`
+// NEXT: Modify the parser to handle `x, y <- 1, 2`
 
 // Parse parses the input statement into a parse tree.
 func Parse(in []token.Token) (*tree.Tree, error) {

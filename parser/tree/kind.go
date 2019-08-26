@@ -9,6 +9,7 @@ const (
 	KD_ASSIGN
 	KD_ID
 	KD_OPERAND
+	KD_UNION // Joins the left and the right
 )
 
 // KindName returns the name of the input kind.

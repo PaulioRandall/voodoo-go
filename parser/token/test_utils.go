@@ -26,17 +26,19 @@ func AssertTokens(t *testing.T, exp []Token, act []Token) {
 
 // AssertToken asserts that the actual token equals the expected token except
 // for the error messages.
-func AssertToken(t *testing.T, exp *Token, act *Token) {
+func AssertToken(t *testing.T, exp *Token, act *Token) (ok bool) {
 	if exp == nil {
-		assert.Nil(t, act)
+		ok = assert.Nil(t, act)
 	} else {
 		require.NotNil(t, act)
-		assert.Equal(t, exp.Val, act.Val, TokenErrorString(act, exp, 0))
-		assert.Equal(t, exp.Line, act.Line, TokenErrorString(act, exp, 1))
-		assert.Equal(t, exp.Start, act.Start, TokenErrorString(act, exp, 2))
-		assert.Equal(t, exp.End, act.End, TokenErrorString(act, exp, 3))
-		assert.Equal(t, exp.Type, act.Type, TokenErrorString(act, exp, 4))
+		ok = true
+		ok = ok && assert.Equal(t, exp.Val, act.Val, TokenErrorString(act, exp, 0))
+		ok = ok && assert.Equal(t, exp.Line, act.Line, TokenErrorString(act, exp, 1))
+		ok = ok && assert.Equal(t, exp.Start, act.Start, TokenErrorString(act, exp, 2))
+		ok = ok && assert.Equal(t, exp.End, act.End, TokenErrorString(act, exp, 3))
+		ok = ok && assert.Equal(t, exp.Type, act.Type, TokenErrorString(act, exp, 4))
 	}
+	return
 }
 
 // TokenErrorString creates a string representation of a failed token assertion.

@@ -9,14 +9,51 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func doTestParse(t *testing.T, in []token.Token, exp *tree.Tree) {
+	tr, err := Parse(in)
+	require.Nil(t, err)
+	require.NotNil(t, tr)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func doTestParseError(t *testing.T, in []token.Token) {
+	tr, err := Parse(in)
+	assert.True(t, err != nil, `Expected 'err != nil'`)
+	assert.True(t, tr == nil, `Expected error but 'tree != nil'`)
+}
+
+func assertTree(t *testing.T, exp *tree.Tree, act *tree.Tree, node string) {
+	if exp == nil {
+		assert.Nil(t, act, `Expected '%s == nil'`, node)
+		return
+	}
+
+	if !token.AssertToken(t, &exp.Token, &act.Token) {
+		t.Logf(`%s: Not the expected token`, node)
+	}
+	assert.Equal(t, exp.Kind, act.Kind, `%s: Not the expected kind`, node)
+
+	assertTree(t, exp.Left, act.Left, node+`.Left`)
+	assertTree(t, exp.Right, act.Right, node+`.Right`)
+}
+
+func dummyTree(k tree.Kind, t token.Token, l *tree.Tree, r *tree.Tree) *tree.Tree {
+	return &tree.Tree{
+		Kind:  k,
+		Token: t,
+		Left:  l,
+		Right: r,
+	}
+}
+
+// Rule 0:
+//  Predicate:   The subject token does not match another rule.
+//  Consequence: Abandon parsing and generate an error.
 func TestParse_Rule_0(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 0, ``, token.TT_SPACE),
 	}
-
-	tr, err := Parse(in)
-	assert.NotNil(t, err)
-	assert.Nil(t, tr)
+	doTestParseError(t, in)
 }
 
 //Rule 1:
@@ -28,18 +65,13 @@ func TestParse_Rule_1(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
 	}
-
-	tr, err := Parse(in)
-	require.Nil(t, err)
-	require.NotNil(t, tr)
-
-	require.NotNil(t, tr.Left)
-	assert.Equal(t, tr.Left.Token, in[0])
-	assert.Equal(t, tr.Left.Kind, tree.KD_ID)
+	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
+	exp := dummyTree(tree.KD_UNDEFINED, token.EMPTY, expLeft, nil)
+	doTestParse(t, in, exp)
 }
 
 //Rule 2:
-//  Predicate:   The left node has the IDENTIFIER kind
+//  Predicate:   The left node has the IDENTIFIER or UNION kind
 //               AND the subject token has the ASSIGNMENT type.
 //  Consequence: Place the subject token in the current node
 //               AND assign the current node the ASSIGNMENT kind.
@@ -48,17 +80,9 @@ func TestParse_Rule_2(t *testing.T) {
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
 		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 	}
-
-	tr, err := Parse(in)
-	require.Nil(t, err)
-	require.NotNil(t, tr)
-
-	require.NotNil(t, tr.Left)
-	assert.Equal(t, tr.Left.Token, in[0])
-	assert.Equal(t, tr.Left.Kind, tree.KD_ID)
-
-	assert.Equal(t, tr.Token, in[1])
-	assert.Equal(t, tr.Kind, tree.KD_ASSIGN)
+	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
+	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, nil)
+	doTestParse(t, in, exp)
 }
 
 //Rule 3:
@@ -73,19 +97,8 @@ func TestParse_Rule_3(t *testing.T) {
 		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 		token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER),
 	}
-
-	tr, err := Parse(in)
-	require.Nil(t, err)
-	require.NotNil(t, tr)
-
-	require.NotNil(t, tr.Left)
-	assert.Equal(t, tr.Left.Token, in[0])
-	assert.Equal(t, tr.Left.Kind, tree.KD_ID)
-
-	assert.Equal(t, tr.Token, in[1])
-	assert.Equal(t, tr.Kind, tree.KD_ASSIGN)
-
-	require.NotNil(t, tr.Right)
-	assert.Equal(t, tr.Right.Token, in[2])
-	assert.Equal(t, tr.Right.Kind, tree.KD_OPERAND)
+	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
+	expRight := dummyTree(tree.KD_OPERAND, in[2], nil, nil)
+	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, expRight)
+	doTestParse(t, in, exp)
 }
