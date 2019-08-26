@@ -123,3 +123,10 @@ func ErrDummyToken(line, start, end int) Token {
 		Type:  TT_ERROR_UPSTREAM,
 	}
 }
+
+// OfType creates a new token initialised to the specified token type.
+func OfType(t TokenType) Token {
+	return Token{
+		Type: t,
+	}
+}
