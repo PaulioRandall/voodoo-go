@@ -7,14 +7,14 @@ import (
 
 // predicate represents the predicate of a parse rule. It returns true if the
 // input satisfies the rules conditions. It is paired with a consequence
-// function which is invoked if the predicate returns true.
+// function which is invoked if the predicate returns true. Note that the
+// return value depends upon the state of the tree and the specific token so any
+// changes to either input renders the previous response invalid.
 type predicate func(*tree.Tree, token.Token) bool
 
 // consequence modifies the input trees state based on the parse rule which it
-// implements. A consequence should only be invoked if the paried predicate
-// returns true. Note that the predicates return value depends upon the state of
-// the tree and the specific token so any changes to either renders the
-// predicates previous response invalid.
+// implements. A consequence should only be invoked if the paired predicate
+// returns true and the tree and the token are not modified in the meantime.
 type consequence func(*tree.Tree, token.Token)
 
 //  Predicate: The left node has no kind

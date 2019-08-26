@@ -13,7 +13,10 @@ func TestRule_1_consequence(t *testing.T) {
 	tk := token.OfType(token.TT_ID)
 
 	exp := tree.Copy(tr)
-	exp.Left = dummyTree(tree.KD_ID, tk, nil, nil)
+	exp.Left = &tree.Tree{
+		Kind:  tree.KD_ID,
+		Token: tk,
+	}
 
 	rule_1_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
@@ -99,3 +102,47 @@ func TestRule_3b_consequence(t *testing.T) {
 	rule_3_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
+
+func TestRule_4a_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
+
+	tk := token.OfType(token.TT_NUMBER)
+
+	exp := tree.Copy(tr)
+	exp.Right = &tree.Tree{
+		Kind:  tree.KD_OPERAND,
+		Token: tk,
+	}
+
+	rule_4_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+/*
+func TestParse_Rule_4b(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+			Left: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+			Right: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+		},
+	}
+
+	in := token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER)
+
+	exp := tree.Copy(tr)
+	exp.Right = dummyTree(tree.KD_OPERAND, in, nil, nil)
+
+	doTestParseToken(t, tr, in, true, exp)
+}
+*/
