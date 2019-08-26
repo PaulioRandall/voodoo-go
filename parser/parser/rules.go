@@ -15,10 +15,10 @@ func findRule(tr *tree.Tree, tk token.Token) int {
 		//               AND assign the left node the IDENTIFIER kind.
 		return 1
 	case rule_2(tr, tk):
-		//  Predicate:   The left node has the IDENTIFIER or UNION kind
-		//               AND the subject token has the ASSIGNMENT type.
+		//  Predicate:   The left node has the IDENTIFIER kind
+		//               AND the subject token has the VALUE_DELIM type.
 		//  Consequence: Place the subject token in the current node
-		//               AND assign the current node the ASSIGNMENT kind.
+		//               AND assign the current node the UNION kind.
 		return 2
 	case rule_3(tr, tk):
 		//  Predicate:   The left node has the IDENTIFIER kind
@@ -28,11 +28,10 @@ func findRule(tr *tree.Tree, tk token.Token) int {
 		//               AND assign the right node the OPERAND kind.
 		return 3
 	case rule_4(tr, tk):
-		// Rule 4:
-		//  Predicate:   The left node has the IDENTIFIER kind
-		//               AND the subject token has the VALUE_DELIM type.
+		//  Predicate:   The left node has the IDENTIFIER or UNION kind
+		//               AND the subject token has the ASSIGNMENT type.
 		//  Consequence: Place the subject token in the current node
-		//               AND assign the current node the UNION kind.
+		//               AND assign the current node the ASSIGNMENT kind.
 		return 4
 	default:
 		//  Predicate:   The subject token does not match any other rule.
@@ -49,9 +48,8 @@ func rule_1(tr *tree.Tree, tk token.Token) bool {
 
 // rule_2 returns true if the input satisfies Rule 2.
 func rule_2(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.IsLeft(tree.KD_ID) ||
-		tr.IsLeft(tree.KD_UNION)
-	return ok && tk.Type == token.TT_ASSIGN
+	return tr.IsLeft(tree.KD_ID) &&
+		tk.Type == token.TT_VALUE_DELIM
 }
 
 // rule_3 returns true if the input satisfies Rule 3.
@@ -63,6 +61,7 @@ func rule_3(tr *tree.Tree, tk token.Token) bool {
 
 // rule_4 returns true if the input satisfies Rule 4.
 func rule_4(tr *tree.Tree, tk token.Token) bool {
-	return tr.IsLeft(tree.KD_ID) &&
-		tk.Type == token.TT_VALUE_DELIM
+	ok := tr.IsLeft(tree.KD_ID) ||
+		tr.IsLeft(tree.KD_UNION)
+	return ok && tk.Type == token.TT_ASSIGN
 }

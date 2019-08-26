@@ -65,13 +65,11 @@ func TestParse_Rule_1(t *testing.T) {
 func TestParse_Rule_2(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
+		token.DummyToken(0, 2, 3, `,`, token.TT_VALUE_DELIM),
 	}
 	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
-	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, nil)
+	exp := dummyTree(tree.KD_UNION, in[1], expLeft, nil)
 	doTestParse(t, in, exp)
-
-	// TODO: Test UNION
 }
 
 func TestParse_Rule_3(t *testing.T) {
@@ -89,9 +87,11 @@ func TestParse_Rule_3(t *testing.T) {
 func TestParse_Rule_4(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
-		token.DummyToken(0, 2, 3, `,`, token.TT_VALUE_DELIM),
+		token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN),
 	}
 	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
-	exp := dummyTree(tree.KD_UNION, in[1], expLeft, nil)
+	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, nil)
 	doTestParse(t, in, exp)
+
+	// TODO: Test UNION
 }
