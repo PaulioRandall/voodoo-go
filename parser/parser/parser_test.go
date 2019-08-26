@@ -62,45 +62,6 @@ func TestParse_1(t *testing.T) {
 	doTestParseToken(t, tr, in, false, nil)
 }
 
-func TestParse_Rule_3a(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
-	}
-
-	in := token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN)
-
-	exp := tree.Copy(tr)
-	exp.Kind = tree.KD_ASSIGN
-	exp.Token = in
-
-	doTestParseToken(t, tr, in, true, exp)
-}
-
-func TestParse_Rule_3b(t *testing.T) {
-	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-			Left: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-			Right: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-		},
-	}
-
-	in := token.DummyToken(0, 3, 5, `<-`, token.TT_ASSIGN)
-
-	exp := tree.Copy(tr)
-	exp.Kind = tree.KD_ASSIGN
-	exp.Token = in
-
-	doTestParseToken(t, tr, in, true, exp)
-}
-
 func TestParse_Rule_4a(t *testing.T) {
 	tr := &tree.Tree{
 		Kind: tree.KD_ASSIGN,

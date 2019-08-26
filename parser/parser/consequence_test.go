@@ -58,3 +58,44 @@ func TestRule_2b_consequence(t *testing.T) {
 	rule_2_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
+
+func TestRule_3a_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
+
+	tk := token.OfType(token.TT_ASSIGN)
+
+	exp := tree.Copy(tr)
+	exp.Kind = tree.KD_ASSIGN
+	exp.Token = tk
+
+	rule_3_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func TestRule_3b_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+			Left: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+			Right: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+		},
+	}
+
+	tk := token.OfType(token.TT_ASSIGN)
+
+	exp := tree.Copy(tr)
+	exp.Kind = tree.KD_ASSIGN
+	exp.Token = tk
+
+	rule_3_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
