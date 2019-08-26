@@ -14,9 +14,10 @@ import (
 // Parse parses the input statement into a parse tree.
 func Parse(in []token.Token) (*tree.Tree, error) {
 	tr := tree.New()
+	var ok bool
 
 	for i, tk := range in {
-		ok := parseToken(tr, tk)
+		tr, ok = parseToken(tr, tk)
 		if !ok {
 			m := "Token[" + strconv.Itoa(i) + "] does not match any parsing rules"
 			return nil, errors.New(m)
@@ -28,19 +29,21 @@ func Parse(in []token.Token) (*tree.Tree, error) {
 
 // parseToken applies the first matching parse rule, with token as subject, to
 // the tree.
-func parseToken(tr *tree.Tree, tk token.Token) bool {
+func parseToken(tr *tree.Tree, tk token.Token) (*tree.Tree, bool) {
 	switch {
 	case rule_1_predicate(tr, tk):
-		rule_1_consequence(tr, tk)
+		tr = rule_1_consequence(tr, tk)
 	case rule_2_predicate(tr, tk):
-		rule_2_consequence(tr, tk)
+		tr = rule_2_consequence(tr, tk)
 	case rule_3_predicate(tr, tk):
-		rule_3_consequence(tr, tk)
+		tr = rule_3_consequence(tr, tk)
 	case rule_4_predicate(tr, tk):
-		rule_4_consequence(tr, tk)
+		tr = rule_4_consequence(tr, tk)
+	case rule_5_predicate(tr, tk):
+		tr = rule_5_consequence(tr, tk)
 	default:
-		return false
+		return tr, false
 	}
 
-	return true
+	return tr, true
 }
