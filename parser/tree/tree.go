@@ -18,6 +18,21 @@ func New() *Tree {
 	return &Tree{}
 }
 
+// Copy performs a deep copy of the input tree. If the input is nil the output
+// will be nil so that easy recursion can be used to copy trees.
+func Copy(tr *Tree) *Tree {
+	if tr == nil {
+		return nil
+	}
+
+	return &Tree{
+		Kind:  tr.Kind,
+		Token: tr.Token,
+		Left:  Copy(tr.Left),
+		Right: Copy(tr.Right),
+	}
+}
+
 // Set sets the field values of the tree.
 func (tr *Tree) Set(tk token.Token, kind Kind) {
 	if tr.isSet {

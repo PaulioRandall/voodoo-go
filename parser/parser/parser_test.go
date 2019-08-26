@@ -79,7 +79,7 @@ func TestParse_Rule_1(t *testing.T) {
 	doTestParseToken(t, tr, in, true, exp)
 }
 
-func TestParse_Rule_2(t *testing.T) {
+func TestParse_Rule_2a(t *testing.T) {
 	tr := dummyTree(tree.KD_UNDEFINED, token.EMPTY, nil, nil)
 
 	inLeft := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
@@ -89,8 +89,28 @@ func TestParse_Rule_2(t *testing.T) {
 	expLeft := dummyTree(tree.KD_ID, inLeft, nil, nil)
 	exp := dummyTree(tree.KD_UNION, in, expLeft, nil)
 	doTestParseToken(t, tr, in, true, exp)
+}
 
-	// TODO: Test UNION
+func TestParse_Rule_2b(t *testing.T) {
+	tr := &tree.Tree{
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+			Left: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+			Right: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+		},
+	}
+
+	in := token.DummyToken(0, 3, 4, `,`, token.TT_VALUE_DELIM)
+
+	exp := tree.Copy(tr)
+	exp.Kind = tree.KD_UNION
+	exp.Token = in
+
+	doTestParseToken(t, tr, in, true, exp)
 }
 
 func TestParse_Rule_3(t *testing.T) {
@@ -107,18 +127,42 @@ func TestParse_Rule_3(t *testing.T) {
 	// TODO: Test UNION
 }
 
-func TestParse_Rule_4(t *testing.T) {
-	tr := dummyTree(tree.KD_UNDEFINED, token.EMPTY, nil, nil)
+func TestParse_Rule_4a(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
 
-	inLeft := token.DummyToken(0, 0, 1, `x`, token.TT_ID)
-	parseToken(tr, inLeft)
+	in := token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER)
 
-	in := token.DummyToken(0, 2, 4, `<-`, token.TT_ASSIGN)
-	parseToken(tr, in)
+	exp := tree.Copy(tr)
+	exp.Right = dummyTree(tree.KD_OPERAND, in, nil, nil)
 
-	inRight := token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER)
-	expLeft := dummyTree(tree.KD_ID, inLeft, nil, nil)
-	expRight := dummyTree(tree.KD_OPERAND, inRight, nil, nil)
-	exp := dummyTree(tree.KD_ASSIGN, in, expLeft, expRight)
-	doTestParseToken(t, tr, inRight, true, exp)
+	doTestParseToken(t, tr, in, true, exp)
 }
+
+/*
+func TestParse_Rule_4b(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+			Left: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+			Right: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+		},
+	}
+
+	in := token.DummyToken(0, 5, 6, `1`, token.TT_NUMBER)
+
+	exp := tree.Copy(tr)
+	exp.Right = dummyTree(tree.KD_OPERAND, in, nil, nil)
+
+	doTestParseToken(t, tr, in, true, exp)
+}
+*/
