@@ -70,6 +70,8 @@ func TestParse_Rule_2(t *testing.T) {
 	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
 	exp := dummyTree(tree.KD_UNION, in[1], expLeft, nil)
 	doTestParse(t, in, exp)
+
+	// TODO: Test UNION
 }
 
 func TestParse_Rule_3(t *testing.T) {
