@@ -13,8 +13,7 @@ func TestRule_1_consequence(t *testing.T) {
 
 	tk := token.OfType(token.TT_ID)
 
-	exp := tree.Copy(tr)
-	exp.Left = &tree.Tree{
+	exp := &tree.Tree{
 		Kind:  tree.KD_ID,
 		Token: tk,
 	}
@@ -26,16 +25,16 @@ func TestRule_1_consequence(t *testing.T) {
 
 func TestRule_2a_consequence(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
+		Kind: tree.KD_ID,
 	}
 
 	tk := token.OfType(token.TT_VALUE_DELIM)
 
-	exp := tree.Copy(tr)
-	exp.Kind = tree.KD_UNION
-	exp.Token = tk
+	exp := &tree.Tree{
+		Kind:  tree.KD_UNION,
+		Token: tk,
+		Left:  tr,
+	}
 
 	require.True(t, rule_2_predicate(tr, tk))
 	tr = rule_2_consequence(tr, tk)
@@ -44,22 +43,16 @@ func TestRule_2a_consequence(t *testing.T) {
 
 func TestRule_2b_consequence(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-			Left: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-			Right: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-		},
+		Kind: tree.KD_UNION,
 	}
 
 	tk := token.OfType(token.TT_VALUE_DELIM)
 
-	exp := tree.Copy(tr)
-	exp.Kind = tree.KD_UNION
-	exp.Token = tk
+	exp := &tree.Tree{
+		Kind:  tree.KD_UNION,
+		Token: tk,
+		Left:  tr,
+	}
 
 	require.True(t, rule_2_predicate(tr, tk))
 	tr = rule_2_consequence(tr, tk)
@@ -110,16 +103,16 @@ func TestRule_3b_consequence(t *testing.T) {
 
 func TestRule_4a_consequence(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
+		Kind: tree.KD_ID,
 	}
 
 	tk := token.OfType(token.TT_ASSIGN)
 
-	exp := tree.Copy(tr)
-	exp.Kind = tree.KD_ASSIGN
-	exp.Token = tk
+	exp := &tree.Tree{
+		Kind:  tree.KD_ASSIGN,
+		Token: tk,
+		Left:  tr,
+	}
 
 	require.True(t, rule_4_predicate(tr, tk))
 	tr = rule_4_consequence(tr, tk)
@@ -128,22 +121,16 @@ func TestRule_4a_consequence(t *testing.T) {
 
 func TestRule_4b_consequence(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-			Left: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-			Right: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-		},
+		Kind: tree.KD_UNION,
 	}
 
 	tk := token.OfType(token.TT_ASSIGN)
 
-	exp := tree.Copy(tr)
-	exp.Kind = tree.KD_ASSIGN
-	exp.Token = tk
+	exp := &tree.Tree{
+		Kind:  tree.KD_ASSIGN,
+		Token: tk,
+		Left:  tr,
+	}
 
 	require.True(t, rule_4_predicate(tr, tk))
 	tr = rule_4_consequence(tr, tk)

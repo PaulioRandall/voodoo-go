@@ -22,9 +22,7 @@ func TestRule_1_predicate(t *testing.T) {
 
 func TestRule_2a_predicate(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
+		Kind: tree.KD_ID,
 	}
 
 	tk := token.OfType(token.TT_VALUE_DELIM)
@@ -38,15 +36,7 @@ func TestRule_2a_predicate(t *testing.T) {
 
 func TestRule_2b_predicate(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-			Left: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-			Right: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-		},
+		Kind: tree.KD_UNION,
 	}
 
 	tk := token.OfType(token.TT_VALUE_DELIM)
@@ -94,9 +84,7 @@ func TestRule_3b_predicate(t *testing.T) {
 
 func TestRule_4a_predicate(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
+		Kind: tree.KD_ID,
 	}
 
 	tk := token.OfType(token.TT_ASSIGN)
@@ -110,15 +98,7 @@ func TestRule_4a_predicate(t *testing.T) {
 
 func TestRule_4b_predicate(t *testing.T) {
 	tr := &tree.Tree{
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-			Left: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-			Right: &tree.Tree{
-				Kind: tree.KD_ID,
-			},
-		},
+		Kind: tree.KD_UNION,
 	}
 
 	tk := token.OfType(token.TT_ASSIGN)

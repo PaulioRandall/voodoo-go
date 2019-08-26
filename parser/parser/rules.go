@@ -17,34 +17,42 @@ type predicate func(*tree.Tree, token.Token) bool
 // returns true and the tree and the token are not modified in the meantime.
 type consequence func(*tree.Tree, token.Token) *tree.Tree
 
-// Predicate: The left node has no kind
+// Predicate: The left, current, and right node have no kind
 //            AND the subject token has the IDENTIFIER type.
 func rule_1_predicate(tr *tree.Tree, tk token.Token) bool {
 	return tr.IsLeft(tree.KD_UNDEFINED) &&
+		tr.Is(tree.KD_UNDEFINED) &&
+		tr.IsRight(tree.KD_UNDEFINED) &&
 		tk.Type == token.TT_ID
 }
 
-// Consequence: Place the subject token in the left node
-//              AND assign the left node the IDENTIFIER kind.
+// Consequence: Place the subject token in the current node
+//              AND assign the current node the IDENTIFIER kind.
 func rule_1_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
-	tr.SetLeft(tk, tree.KD_ID)
+	tr.Set(tk, tree.KD_ID)
 	return tr
 }
 
-// Predicate: The left node has the IDENTIFIER or UNION kind
+// Predicate: The current node has the IDENTIFIER or UNION kind
 //            AND the subject token has the VALUE_DELIM type.
 func rule_2_predicate(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.IsLeft(tree.KD_ID) ||
-		tr.IsLeft(tree.KD_UNION)
+	ok := tr.Is(tree.KD_ID) ||
+		tr.Is(tree.KD_UNION)
 	return ok &&
 		tk.Type == token.TT_VALUE_DELIM
 }
 
-// Consequence: Place the subject token in the current node
-//              AND assign the current node the UNION kind.
+// Consequence: Create a new node
+//              AND place the subject token in the new node
+//              AND assign the new node the UNION kind
+//              AND place the current node as the new nodes left
+//              AND set the new node as the current
 func rule_2_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
-	tr.Set(tk, tree.KD_UNION)
-	return tr
+	return &tree.Tree{
+		Kind:  tree.KD_UNION,
+		Token: tk,
+		Left:  tr,
+	}
 }
 
 // Predicate: The left node has the IDENTIFIER or UNION kind
@@ -65,22 +73,26 @@ func rule_3_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
 	return tr
 }
 
-// Predicate: The left node has the IDENTIFIER or UNION kind
-//            AND the current node has no kind
+// Predicate: The current node has the IDENTIFIER or UNION kind
 //            AND the subject token has the ASSIGNMENT type.
 func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.IsLeft(tree.KD_ID) ||
-		tr.IsLeft(tree.KD_UNION)
+	ok := tr.Is(tree.KD_ID) ||
+		tr.Is(tree.KD_UNION)
 	return ok &&
-		tr.Is(tree.KD_UNDEFINED) &&
 		tk.Type == token.TT_ASSIGN
 }
 
-// Consequence: Place the subject token in the current node
-//              AND assign the current node the ASSIGNMENT kind.
+// Consequence: Create a new node
+//              AND place the subject token in the new node
+//              AND assign the new node the ASSIGNMENT kind
+//              AND place the current node as the new nodes left
+//              AND set the new node as the current
 func rule_4_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
-	tr.Set(tk, tree.KD_ASSIGN)
-	return tr
+	return &tree.Tree{
+		Kind:  tree.KD_ASSIGN,
+		Token: tk,
+		Left:  tr,
+	}
 }
 
 // Predicate: The left node has the IDENTIFIER or UNION kind
