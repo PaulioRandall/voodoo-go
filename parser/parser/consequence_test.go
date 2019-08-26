@@ -150,3 +150,45 @@ func TestRule_4b_consequence(t *testing.T) {
 	rule_4_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
+
+func TestRule_5a_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_UNION,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
+
+	tk := token.OfType(token.TT_ID)
+
+	exp := tree.Copy(tr)
+	exp.Right = &tree.Tree{
+		Kind:  tree.KD_ID,
+		Token: tk,
+	}
+
+	require.True(t, rule_5_predicate(tr, tk))
+	rule_5_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func TestRule_5b_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_UNION,
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+		},
+	}
+
+	tk := token.OfType(token.TT_ID)
+
+	exp := tree.Copy(tr)
+	exp.Right = &tree.Tree{
+		Kind:  tree.KD_ID,
+		Token: tk,
+	}
+
+	require.True(t, rule_5_predicate(tr, tk))
+	rule_5_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}

@@ -64,9 +64,9 @@ func rule_3_consequence(tr *tree.Tree, tk token.Token) {
 //             AND the current node has the ASSIGNMENT kind
 //             AND the subject token has the NUMBER type.
 func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.IsLeft(tree.KD_ID) ||
+	a := tr.IsLeft(tree.KD_ID) ||
 		tr.IsLeft(tree.KD_UNION)
-	return ok &&
+	return a &&
 		tr.Is(tree.KD_ASSIGN) &&
 		tk.Type == token.TT_NUMBER
 }
@@ -75,4 +75,21 @@ func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
 //               AND assign the right node the OPERAND kind.
 func rule_4_consequence(tr *tree.Tree, tk token.Token) {
 	tr.SetRight(tk, tree.KD_OPERAND)
+}
+
+//  Predicate: The left node has the IDENTIFIER or UNION kind
+//             AND the current node has the UNION kind
+//             AND the subject token has the IDENTIFIER type.
+func rule_5_predicate(tr *tree.Tree, tk token.Token) bool {
+	a := tr.IsLeft(tree.KD_ID) ||
+		tr.IsLeft(tree.KD_UNION)
+	return a &&
+		tr.Is(tree.KD_UNION) &&
+		tk.Type == token.TT_ID
+}
+
+//  Consequence: Place the subject token in the right node
+//               AND assign the right node the IDENTIFIER kind.
+func rule_5_consequence(tr *tree.Tree, tk token.Token) {
+	tr.SetRight(tk, tree.KD_ID)
 }
