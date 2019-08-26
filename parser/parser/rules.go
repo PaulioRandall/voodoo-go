@@ -21,17 +21,17 @@ func findRule(tr *tree.Tree, tk token.Token) int {
 		//               AND assign the current node the UNION kind.
 		return 2
 	case rule_3(tr, tk):
+		//  Predicate:   The left node has the IDENTIFIER or UNION kind
+		//               AND the subject token has the ASSIGNMENT type.
+		//  Consequence: Place the subject token in the current node
+		//               AND assign the current node the ASSIGNMENT kind.
+		return 3
+	case rule_4(tr, tk):
 		//  Predicate:   The left node has the IDENTIFIER kind
 		//               AND the current node has the ASSIGNMENT kind
 		//               AND the subject token has the NUMBER type.
 		//  Consequence: Place the subject token in the right node
 		//               AND assign the right node the OPERAND kind.
-		return 3
-	case rule_4(tr, tk):
-		//  Predicate:   The left node has the IDENTIFIER or UNION kind
-		//               AND the subject token has the ASSIGNMENT type.
-		//  Consequence: Place the subject token in the current node
-		//               AND assign the current node the ASSIGNMENT kind.
 		return 4
 	default:
 		//  Predicate:   The subject token does not match any other rule.
@@ -54,14 +54,14 @@ func rule_2(tr *tree.Tree, tk token.Token) bool {
 
 // rule_3 returns true if the input satisfies Rule 3.
 func rule_3(tr *tree.Tree, tk token.Token) bool {
-	return tr.IsLeft(tree.KD_ID) &&
-		tr.Is(tree.KD_ASSIGN) &&
-		tk.Type == token.TT_NUMBER
+	ok := tr.IsLeft(tree.KD_ID) ||
+		tr.IsLeft(tree.KD_UNION)
+	return ok && tk.Type == token.TT_ASSIGN
 }
 
 // rule_4 returns true if the input satisfies Rule 4.
 func rule_4(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.IsLeft(tree.KD_ID) ||
-		tr.IsLeft(tree.KD_UNION)
-	return ok && tk.Type == token.TT_ASSIGN
+	return tr.IsLeft(tree.KD_ID) &&
+		tr.Is(tree.KD_ASSIGN) &&
+		tk.Type == token.TT_NUMBER
 }
