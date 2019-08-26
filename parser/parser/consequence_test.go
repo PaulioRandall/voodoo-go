@@ -14,7 +14,47 @@ func TestRule_1_consequence(t *testing.T) {
 
 	exp := tree.Copy(tr)
 	exp.Left = dummyTree(tree.KD_ID, tk, nil, nil)
-	rule_1_consequence(tr, tk)
 
+	rule_1_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func TestRule_2a_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
+
+	tk := token.OfType(token.TT_VALUE_DELIM)
+
+	exp := tree.Copy(tr)
+	exp.Kind = tree.KD_UNION
+	exp.Token = tk
+
+	rule_2_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func TestRule_2b_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+			Left: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+			Right: &tree.Tree{
+				Kind: tree.KD_ID,
+			},
+		},
+	}
+
+	tk := token.OfType(token.TT_VALUE_DELIM)
+
+	exp := tree.Copy(tr)
+	exp.Kind = tree.KD_UNION
+	exp.Token = tk
+
+	rule_2_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
