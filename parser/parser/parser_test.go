@@ -70,6 +70,8 @@ func TestParse_Rule_2(t *testing.T) {
 	expLeft := dummyTree(tree.KD_ID, in[0], nil, nil)
 	exp := dummyTree(tree.KD_ASSIGN, in[1], expLeft, nil)
 	doTestParse(t, in, exp)
+
+	// TODO: Test UNION
 }
 
 func TestParse_Rule_3(t *testing.T) {
@@ -84,13 +86,6 @@ func TestParse_Rule_3(t *testing.T) {
 	doTestParse(t, in, exp)
 }
 
-// Rule 4:
-//  Predicate:   The left node has the IDENTIFIER kind
-//               AND the subject token has the VALUE_DELIM type.
-//  Consequence: Place the subject token in the current node
-//               AND assign the current node the UNION kind.
-
-/*
 func TestParse_Rule_4(t *testing.T) {
 	in := []token.Token{
 		token.DummyToken(0, 0, 1, `x`, token.TT_ID),
@@ -100,4 +95,3 @@ func TestParse_Rule_4(t *testing.T) {
 	exp := dummyTree(tree.KD_UNION, in[1], expLeft, nil)
 	doTestParse(t, in, exp)
 }
-*/

@@ -23,6 +23,8 @@ func Parse(in []token.Token) (*tree.Tree, error) {
 			tr.Set(tk, tree.KD_ASSIGN)
 		case 3:
 			tr.SetRight(tk, tree.KD_OPERAND)
+		case 4:
+			tr.Set(tk, tree.KD_UNION)
 		default:
 			m := "Token[" + strconv.Itoa(i) + "] does not match any parsing rules"
 			return nil, errors.New(m)

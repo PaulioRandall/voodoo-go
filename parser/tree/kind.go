@@ -4,8 +4,7 @@ package tree
 type Kind int
 
 const (
-	KD_DONT_CARE Kind = iota - 1
-	KD_UNDEFINED
+	KD_UNDEFINED Kind = iota
 	KD_ASSIGN
 	KD_ID
 	KD_OPERAND
