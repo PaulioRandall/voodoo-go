@@ -26,18 +26,18 @@ func Parse(in []token.Token) (*tree.Tree, error) {
 	return tr, nil
 }
 
-// parseToken applies the first matching parse rule --with token as subject--
-// to the tree.
+// parseToken applies the first matching parse rule, with token as subject, to
+// the tree.
 func parseToken(tr *tree.Tree, tk token.Token) bool {
-	switch findRule(tr, tk) {
-	case 1:
-		tr.SetLeft(tk, tree.KD_ID)
-	case 2:
-		tr.Set(tk, tree.KD_UNION)
-	case 3:
-		tr.Set(tk, tree.KD_ASSIGN)
-	case 4:
-		tr.SetRight(tk, tree.KD_OPERAND)
+	switch {
+	case rule_1_predicate(tr, tk):
+		rule_1_consequence(tr, tk)
+	case rule_2_predicate(tr, tk):
+		rule_2_consequence(tr, tk)
+	case rule_3_predicate(tr, tk):
+		rule_3_consequence(tr, tk)
+	case rule_4_predicate(tr, tk):
+		rule_4_consequence(tr, tk)
 	default:
 		return false
 	}
