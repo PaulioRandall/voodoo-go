@@ -69,7 +69,7 @@ func TestRule_3a_consequence(t *testing.T) {
 
 	tk := token.OfType(token.TT_ID)
 
-	exp := tree.Copy(tr)
+	exp := tree.Copy(tr, nil)
 	exp.Right = &tree.Tree{
 		Kind:  tree.KD_ID,
 		Token: tk,
@@ -90,7 +90,7 @@ func TestRule_3b_consequence(t *testing.T) {
 
 	tk := token.OfType(token.TT_ID)
 
-	exp := tree.Copy(tr)
+	exp := tree.Copy(tr, nil)
 	exp.Right = &tree.Tree{
 		Kind:  tree.KD_ID,
 		Token: tk,
@@ -162,7 +162,7 @@ func TestRule_5_consequence(t *testing.T) {
 }
 
 func TestRule_6a_consequence(t *testing.T) {
-	tr := &tree.Tree{
+	curr := &tree.Tree{
 		Kind: tree.KD_ASSIGN,
 		Left: &tree.Tree{
 			Kind: tree.KD_ID,
@@ -171,19 +171,20 @@ func TestRule_6a_consequence(t *testing.T) {
 
 	tk := token.OfType(token.TT_NUMBER)
 
-	exp := tree.Copy(tr)
+	exp := tree.Copy(curr, nil)
 	exp.Right = &tree.Tree{
 		Kind:  tree.KD_OPERAND,
 		Token: tk,
 	}
 
-	require.True(t, rule_6_predicate(tr, tk))
-	tr = rule_6_consequence(tr, tk)
-	assertTree(t, exp, tr, `Trunk`)
+	require.True(t, rule_6_predicate(curr, tk))
+	right := rule_6_consequence(curr, tk)
+	assertTree(t, exp, curr, `Trunk`)
+	assertTree(t, exp.Right, right, `Trunk.Right`)
 }
 
 func TestRule_6b_consequence(t *testing.T) {
-	tr := &tree.Tree{
+	curr := &tree.Tree{
 		Kind: tree.KD_ASSIGN,
 		Left: &tree.Tree{
 			Kind: tree.KD_UNION,
@@ -192,13 +193,52 @@ func TestRule_6b_consequence(t *testing.T) {
 
 	tk := token.OfType(token.TT_NUMBER)
 
-	exp := tree.Copy(tr)
+	exp := tree.Copy(curr, nil)
 	exp.Right = &tree.Tree{
 		Kind:  tree.KD_OPERAND,
 		Token: tk,
 	}
 
-	require.True(t, rule_6_predicate(tr, tk))
-	tr = rule_6_consequence(tr, tk)
+	require.True(t, rule_6_predicate(curr, tk))
+	right := rule_6_consequence(curr, tk)
+	assertTree(t, exp, curr, `Trunk`)
+	assertTree(t, exp.Right, right, `Trunk.Right`)
+}
+
+/*
+func TestRule_7a_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Left: &tree.Tree{
+			Kind: tree.KD_OPERAND,
+		},
+	}
+
+	tk := token.OfType(token.TT_VALUE_DELIM)
+
+	exp := tree.Copy(tr, nil)
+	exp.Kind = tree.KD_UNION
+	exp.Token = tk
+
+	require.True(t, rule_7_predicate(tr, tk))
+	tr = rule_7_consequence(tr, tk)
 	assertTree(t, exp, tr, `Trunk`)
 }
+
+func TestRule_7b_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+		},
+	}
+
+	tk := token.OfType(token.TT_VALUE_DELIM)
+
+	exp := tree.Copy(tr, nil)
+	exp.Kind = tree.KD_UNION
+	exp.Token = tk
+
+	require.True(t, rule_7_predicate(tr, tk))
+	tr = rule_7_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+*/

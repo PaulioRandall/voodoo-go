@@ -6,11 +6,12 @@ import (
 
 // Tree represents a parse tree.
 type Tree struct {
-	Kind  Kind
-	Token token.Token
-	isSet bool
-	Left  *Tree
-	Right *Tree
+	Kind   Kind
+	Token  token.Token
+	isSet  bool
+	Parent *Tree
+	Left   *Tree
+	Right  *Tree
 }
 
 // New creates a new uninitialised tree.
@@ -20,17 +21,20 @@ func New() *Tree {
 
 // Copy performs a deep copy of the input tree. If the input is nil the output
 // will be nil so that easy recursion can be used to copy trees.
-func Copy(tr *Tree) *Tree {
+func Copy(tr *Tree, parent *Tree) *Tree {
 	if tr == nil {
 		return nil
 	}
 
-	return &Tree{
-		Kind:  tr.Kind,
-		Token: tr.Token,
-		Left:  Copy(tr.Left),
-		Right: Copy(tr.Right),
+	cp := &Tree{
+		Kind:   tr.Kind,
+		Token:  tr.Token,
+		Parent: parent,
 	}
+
+	cp.Left = Copy(tr.Left, cp)
+	cp.Right = Copy(tr.Right, cp)
+	return cp
 }
 
 // Set sets the field values of the tree.

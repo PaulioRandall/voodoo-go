@@ -24,6 +24,10 @@ func Parse(in []token.Token) (*tree.Tree, error) {
 		}
 	}
 
+	for tr.Parent != nil {
+		tr = tr.Parent
+	}
+
 	return tr, nil
 }
 
@@ -43,6 +47,8 @@ func parseToken(tr *tree.Tree, tk token.Token) (*tree.Tree, bool) {
 		tr = rule_5_consequence(tr, tk)
 	case rule_6_predicate(tr, tk):
 		tr = rule_6_consequence(tr, tk)
+	//case rule_7_predicate(tr, tk):
+	//tr = rule_7_consequence(tr, tk)
 	default:
 		return tr, false
 	}

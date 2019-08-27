@@ -1,6 +1,7 @@
 package token
 
 import (
+	"math/rand"
 	"strconv"
 	"strings"
 	"testing"
@@ -127,6 +128,15 @@ func ErrDummyToken(line, start, end int) Token {
 // OfType creates a new token initialised to the specified token type.
 func OfType(t TokenType) Token {
 	return Token{
+		Type: t,
+	}
+}
+
+// OfTypeUnique creates a new token initialised to the specified token type and
+// a unique value
+func OfTypeUnique(t TokenType) Token {
+	return Token{
+		Val:  strconv.FormatUint(rand.Uint64(), 10),
 		Type: t,
 	}
 }
