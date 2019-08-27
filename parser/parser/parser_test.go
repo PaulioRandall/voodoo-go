@@ -6,6 +6,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/parser/tree"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func assertTree(t *testing.T, exp *tree.Tree, act *tree.Tree, node string) {
@@ -21,4 +22,29 @@ func assertTree(t *testing.T, exp *tree.Tree, act *tree.Tree, node string) {
 
 	assertTree(t, exp.Left, act.Left, node+`.Left`)
 	assertTree(t, exp.Right, act.Right, node+`.Right`)
+}
+
+func TestParse_1(t *testing.T) {
+	in := []token.Token{
+		token.OfType(token.TT_ID),
+		token.OfType(token.TT_ASSIGN),
+		token.OfType(token.TT_NUMBER),
+	}
+
+	exp := &tree.Tree{
+		Kind:  tree.KD_ASSIGN,
+		Token: in[1],
+		Left: &tree.Tree{
+			Kind:  tree.KD_ID,
+			Token: in[0],
+		},
+		Right: &tree.Tree{
+			Kind:  tree.KD_OPERAND,
+			Token: in[2],
+		},
+	}
+
+	act, err := Parse(in)
+	require.Nil(t, err)
+	assertTree(t, exp, act, `Trunk`)
 }
