@@ -14,17 +14,24 @@ func parseAssign(parent *tree.Tree, in []token.Token, i int) (*tree.Tree, error)
 		Parent: parent,
 	}
 
-	var err error
-
-	tr.Left, err = parseIds(tr, in[:i])
-	if err != nil {
-		return nil, err
-	}
-
-	tr.Right, err = parseOperands(tr, in[i+1:])
+	err := parseAssignChildren(tr, in[:i], in[i+1:])
 	if err != nil {
 		return nil, err
 	}
 
 	return tr, nil
+}
+
+func parseAssignChildren(parent *tree.Tree, left, right []token.Token) (err error) {
+	parent.Left, err = parseIds(parent, left)
+	if err != nil {
+		return err
+	}
+
+	parent.Right, err = parseOperands(parent, right)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
