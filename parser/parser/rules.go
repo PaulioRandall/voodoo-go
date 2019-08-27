@@ -33,12 +33,16 @@ func rule_1_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
 	return tr
 }
 
-// Predicate: The current node has the IDENTIFIER or UNION kind
+// Predicate: The left and right nodes both have or both don't have a kind
+//            AND the current node has the IDENTIFIER or UNION kind
 //            AND the subject token has the VALUE_DELIM type.
 func rule_2_predicate(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.Is(tree.KD_ID) ||
+	a := tr.Is(tree.KD_ID) ||
 		tr.Is(tree.KD_UNION)
-	return ok &&
+	b1 := tr.IsLeft(tree.KD_UNDEFINED)
+	b2 := tr.IsRight(tree.KD_UNDEFINED)
+	b := b1 == b2
+	return a && b &&
 		tk.Type == token.TT_VALUE_DELIM
 }
 
@@ -56,12 +60,14 @@ func rule_2_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
 }
 
 // Predicate: The left node has the IDENTIFIER or UNION kind
+//            AND the right node has no kind
 //            AND the current node has the UNION kind
 //            AND the subject token has the IDENTIFIER type.
 func rule_3_predicate(tr *tree.Tree, tk token.Token) bool {
 	a := tr.IsLeft(tree.KD_ID) ||
 		tr.IsLeft(tree.KD_UNION)
 	return a &&
+		tr.IsRight(tree.KD_UNDEFINED) &&
 		tr.Is(tree.KD_UNION) &&
 		tk.Type == token.TT_ID
 }
@@ -73,12 +79,16 @@ func rule_3_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
 	return tr
 }
 
-// Predicate: The current node has the IDENTIFIER or UNION kind
+// Predicate: The left and right nodes both have or both don't have a kind
+//            AND current node has the IDENTIFIER or UNION kind
 //            AND the subject token has the ASSIGNMENT type.
 func rule_4_predicate(tr *tree.Tree, tk token.Token) bool {
-	ok := tr.Is(tree.KD_ID) ||
+	a := tr.Is(tree.KD_ID) ||
 		tr.Is(tree.KD_UNION)
-	return ok &&
+	b1 := tr.IsLeft(tree.KD_UNDEFINED)
+	b2 := tr.IsRight(tree.KD_UNDEFINED)
+	b := b1 == b2
+	return a && b &&
 		tk.Type == token.TT_ASSIGN
 }
 
@@ -96,12 +106,14 @@ func rule_4_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
 }
 
 // Predicate: The left node has the IDENTIFIER or UNION kind
+//            AND the right node has no kind
 //            AND the current node has the ASSIGNMENT kind
 //            AND the subject token has the NUMBER type.
 func rule_5_predicate(tr *tree.Tree, tk token.Token) bool {
 	a := tr.IsLeft(tree.KD_ID) ||
 		tr.IsLeft(tree.KD_UNION)
 	return a &&
+		tr.IsRight(tree.KD_UNDEFINED) &&
 		tr.Is(tree.KD_ASSIGN) &&
 		tk.Type == token.TT_NUMBER
 }
