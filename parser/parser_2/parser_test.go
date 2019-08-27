@@ -11,49 +11,24 @@ import (
 func TestParse_1(t *testing.T) {
 	in := []token.Token{
 		token.OfType(token.TT_ID),
-		token.OfType(token.TT_VALUE_DELIM),
-		token.OfType(token.TT_ID),
 		token.OfType(token.TT_ASSIGN),
-		token.OfType(token.TT_NUMBER),
-		token.OfType(token.TT_VALUE_DELIM),
 		token.OfType(token.TT_NUMBER),
 	}
 
 	exp := &tree.Tree{
 		Kind:  tree.KD_ASSIGN,
-		Token: in[3],
+		Token: in[1],
 	}
 
 	exp.Left = &tree.Tree{
-		Kind:   tree.KD_UNION,
-		Token:  in[1],
-		Parent: exp,
-	}
-	exp.Left.Left = &tree.Tree{
 		Kind:   tree.KD_ID,
 		Token:  in[0],
 		Parent: exp.Left,
 	}
-	exp.Left.Right = &tree.Tree{
-		Kind:   tree.KD_ID,
-		Token:  in[2],
-		Parent: exp.Left,
-	}
-
 	exp.Right = &tree.Tree{
-		Kind:   tree.KD_UNION,
-		Token:  in[5],
+		Kind:   tree.KD_OPERAND,
+		Token:  in[2],
 		Parent: exp,
-	}
-	exp.Right.Left = &tree.Tree{
-		Kind:   tree.KD_OPERAND,
-		Token:  in[4],
-		Parent: exp.Right,
-	}
-	exp.Right.Right = &tree.Tree{
-		Kind:   tree.KD_OPERAND,
-		Token:  in[6],
-		Parent: exp.Right,
 	}
 
 	act, err := parse(nil, in)
