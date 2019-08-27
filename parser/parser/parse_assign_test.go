@@ -1,4 +1,4 @@
-package parser_2
+package parser
 
 import (
 	"testing"
@@ -8,59 +8,55 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestParseIds(t *testing.T) {
-	ids := []token.Token{
+func TestParseAssign_1(t *testing.T) {
+	in := []token.Token{
 		token.OfType(token.TT_ID),
 		token.OfType(token.TT_VALUE_DELIM),
 		token.OfType(token.TT_ID),
+		token.OfType(token.TT_ASSIGN),
+		token.OfType(token.TT_NUMBER),
 		token.OfType(token.TT_VALUE_DELIM),
-		token.OfType(token.TT_ID),
+		token.OfType(token.TT_NUMBER),
 	}
 
 	exp := &tree.Tree{
-		Kind:  tree.KD_UNION,
-		Token: ids[1],
+		Kind:  tree.KD_ASSIGN,
+		Token: in[3],
 	}
+
 	exp.Left = &tree.Tree{
-		Kind:   tree.KD_ID,
-		Token:  ids[0],
+		Kind:   tree.KD_UNION,
+		Token:  in[1],
 		Parent: exp,
 	}
+	exp.Left.Left = &tree.Tree{
+		Kind:   tree.KD_ID,
+		Token:  in[0],
+		Parent: exp.Left,
+	}
+	exp.Left.Right = &tree.Tree{
+		Kind:   tree.KD_ID,
+		Token:  in[2],
+		Parent: exp.Left,
+	}
+
 	exp.Right = &tree.Tree{
 		Kind:   tree.KD_UNION,
-		Token:  ids[3],
+		Token:  in[5],
 		Parent: exp,
 	}
 	exp.Right.Left = &tree.Tree{
-		Kind:   tree.KD_ID,
-		Token:  ids[2],
+		Kind:   tree.KD_OPERAND,
+		Token:  in[4],
 		Parent: exp.Right,
 	}
 	exp.Right.Right = &tree.Tree{
-		Kind:   tree.KD_ID,
-		Token:  ids[4],
+		Kind:   tree.KD_OPERAND,
+		Token:  in[6],
 		Parent: exp.Right,
 	}
 
-	act, err := parseIds(nil, ids)
-	require.Nil(t, err)
-	require.NotNil(t, act)
-	assertTree(t, exp, act, "Trunk")
-}
-
-func TestParseId(t *testing.T) {
-	id := token.OfType(token.TT_ID)
-
-	parent := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
-	}
-	exp := &tree.Tree{
-		Kind:   tree.KD_ID,
-		Token:  id,
-		Parent: parent,
-	}
-
-	act, err := parseId(parent, id)
+	act, err := parseAssign(nil, in, 3)
 	require.Nil(t, err)
 	require.NotNil(t, act)
 	assertTree(t, exp, act, "Trunk")

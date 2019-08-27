@@ -1,4 +1,4 @@
-package parser_2
+package parser
 
 import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
