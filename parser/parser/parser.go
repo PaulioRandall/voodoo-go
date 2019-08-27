@@ -7,6 +7,10 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/tree"
 )
 
+// DONE: Parse `x <- 1`
+// DONE: Parse `x, y <- 1, 2`
+// NEXT: Parse `x <- 1 + 2`
+
 // Parse parses the input statement into a parse tree.
 func Parse(in []token.Token) (*tree.Tree, error) {
 	return parse(nil, in)

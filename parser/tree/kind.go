@@ -8,6 +8,7 @@ const (
 	KD_ASSIGN
 	KD_ID
 	KD_OPERAND
+	KD_OPERATION
 	KD_UNION // Joins the left and the right
 )
 
@@ -20,6 +21,8 @@ func KindName(t Kind) string {
 		return "IDENTIFIER"
 	case KD_OPERAND:
 		return "OPERAND"
+	case KD_OPERATION:
+		return "OPERATION"
 	}
 
 	return "UNDEFINED"
