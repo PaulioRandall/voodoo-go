@@ -29,9 +29,5 @@ func parseAssignChildren(parent *tree.Tree, left, right []token.Token) (err erro
 	}
 
 	parent.Right, err = parseOperands(parent, right)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return
 }

@@ -13,14 +13,9 @@ func parseOperands(parent *tree.Tree, in []token.Token) (*tree.Tree, error) {
 		return parseOperand(parent, in[0])
 	}
 
-	if len(in)%2 == 0 {
-		m := "Expected odd number of operand delimitered tokens"
-		return nil, errors.New(m)
-	}
-
-	if in[1].Type != token.TT_VALUE_DELIM {
-		m := "Expected VALUE_DELIM token at in[1]"
-		return nil, errors.New(m)
+	err := checkOperands(in)
+	if err != nil {
+		return nil, err
 	}
 
 	tr := &tree.Tree{
@@ -29,19 +24,38 @@ func parseOperands(parent *tree.Tree, in []token.Token) (*tree.Tree, error) {
 		Parent: parent,
 	}
 
-	var err error
-
-	tr.Left, err = parseOperand(tr, in[0])
-	if err != nil {
-		return nil, err
-	}
-
-	tr.Right, err = parseOperands(tr, in[2:])
+	err = parseChildOperands(tr, in[0], in[2:])
 	if err != nil {
 		return nil, err
 	}
 
 	return tr, nil
+}
+
+// checkOperands checks the operand token slice has the expected state.
+func checkOperands(in []token.Token) error {
+	if len(in)%2 == 0 {
+		m := "Expected odd number of operand delimitered tokens"
+		return errors.New(m)
+	}
+
+	if in[1].Type != token.TT_VALUE_DELIM {
+		m := "Expected VALUE_DELIM token at in[1]"
+		return errors.New(m)
+	}
+
+	return nil
+}
+
+// parseChildOperands parses the remaining operands.
+func parseChildOperands(parent *tree.Tree, left token.Token, right []token.Token) (err error) {
+	parent.Left, err = parseOperand(parent, left)
+	if err != nil {
+		return
+	}
+
+	parent.Right, err = parseOperands(parent, right)
+	return
 }
 
 // parseOperand parses a single operand into a parse tree.
