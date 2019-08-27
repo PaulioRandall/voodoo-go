@@ -41,6 +41,8 @@ func parseToken(tr *tree.Tree, tk token.Token) (*tree.Tree, bool) {
 		tr = rule_4_consequence(tr, tk)
 	case rule_5_predicate(tr, tk):
 		tr = rule_5_consequence(tr, tk)
+	case rule_6_predicate(tr, tk):
+		tr = rule_6_consequence(tr, tk)
 	default:
 		return tr, false
 	}

@@ -5,17 +5,27 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/tree"
 )
 
-// predicate represents the predicate of a parse rule. It returns true if the
-// input satisfies the rules conditions. It is paired with a consequence
-// function which is invoked if the predicate returns true. Note that the
-// return value depends upon the state of the tree and the specific token so any
-// changes to either input renders the previous response invalid.
+// predicate represents the conditional part of a parse rule, the conditional
+// part of a glorified IF statement.
 type predicate func(*tree.Tree, token.Token) bool
 
-// consequence modifies the input trees state based on the parse rule which it
-// implements. A consequence should only be invoked if the paired predicate
-// returns true and the tree and the token are not modified in the meantime.
+// consequence represents the state changing part of a parse rule, the THEN part
+// of a glorified IF statement.
 type consequence func(*tree.Tree, token.Token) *tree.Tree
+
+// Meta rules: rules for writing rules.
+// 1) Predicate invocations must be idempotent, that is the result of two calls
+//    with the same input must yeild the same result.
+// 2) Predicate invocations must be pure (void of side effects), that is a call
+//    must not change the state of the input tree or token; that is what the
+//    consequence is for.
+// 3) Consequence invocations must not have any conditional logic; that is what
+//    the predicate is for.
+// 4) Nil must never be returned from a consequence invocation as the value
+//    determines the current node. Doing so is an error.
+// 5) Don't be afraid to just add new rules if it's unclear if an existing rule
+//    can be modified. Rules can be merged later when the duplication becomes
+//    visible.
 
 // Predicate: The left, current, and right node have no kind
 //            AND the subject token has the IDENTIFIER type.
