@@ -115,30 +115,10 @@ func rule_4_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
 	}
 }
 
-// Predicate: The left node has the IDENTIFIER or UNION kind
-//            AND the right node has no kind
-//            AND the current node has the ASSIGNMENT kind
-//            AND the subject token has the NUMBER type.
-func rule_5_predicate(tr *tree.Tree, tk token.Token) bool {
-	a := tr.IsLeft(tree.KD_ID) ||
-		tr.IsLeft(tree.KD_UNION)
-	return a &&
-		tr.IsRight(tree.KD_UNDEFINED) &&
-		tr.Is(tree.KD_ASSIGN) &&
-		tk.Type == token.TT_NUMBER
-}
-
-// Consequence: Place the subject token in the right node
-//              AND assign the right node the OPERAND kind.
-func rule_5_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
-	tr.SetRight(tk, tree.KD_OPERAND)
-	return tr
-}
-
 // Predicate: The left and right nodes have a kind
 //            AND the current node has the UNION kind
 //            AND the subject token has the ASSIGNMENT type.
-func rule_6_predicate(tr *tree.Tree, tk token.Token) bool {
+func rule_5_predicate(tr *tree.Tree, tk token.Token) bool {
 	return !tr.IsLeft(tree.KD_UNDEFINED) &&
 		!tr.IsRight(tree.KD_UNDEFINED) &&
 		tr.Is(tree.KD_UNION) &&
@@ -150,10 +130,30 @@ func rule_6_predicate(tr *tree.Tree, tk token.Token) bool {
 //              AND assign the new node the ASSIGNMENT kind
 //              AND place the current node as the new nodes left
 //              AND set the new node as the current
-func rule_6_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
+func rule_5_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
 	return &tree.Tree{
 		Kind:  tree.KD_ASSIGN,
 		Token: tk,
 		Left:  tr,
 	}
+}
+
+// Predicate: The left node has the IDENTIFIER or UNION kind
+//            AND the right node has no kind
+//            AND the current node has the ASSIGNMENT kind
+//            AND the subject token has the NUMBER type.
+func rule_6_predicate(tr *tree.Tree, tk token.Token) bool {
+	a := tr.IsLeft(tree.KD_ID) ||
+		tr.IsLeft(tree.KD_UNION)
+	return a &&
+		tr.IsRight(tree.KD_UNDEFINED) &&
+		tr.Is(tree.KD_ASSIGN) &&
+		tk.Type == token.TT_NUMBER
+}
+
+// Consequence: Place the subject token in the right node
+//              AND assign the right node the OPERAND kind.
+func rule_6_consequence(tr *tree.Tree, tk token.Token) *tree.Tree {
+	tr.SetRight(tk, tree.KD_OPERAND)
+	return tr
 }

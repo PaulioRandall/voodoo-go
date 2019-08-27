@@ -137,49 +137,7 @@ func TestRule_4b_consequence(t *testing.T) {
 	assertTree(t, exp, tr, `Trunk`)
 }
 
-func TestRule_5a_consequence(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
-	}
-
-	tk := token.OfType(token.TT_NUMBER)
-
-	exp := tree.Copy(tr)
-	exp.Right = &tree.Tree{
-		Kind:  tree.KD_OPERAND,
-		Token: tk,
-	}
-
-	require.True(t, rule_5_predicate(tr, tk))
-	tr = rule_5_consequence(tr, tk)
-	assertTree(t, exp, tr, `Trunk`)
-}
-
-func TestRule_5b_consequence(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-		},
-	}
-
-	tk := token.OfType(token.TT_NUMBER)
-
-	exp := tree.Copy(tr)
-	exp.Right = &tree.Tree{
-		Kind:  tree.KD_OPERAND,
-		Token: tk,
-	}
-
-	require.True(t, rule_5_predicate(tr, tk))
-	tr = rule_5_consequence(tr, tk)
-	assertTree(t, exp, tr, `Trunk`)
-}
-
-func TestRule_6_consequence(t *testing.T) {
+func TestRule_5_consequence(t *testing.T) {
 	tr := &tree.Tree{
 		Kind: tree.KD_UNION,
 		Left: &tree.Tree{
@@ -196,6 +154,48 @@ func TestRule_6_consequence(t *testing.T) {
 		Kind:  tree.KD_ASSIGN,
 		Token: tk,
 		Left:  tr,
+	}
+
+	require.True(t, rule_5_predicate(tr, tk))
+	tr = rule_5_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func TestRule_6a_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
+
+	tk := token.OfType(token.TT_NUMBER)
+
+	exp := tree.Copy(tr)
+	exp.Right = &tree.Tree{
+		Kind:  tree.KD_OPERAND,
+		Token: tk,
+	}
+
+	require.True(t, rule_6_predicate(tr, tk))
+	tr = rule_6_consequence(tr, tk)
+	assertTree(t, exp, tr, `Trunk`)
+}
+
+func TestRule_6b_consequence(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+		},
+	}
+
+	tk := token.OfType(token.TT_NUMBER)
+
+	exp := tree.Copy(tr)
+	exp.Right = &tree.Tree{
+		Kind:  tree.KD_OPERAND,
+		Token: tk,
 	}
 
 	require.True(t, rule_6_predicate(tr, tk))

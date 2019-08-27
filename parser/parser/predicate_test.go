@@ -110,41 +110,7 @@ func TestRule_4b_predicate(t *testing.T) {
 	assert.False(t, r)
 }
 
-func TestRule_5a_predicate(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
-		Left: &tree.Tree{
-			Kind: tree.KD_ID,
-		},
-	}
-
-	tk := token.OfType(token.TT_NUMBER)
-	r := rule_5_predicate(tree.Copy(tr), tk)
-	assert.True(t, r)
-
-	tk = token.OfType(token.TT_SPACE)
-	r = rule_5_predicate(tree.Copy(tr), tk)
-	assert.False(t, r)
-}
-
-func TestRule_5b_predicate(t *testing.T) {
-	tr := &tree.Tree{
-		Kind: tree.KD_ASSIGN,
-		Left: &tree.Tree{
-			Kind: tree.KD_UNION,
-		},
-	}
-
-	tk := token.OfType(token.TT_NUMBER)
-	r := rule_5_predicate(tree.Copy(tr), tk)
-	assert.True(t, r)
-
-	tk = token.OfType(token.TT_SPACE)
-	r = rule_5_predicate(tree.Copy(tr), tk)
-	assert.False(t, r)
-}
-
-func TestRule_6_predicate(t *testing.T) {
+func TestRule_5_predicate(t *testing.T) {
 	tr := &tree.Tree{
 		Kind: tree.KD_UNION,
 		Left: &tree.Tree{
@@ -156,6 +122,40 @@ func TestRule_6_predicate(t *testing.T) {
 	}
 
 	tk := token.OfType(token.TT_ASSIGN)
+	r := rule_5_predicate(tree.Copy(tr), tk)
+	assert.True(t, r)
+
+	tk = token.OfType(token.TT_SPACE)
+	r = rule_5_predicate(tree.Copy(tr), tk)
+	assert.False(t, r)
+}
+
+func TestRule_6a_predicate(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_ID,
+		},
+	}
+
+	tk := token.OfType(token.TT_NUMBER)
+	r := rule_6_predicate(tree.Copy(tr), tk)
+	assert.True(t, r)
+
+	tk = token.OfType(token.TT_SPACE)
+	r = rule_6_predicate(tree.Copy(tr), tk)
+	assert.False(t, r)
+}
+
+func TestRule_6b_predicate(t *testing.T) {
+	tr := &tree.Tree{
+		Kind: tree.KD_ASSIGN,
+		Left: &tree.Tree{
+			Kind: tree.KD_UNION,
+		},
+	}
+
+	tk := token.OfType(token.TT_NUMBER)
 	r := rule_6_predicate(tree.Copy(tr), tk)
 	assert.True(t, r)
 
