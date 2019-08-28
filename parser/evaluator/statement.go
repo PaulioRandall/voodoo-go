@@ -1,4 +1,4 @@
-package preparser
+package evaluator
 
 import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"

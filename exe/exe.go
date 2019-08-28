@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/parser/preparser"
+	"github.com/PaulioRandall/voodoo-go/parser/evaluator"
 	"github.com/PaulioRandall/voodoo-go/parser/scanner"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
@@ -31,8 +31,8 @@ func scan(data string) *token.Token {
 		return errTk
 	}
 
-	strimmer := preparser.NewStrimmer()
-	stat := preparser.NewStatement()
+	strimmer := evaluator.NewStrimmer()
+	stat := evaluator.NewStatement()
 	stats := [][]token.Token{}
 	var tk *token.Token
 	var ok bool
