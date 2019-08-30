@@ -63,7 +63,7 @@ fi
 contains "$1" "test" "run"
 if [[ $? == 1 ]]; then
 	echo Testing...
-	go test ./...
+	go test ./... -timeout 3s
 	exitIfNotZero $? "Go tests failed"
 fi
 
