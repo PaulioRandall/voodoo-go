@@ -69,8 +69,8 @@ func (r *Runer) NextCol() int {
 
 // Peek returns the next rune in the sequence without incrementing the 'cursor'.
 func (r *Runer) Peek() (rune, bool, error) {
-	err := r.ensureBufferInit()
-	return r.buf, r.bufEOF, err
+	e := r.ensureBufferInit()
+	return r.buf, r.bufEOF, e
 }
 
 // ensureBufferInit checks if the buffer has been initialised, if it hasn't it
@@ -85,21 +85,21 @@ func (r *Runer) ensureBufferInit() error {
 // buffer reads a rune from the reader and places the it in the buffer along
 // with the buffer EOF flag.
 func (r *Runer) buffer() error {
-	var err error
-	r.buf, r.bufEOF, err = r.read()
-	return err
+	var e error
+	r.buf, r.bufEOF, e = r.read()
+	return e
 }
 
 // readRune reads the next rune in the sequence returning the rune followed by
 // an EOF flag.
 func (r *Runer) read() (rune, bool, error) {
-	ru, _, err := r.reader.ReadRune()
+	ru, _, e := r.reader.ReadRune()
 
-	if err == io.EOF {
+	if e == io.EOF {
 		return 0, true, nil
 	}
 
-	return ru, false, err
+	return ru, false, e
 }
 
 // Read reads the next rune from the reader followed by a flag indicating
@@ -115,8 +115,8 @@ func (r *Runer) Read() (rune, bool, error) {
 		r.col = -1
 	}
 
-	if err := r.ensureBufferInit(); err != nil {
-		return 0, false, err
+	if e := r.ensureBufferInit(); e != nil {
+		return 0, false, e
 	}
 
 	return r.next()
@@ -139,6 +139,49 @@ func (r *Runer) next() (rune, bool, error) {
 // Skip skips the next rune in the reader. True is returned if the end of the
 // file has been reached.
 func (r *Runer) Skip() (bool, error) {
-	_, eof, err := r.Read()
-	return eof, err
+	_, eof, e := r.Read()
+	return eof, e
+}
+
+// predicate returns true if the rune passed is part of the token being scanned.
+type predicate func(rune) (bool, error)
+
+// ReadIf reads the next rune only if the predicate function returns true. If
+// the second return value is true then the a value was succesfully read from
+// the reader and the predicate function evaluated to true.
+func (r *Runer) ReadIf(f predicate) (rune, bool, error) {
+	ru, eof, e := r.Peek()
+	if eof || e != nil {
+		return 0, !eof, e
+	}
+
+	want, e := f(ru)
+	if e != nil {
+		return 0, false, e
+	}
+
+	if want {
+		if _, e = r.Skip(); e != nil {
+			return 0, false, e
+		}
+		return ru, true, nil
+	}
+
+	return 0, false, nil
+}
+
+// ReadWhile reads runes until the predicate returns false. The runes are
+// returned as a string.
+func (r *Runer) ReadWhile(f predicate) (string, error) {
+	sb := strings.Builder{}
+
+	for ru, read, e := r.ReadIf(f); read; ru, read, e = r.ReadIf(f) {
+		if e != nil {
+			return ``, e
+		}
+
+		sb.WriteRune(ru)
+	}
+
+	return sb.String(), nil
 }

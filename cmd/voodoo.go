@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/PaulioRandall/voodoo-go/exe"
-	"github.com/PaulioRandall/voodoo-go/shared"
+	"github.com/PaulioRandall/voodoo-go/utils"
 )
 
 // main is the entry point.
 func main() {
-	stopWatch := shared.StopWatch{}
+	stopWatch := utils.StopWatch{}
 	stopWatch.Start()
 	fmt.Printf("Started\t%v\n\n", stopWatch.Started.UTC())
 

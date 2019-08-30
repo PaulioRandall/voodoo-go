@@ -1,7 +1,9 @@
-package scanner
+package symbols
 
 import (
+	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/err"
 	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/runer"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser_2/token"
 )
 
@@ -12,16 +14,16 @@ import (
 // - opening or closing brace token
 // - value separator token
 // - void token
-func scanSymbol(r *runer.Runer) (token.Token, ScanError) {
+func ScanSymbol(r *runer.Runer) (token.Token, err.ScanError) {
 
-	ru1, _, err := r.Read()
-	if err != nil {
-		return nil, runerError(r, err)
+	ru1, _, e := r.Read()
+	if e != nil {
+		return nil, err.NewByRuner(r, e)
 	}
 
-	ru2, _, err := r.Peek()
-	if err != nil {
-		return nil, runerError(r, err)
+	ru2, _, e := r.Peek()
+	if e != nil {
+		return nil, err.NewByRuner(r, e)
 	}
 
 	switch {
@@ -87,33 +89,33 @@ func scanSymbol(r *runer.Runer) (token.Token, ScanError) {
 }
 
 // symbolToken creates the new token when a symbol match is found.
-func symbolToken(r *runer.Runer, ru1, ru2 rune, k token.Kind) (token.Token, ScanError) {
+func symbolToken(r *runer.Runer, ru1, ru2 rune, k token.Kind) (token.Token, err.ScanError) {
 
-	text, size, err := runesToText(r, ru1, ru2)
-	if err != nil {
-		return nil, err
+	text, size, e := runesToText(r, ru1, ru2)
+	if e != nil {
+		return nil, e
 	}
 
-	tk := scanTok{
-		text:  text,
-		line:  r.Line(),
-		start: r.NextCol() - size,
-		end:   r.NextCol(),
-		kind:  k,
-	}
+	tk := scantok.New(
+		text,
+		r.Line(),
+		r.NextCol()-size,
+		r.NextCol(),
+		k,
+	)
 
 	return tk, nil
 }
 
 // runesToText converts the runes to a string and skips the next rune in the
 // reader if the second rune formed part of the symbol.
-func runesToText(r *runer.Runer, ru1, ru2 rune) (string, int, ScanError) {
+func runesToText(r *runer.Runer, ru1, ru2 rune) (string, int, err.ScanError) {
 	if ru2 < 0 {
 		return string(ru1), 1, nil
 	}
 
-	if _, err := r.Skip(); err != nil {
-		return ``, 0, runerError(r, err)
+	if _, e := r.Skip(); e != nil {
+		return ``, 0, err.NewByRuner(r, e)
 	}
 
 	text := string(ru1) + string(ru2)
@@ -121,12 +123,12 @@ func runesToText(r *runer.Runer, ru1, ru2 rune) (string, int, ScanError) {
 }
 
 // unknownSymbol creates a ScanError for when a symbol is not recognised.
-func unknownSymbol(r *runer.Runer, ru rune) ScanError {
-	return scanErr{
-		l: r.Line(),
-		i: r.NextCol(),
-		e: []string{
+func unknownSymbol(r *runer.Runer, ru rune) err.ScanError {
+	return err.New(
+		r.Line(),
+		r.NextCol(),
+		[]string{
 			"I don't know what this symbol means '" + string(ru) + "'",
 		},
-	}
+	)
 }

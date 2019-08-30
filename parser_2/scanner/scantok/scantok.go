@@ -1,4 +1,4 @@
-package scanner
+package scantok
 
 import (
 	"strconv"
@@ -14,6 +14,17 @@ type scanTok struct {
 	start int        // Index of first rune
 	end   int        // Index after last rune
 	kind  token.Kind // Type of token
+}
+
+// New returns a new initilised Token.
+func New(text string, line, start, end int, kind token.Kind) token.Token {
+	return scanTok{
+		text:  text,
+		line:  line,
+		start: start,
+		end:   end,
+		kind:  kind,
+	}
 }
 
 // Text satisfies the Token interface.

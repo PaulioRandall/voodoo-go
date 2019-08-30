@@ -1,4 +1,4 @@
-package scanner
+package err
 
 import (
 	"fmt"
@@ -19,34 +19,34 @@ const (
 )
 
 // PrintScanError prints a ScanError.
-func PrintErrorToken(file string, scErr ScanError) {
-	f, err := os.Open(file)
-	if err != nil {
-		panic(err)
+func PrintErrorToken(file string, sce ScanError) {
+	f, e := os.Open(file)
+	if e != nil {
+		panic(e)
 	}
 	defer f.Close()
 
-	err = printScanError(f, scErr)
-	if err != nil {
-		panic(err)
+	e = printScanError(f, sce)
+	if e != nil {
+		panic(e)
 	}
 }
 
 // printScanError prints a ScanError.
-func printScanError(f *os.File, scErr ScanError) error {
+func printScanError(f *os.File, sce ScanError) error {
 	sb := &strings.Builder{}
-	line := scErr.Line()
+	line := sce.Line()
 
 	addHeader(f, sb)
-	err := addLines(f, sb, line+leadLines, line+1)
-	if err != nil {
-		return err
+	e := addLines(f, sb, line+leadLines, line+1)
+	if e != nil {
+		return e
 	}
 
-	addMsgs(sb, scErr.Index(), scErr.Errors()...)
-	err = addLines(f, sb, line+1, line+trailLines)
-	if err != nil {
-		return err
+	addMsgs(sb, sce.Index(), sce.Errors()...)
+	e = addLines(f, sb, line+1, line+trailLines)
+	if e != nil {
+		return e
 	}
 
 	fmt.Println(sb.String())
@@ -76,7 +76,7 @@ func addHeader(f *os.File, sb *strings.Builder) {
 // seekLine sets the file cursor to point at the specified line. If the index is
 // less than zero then the cursor will be set to the first line. An error
 // returns if the index exceeds the last line.
-func seekLine(f *os.File, index int) (err error) {
+func seekLine(f *os.File, index int) (e error) {
 	f.Seek(0, io.SeekStart)
 
 	if index == 0 {
@@ -85,10 +85,10 @@ func seekLine(f *os.File, index int) (err error) {
 
 	n := 0
 	for {
-		err = jumpToNextLine(f)
+		e = jumpToNextLine(f)
 		n++
 
-		if err != nil || n >= index {
+		if e != nil || n >= index {
 			break
 		}
 	}
@@ -97,12 +97,12 @@ func seekLine(f *os.File, index int) (err error) {
 }
 
 // jumpToNextLine jumps to the next new line in the file.
-func jumpToNextLine(f *os.File) (err error) {
+func jumpToNextLine(f *os.File) (e error) {
 	b := []byte{0}
 
 	for {
-		_, err = f.Read(b)
-		if err != nil || b[0] == utfLineFeed {
+		_, e = f.Read(b)
+		if e != nil || b[0] == utfLineFeed {
 			break
 		}
 	}
@@ -116,16 +116,16 @@ func readNextLine(f *os.File) (string, bool, error) {
 	sb := strings.Builder{}
 
 	b := []byte{0}
-	var err error
+	var e error
 
 	for {
-		_, err = f.Read(b)
-		if err == io.EOF {
+		_, e = f.Read(b)
+		if e == io.EOF {
 			return ``, true, nil
 		}
 
-		if err != nil {
-			return ``, false, err
+		if e != nil {
+			return ``, false, e
 		}
 
 		if b[0] == utfLineFeed {
@@ -147,9 +147,9 @@ func addLines(f *os.File, sb *strings.Builder, start, end int) error {
 	seekLine(f, start)
 
 	for i := start; i < end; i++ {
-		s, eof, err := readNextLine(f)
-		if eof || err != nil {
-			return err
+		s, eof, e := readNextLine(f)
+		if eof || e != nil {
+			return e
 		}
 
 		s = fmt.Sprintf("%4d: %s\n", i+1, s)

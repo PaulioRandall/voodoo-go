@@ -2,7 +2,7 @@
 	Originally from github.com/PaulioRandall/go-cookies/cookies
 ******************************************************************************/
 
-package shared
+package utils
 
 import (
 	"fmt"

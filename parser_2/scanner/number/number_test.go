@@ -1,36 +1,30 @@
-package scanner
+package number
 
 import (
 	"testing"
 
+	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/err"
 	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/runer"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser_2/token"
+	"github.com/PaulioRandall/voodoo-go/utils"
 )
 
-func doTestScanNumber(t *testing.T, in string, exp *scanTok, expErr ScanError) bool {
+func doTestScanNumber(t *testing.T, in string, exp token.Token, expErr err.ScanError) bool {
 	r := runer.NewByStr(in)
-	tk, err := scanNumber(r)
-	return logicalConjunction(
-		AssertScanTokEqual(t, exp, tk),
-		AssertScanError(t, expErr, err),
+	act, e := ScanNumber(r)
+	return utils.LogicalConjunction(
+		scantok.AssertEqual(t, exp, act),
+		err.AssertEqual(t, expErr, e),
 	)
 }
 
-func dummyNumToken(end int, text string) *scanTok {
-	return &scanTok{
-		text: text,
-		end:  end,
-		kind: token.TT_NUMBER,
-	}
+func dummyNumToken(end int, text string) token.Token {
+	return scantok.New(text, 0, 0, end, token.TT_NUMBER)
 }
 
-func dummyNumErr(i int) ScanError {
-	return scanErr{
-		i: i,
-		e: []string{
-			`:)`,
-		},
-	}
+func dummyNumErr(i int) err.ScanError {
+	return err.New(0, i, []string{`:)`})
 }
 
 func TestScanNumber_1(t *testing.T) {

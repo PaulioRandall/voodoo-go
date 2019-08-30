@@ -1,25 +1,23 @@
-package scanner
+package symbols
 
 import (
 	"testing"
 
+	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/err"
 	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/runer"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser_2/token"
 )
 
-func doTestScanSymbol(t *testing.T, in string, exp *scanTok, expErr ScanError) {
+func doTestScanSymbol(t *testing.T, in string, exp token.Token, expErr err.ScanError) {
 	r := runer.NewByStr(in)
-	tk, err := scanSymbol(r)
-	AssertScanTokEqual(t, exp, tk)
-	AssertScanError(t, expErr, err)
+	tk, e := ScanSymbol(r)
+	scantok.AssertEqual(t, exp, tk)
+	err.AssertEqual(t, expErr, e)
 }
 
-func dummySymToken(end int, text string, k token.Kind) *scanTok {
-	return &scanTok{
-		text: text,
-		end:  end,
-		kind: k,
-	}
+func dummySymToken(end int, text string, k token.Kind) token.Token {
+	return scantok.New(text, 0, 0, end, k)
 }
 
 func TestScanSymbol_1(t *testing.T) {
