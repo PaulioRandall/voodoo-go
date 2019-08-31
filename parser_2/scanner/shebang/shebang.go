@@ -11,8 +11,8 @@ import (
 func ScanShebang(r *runer.Runer) (token.Token, err.ScanError) {
 	start := r.NextCol()
 
-	s, e := r.ReadWhile(func(ru rune) (bool, error) {
-		return ru == '\n', nil
+	s, e := r.ReadWhile(func(ru, _ rune) (bool, error) {
+		return ru != '\n', nil
 	})
 
 	if e != nil {

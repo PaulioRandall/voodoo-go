@@ -10,13 +10,15 @@ import (
 // allows a look ahead of two runes. It also keeps a track of the current line
 // and column indexes.
 type Runer struct {
-	reader  *bufio.Reader
-	line    int
-	col     int
-	newline bool
-	eof     bool
-	buf     rune
-	bufEOF  bool
+	reader   *bufio.Reader
+	line     int
+	col      int
+	newline  bool
+	eof      bool
+	buf1     rune
+	buf1_eof bool
+	buf2     rune
+	buf2_eof bool
 }
 
 // New returns a new initialised Runer.
@@ -30,7 +32,8 @@ func New(r *bufio.Reader) *Runer {
 		line:    -1,
 		col:     -1,
 		newline: true,
-		buf:     -1,
+		buf1:    -1,
+		buf2:    -1,
 	}
 }
 
@@ -49,12 +52,8 @@ func (r *Runer) Line() int {
 	return r.line
 }
 
-// Col returns the column index of the last rune returned or 0 if no calls to
-// read runes has been made yet.
+// Col returns the column index of the last rune returned.
 func (r *Runer) Col() int {
-	if r.newline {
-		return -1
-	}
 	return r.col
 }
 
@@ -70,13 +69,27 @@ func (r *Runer) NextCol() int {
 // Peek returns the next rune in the sequence without incrementing the 'cursor'.
 func (r *Runer) Peek() (rune, bool, error) {
 	e := r.ensureBufferInit()
-	return r.buf, r.bufEOF, e
+	return r.buf1, r.buf1_eof, e
+}
+
+// PeekMore returns the rune after the next rune in the sequence without
+// incrementing the 'cursor'.
+func (r *Runer) PeekMore() (rune, bool, error) {
+	e := r.ensureBufferInit()
+	return r.buf2, r.buf2_eof, e
+}
+
+// PeekBoth returns the next rune and the rune after the next rune in the
+// sequence without incrementing the 'cursor'.
+func (r *Runer) PeekBoth() (rune, rune, bool, error) {
+	e := r.ensureBufferInit()
+	return r.buf1, r.buf2, r.buf1_eof, e
 }
 
 // ensureBufferInit checks if the buffer has been initialised, if it hasn't it
 // initialises it.
 func (r *Runer) ensureBufferInit() error {
-	if r.buf == -1 {
+	if r.buf1 == -1 || r.buf2 == -1 {
 		return r.buffer()
 	}
 	return nil
@@ -85,9 +98,22 @@ func (r *Runer) ensureBufferInit() error {
 // buffer reads a rune from the reader and places the it in the buffer along
 // with the buffer EOF flag.
 func (r *Runer) buffer() error {
+	if r.eof {
+		return nil
+	}
+
 	var e error
-	r.buf, r.bufEOF, e = r.read()
-	return e
+	r.buf1, r.buf1_eof = r.buf2, r.buf2_eof
+	r.buf2, r.buf2_eof, e = r.read()
+	if e != nil {
+		return e
+	}
+
+	if r.buf1 == -1 {
+		return r.buffer()
+	}
+
+	return nil
 }
 
 // readRune reads the next rune in the sequence returning the rune followed by
@@ -126,7 +152,7 @@ func (r *Runer) Read() (rune, bool, error) {
 // reader into the buffer.
 func (r *Runer) next() (rune, bool, error) {
 	var ru rune
-	ru, r.eof = r.buf, r.bufEOF
+	ru, r.eof = r.buf1, r.buf1_eof
 	r.col++
 
 	if ru == '\n' {
@@ -143,19 +169,25 @@ func (r *Runer) Skip() (bool, error) {
 	return eof, e
 }
 
-// predicate returns true if the rune passed is part of the token being scanned.
-type predicate func(rune) (bool, error)
+// predicate returns true if the first rune passed is part of the token being
+// scanned. The second rune iss the one after the next.
+type predicate func(rune, rune) (bool, error)
 
 // ReadIf reads the next rune only if the predicate function returns true. If
 // the second return value is true then the a value was succesfully read from
 // the reader and the predicate function evaluated to true.
 func (r *Runer) ReadIf(f predicate) (rune, bool, error) {
-	ru, eof, e := r.Peek()
-	if eof || e != nil {
-		return 0, !eof, e
+	ru1, eof1, e := r.Peek()
+	if eof1 || e != nil {
+		return 0, !eof1, e
 	}
 
-	want, e := f(ru)
+	ru2, _, e := r.PeekMore()
+	if e != nil {
+		return 0, !eof1, e
+	}
+
+	want, e := f(ru1, ru2)
 	if e != nil {
 		return 0, false, e
 	}
@@ -164,7 +196,7 @@ func (r *Runer) ReadIf(f predicate) (rune, bool, error) {
 		if _, e = r.Skip(); e != nil {
 			return 0, false, e
 		}
-		return ru, true, nil
+		return ru1, true, nil
 	}
 
 	return 0, false, nil

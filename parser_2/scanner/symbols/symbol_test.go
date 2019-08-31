@@ -21,20 +21,8 @@ func dummySymToken(end int, text string, k token.Kind) token.Token {
 }
 
 func TestScanSymbol_1(t *testing.T) {
-	in := `<-`
-	exp := dummySymToken(2, `<-`, token.TT_ASSIGN)
-	doTestScanSymbol(t, in, exp, nil)
-}
-
-func TestScanSymbol_2(t *testing.T) {
-	in := `=`
-	exp := dummySymToken(1, `=`, token.TT_ASSIGN)
-	doTestScanSymbol(t, in, exp, nil)
-}
-
-func TestScanSymbol_3(t *testing.T) {
-	in := `:=`
-	exp := dummySymToken(2, `:=`, token.TT_ASSIGN)
+	in := `:`
+	exp := dummySymToken(1, `:`, token.TT_ASSIGN)
 	doTestScanSymbol(t, in, exp, nil)
 }
 

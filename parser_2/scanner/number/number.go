@@ -30,8 +30,8 @@ func ScanNumber(r *runer.Runer) (token.Token, err.ScanError) {
 
 // isDigit returns true if the input rune is a digit. This function implements
 // the runer.predicate interface.
-func isDigit(ru rune) (bool, error) {
-	return unicode.IsDigit(ru), nil
+func isDigit(ru1, _ rune) (bool, error) {
+	return unicode.IsDigit(ru1), nil
 }
 
 // scanFrac scans the delimiter and fractional part of a number.
@@ -56,7 +56,7 @@ func scanFrac(r *runer.Runer) (string, err.ScanError) {
 // of a floating point number. False is returned if no delimiter is present.
 func scanFracDelim(r *runer.Runer) (string, bool, err.ScanError) {
 
-	isDelim := func(ru rune) (bool, error) {
+	isDelim := func(ru, _ rune) (bool, error) {
 		return ru == '.', nil
 	}
 

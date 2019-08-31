@@ -13,8 +13,10 @@ func assertRuner(t *testing.T, exp *Runer, act *Runer) bool {
 		assert.Equal(t, exp.col, act.col, `Runer.col`),
 		assert.Equal(t, exp.newline, act.newline, `Runer.newline`),
 		assert.Equal(t, exp.eof, act.eof, `Runer.eof`),
-		assert.Equal(t, exp.buf, act.buf, `Runer.buf`),
-		assert.Equal(t, exp.bufEOF, act.bufEOF, `Runer.bufEOF`),
+		assert.Equal(t, exp.buf1, act.buf1, `Runer.buf1`),
+		assert.Equal(t, exp.buf1_eof, act.buf1_eof, `Runer.buf1_eof`),
+		assert.Equal(t, exp.buf2, act.buf2, `Runer.buf2`),
+		assert.Equal(t, exp.buf2_eof, act.buf2_eof, `Runer.buf2_eof`),
 	)
 }
 
@@ -46,30 +48,30 @@ func doTestRead(t *testing.T, expRu rune, expEOF bool, exp *Runer, r *Runer) boo
 func TestRuner_Read(t *testing.T) {
 	r := NewByStr("ab\ncd")
 
-	exp := &Runer{nil, 0, 0, false, false, 'b', false}
+	exp := &Runer{nil, 0, 0, false, false, 'b', false, '\n', false}
 	doTestRead(t, 'a', false, exp, r)
 
-	exp = &Runer{nil, 0, 1, false, false, '\n', false}
+	exp = &Runer{nil, 0, 1, false, false, '\n', false, 'c', false}
 	doTestRead(t, 'b', false, exp, r)
 
-	exp = &Runer{nil, 0, 2, true, false, 'c', false}
+	exp = &Runer{nil, 0, 2, true, false, 'c', false, 'd', false}
 	doTestRead(t, '\n', false, exp, r)
 
-	exp = &Runer{nil, 1, 0, false, false, 'd', false}
+	exp = &Runer{nil, 1, 0, false, false, 'd', false, 0, true}
 	doTestRead(t, 'c', false, exp, r)
 
-	exp = &Runer{nil, 1, 1, false, false, 0, true}
+	exp = &Runer{nil, 1, 1, false, false, 0, true, 0, true}
 	doTestRead(t, 'd', false, exp, r)
 
-	exp = &Runer{nil, 1, 2, false, true, 0, true}
+	exp = &Runer{nil, 1, 2, false, true, 0, true, 0, true}
 	doTestRead(t, 0, true, exp, r)
 }
 
 func TestRuner_ReadIf(t *testing.T) {
 	r := NewByStr(`123`)
 
-	f := func(ru rune) (bool, error) {
-		a := ru == '1' || ru == '2'
+	f := func(ru1 rune, ru2 rune) (bool, error) {
+		a := ru1 > '0' && ru2 != 0
 		return a, nil
 	}
 
@@ -92,7 +94,7 @@ func TestRuner_ReadIf(t *testing.T) {
 func TestRuner_ReadWhile(t *testing.T) {
 	r := NewByStr(`abc 123`)
 
-	f := func(ru rune) (bool, error) {
+	f := func(ru, _ rune) (bool, error) {
 		return ru != ' ', nil
 	}
 

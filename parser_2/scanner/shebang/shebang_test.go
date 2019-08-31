@@ -10,7 +10,7 @@ import (
 )
 
 func TestScanShebang_1(t *testing.T) {
-	in := "#!/bin/voodoo\n\nx <- 1"
+	in := "#!/bin/voodoo\n\nx:1"
 
 	exp := scantok.New(
 		"#!/bin/voodoo",

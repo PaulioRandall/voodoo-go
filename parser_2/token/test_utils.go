@@ -13,16 +13,15 @@ import (
 // of expected tokens. Note that the only the responses from the token interface
 // methods are checked, the underlying type and its fields are not considered.
 func AssertSliceEqual(t *testing.T, exp []Token, act []Token) {
-	for i, expTk := range exp {
+	for i, _ := range exp {
 		if !assert.True(t, i < len(act), `Token[%d] missing`, i) {
 			break
 		}
 
-		actTk := act[i]
-		AssertEqual(t, expTk, actTk)
+		AssertEqual(t, exp[i], act[i])
 	}
 
-	assert.Equal(t, len(exp), len(act), `Expected len(exp) = len(act)`)
+	assert.Equal(t, len(exp), len(act), `len(exp) == len(act)`)
 }
 
 // AssertEqual asserts that the actual token equals the expected token. Note
