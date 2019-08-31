@@ -27,6 +27,16 @@ func New(text string, line, start, end int, kind token.Kind) token.Token {
 	}
 }
 
+// UpdateText updates the text within a scantok.
+func UpdateText(tk token.Token, newText string) token.Token {
+	stk, ok := tk.(scanTok)
+	if !ok {
+		panic("This isn't a scanTok")
+	}
+	stk.text = newText
+	return stk
+}
+
 // Text satisfies the Token interface.
 func (tk scanTok) Text() string {
 	return tk.text

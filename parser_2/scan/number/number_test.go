@@ -5,7 +5,7 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/parser_2/scan/err"
 	"github.com/PaulioRandall/voodoo-go/parser_2/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scan/scantok"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser_2/token"
 	"github.com/PaulioRandall/voodoo-go/utils"
 )

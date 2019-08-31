@@ -18,11 +18,9 @@ import (
 // specific Kind of Token.
 type TokenScanner func(*runer.Runer) (token.Token, err.ScanError)
 
-// Scanner represents the scanning part of a lexical analyser. If true the
-// scanner will return a SheBang line token scanning function on the first
-// invocation of Next().
+// Scanner represents the scanning part of a lexical analyser.
 type Scanner struct {
-	shebang bool
+	shebang bool // True if the next line is a shebang line
 }
 
 // New returns a new Scanner.

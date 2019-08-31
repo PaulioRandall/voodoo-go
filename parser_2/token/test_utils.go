@@ -14,10 +14,7 @@ import (
 // methods are checked, the underlying type and its fields are not considered.
 func AssertSliceEqual(t *testing.T, exp []Token, act []Token) {
 	for i, _ := range exp {
-		if !assert.True(t, i < len(act), `Token[%d] missing`, i) {
-			break
-		}
-
+		require.True(t, i < len(act), `Token[%d] missing`, i)
 		AssertEqual(t, exp[i], act[i])
 	}
 
