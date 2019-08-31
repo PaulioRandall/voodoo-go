@@ -1,15 +1,15 @@
-package scanner
+package scan
 
 import (
 	"unicode"
 
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/err"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/number"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/runer"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/shebang"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/space"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/symbols"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/word"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/number"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/runer"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/shebang"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/space"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/symbols"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/word"
 	"github.com/PaulioRandall/voodoo-go/parser_2/token"
 )
 

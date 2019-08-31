@@ -1,7 +1,7 @@
 package err
 
 import (
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/runer"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/runer"
 )
 
 // ScanError represents an error found while scanning text.

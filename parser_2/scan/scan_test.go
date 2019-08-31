@@ -1,11 +1,11 @@
-package scanner
+package scan
 
 import (
 	"testing"
 
-	//	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/err"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/runer"
-	"github.com/PaulioRandall/voodoo-go/parser_2/scanner/scantok"
+	//	"github.com/PaulioRandall/voodoo-go/parser_2/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/runer"
+	"github.com/PaulioRandall/voodoo-go/parser_2/scan/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser_2/token"
 
 	"github.com/stretchr/testify/require"
