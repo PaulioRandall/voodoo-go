@@ -4,15 +4,15 @@ package stat
 type Kind int
 
 const (
-	SK_UNDEFINED Kind = iota
-	SK_ASSIGN         // x: 1
+	SK_UNDEFINED  Kind = iota
+	SK_EXPRESSION      // 1, 1 + 2, @Print(`abc`)
 )
 
 // KindName returns the name of the statement kind.
 func KindName(t Kind) string {
 	switch t {
-	case SK_ASSIGN:
-		return `ASSIGN`
+	case SK_EXPRESSION:
+		return `EXPRESSION`
 	default:
 		return `UNDEFINED`
 	}

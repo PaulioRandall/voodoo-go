@@ -12,13 +12,15 @@ import (
 // AssertSliceEqual asserts that the slice of actual tokens matches the slice
 // of expected tokens. Note that the only the responses from the token interface
 // methods are checked, the underlying type and its fields are not considered.
-func AssertSliceEqual(t *testing.T, exp []Token, act []Token) {
+func AssertSliceEqual(t *testing.T, exp []Token, act []Token) bool {
+	ok := true
+
 	for i, _ := range exp {
 		require.True(t, i < len(act), `Token[%d] missing`, i)
-		AssertEqual(t, exp[i], act[i])
+		ok = ok && AssertEqual(t, exp[i], act[i])
 	}
 
-	assert.Equal(t, len(exp), len(act), `len(exp) == len(act)`)
+	return ok && assert.Equal(t, len(exp), len(act), `len(exp) == len(act)`)
 }
 
 // AssertEqual asserts that the actual token equals the expected token. Note
