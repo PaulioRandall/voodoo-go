@@ -19,7 +19,7 @@ const (
 )
 
 // PrintScanError prints a ScanError.
-func PrintErrorToken(file string, sce ScanError) {
+func PrintScanError(file string, sce ScanError) {
 	f, e := os.Open(file)
 	if e != nil {
 		panic(e)

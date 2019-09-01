@@ -10,19 +10,28 @@ import (
 // Farm represents an allotment of tokens representing a statement.
 type Farm struct {
 	multiline bool          // True if the next line feed can be ignore
-	allotment []token.Token // Set of tokens representing a statement
 	mature    bool          // True if a statement is ready for harvesting
+	tokens    []token.Token // Set of tokens representing a statement
 }
 
 // New returns a new Farm.
 func New() *Farm {
 	return &Farm{
-		allotment: []token.Token{},
+		tokens: []token.Token{},
+	}
+}
+
+// Copy performs a deep copy of the farm.
+func Copy(f *Farm) *Farm {
+	return &Farm{
+		multiline: f.multiline,
+		mature:    f.mature,
+		tokens:    token.Copy(f.tokens),
 	}
 }
 
 // Feed processes a Token to remove redundant runes, converting its Kind if
-// certain criteria are meet, and placing it in the Farms allotment as part of
+// certain criteria are meet, and placing it in the Farms token field as part of
 // the next statement if it's not redundant. Newline Tokens may cause the
 // allotment to mature and the Farm be flagged as ready for harvesting; upon
 // which, attempting to feed more Tokens will result in a panic unless a call to
@@ -32,7 +41,7 @@ func (ev *Farm) Feed(in token.Token) (bool, error) {
 		panic("Can't feed with any more Tokens until Harvest() is invoked")
 	}
 
-	if ev.allotment == nil {
+	if ev.tokens == nil {
 		panic("Can't use a salted farm")
 	}
 
@@ -41,7 +50,7 @@ func (ev *Farm) Feed(in token.Token) (bool, error) {
 	}
 
 	in = ev.strim(in)
-	ev.allotment = append(ev.allotment, in)
+	ev.tokens = append(ev.tokens, in)
 	return ev.mature, nil
 }
 
@@ -53,15 +62,15 @@ func (ev *Farm) Harvest() []token.Token {
 	}
 
 	defer ev.reset(false)
-	return ev.allotment
+	return ev.tokens
 }
 
 // SaltHarvest returns the set of Tokens that make up a statement even if a
 // newline Token was not supplied in the previous invocation of Feed(). The
-// allotment is salted in the process rendering the Farm unusable.
+// tokens is salted in the process rendering the Farm unusable.
 func (ev *Farm) SaltHarvest() []token.Token {
 	defer ev.reset(true)
-	return ev.allotment
+	return ev.tokens
 }
 
 // reset resets the Farm so a new statement can be started. If the input is true
@@ -70,9 +79,9 @@ func (ev *Farm) reset(salt bool) {
 	ev.multiline = false
 	ev.mature = false
 	if salt {
-		ev.allotment = nil
+		ev.tokens = nil
 	} else {
-		ev.allotment = []token.Token{}
+		ev.tokens = []token.Token{}
 	}
 }
 

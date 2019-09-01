@@ -41,8 +41,11 @@ func AssertEqual(t *testing.T, exp, act token.Token) bool {
 // scanTok instances and that each equals the corresponding one from the
 // expected Token slice.
 func AssertSliceEqual(t *testing.T, exp, act []token.Token) bool {
-	require.NotNil(t, exp, `exp != nil`)
-	require.NotNil(t, act, `act != nil`)
+	if exp == nil {
+		return assert.Nil(t, act, `act == nil`)
+	} else {
+		require.NotNil(t, act, `act != nil`)
+	}
 
 	ok := true
 	for i, _ := range exp {

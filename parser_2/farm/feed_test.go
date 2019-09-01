@@ -17,7 +17,7 @@ func doTestFarm_Feed(
 	f *Farm,
 	multiline, mature bool) {
 
-	size := len(f.allotment)
+	size := len(f.tokens)
 
 	m, e := f.Feed(in)
 	if err {
@@ -34,8 +34,8 @@ func doTestFarm_Feed(
 
 	assert.Equal(t, multiline, f.multiline, `Farm.multiline`)
 	assert.Equal(t, mature, f.mature, `Farm.mature`)
-	assert.Equal(t, size, len(f.allotment),
-		`Farm.allotment: len(exp) == len(act)`)
+	assert.Equal(t, size, len(f.tokens),
+		`Farm.tokens: len(exp) == len(act)`)
 }
 
 func TestFarm_Feed_1(t *testing.T) {

@@ -15,3 +15,17 @@ type Token interface {
 	// String returns a string representation of the token.
 	String() string
 }
+
+// Copy performs a deep copy of a token array.
+func Copy(in []Token) []Token {
+	if in == nil {
+		return nil
+	}
+
+	out := make([]Token, len(in))
+	for i, _ := range in {
+		out[i] = in[i]
+	}
+
+	return out
+}
