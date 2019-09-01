@@ -35,7 +35,7 @@ func TestFarm_Harvest_1(t *testing.T) {
 	assertFarm(t, false, false, exp, act)
 }
 
-func TestFarm_SaltHarvest_1(t *testing.T) {
+func TestFarm_FinalHarvest_1(t *testing.T) {
 	tks := []token.Token{
 		// x <- 1
 		token.Dummy{`x`, token.TT_ID},
@@ -49,7 +49,7 @@ func TestFarm_SaltHarvest_1(t *testing.T) {
 		tokens: token.Copy(tks),
 	}
 
-	out := act.SaltHarvest()
+	out := act.FinalHarvest()
 	token.AssertSliceEqual(t, tks, out)
 	assertFarm(t, false, false, exp, act)
 }

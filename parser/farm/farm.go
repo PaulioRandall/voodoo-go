@@ -34,15 +34,15 @@ func Copy(f *Farm) *Farm {
 // certain criteria are meet, and placing it in the Farms token field as part of
 // the next statement if it's not redundant. Newline Tokens may cause the
 // allotment to mature and the Farm be flagged as ready for harvesting; upon
-// which, attempting to feed more Tokens will result in a panic unless a call to
-// Harvest() is performed first.
+// which, attempting to feed more Tokens will result in a panic; a new farm must
+// be created.
 func (ev *Farm) Feed(in token.Token) (bool, error) {
 	if ev.mature {
-		panic("Can't feed with any more Tokens until Harvest() is invoked")
+		panic("Can't feed with any more Tokens, harvest is required")
 	}
 
 	if ev.tokens == nil {
-		panic("Can't use a salted farm")
+		panic("Can't use a harvested farm")
 	}
 
 	if ev.filter(in) {
@@ -61,28 +61,19 @@ func (ev *Farm) Harvest() []token.Token {
 		panic("Can't harvest until a newline Token has been sown")
 	}
 
-	defer ev.reset(false)
-	return ev.tokens
-}
-
-// SaltHarvest returns the set of Tokens that make up a statement even if a
-// newline Token was not supplied in the previous invocation of Feed(). The
-// tokens is salted in the process rendering the Farm unusable.
-func (ev *Farm) SaltHarvest() []token.Token {
-	defer ev.reset(true)
-	return ev.tokens
-}
-
-// reset resets the Farm so a new statement can be started. If the input is true
-// then Farm will be rendered unusable.
-func (ev *Farm) reset(salt bool) {
-	ev.multiline = false
-	ev.mature = false
-	if salt {
+	defer func() {
+		ev.multiline = false
+		ev.mature = false
 		ev.tokens = nil
-	} else {
-		ev.tokens = []token.Token{}
-	}
+	}()
+	return ev.tokens
+}
+
+// FinalHarvest performs a harvest that will not panic if the allotment is not
+// mature.
+func (ev *Farm) FinalHarvest() []token.Token {
+	ev.mature = true
+	return ev.Harvest()
 }
 
 // filter removes redundant Tokens.

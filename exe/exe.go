@@ -70,7 +70,7 @@ func scanNext(r *runer.Runer, sc *Scroll) (_ []token.Token, last bool) {
 		}
 	}
 
-	return frm.SaltHarvest(), true
+	return frm.FinalHarvest(), true
 }
 
 // printStatement prints a statmant.
