@@ -14,26 +14,40 @@ import (
 func Execute(sc *Scroll, scArgs []string) int {
 
 	r := runer.NewByStr(sc.Data)
-	s := scan.New(true)
+	if scanAndPrintShebang(r, sc) {
+		return 1
+	}
 
-	for tks, exit := scanNext(s, r, sc); !exit; {
+	for tks, exit := scanNext(r, sc); !exit; {
 		if tks == nil {
 			return 1
 		}
 
 		printStatement(tks)
-		tks, exit = scanNext(s, r, sc)
+		tks, exit = scanNext(r, sc)
 	}
 
 	return 0
 }
 
+// scanAndPrintShebang scans the shebang line and prints it.
+func scanAndPrintShebang(r *runer.Runer, sc *Scroll) bool {
+	s, e := scan.ShebangScanner()(r)
+	if e != nil {
+		err.PrintScanError(sc.File, e)
+		return true
+	}
+
+	fmt.Println(`[` + token.KindName(s.Kind()) + `]`)
+	return false
+}
+
 // scanNextStat scans the next statement from the scanner passing each token
 // through the farm in the process.
-func scanNext(s *scan.Scanner, r *runer.Runer, sc *Scroll) (_ []token.Token, last bool) {
+func scanNext(r *runer.Runer, sc *Scroll) (_ []token.Token, last bool) {
 	frm := farm.New()
 
-	for f, e := s.Next(r); f != nil; f, e = s.Next(r) {
+	for f, e := scan.Next(r); f != nil; f, e = scan.Next(r) {
 		if e != nil {
 			err.PrintScanError(sc.File, e)
 			return nil, false

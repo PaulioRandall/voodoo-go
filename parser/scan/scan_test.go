@@ -3,7 +3,7 @@ package scan
 import (
 	"testing"
 
-	//	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
@@ -11,25 +11,33 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func doTestScanner_Next(t *testing.T, shebang bool, r *runer.Runer, exp []token.Token) {
-	s := New(shebang)
+func doTestNext(t *testing.T, shebang bool, r *runer.Runer, exp []token.Token) {
 
 	act := []token.Token{}
-	for f, e := s.Next(r); f != nil; f, e = s.Next(r) {
-		require.Nil(t, e, `Scanner.Next(): ScanError == nil`)
-		require.NotNil(t, f, `Scanner.Next(): TokenScanner != nil`)
+	if shebang {
+		f := ShebangScanner()
+		act = doTestScanner(t, r, f, nil, act)
+	}
 
-		tk, e := f(r)
-		require.Nil(t, e, `TokenScanner? ScanError == nil`)
-		require.NotNil(t, f, `TokenScanner? Token != nil`)
-
-		act = append(act, tk)
+	for f, e := Next(r); f != nil; f, e = Next(r) {
+		act = doTestScanner(t, r, f, e, act)
 	}
 
 	scantok.AssertSliceEqual(t, exp, act)
 }
 
-func TestScanner_Next_1(t *testing.T) {
+func doTestScanner(t *testing.T, r *runer.Runer, f TokenScanner, e err.ScanError, act []token.Token) []token.Token {
+	require.Nil(t, e, `scan.Next(): ScanError == nil`)
+	require.NotNil(t, f, `scan.Next(): TokenScanner != nil`)
+
+	tk, e := f(r)
+	require.Nil(t, e, `TokenScanner? ScanError == nil`)
+	require.NotNil(t, f, `TokenScanner? Token != nil`)
+
+	return append(act, tk)
+}
+
+func TestNext_1(t *testing.T) {
 	r := runer.NewByStr("#!/bin/bash\n")
 
 	exp := []token.Token{
@@ -37,10 +45,10 @@ func TestScanner_Next_1(t *testing.T) {
 		scantok.New("\n", 0, 11, 12, token.TT_NEWLINE),
 	}
 
-	doTestScanner_Next(t, true, r, exp)
+	doTestNext(t, true, r, exp)
 }
 
-func TestScanner_Next_2(t *testing.T) {
+func TestNext_2(t *testing.T) {
 	r := runer.NewByStr("x <- 1")
 
 	exp := []token.Token{
@@ -51,10 +59,10 @@ func TestScanner_Next_2(t *testing.T) {
 		scantok.New(`1`, 0, 5, 6, token.TT_NUMBER),
 	}
 
-	doTestScanner_Next(t, false, r, exp)
+	doTestNext(t, false, r, exp)
 }
 
-func TestScanner_Next_3(t *testing.T) {
+func TestNext_3(t *testing.T) {
 	r := runer.NewByStr("x <- 1\ny := 2\r\nz <- 32")
 
 	exp := []token.Token{
@@ -80,5 +88,5 @@ func TestScanner_Next_3(t *testing.T) {
 		scantok.New(`32`, 2, 5, 7, token.TT_NUMBER),
 	}
 
-	doTestScanner_Next(t, false, r, exp)
+	doTestNext(t, false, r, exp)
 }

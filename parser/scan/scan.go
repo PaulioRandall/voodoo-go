@@ -18,25 +18,14 @@ import (
 // specific Kind of Token.
 type TokenScanner func(*runer.Runer) (token.Token, err.ScanError)
 
-// Scanner represents the scanning part of a lexical analyser.
-type Scanner struct {
-	shebang bool // True if the next line is a shebang line
-}
-
-// New returns a new Scanner.
-func New(shebang bool) *Scanner {
-	return &Scanner{
-		shebang: shebang,
-	}
+// ShebangScanner returns the scanner that will scan all remaning runes in the
+// current line
+func ShebangScanner() TokenScanner {
+	return shebang.ScanShebang
 }
 
 // Next returns a suitable TokenScanner function that will scan the next Token.
-func (s *Scanner) Next(r *runer.Runer) (TokenScanner, err.ScanError) {
-	if s.shebang {
-		s.shebang = false
-		return shebang.ScanShebang, nil
-	}
-
+func Next(r *runer.Runer) (TokenScanner, err.ScanError) {
 	switch ru, eof, e := r.Peek(); {
 	case e != nil:
 		return nil, err.NewByRuner(r, e)
