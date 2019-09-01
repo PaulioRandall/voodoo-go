@@ -1,28 +1,4 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
-s <- "abc"
-x = 1 + 2
-
-a, b, c := 1, 2, 3
-y <- a + c - b
-z <- 123.456
-
-print <- func(x, newline) r {
-  @Print(x)
-  newline => @Println()
-}
-
-list <- [
-  "a",
-  "b",
-  "c",
-]
-
-loop i, v, more <- list {
-  i == 0 => print("[")
-
-  match {
-    more => print("${v}, ")
-    _    => print("${v}]")
-  }
-}
+x <- 1
+y := 2
