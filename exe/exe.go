@@ -1,7 +1,9 @@
 package exe
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 
 	"github.com/PaulioRandall/voodoo-go/parser/farm"
 	"github.com/PaulioRandall/voodoo-go/parser/scan"
@@ -11,30 +13,46 @@ import (
 )
 
 // Execute runs a Voodoo scroll.
-func Execute(sc *Scroll, scArgs []string) int {
+func Execute(file string, scArgs []string) int {
 
-	r := runer.NewByStr(sc.Data)
-	if scanAndPrintShebang(r, sc) {
+	r, e := newRuner(file)
+	if e != nil {
+		print(e)
 		return 1
 	}
 
-	for tks, exit := scanNext(r, sc); !exit; {
+	if scanAndPrintShebang(r, file) {
+		return 1
+	}
+
+	for tks, exit := scanNext(r, file); !exit; {
 		if tks == nil {
 			return 1
 		}
 
 		printStatement(tks)
-		tks, exit = scanNext(r, sc)
+		tks, exit = scanNext(r, file)
 	}
 
 	return 0
 }
 
+// newRuner creates a new Runer from a file.
+func newRuner(file string) (*runer.Runer, error) {
+	r, e := os.Open(file)
+	if e != nil {
+		return nil, e
+	}
+
+	bf := bufio.NewReader(r)
+	return runer.New(bf), nil
+}
+
 // scanAndPrintShebang scans the shebang line and prints it.
-func scanAndPrintShebang(r *runer.Runer, sc *Scroll) bool {
+func scanAndPrintShebang(r *runer.Runer, file string) bool {
 	s, e := scan.ShebangScanner()(r)
 	if e != nil {
-		err.PrintScanError(sc.File, e)
+		err.PrintScanError(file, e)
 		return true
 	}
 
@@ -44,18 +62,18 @@ func scanAndPrintShebang(r *runer.Runer, sc *Scroll) bool {
 
 // scanNextStat scans the next statement from the scanner passing each token
 // through the farm in the process.
-func scanNext(r *runer.Runer, sc *Scroll) (_ []token.Token, last bool) {
+func scanNext(r *runer.Runer, file string) (_ []token.Token, last bool) {
 	frm := farm.New()
 
 	for f, e := scan.Next(r); f != nil; f, e = scan.Next(r) {
 		if e != nil {
-			err.PrintScanError(sc.File, e)
+			err.PrintScanError(file, e)
 			return nil, false
 		}
 
 		tk, e := f(r)
 		if e != nil {
-			err.PrintScanError(sc.File, e)
+			err.PrintScanError(file, e)
 			return nil, false
 		}
 

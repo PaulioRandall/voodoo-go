@@ -40,17 +40,7 @@ func exeScroll() {
 	scPath := getScrollPath()
 	scArgs := getScrollArgs()
 
-	sc, err := exe.LoadScroll(scPath)
-	if err != nil {
-		// TODO: Handle when error returned.
-		panic(err)
-	}
-
-	exitCode := exe.Execute(sc, scArgs)
-	if err != nil {
-		// TODO: Handle when error returned.
-		panic(err)
-	}
+	exitCode := exe.Execute(scPath, scArgs)
 
 	// TODO: What to do when non-zero exit code?
 	exitMsg := fmt.Sprintf("\nExit %d", exitCode)
