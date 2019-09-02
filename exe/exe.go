@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/PaulioRandall/voodoo-go/parser/farm"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan"
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
@@ -52,7 +52,7 @@ func newRuner(file string) (*runer.Runer, error) {
 func scanAndPrintShebang(r *runer.Runer, file string) bool {
 	s, e := scan.ShebangScanner()(r)
 	if e != nil {
-		err.PrintScanError(file, e)
+		perror.PrintError(file, e)
 		return true
 	}
 
@@ -67,13 +67,13 @@ func scanNext(r *runer.Runer, file string) (_ []token.Token, last bool) {
 
 	for f, e := scan.Next(r); f != nil; f, e = scan.Next(r) {
 		if e != nil {
-			err.PrintScanError(file, e)
+			perror.PrintError(file, e)
 			return nil, false
 		}
 
 		tk, e := f(r)
 		if e != nil {
-			err.PrintScanError(file, e)
+			perror.PrintError(file, e)
 			return nil, false
 		}
 

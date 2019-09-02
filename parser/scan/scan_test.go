@@ -3,7 +3,7 @@ package scan
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
@@ -26,12 +26,12 @@ func doTestNext(t *testing.T, shebang bool, r *runer.Runer, exp []token.Token) {
 	scantok.AssertSliceEqual(t, exp, act)
 }
 
-func doTestScanner(t *testing.T, r *runer.Runer, f TokenScanner, e err.ScanError, act []token.Token) []token.Token {
-	require.Nil(t, e, `scan.Next(): ScanError == nil`)
+func doTestScanner(t *testing.T, r *runer.Runer, f TokenScanner, e perror.Perror, act []token.Token) []token.Token {
+	require.Nil(t, e, `scan.Next(): Perror == nil`)
 	require.NotNil(t, f, `scan.Next(): TokenScanner != nil`)
 
 	tk, e := f(r)
-	require.Nil(t, e, `TokenScanner? ScanError == nil`)
+	require.Nil(t, e, `TokenScanner? Perror == nil`)
 	require.NotNil(t, f, `TokenScanner? Token != nil`)
 
 	return append(act, tk)

@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"io"
 	"strings"
+
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 )
 
 // Runer wraps a bufio.Reader to provide easy reading and peeking of runes. It
@@ -67,28 +69,28 @@ func (r *Runer) NextCol() int {
 }
 
 // Peek returns the next rune in the sequence without incrementing the 'cursor'.
-func (r *Runer) Peek() (rune, bool, error) {
+func (r *Runer) Peek() (rune, bool, perror.Perror) {
 	e := r.ensureBufferInit()
 	return r.buf1, r.buf1_eof, e
 }
 
 // PeekMore returns the rune after the next rune in the sequence without
 // incrementing the 'cursor'.
-func (r *Runer) PeekMore() (rune, bool, error) {
+func (r *Runer) PeekMore() (rune, bool, perror.Perror) {
 	e := r.ensureBufferInit()
 	return r.buf2, r.buf2_eof, e
 }
 
 // PeekBoth returns the next rune and the rune after the next rune in the
 // sequence without incrementing the 'cursor'.
-func (r *Runer) PeekBoth() (rune, rune, bool, error) {
+func (r *Runer) PeekBoth() (rune, rune, bool, perror.Perror) {
 	e := r.ensureBufferInit()
 	return r.buf1, r.buf2, r.buf1_eof, e
 }
 
 // ensureBufferInit checks if the buffer has been initialised, if it hasn't it
 // initialises it.
-func (r *Runer) ensureBufferInit() error {
+func (r *Runer) ensureBufferInit() perror.Perror {
 	if r.buf1 == -1 || r.buf2 == -1 {
 		return r.buffer()
 	}
@@ -97,12 +99,12 @@ func (r *Runer) ensureBufferInit() error {
 
 // buffer reads a rune from the reader and places the it in the buffer along
 // with the buffer EOF flag.
-func (r *Runer) buffer() error {
+func (r *Runer) buffer() perror.Perror {
 	if r.eof {
 		return nil
 	}
 
-	var e error
+	var e perror.Perror
 	r.buf1, r.buf1_eof = r.buf2, r.buf2_eof
 	r.buf2, r.buf2_eof, e = r.read()
 	if e != nil {
@@ -118,19 +120,23 @@ func (r *Runer) buffer() error {
 
 // readRune reads the next rune in the sequence returning the rune followed by
 // an EOF flag.
-func (r *Runer) read() (rune, bool, error) {
+func (r *Runer) read() (rune, bool, perror.Perror) {
 	ru, _, e := r.reader.ReadRune()
 
 	if e == io.EOF {
 		return 0, true, nil
 	}
 
-	return ru, false, e
+	if e != nil {
+		return 0, false, perror.NewByError(r.Line(), r.NextCol(), e)
+	}
+
+	return ru, false, nil
 }
 
 // Read reads the next rune from the reader followed by a flag indicating
 // the end of the file.
-func (r *Runer) Read() (rune, bool, error) {
+func (r *Runer) Read() (rune, bool, perror.Perror) {
 	if r.eof {
 		return 0, true, nil
 	}
@@ -150,7 +156,7 @@ func (r *Runer) Read() (rune, bool, error) {
 
 // next returns the rune in the buffer and then reads the next rune from the
 // reader into the buffer.
-func (r *Runer) next() (rune, bool, error) {
+func (r *Runer) next() (rune, bool, perror.Perror) {
 	var ru rune
 	ru, r.eof = r.buf1, r.buf1_eof
 	r.col++
@@ -164,19 +170,19 @@ func (r *Runer) next() (rune, bool, error) {
 
 // Skip skips the next rune in the reader. True is returned if the end of the
 // file has been reached.
-func (r *Runer) Skip() (bool, error) {
+func (r *Runer) Skip() (bool, perror.Perror) {
 	_, eof, e := r.Read()
 	return eof, e
 }
 
 // predicate returns true if the first rune passed is part of the token being
 // scanned. The second rune iss the one after the next.
-type predicate func(rune, rune) (bool, error)
+type predicate func(rune, rune) bool
 
 // ReadIf reads the next rune only if the predicate function returns true. If
 // the second return value is true then the a value was succesfully read from
 // the reader and the predicate function evaluated to true.
-func (r *Runer) ReadIf(f predicate) (rune, bool, error) {
+func (r *Runer) ReadIf(f predicate) (rune, bool, perror.Perror) {
 	ru1, eof1, e := r.Peek()
 	if eof1 || e != nil {
 		return 0, !eof1, e
@@ -187,12 +193,7 @@ func (r *Runer) ReadIf(f predicate) (rune, bool, error) {
 		return 0, !eof1, e
 	}
 
-	want, e := f(ru1, ru2)
-	if e != nil {
-		return 0, false, e
-	}
-
-	if want {
+	if f(ru1, ru2) {
 		if _, e = r.Skip(); e != nil {
 			return 0, false, e
 		}
@@ -204,7 +205,7 @@ func (r *Runer) ReadIf(f predicate) (rune, bool, error) {
 
 // ReadWhile reads runes until the predicate returns false. The runes are
 // returned as a string.
-func (r *Runer) ReadWhile(f predicate) (string, error) {
+func (r *Runer) ReadWhile(f predicate) (string, perror.Perror) {
 	sb := strings.Builder{}
 
 	for ru, read, e := r.ReadIf(f); read; ru, read, e = r.ReadIf(f) {

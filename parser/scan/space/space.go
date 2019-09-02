@@ -3,24 +3,24 @@ package space
 import (
 	"unicode"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // ScanSpace scans space or newline runes into a space or newline Token.
-func ScanSpace(r *runer.Runer) (token.Token, err.ScanError) {
+func ScanSpace(r *runer.Runer) (token.Token, perror.Perror) {
 	start := r.NextCol()
 
-	isSpace := func(ru1, ru2 rune) (bool, error) {
+	isSpace := func(ru1, ru2 rune) bool {
 		isNewline := ru1 == '\n' || (ru1 == '\r' && ru2 == '\n')
-		return !isNewline && unicode.IsSpace(ru1), nil
+		return !isNewline && unicode.IsSpace(ru1)
 	}
 
 	s, e := r.ReadWhile(isSpace)
 	if e != nil {
-		return nil, err.NewByRuner(r, e)
+		return nil, e
 	}
 
 	if len(s) > 0 {
@@ -31,16 +31,16 @@ func ScanSpace(r *runer.Runer) (token.Token, err.ScanError) {
 }
 
 // scanNewline scans a newline symbol set, i.e. `\n` or `\r\n`.
-func scanNewline(r *runer.Runer, start int) (token.Token, err.ScanError) {
+func scanNewline(r *runer.Runer, start int) (token.Token, perror.Perror) {
 	ru1, _, e := r.Read()
 	if e != nil {
-		return nil, err.NewByRuner(r, e)
+		return nil, e
 	}
 
 	if ru1 == '\r' {
 		ru2, _, e := r.Read()
 		if e != nil {
-			return nil, err.NewByRuner(r, e)
+			return nil, e
 		}
 
 		return newlineToken(r, start, string(ru1)+string(ru2)), nil

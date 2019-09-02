@@ -3,7 +3,7 @@ package number
 import (
 	"unicode"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
@@ -11,12 +11,12 @@ import (
 
 // ScanNumber scans symbols that start with a unicode category Nd rune returning
 // a literal number token.
-func ScanNumber(r *runer.Runer) (token.Token, err.ScanError) {
+func ScanNumber(r *runer.Runer) (token.Token, perror.Perror) {
 	start := r.NextCol()
 
 	whole, e := r.ReadWhile(isDigit)
 	if e != nil {
-		return nil, err.NewByRuner(r, e)
+		return nil, e
 	}
 
 	frac, sce := scanFrac(r)
@@ -30,12 +30,12 @@ func ScanNumber(r *runer.Runer) (token.Token, err.ScanError) {
 
 // isDigit returns true if the input rune is a digit. This function implements
 // the runer.predicate interface.
-func isDigit(ru1, _ rune) (bool, error) {
-	return unicode.IsDigit(ru1), nil
+func isDigit(ru1, _ rune) bool {
+	return unicode.IsDigit(ru1)
 }
 
 // scanFrac scans the delimiter and fractional part of a number.
-func scanFrac(r *runer.Runer) (string, err.ScanError) {
+func scanFrac(r *runer.Runer) (string, perror.Perror) {
 	delim, is, sce := scanFracDelim(r)
 	if sce != nil {
 		return ``, sce
@@ -54,14 +54,14 @@ func scanFrac(r *runer.Runer) (string, err.ScanError) {
 
 // scanFracDelim scans the delimiter between the whole part and fractional part
 // of a floating point number. False is returned if no delimiter is present.
-func scanFracDelim(r *runer.Runer) (string, bool, err.ScanError) {
+func scanFracDelim(r *runer.Runer) (string, bool, perror.Perror) {
 
-	isDelim := func(ru, _ rune) (bool, error) {
-		return ru == '.', nil
+	isDelim := func(ru, _ rune) bool {
+		return ru == '.'
 	}
 
 	if ru, is, e := r.ReadIf(isDelim); e != nil {
-		return ``, false, err.NewByRuner(r, e)
+		return ``, false, e
 	} else if is {
 		return string(ru), true, nil
 	}
@@ -70,10 +70,10 @@ func scanFracDelim(r *runer.Runer) (string, bool, err.ScanError) {
 }
 
 // scanFracInt scans the fractional part of a number.
-func scanFracInt(r *runer.Runer) (string, err.ScanError) {
+func scanFracInt(r *runer.Runer) (string, perror.Perror) {
 	switch frac, e := r.ReadWhile(isDigit); {
 	case e != nil:
-		return ``, err.NewByRuner(r, e)
+		return ``, e
 	case frac == ``:
 		return ``, badFractionalToken(r)
 	default:
@@ -82,8 +82,8 @@ func scanFracInt(r *runer.Runer) (string, err.ScanError) {
 }
 
 // badFractionalToken creates a new scan error for invalid fractional syntax.
-func badFractionalToken(r *runer.Runer) err.ScanError {
-	return err.New(
+func badFractionalToken(r *runer.Runer) perror.Perror {
+	return perror.New(
 		r.Line(),
 		r.NextCol(),
 		[]string{

@@ -3,19 +3,19 @@ package number
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/utils"
 )
 
-func doTestScanNumber(t *testing.T, in string, exp token.Token, expErr err.ScanError) bool {
+func doTestScanNumber(t *testing.T, in string, exp token.Token, expErr perror.Perror) bool {
 	r := runer.NewByStr(in)
 	act, e := ScanNumber(r)
 	return utils.LogicalConjunction(
 		scantok.AssertEqual(t, exp, act),
-		err.AssertEqual(t, expErr, e),
+		perror.AssertEqual(t, expErr, e),
 	)
 }
 
@@ -23,8 +23,8 @@ func dummyNumToken(end int, text string) token.Token {
 	return scantok.New(text, 0, 0, end, token.TT_NUMBER)
 }
 
-func dummyNumErr(i int) err.ScanError {
-	return err.New(0, i, []string{`:)`})
+func dummyNumErr(i int) perror.Perror {
+	return perror.New(0, i, []string{`:)`})
 }
 
 func TestScanNumber_1(t *testing.T) {

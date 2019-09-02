@@ -3,25 +3,25 @@ package word
 import (
 	"unicode"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // ScanWord scans word tokens returning a keyword or identifier.
-func ScanWord(r *runer.Runer) (token.Token, err.ScanError) {
+func ScanWord(r *runer.Runer) (token.Token, perror.Perror) {
 	start := r.NextCol()
 
-	isWordLetter := func(ru, _ rune) (bool, error) {
+	isWordLetter := func(ru, _ rune) bool {
 		ok := unicode.IsLetter(ru) || unicode.IsDigit(ru) || ru == '_'
-		return ok, nil
+		return ok
 	}
 
 	w, e := r.ReadWhile(isWordLetter)
 
 	if e != nil {
-		return nil, err.NewByRuner(r, e)
+		return nil, e
 	}
 
 	return wordToken(r, start, w), nil

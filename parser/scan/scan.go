@@ -3,7 +3,7 @@ package scan
 import (
 	"unicode"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/number"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/shebang"
@@ -16,7 +16,7 @@ import (
 // TokenScanner represents a function that scans a Token from a Runer. The
 // scanning employs longest match against the productions relevant to the
 // specific Kind of Token.
-type TokenScanner func(*runer.Runer) (token.Token, err.ScanError)
+type TokenScanner func(*runer.Runer) (token.Token, perror.Perror)
 
 // ShebangScanner returns the scanner that will scan all remaning runes in the
 // current line
@@ -25,10 +25,10 @@ func ShebangScanner() TokenScanner {
 }
 
 // Next returns a suitable TokenScanner function that will scan the next Token.
-func Next(r *runer.Runer) (TokenScanner, err.ScanError) {
+func Next(r *runer.Runer) (TokenScanner, perror.Perror) {
 	switch ru, eof, e := r.Peek(); {
 	case e != nil:
-		return nil, err.NewByRuner(r, e)
+		return nil, e
 	case eof:
 		return nil, nil
 	case unicode.IsSpace(ru):

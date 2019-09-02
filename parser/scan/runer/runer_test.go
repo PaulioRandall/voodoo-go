@@ -3,12 +3,13 @@ package runer
 import (
 	"testing"
 
+	"github.com/PaulioRandall/voodoo-go/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func assertRuner(t *testing.T, exp *Runer, act *Runer) bool {
-	return logicalConjunction(
+	return utils.LogicalConjunction(
 		assert.Equal(t, exp.line, act.line, `Runer.line`),
 		assert.Equal(t, exp.col, act.col, `Runer.col`),
 		assert.Equal(t, exp.newline, act.newline, `Runer.newline`),
@@ -20,15 +21,6 @@ func assertRuner(t *testing.T, exp *Runer, act *Runer) bool {
 	)
 }
 
-func logicalConjunction(operands ...bool) bool {
-	for _, b := range operands {
-		if b == false {
-			return false
-		}
-	}
-	return true
-}
-
 func readReqNoErr(t *testing.T, r *Runer) (rune, bool) {
 	ru, eof, err := r.Read()
 	require.Nil(t, err, `Unexpected Runer error`)
@@ -38,7 +30,7 @@ func readReqNoErr(t *testing.T, r *Runer) (rune, bool) {
 func doTestRead(t *testing.T, expRu rune, expEOF bool, exp *Runer, r *Runer) bool {
 	ru, eof := readReqNoErr(t, r)
 
-	return logicalConjunction(
+	return utils.LogicalConjunction(
 		assert.Equal(t, expRu, ru, `Runer.Read(): Unexpected rune`),
 		assert.Equal(t, expEOF, eof, `Runer.Read(): Unexpected EOF`),
 		assertRuner(t, exp, r),
@@ -70,9 +62,8 @@ func TestRuner_Read(t *testing.T) {
 func TestRuner_ReadIf(t *testing.T) {
 	r := NewByStr(`123`)
 
-	f := func(ru1 rune, ru2 rune) (bool, error) {
-		a := ru1 > '0' && ru2 != 0
-		return a, nil
+	f := func(ru1 rune, ru2 rune) bool {
+		return ru1 > '0' && ru2 != 0
 	}
 
 	ru, read, e := r.ReadIf(f)
@@ -94,8 +85,8 @@ func TestRuner_ReadIf(t *testing.T) {
 func TestRuner_ReadWhile(t *testing.T) {
 	r := NewByStr(`abc 123`)
 
-	f := func(ru, _ rune) (bool, error) {
-		return ru != ' ', nil
+	f := func(ru, _ rune) bool {
+		return ru != ' '
 	}
 
 	s, e := r.ReadWhile(f)

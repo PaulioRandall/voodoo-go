@@ -1,9 +1,5 @@
 package perror
 
-import (
-	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-)
-
 // Perror represents an error found while parsing.
 type Perror interface {
 
@@ -48,11 +44,11 @@ func (e perror) Errors() []string {
 	return e.e
 }
 
-// NewByRuner creates a new Perror from an error returned by a Runer.
-func NewByRuner(r *runer.Runer, e error) Perror {
+// NewByError creates a new Perror from an error.
+func NewByError(l, i int, e error) Perror {
 	return perror{
-		l: r.Line(),
-		i: r.NextCol(),
+		l: l,
+		i: i,
 		e: []string{e.Error()},
 	}
 }

@@ -1,23 +1,23 @@
 package symbols
 
 import (
-	"github.com/PaulioRandall/voodoo-go/parser/scan/err"
+	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 // scanSymbol scans one or two runes returning a non-alphanumeric symbol set.
-func ScanSymbol(r *runer.Runer) (token.Token, err.ScanError) {
+func ScanSymbol(r *runer.Runer) (token.Token, perror.Perror) {
 
 	ru1, _, e := r.Peek()
 	if e != nil {
-		return nil, err.NewByRuner(r, e)
+		return nil, e
 	}
 
 	ru2, _, e := r.PeekMore()
 	if e != nil {
-		return nil, err.NewByRuner(r, e)
+		return nil, e
 	}
 
 	switch {
@@ -41,7 +41,7 @@ func ScanSymbol(r *runer.Runer) (token.Token, err.ScanError) {
 }
 
 // symbolToken creates the new token when a symbol match is found.
-func symbolToken(r *runer.Runer, n int, k token.Kind) (token.Token, err.ScanError) {
+func symbolToken(r *runer.Runer, n int, k token.Kind) (token.Token, perror.Perror) {
 
 	text, size, e := runesToText(r, n)
 	if e != nil {
@@ -60,17 +60,17 @@ func symbolToken(r *runer.Runer, n int, k token.Kind) (token.Token, err.ScanErro
 }
 
 // runesToText converts the specified number of runes to a string.
-func runesToText(r *runer.Runer, n int) (string, int, err.ScanError) {
+func runesToText(r *runer.Runer, n int) (string, int, perror.Perror) {
 
 	ru1, _, e := r.Read()
 	if e != nil {
-		return ``, 0, err.NewByRuner(r, e)
+		return ``, 0, e
 	}
 
 	if n == 2 {
 		ru2, _, e := r.Read()
 		if e != nil {
-			return ``, 0, err.NewByRuner(r, e)
+			return ``, 0, e
 		}
 
 		return string(ru1) + string(ru2), 2, nil
@@ -80,8 +80,8 @@ func runesToText(r *runer.Runer, n int) (string, int, err.ScanError) {
 }
 
 // unknownSymbol creates a ScanError for when a symbol is not recognised.
-func unknownSymbol(r *runer.Runer, ru rune) err.ScanError {
-	return err.New(
+func unknownSymbol(r *runer.Runer, ru rune) perror.Perror {
+	return perror.New(
 		r.Line(),
 		r.NextCol(),
 		[]string{
