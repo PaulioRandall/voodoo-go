@@ -59,6 +59,18 @@ func (d Dummy) Text() string {
 	return d.T
 }
 
+func (d Dummy) Line() int {
+	return 0
+}
+
+func (d Dummy) Start() int {
+	return 0
+}
+
+func (d Dummy) End() int {
+	return 0
+}
+
 // Kind satisfies the Token interface.
 func (d Dummy) Kind() Kind {
 	return d.K

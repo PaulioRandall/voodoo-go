@@ -42,6 +42,21 @@ func (tk scanTok) Text() string {
 	return tk.text
 }
 
+// Line satisfies the Token interface.
+func (tk scanTok) Line() int {
+	return tk.line
+}
+
+// Start satisfies the Token interface.
+func (tk scanTok) Start() int {
+	return tk.start
+}
+
+// End satisfies the Token interface.
+func (tk scanTok) End() int {
+	return tk.end
+}
+
 // Kind satisfies the Token interface.
 func (tk scanTok) Kind() token.Kind {
 	return tk.kind

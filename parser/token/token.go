@@ -9,6 +9,12 @@ type Token interface {
 	// may choose to use as they please.
 	Text() string
 
+	Line() int
+
+	Start() int
+
+	End() int
+
 	// Kind returns the type of token.
 	Kind() Kind
 
