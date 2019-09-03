@@ -13,14 +13,14 @@ import (
 // operation represents an infix expression.
 type operation struct {
 	t  token.Token
-	nu expr.Expr   // numerator
-	de token.Token // denominator
+	nu expr.Expr // numerator
+	de expr.Expr // denominator
 }
 
 // New returns a new assignment expression.
 func New(t token.Token, nu, de expr.Expr) expr.Expr {
 	return operation{
-		t:   t,
+		t:  t,
 		nu: nu,
 		de: de,
 	}
