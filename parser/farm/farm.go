@@ -3,7 +3,6 @@ package farm
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -107,5 +106,5 @@ func (ev *Farm) strim(in token.Token) token.Token {
 // field converted to lowercase.
 func toLower(tk token.Token) token.Token {
 	s := strings.ToLower(tk.Text())
-	return scantok.UpdateText(tk, s)
+	return token.UpdateText(tk, s)
 }

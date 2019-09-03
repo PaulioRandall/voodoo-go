@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/stretchr/testify/require"
 )
@@ -13,11 +12,11 @@ func doTestScanWord(t *testing.T, in string, exp token.Token) {
 	r := runer.NewByStr(in)
 	act, e := ScanWord(r)
 	require.Nil(t, e, `Unexpected ScanError`)
-	scantok.AssertEqual(t, exp, act)
+	token.AssertEqual(t, exp, act)
 }
 
 func wordDummy(t string, e int, k token.Kind) token.Token {
-	return scantok.New(t, 0, 0, e, k)
+	return token.New(t, 0, 0, e, k)
 }
 
 func TestScanWord_1(t *testing.T) {

@@ -5,7 +5,6 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -96,7 +95,7 @@ func badFractionalToken(r *runer.Runer) perror.Perror {
 
 // numberToken creates a new number token.
 func numberToken(r *runer.Runer, start int, text string) token.Token {
-	return scantok.New(
+	return token.New(
 		text,
 		r.Line(),
 		start,

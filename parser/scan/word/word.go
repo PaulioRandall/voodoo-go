@@ -5,7 +5,6 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -29,7 +28,7 @@ func ScanWord(r *runer.Runer) (token.Token, perror.Perror) {
 
 // wordToken returns a new word Token.
 func wordToken(r *runer.Runer, start int, w string) token.Token {
-	return scantok.New(
+	return token.New(
 		w,
 		r.Line(),
 		start,

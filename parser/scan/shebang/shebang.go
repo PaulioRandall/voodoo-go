@@ -3,7 +3,6 @@ package shebang
 import (
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -24,7 +23,7 @@ func ScanShebang(r *runer.Runer) (token.Token, perror.Perror) {
 
 // newShebangToken returns a new SHEBANG token.
 func newShebangToken(r *runer.Runer, text string, start int) token.Token {
-	return scantok.New(
+	return token.New(
 		text,
 		r.Line(),
 		start,

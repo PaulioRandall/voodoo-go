@@ -5,7 +5,6 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/utils"
 )
@@ -14,13 +13,13 @@ func doTestScanNumber(t *testing.T, in string, exp token.Token, expErr perror.Pe
 	r := runer.NewByStr(in)
 	act, e := ScanNumber(r)
 	return utils.LogicalConjunction(
-		scantok.AssertEqual(t, exp, act),
+		token.AssertEqual(t, exp, act),
 		perror.AssertEqual(t, expErr, e),
 	)
 }
 
 func dummyNumToken(end int, text string) token.Token {
-	return scantok.New(text, 0, 0, end, token.TT_NUMBER)
+	return token.New(text, 0, 0, end, token.TT_NUMBER)
 }
 
 func dummyNumErr(i int) perror.Perror {

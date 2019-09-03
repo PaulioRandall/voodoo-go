@@ -3,7 +3,6 @@ package symbols
 import (
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -48,7 +47,7 @@ func symbolToken(r *runer.Runer, n int, k token.Kind) (token.Token, perror.Perro
 		return nil, e
 	}
 
-	tk := scantok.New(
+	tk := token.New(
 		text,
 		r.Line(),
 		r.NextCol()-size,

@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/stretchr/testify/require"
 )
@@ -12,7 +11,7 @@ import (
 func TestScanShebang_1(t *testing.T) {
 	in := "#!/bin/voodoo\n\nx:1"
 
-	exp := scantok.New(
+	exp := token.New(
 		"#!/bin/voodoo",
 		0,
 		0,
@@ -24,5 +23,5 @@ func TestScanShebang_1(t *testing.T) {
 	act, err := ScanShebang(r)
 
 	require.Nil(t, err)
-	scantok.AssertEqual(t, exp, act)
+	token.AssertEqual(t, exp, act)
 }

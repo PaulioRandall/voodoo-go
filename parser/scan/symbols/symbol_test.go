@@ -5,19 +5,18 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
 func doTestScanSymbol(t *testing.T, in string, exp token.Token, expErr perror.Perror) {
 	r := runer.NewByStr(in)
 	tk, e := ScanSymbol(r)
-	scantok.AssertEqual(t, exp, tk)
+	token.AssertEqual(t, exp, tk)
 	perror.AssertEqual(t, expErr, e)
 }
 
 func dummySymToken(end int, text string, k token.Kind) token.Token {
-	return scantok.New(text, 0, 0, end, k)
+	return token.New(text, 0, 0, end, k)
 }
 
 func TestScanSymbol_0(t *testing.T) {

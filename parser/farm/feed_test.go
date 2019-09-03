@@ -3,7 +3,6 @@ package farm
 import (
 	"testing"
 
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 
 	"github.com/stretchr/testify/assert"
@@ -41,22 +40,22 @@ func doTestFarm_Feed(
 func TestFarm_Feed_1(t *testing.T) {
 	f := New()
 
-	tk := scantok.New(`x`, 0, 0, 1, token.TT_ID)
+	tk := token.New(`x`, 0, 0, 1, token.TT_ID)
 	doTestFarm_Feed(t, tk, true, false, f, false, false)
 
-	tk = scantok.New(`:`, 0, 1, 2, token.TT_ASSIGN)
+	tk = token.New(`:`, 0, 1, 2, token.TT_ASSIGN)
 	doTestFarm_Feed(t, tk, true, false, f, false, false)
 
-	tk = scantok.New(` `, 0, 2, 3, token.TT_SPACE)
+	tk = token.New(` `, 0, 2, 3, token.TT_SPACE)
 	doTestFarm_Feed(t, tk, false, false, f, false, false)
 
-	tk = scantok.New(`1`, 0, 3, 4, token.TT_NUMBER)
+	tk = token.New(`1`, 0, 3, 4, token.TT_NUMBER)
 	doTestFarm_Feed(t, tk, true, false, f, false, false)
 
-	tk = scantok.New("\n", 0, 4, 5, token.TT_NEWLINE)
+	tk = token.New("\n", 0, 4, 5, token.TT_NEWLINE)
 	doTestFarm_Feed(t, tk, false, false, f, false, true)
 
-	tk = scantok.New("y", 0, 0, 1, token.TT_ID)
+	tk = token.New("y", 0, 0, 1, token.TT_ID)
 	assert.Panics(t, func() {
 		doTestFarm_Feed(t, tk, false, false, f, false, false)
 	})

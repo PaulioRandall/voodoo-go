@@ -13,17 +13,19 @@ func assertFarm(t *testing.T, multiline, mature bool, exp, act *Farm) {
 	token.AssertSliceEqual(t, exp.tokens, act.tokens)
 }
 
+func dummy(t string, k token.Kind) token.Token {
+	return token.New(t, 0, 0, 0, k)
+}
+
 func TestFarm_Harvest_1(t *testing.T) {
 	tks := []token.Token{
 		// x <- 1
-		token.Dummy{`x`, token.TT_ID},
-		token.Dummy{`<-`, token.TT_ASSIGN},
-		token.Dummy{`1`, token.TT_NUMBER},
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`1`, token.TT_NUMBER),
 	}
 
-	exp := &Farm{
-		tokens: []token.Token{},
-	}
+	exp := &Farm{}
 
 	act := &Farm{
 		mature: true,
@@ -38,9 +40,9 @@ func TestFarm_Harvest_1(t *testing.T) {
 func TestFarm_FinalHarvest_1(t *testing.T) {
 	tks := []token.Token{
 		// x <- 1
-		token.Dummy{`x`, token.TT_ID},
-		token.Dummy{`<-`, token.TT_ASSIGN},
-		token.Dummy{`1`, token.TT_NUMBER},
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`1`, token.TT_NUMBER),
 	}
 
 	exp := &Farm{}

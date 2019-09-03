@@ -5,7 +5,6 @@ import (
 
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
-	"github.com/PaulioRandall/voodoo-go/parser/scantok"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -51,7 +50,7 @@ func scanNewline(r *runer.Runer, start int) (token.Token, perror.Perror) {
 
 // spaceToken returns a new space token.
 func spaceToken(r *runer.Runer, start int, s string) token.Token {
-	return scantok.New(
+	return token.New(
 		s,
 		r.Line(),
 		start,
@@ -62,7 +61,7 @@ func spaceToken(r *runer.Runer, start int, s string) token.Token {
 
 // newlineToken returns a new newline token.
 func newlineToken(r *runer.Runer, start int, s string) token.Token {
-	return scantok.New(
+	return token.New(
 		s,
 		r.Line()-1,
 		start,
