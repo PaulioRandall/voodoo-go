@@ -19,7 +19,7 @@ import (
 type TokenScanner func(*runer.Runer) (token.Token, perror.Perror)
 
 // ShebangScanner returns the scanner that will scan all remaning runes in the
-// current line
+// current line.
 func ShebangScanner() TokenScanner {
 	return shebang.ScanShebang
 }

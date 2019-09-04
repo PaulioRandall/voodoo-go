@@ -18,7 +18,17 @@ func ScanShebang(r *runer.Runer) (token.Token, perror.Perror) {
 		return nil, e
 	}
 
-	return newShebangToken(r, s, start), nil
+	tk, e := newShebangToken(r, s, start), nil
+	if e != nil {
+		return nil, e
+	}
+
+	_, e = r.Skip()
+	if e != nil {
+		return nil, e
+	}
+
+	return tk, nil
 }
 
 // newShebangToken returns a new SHEBANG token.

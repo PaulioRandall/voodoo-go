@@ -41,7 +41,6 @@ func TestNext_1(t *testing.T) {
 
 	exp := []token.Token{
 		token.New(`#!/bin/bash`, 0, 0, 11, token.TT_SHEBANG),
-		token.New("\n", 0, 11, 12, token.TT_NEWLINE),
 	}
 
 	doTestNext(t, true, r, exp)

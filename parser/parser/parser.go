@@ -23,24 +23,46 @@ func New() *Parser {
 	}
 }
 
+// reset resets the parsers index so a new line statement can be parsed.
+func (p *Parser) reset() {
+	p.i = 0
+}
+
 // Parse parses the next token by storing it and based on the token type,
 // returning an expression tree. If nil is returned then more tokens are
 // required before parsing can begin.
 func (p *Parser) Parse(tk token.Token) (expr.Expr, perror.Perror) {
+	if tk == nil {
+		return nil, perror.New(
+			p.t[0].Line(),
+			p.t[0].Start(),
+			[]string{
+				`Nil passed to parser`,
+			},
+		)
+	}
+
 	if !analyse(p, tk) {
 		return nil, nil
 	}
 
 	p.size, p.i = p.i, 0
+	defer p.reset()
 	return parse(p)
 }
 
 // analyse stores the token then checks to see if parsing can begin returning
 // true if so.
 func analyse(p *Parser, tk token.Token) bool {
+	k := tk.Kind()
+
+	if p.i == 0 && k == token.TT_NEWLINE {
+		return false
+	}
+
 	p.t[p.i] = tk
 	p.i++
-	return tk.Kind() == token.TT_NEWLINE
+	return k == token.TT_NEWLINE
 }
 
 // parse kicks off the parsing process.
@@ -58,7 +80,7 @@ func parse(p *Parser) (expr.Expr, perror.Perror) {
 func noMatch(p *Parser) perror.Perror {
 	return perror.New(
 		p.t[0].Line(),
-		0,
+		p.t[0].Start(),
 		[]string{
 			`No matching pattern found for this statement`,
 		},

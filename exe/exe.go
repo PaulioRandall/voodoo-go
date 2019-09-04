@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/PaulioRandall/voodoo-go/parser/farm"
+	"github.com/PaulioRandall/voodoo-go/parser/expr"
+	"github.com/PaulioRandall/voodoo-go/parser/parser"
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/scan"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
+	"github.com/PaulioRandall/voodoo-go/parser/strim"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
@@ -21,17 +23,14 @@ func Execute(file string, scArgs []string) int {
 		return 1
 	}
 
-	if scanAndPrintShebang(r, file) {
+	if e := scanAndPrintShebang(r, file); e != nil {
+		perror.PrintError(file, e)
 		return 1
 	}
 
-	for tks, exit := scanNext(r, file); !exit; {
-		if tks == nil {
-			return 1
-		}
-
-		printStatement(tks)
-		tks, exit = scanNext(r, file)
+	if e := scanExpr(r); e != nil {
+		perror.PrintError(file, e)
+		return 1
 	}
 
 	return 0
@@ -49,61 +48,51 @@ func newRuner(file string) (*runer.Runer, error) {
 }
 
 // scanAndPrintShebang scans the shebang line and prints it.
-func scanAndPrintShebang(r *runer.Runer, file string) bool {
+func scanAndPrintShebang(r *runer.Runer, file string) perror.Perror {
 	s, e := scan.ShebangScanner()(r)
 	if e != nil {
-		perror.PrintError(file, e)
-		return true
+		return e
 	}
 
 	fmt.Println(`[` + token.KindName(s.Kind()) + `]`)
-	return false
+	return nil
 }
 
-// scanNextStat scans the next statement from the scanner passing each token
-// through the farm in the process.
-func scanNext(r *runer.Runer, file string) (_ []token.Token, last bool) {
-	frm := farm.New()
+// scanExpr scans, strims, parses, and prints the tokens into expression trees.
+func scanExpr(r *runer.Runer) perror.Perror {
+	p := parser.New()
 
 	for f, e := scan.Next(r); f != nil; f, e = scan.Next(r) {
 		if e != nil {
-			perror.PrintError(file, e)
-			return nil, false
+			return e
 		}
 
 		tk, e := f(r)
 		if e != nil {
-			perror.PrintError(file, e)
-			return nil, false
+			return e
 		}
 
-		ready, er := frm.Feed(tk)
-		if er != nil {
-			print(er)
-			return nil, false
+		tk = strim.Strim(tk)
+		if tk == nil {
+			continue
 		}
 
-		if ready {
-			return frm.Harvest(), false
+		ex, e := p.Parse(tk)
+		if e != nil {
+			return e
+		}
+
+		if ex != nil {
+			printExprTree(ex)
 		}
 	}
 
-	return frm.FinalHarvest(), true
+	return nil
 }
 
-// printStatement prints a statmant.
-func printStatement(tks []token.Token) {
+// printExprTree prints an expression tree.
+func printExprTree(ex expr.Expr) {
 	fmt.Print(`[`)
-
-	last := len(tks) - 1
-	for i, tk := range tks {
-		s := token.KindName(tk.Kind())
-		fmt.Print(s)
-
-		if i < last {
-			fmt.Print(`, `)
-		}
-	}
-
+	fmt.Print(ex.String())
 	fmt.Println("]")
 }
