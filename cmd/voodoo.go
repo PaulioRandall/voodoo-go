@@ -15,7 +15,7 @@ import (
 func main() {
 	stopWatch := utils.StopWatch{}
 	stopWatch.Start()
-	fmt.Printf("Started\t%v\n\n", stopWatch.Started.UTC())
+	fmt.Printf("Started\t\t%v\n\n", stopWatch.Started.UTC())
 
 	// Don't abstract the build workflows!
 	// More readable this way.
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	stopWatch.Stop()
-	fmt.Printf("\nDone\t")
+	fmt.Printf("\nFinished\t")
 	stopWatch.PrintElapsed(time.Microsecond)
 
 	os.Exit(0)
