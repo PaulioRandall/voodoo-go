@@ -32,9 +32,12 @@ func (a assign) Token() token.Token {
 }
 
 // Exe satisfies the Expr interface.
-func (a assign) Exe(ctx.Context) (value.Value, perror.Perror) {
-	// TODO
-	panic(`TODO: assign.Exe(ctx.Context)`)
+func (a assign) Exe(c ctx.Context) (value.Value, perror.Perror) {
+	v, e := a.src[0].Exe(c)
+	if e != nil {
+		return nil, e
+	}
+	c.Vars[a.dst[0].Text()] = v
 	return nil, nil
 }
 

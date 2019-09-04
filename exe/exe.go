@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/PaulioRandall/voodoo-go/parser/ctx"
 	"github.com/PaulioRandall/voodoo-go/parser/expr"
 	"github.com/PaulioRandall/voodoo-go/parser/parser"
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
@@ -28,10 +29,13 @@ func Execute(file string, scArgs []string) int {
 		return 1
 	}
 
-	if e := scanExpr(r); e != nil {
+	c := ctx.New(nil)
+	if e := scanExpr(r, c); e != nil {
 		perror.PrintError(file, e)
 		return 1
 	}
+
+	fmt.Print("\n" + c.String())
 
 	return 0
 }
@@ -59,7 +63,7 @@ func scanAndPrintShebang(r *runer.Runer, file string) perror.Perror {
 }
 
 // scanExpr scans, strims, parses, and prints the tokens into expression trees.
-func scanExpr(r *runer.Runer) perror.Perror {
+func scanExpr(r *runer.Runer, c ctx.Context) perror.Perror {
 	p := parser.New()
 
 	for f, e := scan.Next(r); f != nil; f, e = scan.Next(r) {
@@ -84,6 +88,10 @@ func scanExpr(r *runer.Runer) perror.Perror {
 
 		if ex != nil {
 			printExprTree(ex)
+
+			if _, e = ex.Exe(c); e != nil {
+				return e
+			}
 		}
 	}
 

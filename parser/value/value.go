@@ -29,5 +29,5 @@ func (v num_value) Num() (float64, bool) {
 
 // String satisfies the Value interface.
 func (v num_value) String() string {
-	return `Number: ` + strconv.FormatFloat(float64(v), byte('g'), -1, 64)
+	return `(Number) ` + strconv.FormatFloat(float64(v), byte('g'), -1, 64)
 }
