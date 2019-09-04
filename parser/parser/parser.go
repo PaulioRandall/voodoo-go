@@ -6,6 +6,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/token"
 )
 
+// max_tokens is the maximum number of tokens in the parsers statement buffer.
 const max_tokens = 256
 
 // Parser represents a structure used to parse tokens into expression trees.

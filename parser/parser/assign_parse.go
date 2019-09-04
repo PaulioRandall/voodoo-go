@@ -16,7 +16,9 @@ func matchAssign(p *Parser) bool {
 			}
 		} else {
 			//if tk.Kind() != token.TT_VALUE_DELIM {
-			return tk.Kind() == token.TT_ASSIGN
+			if tk.Kind() == token.TT_ASSIGN {
+				return i+1 < p.size
+			}
 			//}
 		}
 	}
@@ -61,6 +63,9 @@ func parseAssignSrc(p *Parser) ([]expr.Expr, perror.Perror) {
 		if e != nil {
 			return nil, e
 		}
+		if ex == nil {
+			break
+		}
 		src = append(src, ex)
 	}
 	return src, nil
@@ -69,6 +74,13 @@ func parseAssignSrc(p *Parser) ([]expr.Expr, perror.Perror) {
 // nextAssignSrc parses the source expressions that produce the values to
 // assign.
 func nextAssignSrc(p *Parser) (expr.Expr, perror.Perror) {
-	// NEXT
-	return nil, nil
+	switch {
+	case matchOperand(p):
+		return parseOperand(p)
+	case p.t[p.i].Kind() == token.TT_NEWLINE:
+		p.i++
+		return nil, nil
+	default:
+		return nil, noMatch(p)
+	}
 }
