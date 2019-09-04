@@ -19,4 +19,7 @@ type Expr interface {
 
 	// String returns a string representation of the expression.
 	String() string
+
+	// RuneTable returns a string tree representation of the expression.
+	RuneTable() RuneTable
 }
