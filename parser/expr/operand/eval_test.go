@@ -40,3 +40,15 @@ func TestOperand_Eval_2(t *testing.T) {
 	require.Nil(t, e)
 	assert.Equal(t, exp, act)
 }
+
+func TestOperand_Eval_3(t *testing.T) {
+	o := operand{
+		t: tok(` `, token.TT_SPACE),
+	}
+
+	c := ctx.New(nil)
+
+	act, e := o.Eval(c)
+	require.NotNil(t, e)
+	assert.Nil(t, act)
+}
