@@ -17,8 +17,8 @@ type Value interface {
 // num_value represnts a number Value.
 type num_value float64
 
-// NewNumber returns a new number value.
-func NewNumber(n float64) Value {
+// Number returns a new number value.
+func Number(n float64) Value {
 	return num_value(n)
 }
 
@@ -29,5 +29,5 @@ func (v num_value) Num() (float64, bool) {
 
 // String satisfies the Value interface.
 func (v num_value) String() string {
-	return `(Number) ` + strconv.FormatFloat(float64(v), byte('g'), -1, 64)
+	return strconv.FormatFloat(float64(v), byte('g'), -1, 64) + ` (Number)`
 }

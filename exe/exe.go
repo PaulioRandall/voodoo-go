@@ -89,7 +89,7 @@ func scanExpr(r *runer.Runer, c ctx.Context) perror.Perror {
 		if ex != nil {
 			printExprTree(ex)
 
-			if _, e = ex.Exe(c); e != nil {
+			if _, e = ex.Eval(c); e != nil {
 				return e
 			}
 		}

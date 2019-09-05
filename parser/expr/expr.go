@@ -14,8 +14,8 @@ type Expr interface {
 	// the scroll.
 	Token() token.Token
 
-	// Exe executes the expression within the given context.
-	Exe(ctx.Context) (value.Value, perror.Perror)
+	// Eval evaluates the expression within the given context.
+	Eval(ctx.Context) (value.Value, perror.Perror)
 
 	// String returns a string representation of the expression.
 	String() string

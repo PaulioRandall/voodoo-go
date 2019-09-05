@@ -31,10 +31,10 @@ func (o operation) Token() token.Token {
 	return o.t
 }
 
-// Exe satisfies the Expr interface.
-func (o operation) Exe(ctx.Context) (value.Value, perror.Perror) {
+// Eval satisfies the Expr interface.
+func (o operation) Eval(ctx.Context) (value.Value, perror.Perror) {
 	// TODO
-	panic(`TODO: operation.Exe(ctx.Context)`)
+	panic(`TODO: operation.Eval(ctx.Context)`)
 	return nil, nil
 }
 

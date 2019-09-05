@@ -3,11 +3,8 @@ package assign
 import (
 	"strings"
 
-	"github.com/PaulioRandall/voodoo-go/parser/ctx"
 	"github.com/PaulioRandall/voodoo-go/parser/expr"
-	"github.com/PaulioRandall/voodoo-go/parser/perror"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
-	"github.com/PaulioRandall/voodoo-go/parser/value"
 )
 
 // assign represents an assignment expression.
@@ -29,16 +26,6 @@ func New(t token.Token, src []expr.Expr, dst []token.Token) expr.Expr {
 // Token satisfies the Expr interface.
 func (a assign) Token() token.Token {
 	return a.t
-}
-
-// Exe satisfies the Expr interface.
-func (a assign) Exe(c ctx.Context) (value.Value, perror.Perror) {
-	v, e := a.src[0].Exe(c)
-	if e != nil {
-		return nil, e
-	}
-	c.Vars[a.dst[0].Text()] = v
-	return nil, nil
 }
 
 // String satisfies the Expr interface.
