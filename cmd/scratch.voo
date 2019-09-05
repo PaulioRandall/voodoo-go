@@ -1,0 +1,43 @@
+./voodoo run "$0" "$@"; exit "$?"
+
+x <- 1
+y, z := 2, 3
+
+a <- 1 + 2
+
+a == 3 --> b := 4
+b > 0 {
+  c <- 9
+}
+
+match {
+  x == 0 --> @Println(`:(`)
+  x == 1 --> @Println(`:)`)
+  true {
+    @Println(`:|`)
+  }
+}
+
+list := [1, 2, 3]
+list <- [
+  a,
+  b,
+  c,
+]
+
+loop i, v, m <- list {
+  @Print("$i: $v")
+  m --> @Print(`, `)
+}
+
+@cd(`~/Downloads`)
+
+code <- $() `cp abc.txt xyz.txt`
+code != 0 --> @Panic(`Copy failed!`)
+
+add := func(a, b) r {
+  r <- a + b
+}
+
+r <- add(10, 20)
+@Println("10 + 20 = $r")
