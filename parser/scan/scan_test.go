@@ -88,3 +88,17 @@ func TestNext_3(t *testing.T) {
 
 	doTestNext(t, false, r, exp)
 }
+
+func TestNext_4(t *testing.T) {
+	r := runer.NewByStr("x <- _")
+
+	exp := []token.Token{
+		token.New(`x`, 0, 0, 1, token.TT_ID),
+		token.New(` `, 0, 1, 2, token.TT_SPACE),
+		token.New(`<-`, 0, 2, 4, token.TT_ASSIGN),
+		token.New(` `, 0, 4, 5, token.TT_SPACE),
+		token.New(`_`, 0, 5, 6, token.TT_VOID),
+	}
+
+	doTestNext(t, false, r, exp)
+}

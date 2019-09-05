@@ -34,6 +34,8 @@ func ScanSymbol(r *runer.Runer) (token.Token, perror.Perror) {
 		return symbolToken(r, 1, token.TT_DIVIDE)
 	case ru1 == '%':
 		return symbolToken(r, 1, token.TT_MODULO)
+	case ru1 == '_':
+		return symbolToken(r, 1, token.TT_VOID)
 	default:
 		return nil, unknownSymbol(r, ru1)
 	}

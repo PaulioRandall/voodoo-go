@@ -12,6 +12,14 @@ func (a assign) Eval(c ctx.Context) (value.Value, perror.Perror) {
 	if e != nil {
 		return nil, e
 	}
-	c.Vars[a.dst[0].Text()] = v
+
+	t := a.dst[0].Text()
+
+	if v == nil {
+		delete(c.Vars, t)
+	} else {
+		c.Vars[t] = v
+	}
+
 	return nil, nil
 }

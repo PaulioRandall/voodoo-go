@@ -16,6 +16,8 @@ func (o operand) Eval(c ctx.Context) (value.Value, perror.Perror) {
 		return o.parseNum()
 	case token.TT_ID:
 		return o.getId(c)
+	case token.TT_VOID:
+		return nil, nil
 	default:
 		return nil, o.invalidKind()
 	}

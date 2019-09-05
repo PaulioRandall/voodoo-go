@@ -55,3 +55,27 @@ func TestParse_1(t *testing.T) {
 	doParse(t, p, in[2], nil, false)
 	doParse(t, p, in[3], exp, false)
 }
+
+func TestParse_2(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`_`, token.TT_VOID),
+		dummy("\n", token.TT_NEWLINE),
+	}
+
+	exp := assign.New(
+		in[1],
+		[]expr.Expr{
+			operand.New(in[2]),
+		},
+		[]token.Token{in[0]},
+	)
+
+	p := New()
+
+	doParse(t, p, in[0], nil, false)
+	doParse(t, p, in[1], nil, false)
+	doParse(t, p, in[2], nil, false)
+	doParse(t, p, in[3], exp, false)
+}

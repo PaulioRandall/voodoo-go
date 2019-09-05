@@ -46,8 +46,25 @@ func TestAssign_Eval_1(t *testing.T) {
 
 	c := ctx.New(nil)
 
-	expCtx := ctx.New(nil)
-	expCtx.Vars[`x`] = value.Number(1)
+	exp := ctx.New(nil)
+	exp.Vars[`x`] = value.Number(1)
 
-	doTestAssign_Eval(t, a, c, expCtx)
+	doTestAssign_Eval(t, a, c, exp)
+}
+
+func TestAssign_Eval_2(t *testing.T) {
+	a := assign{
+		t: tok(`<-`, token.TT_ASSIGN),
+		dst: []token.Token{
+			tok(`x`, token.TT_ID),
+		},
+		src: []expr.Expr{
+			dummy(`_`, token.TT_VOID, value.Value(nil)),
+		},
+	}
+
+	c := ctx.New(nil)
+	exp := ctx.New(nil)
+
+	doTestAssign_Eval(t, a, c, exp)
 }

@@ -16,6 +16,7 @@ const (
 	TT_MULTIPLY       // *
 	TT_DIVIDE         // /
 	TT_MODULO         // %
+	TT_VOID           // _
 )
 
 // KindName returns the name of the token type.
@@ -43,6 +44,8 @@ func KindName(t Kind) string {
 		return `DIVIDE`
 	case TT_MODULO:
 		return `MODULO`
+	case TT_VOID:
+		return `VOID`
 	default:
 		return `UNDEFINED`
 	}

@@ -30,3 +30,14 @@ func TestMatchAssign_2(t *testing.T) {
 	m := matchAssign(p)
 	assert.False(t, m)
 }
+
+func TestMatchAssign_3(t *testing.T) {
+	p := mock([]token.Token{
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`_`, token.TT_VOID),
+	})
+
+	m := matchAssign(p)
+	assert.True(t, m)
+}
