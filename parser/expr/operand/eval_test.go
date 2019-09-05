@@ -52,3 +52,29 @@ func TestOperand_Eval_3(t *testing.T) {
 	require.NotNil(t, e)
 	assert.Nil(t, act)
 }
+
+func TestOperand_Eval_4(t *testing.T) {
+	o := operand{
+		t: tok(`x`, token.TT_ID),
+	}
+
+	c := ctx.New(nil)
+	c.Vars[`x`] = value.Number(2)
+	exp := value.Number(2)
+
+	act, e := o.Eval(c)
+	require.Nil(t, e)
+	assert.Equal(t, exp, act)
+}
+
+func TestOperand_Eval_5(t *testing.T) {
+	o := operand{
+		t: tok(`x`, token.TT_ID),
+	}
+
+	c := ctx.New(nil)
+
+	act, e := o.Eval(c)
+	require.NotNil(t, e)
+	assert.Nil(t, act)
+}
