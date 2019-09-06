@@ -74,14 +74,14 @@ func scanFracInt(r *runer.Runer) (string, perror.Perror) {
 	case e != nil:
 		return ``, e
 	case frac == ``:
-		return ``, badFractionalToken(r)
+		return ``, badFractional(r)
 	default:
 		return frac, nil
 	}
 }
 
-// badFractionalToken creates a new scan error for invalid fractional syntax.
-func badFractionalToken(r *runer.Runer) perror.Perror {
+// badFractional creates a new scan error for invalid fractional syntax.
+func badFractional(r *runer.Runer) perror.Perror {
 	return perror.New(
 		r.Line(),
 		r.NextCol(),

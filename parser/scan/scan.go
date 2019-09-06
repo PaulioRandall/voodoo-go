@@ -8,6 +8,7 @@ import (
 	"github.com/PaulioRandall/voodoo-go/parser/scan/runer"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/shebang"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/space"
+	"github.com/PaulioRandall/voodoo-go/parser/scan/string"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/symbols"
 	"github.com/PaulioRandall/voodoo-go/parser/scan/word"
 	"github.com/PaulioRandall/voodoo-go/parser/token"
@@ -37,6 +38,8 @@ func Next(r *runer.Runer) (TokenScanner, perror.Perror) {
 		return word.ScanWord, nil
 	case unicode.IsDigit(ru):
 		return number.ScanNumber, nil
+	case ru == '`':
+		return string.ScanString, nil
 	default:
 		return symbols.ScanSymbol, nil
 	}

@@ -82,7 +82,8 @@ func noMatch(p *Parser) perror.Perror {
 		p.t[0].Line(),
 		p.t[0].Start(),
 		[]string{
-			`No matching pattern found for this statement`,
+			`Statement has no matching pattern,`,
+			`I don't know how to parse it ¯\_(--)_/¯`,
 		},
 	)
 }

@@ -12,6 +12,7 @@ const (
 	TT_ASSIGN         // <-, :=
 	TT_BOOL           // true, false
 	TT_NUMBER         // 123.456
+	TT_STRING         // `...`
 	TT_ADD            // +
 	TT_SUBTRACT       // -
 	TT_MULTIPLY       // *
@@ -38,6 +39,8 @@ func KindName(t Kind) string {
 		return `BOOL`
 	case TT_NUMBER:
 		return `NUMBER`
+	case TT_STRING:
+		return `STRING`
 	case TT_ADD:
 		return `ADD`
 	case TT_SUBTRACT:

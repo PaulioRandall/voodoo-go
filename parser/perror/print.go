@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -56,10 +57,14 @@ func printError(f *os.File, perr Perror) error {
 // addHeader adds a header to the print message.
 func addHeader(f *os.File, sb *strings.Builder) {
 	sb.WriteString("\n[SYNTAX ERROR]\n")
+	path, e := filepath.Abs(f.Name())
+	if e != nil {
+		panic(e)
+	}
 
 	sb.WriteString(`Line: `)
 	sb.WriteRune('`')
-	sb.WriteString(f.Name())
+	sb.WriteString(path)
 	sb.WriteRune('`')
 	sb.WriteRune('\n')
 
@@ -67,7 +72,7 @@ func addHeader(f *os.File, sb *strings.Builder) {
 	sb.WriteString(pad)
 	sb.WriteString(`:`)
 
-	padLen := len(f.Name()) + lenOfQuotesAndSpace
+	padLen := len(path) + lenOfQuotesAndSpace
 	pad = strings.Repeat(`-`, padLen)
 	sb.WriteString(pad)
 	sb.WriteRune('\n')
