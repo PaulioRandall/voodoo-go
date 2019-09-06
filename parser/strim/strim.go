@@ -30,11 +30,20 @@ func filter(in token.Token) bool {
 // parsing.
 func strim(in token.Token) token.Token {
 	switch in.Kind() {
-	case token.TT_ID:
+	case token.TT_ID, token.TT_BOOL:
 		return toLower(in)
+	case token.TT_STRING:
+		return stripEnds(in)
 	default:
 		return in
 	}
+}
+
+// stripEnds returns the token but with the first and last rune of the tokens
+// text removed.
+func stripEnds(tk token.Token) token.Token {
+	s := tk.Text()[1 : len(tk.Text())-1]
+	return token.UpdateText(tk, s)
 }
 
 // toLower returns the input token but with all the characters in the value

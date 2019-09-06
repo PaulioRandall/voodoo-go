@@ -41,3 +41,47 @@ func TestStrim_1(t *testing.T) {
 
 	doStrim(t, in, exp)
 }
+
+func TestStrim_2(t *testing.T) {
+	in := []token.Token{
+		// x <- TrUe
+		dummy(`x`, token.TT_ID),
+		dummy(` `, token.TT_SPACE),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(` `, token.TT_SPACE),
+		dummy(`TrUe`, token.TT_BOOL),
+		dummy("\n", token.TT_NEWLINE),
+	}
+
+	exp := []token.Token{
+		// x<-true
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`true`, token.TT_BOOL),
+		dummy("\n", token.TT_NEWLINE),
+	}
+
+	doStrim(t, in, exp)
+}
+
+func TestStrim_3(t *testing.T) {
+	in := []token.Token{
+		// x <- `aBc`
+		dummy(`x`, token.TT_ID),
+		dummy(` `, token.TT_SPACE),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(` `, token.TT_SPACE),
+		dummy("`aBc`", token.TT_STRING),
+		dummy("\n", token.TT_NEWLINE),
+	}
+
+	exp := []token.Token{
+		// x<-aBc
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`aBc`, token.TT_STRING),
+		dummy("\n", token.TT_NEWLINE),
+	}
+
+	doStrim(t, in, exp)
+}
