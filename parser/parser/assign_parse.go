@@ -10,24 +10,26 @@ import (
 // matchAssign returns true if the next part of the statement is an assignment.
 func matchAssign(p *Parser) bool {
 	for i, tk := range p.t[p.i:] {
+		k := tk.Kind()
+
 		if i%2 == 0 {
-			if tk.Kind() != token.TT_ID {
+			if k != token.TT_ID && k != token.TT_VOID {
 				return false
 			}
 		} else {
 			//if tk.Kind() != token.TT_VALUE_DELIM {
-			if tk.Kind() == token.TT_ASSIGN {
+			if k == token.TT_ASSIGN {
 				return i+1 < p.size
 			}
 			//}
 		}
 	}
+
 	return false
 }
 
 // parseAssign parses an assignment expression.
 func parseAssign(p *Parser) (expr.Expr, perror.Perror) {
-
 	dst := parseAssignDst(p)
 	t := p.t[p.i]
 	p.i++
@@ -45,9 +47,10 @@ func parseAssignDst(p *Parser) []token.Token {
 	dst := []token.Token{}
 
 	for even := true; p.i < p.size; even, p.i = !even, p.i+1 {
+		k := p.t[p.i].Kind()
 		if even {
 			dst = append(dst, p.t[p.i])
-		} else if p.t[p.i].Kind() == token.TT_ASSIGN {
+		} else if k == token.TT_ASSIGN || k == token.TT_VOID {
 			break
 		}
 	}

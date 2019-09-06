@@ -3,6 +3,7 @@ package assign
 import (
 	"github.com/PaulioRandall/voodoo-go/parser/ctx"
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
+	"github.com/PaulioRandall/voodoo-go/parser/token"
 	"github.com/PaulioRandall/voodoo-go/parser/value"
 )
 
@@ -13,11 +14,10 @@ func (a assign) Eval(c ctx.Context) (value.Value, perror.Perror) {
 		return nil, e
 	}
 
-	t := a.dst[0].Text()
-
-	if v == nil {
+	switch t := a.dst[0].Text(); {
+	case v == nil:
 		delete(c.Vars, t)
-	} else {
+	case a.dst[0].Kind() != token.TT_VOID:
 		c.Vars[t] = v
 	}
 

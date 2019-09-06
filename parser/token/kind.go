@@ -9,7 +9,7 @@ const (
 	TT_SPACE          // All whitespace characters except newlines
 	TT_SHEBANG        // Always the first line in a file
 	TT_ID             // Identifier
-	TT_ASSIGN         // :
+	TT_ASSIGN         // <-, :=
 	TT_NUMBER         // 123.456
 	TT_ADD            // +
 	TT_SUBTRACT       // -
@@ -17,6 +17,7 @@ const (
 	TT_DIVIDE         // /
 	TT_MODULO         // %
 	TT_VOID           // _
+	TT_DELIM          // ,
 )
 
 // KindName returns the name of the token type.

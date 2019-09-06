@@ -59,7 +59,24 @@ func TestAssign_Eval_2(t *testing.T) {
 			tok(`x`, token.TT_ID),
 		},
 		src: []expr.Expr{
-			dummy(`_`, token.TT_VOID, value.Value(nil)),
+			dummy(`_`, token.TT_VOID, nil),
+		},
+	}
+
+	c := ctx.New(nil)
+	exp := ctx.New(nil)
+
+	doTestAssign_Eval(t, a, c, exp)
+}
+
+func TestAssign_Eval_3(t *testing.T) {
+	a := assign{
+		t: tok(`<-`, token.TT_ASSIGN),
+		dst: []token.Token{
+			tok(`_`, token.TT_VOID),
+		},
+		src: []expr.Expr{
+			dummy(`3`, token.TT_NUMBER, value.Number(3)),
 		},
 	}
 
