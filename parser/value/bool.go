@@ -22,6 +22,11 @@ func (v bool_value) Num() (float64, bool) {
 	return 0, false
 }
 
+// Str satisfies the Value interface.
+func (v bool_value) Str() (string, bool) {
+	return ``, false
+}
+
 // String satisfies the Value interface.
 func (v bool_value) String() string {
 	return strconv.FormatBool(bool(v)) + ` (Bool)`
