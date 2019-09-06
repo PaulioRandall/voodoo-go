@@ -17,11 +17,12 @@ func matchAssign(p *Parser) bool {
 				return false
 			}
 		} else {
-			//if tk.Kind() != token.TT_VALUE_DELIM {
-			if k == token.TT_ASSIGN {
-				return i+1 < p.size
+			if tk.Kind() != token.TT_DELIM {
+				if k == token.TT_ASSIGN {
+					return i+1 < p.size
+				}
+				return false
 			}
-			//}
 		}
 	}
 
@@ -50,7 +51,7 @@ func parseAssignDst(p *Parser) []token.Token {
 		k := p.t[p.i].Kind()
 		if even {
 			dst = append(dst, p.t[p.i])
-		} else if k == token.TT_ASSIGN || k == token.TT_VOID {
+		} else if k == token.TT_ASSIGN {
 			break
 		}
 	}
@@ -61,7 +62,8 @@ func parseAssignDst(p *Parser) []token.Token {
 // parseAssignSrc parses the source expressions, e.g. `[...<-, x+1, y*2, z]`
 func parseAssignSrc(p *Parser) ([]expr.Expr, perror.Perror) {
 	src := []expr.Expr{}
-	for p.i < p.size {
+
+	for ; p.i < p.size; p.i = p.i + 1 {
 		ex, e := nextAssignSrc(p)
 		if e != nil {
 			return nil, e

@@ -132,3 +132,35 @@ func TestParse_5(t *testing.T) {
 
 	doTestParseStat(t, in, exp, false)
 }
+
+func TestParse_6(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TT_ID),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`y`, token.TT_VOID),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`z`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`4`, token.TT_NUMBER),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`Dragonfly`, token.TT_STRING),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`_`, token.TT_VOID),
+	}
+
+	exp := assign.New(
+		in[5],
+		[]expr.Expr{
+			operand.New(in[6]),
+			operand.New(in[8]),
+			operand.New(in[10]),
+		},
+		[]token.Token{
+			in[0],
+			in[2],
+			in[4],
+		},
+	)
+
+	doTestParseStat(t, in, exp, false)
+}

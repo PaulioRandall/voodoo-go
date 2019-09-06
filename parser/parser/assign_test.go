@@ -52,3 +52,22 @@ func TestMatchAssign_4(t *testing.T) {
 	m := matchAssign(p)
 	assert.True(t, m)
 }
+
+func TestMatchAssign_5(t *testing.T) {
+	p := mock([]token.Token{
+		dummy(`x`, token.TT_ID),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`y`, token.TT_VOID),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`z`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`4`, token.TT_NUMBER),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`Dragonfly`, token.TT_STRING),
+		dummy(`,`, token.TT_DELIM),
+		dummy(`_`, token.TT_VOID),
+	})
+
+	m := matchAssign(p)
+	assert.True(t, m)
+}

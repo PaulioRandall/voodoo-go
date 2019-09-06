@@ -33,6 +33,11 @@ func doTestAssign_Eval(t *testing.T, a assign, c, expCtx ctx.Context) {
 	assert.Equal(t, expCtx, c)
 }
 
+func doErrTestAssign_Eval(t *testing.T, a assign, c ctx.Context) {
+	_, e := a.Eval(c)
+	require.NotNil(t, e)
+}
+
 func TestAssign_Eval_1(t *testing.T) {
 	a := assign{
 		t: tok(`<-`, token.TT_ASSIGN),
@@ -84,4 +89,65 @@ func TestAssign_Eval_3(t *testing.T) {
 	exp := ctx.New(nil)
 
 	doTestAssign_Eval(t, a, c, exp)
+}
+
+func TestAssign_Eval_4(t *testing.T) {
+	a := assign{
+		t: tok(`<-`, token.TT_ASSIGN),
+		dst: []token.Token{
+			tok(`x`, token.TT_ID),
+			tok(`y`, token.TT_ID),
+			tok(`z`, token.TT_ID),
+		},
+		src: []expr.Expr{
+			dummy(`4`, token.TT_NUMBER, value.Number(4)),
+			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
+			dummy(`_`, token.TT_VOID, nil),
+		},
+	}
+
+	c := ctx.New(nil)
+	exp := ctx.New(nil)
+	exp.Vars[`x`] = value.Number(4)
+	exp.Vars[`y`] = value.String(`Dragonfly`)
+
+	doTestAssign_Eval(t, a, c, exp)
+}
+
+func TestAssign_Eval_5(t *testing.T) {
+	a := assign{
+		t: tok(`<-`, token.TT_ASSIGN),
+		dst: []token.Token{
+			tok(`x`, token.TT_ID),
+			tok(`y`, token.TT_ID),
+		},
+		src: []expr.Expr{
+			dummy(`4`, token.TT_NUMBER, value.Number(4)),
+			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
+			dummy(`_`, token.TT_VOID, nil),
+		},
+	}
+
+	c := ctx.New(nil)
+
+	doErrTestAssign_Eval(t, a, c)
+}
+
+func TestAssign_Eval_6(t *testing.T) {
+	a := assign{
+		t: tok(`<-`, token.TT_ASSIGN),
+		dst: []token.Token{
+			tok(`x`, token.TT_ID),
+			tok(`y`, token.TT_ID),
+			tok(`z`, token.TT_ID),
+		},
+		src: []expr.Expr{
+			dummy(`4`, token.TT_NUMBER, value.Number(4)),
+			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
+		},
+	}
+
+	c := ctx.New(nil)
+
+	doErrTestAssign_Eval(t, a, c)
 }

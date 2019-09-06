@@ -44,7 +44,7 @@ func (a assign) String() string {
 func (a assign) writeTokens(sb *strings.Builder) {
 	for i, tk := range a.dst {
 		if i != 0 {
-			sb.WriteString(`, `)
+			sb.WriteString(`,`)
 		}
 
 		sb.WriteString(tk.Text())
@@ -56,7 +56,7 @@ func (a assign) writeTokens(sb *strings.Builder) {
 func (a assign) writeExprs(sb *strings.Builder) {
 	for i, ex := range a.src {
 		if i != 0 {
-			sb.WriteString(`, `)
+			sb.WriteString(`,`)
 		}
 
 		sb.WriteString(ex.String())
