@@ -27,6 +27,11 @@ func (v bool_value) Str() (string, bool) {
 	return ``, false
 }
 
+// Tuple satisfies the Value interface.
+func (v bool_value) Tuple() ([]Value, bool) {
+	return nil, false
+}
+
 // String satisfies the Value interface.
 func (v bool_value) String() string {
 	return strconv.FormatBool(bool(v)) + ` (Bool)`

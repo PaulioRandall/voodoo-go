@@ -102,3 +102,19 @@ func TestNext_4(t *testing.T) {
 
 	doTestNext(t, false, r, exp)
 }
+
+func TestNext_5(t *testing.T) {
+	r := runer.NewByStr("x,y<-1,_")
+
+	exp := []token.Token{
+		token.New(`x`, 0, 0, 1, token.TT_ID),
+		token.New(`,`, 0, 1, 2, token.TT_DELIM),
+		token.New(`y`, 0, 2, 3, token.TT_ID),
+		token.New(`<-`, 0, 3, 5, token.TT_ASSIGN),
+		token.New(`1`, 0, 5, 6, token.TT_NUMBER),
+		token.New(`,`, 0, 6, 7, token.TT_DELIM),
+		token.New(`_`, 0, 7, 8, token.TT_VOID),
+	}
+
+	doTestNext(t, false, r, exp)
+}

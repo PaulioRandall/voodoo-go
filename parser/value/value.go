@@ -12,6 +12,9 @@ type Value interface {
 	// String returns the value as a string.
 	Str() (string, bool)
 
+	// Tuple returns the value as a list.
+	Tuple() ([]Value, bool)
+
 	// String returns the human readable string representation of the value.
 	String() string
 }

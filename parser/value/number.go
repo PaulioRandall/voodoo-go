@@ -27,6 +27,11 @@ func (v num_value) Str() (string, bool) {
 	return ``, false
 }
 
+// Tuple satisfies the Value interface.
+func (v num_value) Tuple() ([]Value, bool) {
+	return nil, false
+}
+
 // String satisfies the Value interface.
 func (v num_value) String() string {
 	return strconv.FormatFloat(float64(v), byte('g'), -1, 64) + ` (Number)`

@@ -53,6 +53,8 @@ func KindName(t Kind) string {
 		return `MODULO`
 	case TT_VOID:
 		return `VOID`
+	case TT_DELIM:
+		return `DELIM`
 	default:
 		return `UNDEFINED`
 	}

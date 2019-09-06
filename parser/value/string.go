@@ -23,6 +23,11 @@ func (v str_value) Str() (string, bool) {
 	return string(v), true
 }
 
+// Tuple satisfies the Value interface.
+func (v str_value) Tuple() ([]Value, bool) {
+	return nil, false
+}
+
 // String satisfies the Value interface.
 func (v str_value) String() string {
 	return string(v) + ` (String)`

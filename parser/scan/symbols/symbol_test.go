@@ -66,3 +66,15 @@ func TestScanSymbol_9(t *testing.T) {
 	exp := dummySymToken(1, `+`, token.TT_ADD)
 	doTestScanSymbol(t, in, exp, nil)
 }
+
+func TestScanSymbol_10(t *testing.T) {
+	in := `_`
+	exp := dummySymToken(1, `_`, token.TT_VOID)
+	doTestScanSymbol(t, in, exp, nil)
+}
+
+func TestScanSymbol_11(t *testing.T) {
+	in := `,`
+	exp := dummySymToken(1, `,`, token.TT_DELIM)
+	doTestScanSymbol(t, in, exp, nil)
+}
