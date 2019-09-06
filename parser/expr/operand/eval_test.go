@@ -91,3 +91,16 @@ func TestOperand_Eval_6(t *testing.T) {
 	require.Nil(t, e)
 	assert.Equal(t, exp, act)
 }
+
+func TestOperand_Eval_7(t *testing.T) {
+	o := operand{
+		t: tok(`Dragonfly`, token.TT_STRING),
+	}
+
+	c := ctx.New(nil)
+	exp := value.String(`Dragonfly`)
+
+	act, e := o.Eval(c)
+	require.Nil(t, e)
+	assert.Equal(t, exp, act)
+}

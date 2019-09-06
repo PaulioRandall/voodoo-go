@@ -114,3 +114,21 @@ func TestParse_4(t *testing.T) {
 
 	doTestParseStat(t, in, exp, false)
 }
+
+func TestParse_5(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`dragonfly`, token.TT_STRING),
+	}
+
+	exp := assign.New(
+		in[1],
+		[]expr.Expr{
+			operand.New(in[2]),
+		},
+		[]token.Token{in[0]},
+	)
+
+	doTestParseStat(t, in, exp, false)
+}

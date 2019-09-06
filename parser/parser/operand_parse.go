@@ -13,6 +13,7 @@ func matchOperand(p *Parser) bool {
 	return k == token.TT_ID ||
 		k == token.TT_BOOL ||
 		k == token.TT_NUMBER ||
+		k == token.TT_STRING ||
 		k == token.TT_VOID
 }
 

@@ -13,17 +13,24 @@ import (
 // Eval satisfies the Expr interface.
 func (o operand) Eval(c ctx.Context) (value.Value, perror.Perror) {
 	switch o.t.Kind() {
+	case token.TT_ID:
+		return o.getId(c)
 	case token.TT_BOOL:
 		return o.parseBool()
 	case token.TT_NUMBER:
 		return o.parseNum()
-	case token.TT_ID:
-		return o.getId(c)
+	case token.TT_STRING:
+		return o.parseStr()
 	case token.TT_VOID:
 		return nil, nil
 	default:
 		return nil, o.invalidKind()
 	}
+}
+
+// parseStr parses a string token.
+func (o operand) parseStr() (value.Value, perror.Perror) {
+	return value.String(o.t.Text()), nil
 }
 
 // parseBool parses a boolean token.
