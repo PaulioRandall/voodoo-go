@@ -2,6 +2,7 @@ package operand
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/PaulioRandall/voodoo-go/parser/ctx"
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
@@ -12,6 +13,8 @@ import (
 // Eval satisfies the Expr interface.
 func (o operand) Eval(c ctx.Context) (value.Value, perror.Perror) {
 	switch o.t.Kind() {
+	case token.TT_BOOL:
+		return o.parseBool()
 	case token.TT_NUMBER:
 		return o.parseNum()
 	case token.TT_ID:
@@ -23,11 +26,21 @@ func (o operand) Eval(c ctx.Context) (value.Value, perror.Perror) {
 	}
 }
 
+// parseBool parses a boolean token.
+func (o operand) parseBool() (value.Value, perror.Perror) {
+	t := strings.ToLower(o.t.Text())
+	v, e := strconv.ParseBool(t)
+	if e != nil {
+		return nil, o.badBoolFormat()
+	}
+	return value.Bool(v), nil
+}
+
 // parseNum parses a number token.
 func (o operand) parseNum() (value.Value, perror.Perror) {
 	v, e := strconv.ParseFloat(o.t.Text(), 64)
 	if e != nil {
-		return nil, o.badFormat()
+		return nil, o.badNumFormat()
 	}
 	return value.Number(v), nil
 }
@@ -41,8 +54,15 @@ func (o operand) getId(c ctx.Context) (value.Value, perror.Perror) {
 	return v, nil
 }
 
-// badFormat returns a new Perror for a badly formatted number.
-func (o operand) badFormat() perror.Perror {
+// badBoolFormat returns a new Perror for a badly formatted number.
+func (o operand) badBoolFormat() perror.Perror {
+	return o.newPerror([]string{
+		"Could not parse boolean '" + o.t.Text() + "'",
+	})
+}
+
+// badNumFormat returns a new Perror for a badly formatted number.
+func (o operand) badNumFormat() perror.Perror {
 	return o.newPerror([]string{
 		"Could not parse number '" + o.t.Text() + "'",
 	})
@@ -52,7 +72,7 @@ func (o operand) badFormat() perror.Perror {
 // was not in the map of existing variables.
 func (o operand) unknownID() perror.Perror {
 	return o.newPerror([]string{
-		"Unknown ID '" + token.KindName(o.t.Kind()) + "'",
+		"Unknown ID '" + o.t.Text() + "'",
 	})
 }
 

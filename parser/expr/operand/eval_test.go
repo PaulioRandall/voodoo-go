@@ -81,13 +81,13 @@ func TestOperand_Eval_5(t *testing.T) {
 
 func TestOperand_Eval_6(t *testing.T) {
 	o := operand{
-		t: tok(`_`, token.TT_VOID),
+		t: tok(`true`, token.TT_BOOL),
 	}
 
 	c := ctx.New(nil)
-	c.Vars[`x`] = value.Number(2)
+	exp := value.Bool(true)
 
 	act, e := o.Eval(c)
 	require.Nil(t, e)
-	assert.Equal(t, nil, act)
+	assert.Equal(t, exp, act)
 }

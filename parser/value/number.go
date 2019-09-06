@@ -12,6 +12,11 @@ func Number(n float64) Value {
 	return num_value(n)
 }
 
+// Bool satisfies the Value interface.
+func (v num_value) Bool() (bool, bool) {
+	return false, false
+}
+
 // Num satisfies the Value interface.
 func (v num_value) Num() (float64, bool) {
 	return float64(v), true

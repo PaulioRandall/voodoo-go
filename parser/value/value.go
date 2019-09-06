@@ -3,6 +3,9 @@ package value
 // Value represents a variables current value.
 type Value interface {
 
+	// Bool returns the value as a boolean.
+	Bool() (bool, bool)
+
 	// Number returns the value as a number.
 	Num() (float64, bool)
 

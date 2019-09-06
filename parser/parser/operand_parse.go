@@ -11,6 +11,7 @@ import (
 func matchOperand(p *Parser) bool {
 	k := p.t[p.i].Kind()
 	return k == token.TT_ID ||
+		k == token.TT_BOOL ||
 		k == token.TT_NUMBER ||
 		k == token.TT_VOID
 }

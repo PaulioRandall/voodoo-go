@@ -10,6 +10,7 @@ const (
 	TT_SHEBANG        // Always the first line in a file
 	TT_ID             // Identifier
 	TT_ASSIGN         // <-, :=
+	TT_BOOL           // true, false
 	TT_NUMBER         // 123.456
 	TT_ADD            // +
 	TT_SUBTRACT       // -
@@ -33,6 +34,8 @@ func KindName(t Kind) string {
 		return `ID`
 	case TT_ASSIGN:
 		return `ASSIGN`
+	case TT_BOOL:
+		return `BOOL`
 	case TT_NUMBER:
 		return `NUMBER`
 	case TT_ADD:

@@ -1,6 +1,7 @@
 package word
 
 import (
+	"strings"
 	"unicode"
 
 	"github.com/PaulioRandall/voodoo-go/parser/perror"
@@ -39,5 +40,11 @@ func wordToken(r *runer.Runer, start int, w string) token.Token {
 
 // findWordKind finds the kind of the word.
 func findWordKind(w string) token.Kind {
-	return token.TT_ID
+	switch strings.ToLower(w) {
+	case `true`, `false`:
+		return token.TT_BOOL
+	default:
+		return token.TT_ID
+	}
+
 }

@@ -32,12 +32,22 @@ func doParse(t *testing.T, p *Parser, in token.Token, exp expr.Expr, err bool) {
 	require.Equal(t, exp, act, `exp.(Expr) != act.(Expr)`)
 }
 
+func doTestParseStat(t *testing.T, in []token.Token, exp expr.Expr, err bool) {
+	p := New()
+
+	for _, v := range in {
+		doParse(t, p, v, nil, false)
+	}
+
+	eos := dummy("\n", token.TT_NEWLINE)
+	doParse(t, p, eos, exp, err)
+}
+
 func TestParse_1(t *testing.T) {
 	in := []token.Token{
 		dummy(`x`, token.TT_ID),
 		dummy(`<-`, token.TT_ASSIGN),
 		dummy(`1`, token.TT_NUMBER),
-		dummy("\n", token.TT_NEWLINE),
 	}
 
 	exp := assign.New(
@@ -48,12 +58,7 @@ func TestParse_1(t *testing.T) {
 		[]token.Token{in[0]},
 	)
 
-	p := New()
-
-	doParse(t, p, in[0], nil, false)
-	doParse(t, p, in[1], nil, false)
-	doParse(t, p, in[2], nil, false)
-	doParse(t, p, in[3], exp, false)
+	doTestParseStat(t, in, exp, false)
 }
 
 func TestParse_2(t *testing.T) {
@@ -61,7 +66,6 @@ func TestParse_2(t *testing.T) {
 		dummy(`x`, token.TT_ID),
 		dummy(`<-`, token.TT_ASSIGN),
 		dummy(`_`, token.TT_VOID),
-		dummy("\n", token.TT_NEWLINE),
 	}
 
 	exp := assign.New(
@@ -72,12 +76,7 @@ func TestParse_2(t *testing.T) {
 		[]token.Token{in[0]},
 	)
 
-	p := New()
-
-	doParse(t, p, in[0], nil, false)
-	doParse(t, p, in[1], nil, false)
-	doParse(t, p, in[2], nil, false)
-	doParse(t, p, in[3], exp, false)
+	doTestParseStat(t, in, exp, false)
 }
 
 func TestParse_3(t *testing.T) {
@@ -85,7 +84,6 @@ func TestParse_3(t *testing.T) {
 		dummy(`_`, token.TT_VOID),
 		dummy(`<-`, token.TT_ASSIGN),
 		dummy(`2`, token.TT_NUMBER),
-		dummy("\n", token.TT_NEWLINE),
 	}
 
 	exp := assign.New(
@@ -96,10 +94,23 @@ func TestParse_3(t *testing.T) {
 		[]token.Token{in[0]},
 	)
 
-	p := New()
+	doTestParseStat(t, in, exp, false)
+}
 
-	doParse(t, p, in[0], nil, false)
-	doParse(t, p, in[1], nil, false)
-	doParse(t, p, in[2], nil, false)
-	doParse(t, p, in[3], exp, false)
+func TestParse_4(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TT_ID),
+		dummy(`<-`, token.TT_ASSIGN),
+		dummy(`false`, token.TT_BOOL),
+	}
+
+	exp := assign.New(
+		in[1],
+		[]expr.Expr{
+			operand.New(in[2]),
+		},
+		[]token.Token{in[0]},
+	)
+
+	doTestParseStat(t, in, exp, false)
 }
