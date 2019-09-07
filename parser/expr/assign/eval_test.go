@@ -151,3 +151,20 @@ func TestAssign_Eval_6(t *testing.T) {
 
 	doErrTestAssign_Eval(t, a, c)
 }
+
+func TestAssign_Eval_7(t *testing.T) {
+	a := assign{
+		t: tok(`<-`, token.TT_ASSIGN),
+		dst: []token.Token{
+			tok(`x`, token.TT_ID),
+		},
+		src: []expr.Expr{
+			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
+		},
+	}
+
+	c := ctx.New(nil)
+	c.Vars[`x`] = value.Number(4)
+
+	doErrTestAssign_Eval(t, a, c)
+}

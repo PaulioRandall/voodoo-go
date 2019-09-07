@@ -13,6 +13,19 @@ import (
 
 // main is the entry point.
 func main() {
+
+	var x int
+	f := func() int {
+		x++
+		return x
+	}
+
+	a, b := f(), f()
+	print(`a: `)
+	println(a)
+	print(`b: `)
+	println(b)
+
 	stopWatch := utils.StopWatch{}
 	stopWatch.Start()
 	fmt.Printf("Started\t\t%v\n\n", stopWatch.Started.UTC())

@@ -1,7 +1,7 @@
 ./voodoo run "$0" "$@"; exit "$?"
 
 x <- 1
-y := 2.22
+y := 02.22
 
 z <- 3
 z <- _
@@ -17,4 +17,8 @@ s <- `:)`
 t <- s
 s <- `Happiness`
 
-x, y, z <- y, `Dragonfly`, false
+x, s, z <- y, `Dragonfly`, false
+a,b,c := _,_,_
+
+s, s <- _, 99
+s := `:(`
