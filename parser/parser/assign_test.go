@@ -13,9 +13,9 @@ import (
 
 func TestMatchAssign_1(t *testing.T) {
 	p := mock([]token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`1`, token.TT_NUMBER),
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`1`, token.TK_NUMBER),
 	})
 
 	m := matchAssign(p)
@@ -24,7 +24,7 @@ func TestMatchAssign_1(t *testing.T) {
 
 func TestMatchAssign_2(t *testing.T) {
 	p := mock([]token.Token{
-		dummy(`1`, token.TT_NUMBER),
+		dummy(`1`, token.TK_NUMBER),
 	})
 
 	m := matchAssign(p)
@@ -33,9 +33,9 @@ func TestMatchAssign_2(t *testing.T) {
 
 func TestMatchAssign_3(t *testing.T) {
 	p := mock([]token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`_`, token.TT_VOID),
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`_`, token.TK_VOID),
 	})
 
 	m := matchAssign(p)
@@ -44,9 +44,9 @@ func TestMatchAssign_3(t *testing.T) {
 
 func TestMatchAssign_4(t *testing.T) {
 	p := mock([]token.Token{
-		dummy(`_`, token.TT_VOID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`4`, token.TT_NUMBER),
+		dummy(`_`, token.TK_VOID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`4`, token.TK_NUMBER),
 	})
 
 	m := matchAssign(p)
@@ -55,17 +55,17 @@ func TestMatchAssign_4(t *testing.T) {
 
 func TestMatchAssign_5(t *testing.T) {
 	p := mock([]token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`y`, token.TT_VOID),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`z`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`4`, token.TT_NUMBER),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`Dragonfly`, token.TT_STRING),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`_`, token.TT_VOID),
+		dummy(`x`, token.TK_ID),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`y`, token.TK_VOID),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`z`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`4`, token.TK_NUMBER),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`Dragonfly`, token.TK_STRING),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`_`, token.TK_VOID),
 	})
 
 	m := matchAssign(p)

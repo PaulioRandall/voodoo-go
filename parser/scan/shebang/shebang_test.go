@@ -16,7 +16,7 @@ func TestScanShebang_1(t *testing.T) {
 		0,
 		0,
 		13,
-		token.TT_SHEBANG,
+		token.TK_SHEBANG,
 	)
 
 	r := runer.NewByStr(in)

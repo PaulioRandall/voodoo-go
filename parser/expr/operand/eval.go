@@ -13,15 +13,15 @@ import (
 // Eval satisfies the Expr interface.
 func (o operand) Eval(c ctx.Context) (value.Value, perror.Perror) {
 	switch o.t.Kind() {
-	case token.TT_ID:
+	case token.TK_ID:
 		return o.getId(c)
-	case token.TT_BOOL:
+	case token.TK_BOOL:
 		return o.parseBool()
-	case token.TT_NUMBER:
+	case token.TK_NUMBER:
 		return o.parseNum()
-	case token.TT_STRING:
+	case token.TK_STRING:
 		return o.parseStr()
-	case token.TT_VOID:
+	case token.TK_VOID:
 		return nil, nil
 	default:
 		return nil, o.invalidKind()

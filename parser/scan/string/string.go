@@ -56,6 +56,6 @@ func stringToken(r *runer.Runer, start int, s string) token.Token {
 		r.Line(),
 		start,
 		r.NextCol(),
-		token.TT_STRING,
+		token.TK_STRING,
 	)
 }

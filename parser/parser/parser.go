@@ -56,13 +56,13 @@ func (p *Parser) Parse(tk token.Token) (expr.Expr, perror.Perror) {
 func analyse(p *Parser, tk token.Token) bool {
 	k := tk.Kind()
 
-	if p.i == 0 && k == token.TT_NEWLINE {
+	if p.i == 0 && k == token.TK_NEWLINE {
 		return false
 	}
 
 	p.t[p.i] = tk
 	p.i++
-	return k == token.TT_NEWLINE
+	return k == token.TK_NEWLINE
 }
 
 // parse kicks off the parsing process.

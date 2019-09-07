@@ -55,7 +55,7 @@ func spaceToken(r *runer.Runer, start int, s string) token.Token {
 		r.Line(),
 		start,
 		r.NextCol(),
-		token.TT_SPACE,
+		token.TK_SPACE,
 	)
 }
 
@@ -66,6 +66,6 @@ func newlineToken(r *runer.Runer, start int, s string) token.Token {
 		r.Line()-1,
 		start,
 		r.Col()+1,
-		token.TT_NEWLINE,
+		token.TK_NEWLINE,
 	)
 }

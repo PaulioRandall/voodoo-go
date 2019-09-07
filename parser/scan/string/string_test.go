@@ -19,7 +19,7 @@ func doTestScanString(t *testing.T, in string, exp token.Token, expErr perror.Pe
 }
 
 func dummy(end int, text string) token.Token {
-	return token.New(text, 0, 0, end, token.TT_STRING)
+	return token.New(text, 0, 0, end, token.TK_STRING)
 }
 
 func dummyErr(i int) perror.Perror {

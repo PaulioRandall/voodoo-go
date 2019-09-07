@@ -39,15 +39,15 @@ func doTestParseStat(t *testing.T, in []token.Token, exp expr.Expr, err bool) {
 		doParse(t, p, v, nil, false)
 	}
 
-	eos := dummy("\n", token.TT_NEWLINE)
+	eos := dummy("\n", token.TK_NEWLINE)
 	doParse(t, p, eos, exp, err)
 }
 
 func TestParse_1(t *testing.T) {
 	in := []token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`1`, token.TT_NUMBER),
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`1`, token.TK_NUMBER),
 	}
 
 	exp := assign.New(
@@ -63,9 +63,9 @@ func TestParse_1(t *testing.T) {
 
 func TestParse_2(t *testing.T) {
 	in := []token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`_`, token.TT_VOID),
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`_`, token.TK_VOID),
 	}
 
 	exp := assign.New(
@@ -81,9 +81,9 @@ func TestParse_2(t *testing.T) {
 
 func TestParse_3(t *testing.T) {
 	in := []token.Token{
-		dummy(`_`, token.TT_VOID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`2`, token.TT_NUMBER),
+		dummy(`_`, token.TK_VOID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`2`, token.TK_NUMBER),
 	}
 
 	exp := assign.New(
@@ -99,9 +99,9 @@ func TestParse_3(t *testing.T) {
 
 func TestParse_4(t *testing.T) {
 	in := []token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`false`, token.TT_BOOL),
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`false`, token.TK_BOOL),
 	}
 
 	exp := assign.New(
@@ -117,9 +117,9 @@ func TestParse_4(t *testing.T) {
 
 func TestParse_5(t *testing.T) {
 	in := []token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`dragonfly`, token.TT_STRING),
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`dragonfly`, token.TK_STRING),
 	}
 
 	exp := assign.New(
@@ -135,17 +135,17 @@ func TestParse_5(t *testing.T) {
 
 func TestParse_6(t *testing.T) {
 	in := []token.Token{
-		dummy(`x`, token.TT_ID),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`y`, token.TT_VOID),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`z`, token.TT_ID),
-		dummy(`<-`, token.TT_ASSIGN),
-		dummy(`4`, token.TT_NUMBER),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`Dragonfly`, token.TT_STRING),
-		dummy(`,`, token.TT_DELIM),
-		dummy(`_`, token.TT_VOID),
+		dummy(`x`, token.TK_ID),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`y`, token.TK_VOID),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`z`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`4`, token.TK_NUMBER),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`Dragonfly`, token.TK_STRING),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`_`, token.TK_VOID),
 	}
 
 	exp := assign.New(

@@ -17,8 +17,8 @@ func Strim(tk token.Token) token.Token {
 // filter removes redundant Tokens.
 func filter(in token.Token) bool {
 	switch in.Kind() {
-	case token.TT_SHEBANG:
-	case token.TT_SPACE:
+	case token.TK_SHEBANG:
+	case token.TK_SPACE:
 	default:
 		return false
 	}
@@ -30,9 +30,9 @@ func filter(in token.Token) bool {
 // parsing.
 func strim(in token.Token) token.Token {
 	switch in.Kind() {
-	case token.TT_ID, token.TT_BOOL:
+	case token.TK_ID, token.TK_BOOL:
 		return toLower(in)
-	case token.TT_STRING:
+	case token.TK_STRING:
 		return stripEnds(in)
 	default:
 		return in

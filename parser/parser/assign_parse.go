@@ -13,12 +13,12 @@ func matchAssign(p *Parser) bool {
 		k := tk.Kind()
 
 		if i%2 == 0 {
-			if k != token.TT_ID && k != token.TT_VOID {
+			if k != token.TK_ID && k != token.TK_VOID {
 				return false
 			}
 		} else {
-			if tk.Kind() != token.TT_DELIM {
-				if k == token.TT_ASSIGN {
+			if tk.Kind() != token.TK_DELIM {
+				if k == token.TK_ASSIGN {
 					return i+1 < p.size
 				}
 				return false
@@ -51,7 +51,7 @@ func parseAssignDst(p *Parser) []token.Token {
 		k := p.t[p.i].Kind()
 		if even {
 			dst = append(dst, p.t[p.i])
-		} else if k == token.TT_ASSIGN {
+		} else if k == token.TK_ASSIGN {
 			break
 		}
 	}
@@ -82,7 +82,7 @@ func nextAssignSrc(p *Parser) (expr.Expr, perror.Perror) {
 	switch {
 	case matchOperand(p):
 		return parseOperand(p)
-	case p.t[p.i].Kind() == token.TT_NEWLINE:
+	case p.t[p.i].Kind() == token.TK_NEWLINE:
 		p.i++
 		return nil, nil
 	default:

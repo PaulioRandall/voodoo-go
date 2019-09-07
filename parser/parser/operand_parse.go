@@ -10,11 +10,11 @@ import (
 // matchOperand returns true if the next part of the statement is an operand.
 func matchOperand(p *Parser) bool {
 	k := p.t[p.i].Kind()
-	return k == token.TT_ID ||
-		k == token.TT_BOOL ||
-		k == token.TT_NUMBER ||
-		k == token.TT_STRING ||
-		k == token.TT_VOID
+	return k == token.TK_ID ||
+		k == token.TK_BOOL ||
+		k == token.TK_NUMBER ||
+		k == token.TK_STRING ||
+		k == token.TK_VOID
 }
 
 // parseOperand parses an operand expression.

@@ -40,12 +40,12 @@ func doErrTestAssign_Eval(t *testing.T, a assign, c ctx.Context) {
 
 func TestAssign_Eval_1(t *testing.T) {
 	a := assign{
-		t: tok(`<-`, token.TT_ASSIGN),
+		t: tok(`<-`, token.TK_ASSIGN),
 		dst: []token.Token{
-			tok(`x`, token.TT_ID),
+			tok(`x`, token.TK_ID),
 		},
 		src: []expr.Expr{
-			dummy(`1`, token.TT_NUMBER, value.Number(1)),
+			dummy(`1`, token.TK_NUMBER, value.Number(1)),
 		},
 	}
 
@@ -59,12 +59,12 @@ func TestAssign_Eval_1(t *testing.T) {
 
 func TestAssign_Eval_2(t *testing.T) {
 	a := assign{
-		t: tok(`<-`, token.TT_ASSIGN),
+		t: tok(`<-`, token.TK_ASSIGN),
 		dst: []token.Token{
-			tok(`x`, token.TT_ID),
+			tok(`x`, token.TK_ID),
 		},
 		src: []expr.Expr{
-			dummy(`_`, token.TT_VOID, nil),
+			dummy(`_`, token.TK_VOID, nil),
 		},
 	}
 
@@ -76,12 +76,12 @@ func TestAssign_Eval_2(t *testing.T) {
 
 func TestAssign_Eval_3(t *testing.T) {
 	a := assign{
-		t: tok(`<-`, token.TT_ASSIGN),
+		t: tok(`<-`, token.TK_ASSIGN),
 		dst: []token.Token{
-			tok(`_`, token.TT_VOID),
+			tok(`_`, token.TK_VOID),
 		},
 		src: []expr.Expr{
-			dummy(`3`, token.TT_NUMBER, value.Number(3)),
+			dummy(`3`, token.TK_NUMBER, value.Number(3)),
 		},
 	}
 
@@ -93,16 +93,16 @@ func TestAssign_Eval_3(t *testing.T) {
 
 func TestAssign_Eval_4(t *testing.T) {
 	a := assign{
-		t: tok(`<-`, token.TT_ASSIGN),
+		t: tok(`<-`, token.TK_ASSIGN),
 		dst: []token.Token{
-			tok(`x`, token.TT_ID),
-			tok(`y`, token.TT_ID),
-			tok(`z`, token.TT_ID),
+			tok(`x`, token.TK_ID),
+			tok(`y`, token.TK_ID),
+			tok(`z`, token.TK_ID),
 		},
 		src: []expr.Expr{
-			dummy(`4`, token.TT_NUMBER, value.Number(4)),
-			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
-			dummy(`_`, token.TT_VOID, nil),
+			dummy(`4`, token.TK_NUMBER, value.Number(4)),
+			dummy(`Dragonfly`, token.TK_STRING, value.String(`Dragonfly`)),
+			dummy(`_`, token.TK_VOID, nil),
 		},
 	}
 
@@ -116,15 +116,15 @@ func TestAssign_Eval_4(t *testing.T) {
 
 func TestAssign_Eval_5(t *testing.T) {
 	a := assign{
-		t: tok(`<-`, token.TT_ASSIGN),
+		t: tok(`<-`, token.TK_ASSIGN),
 		dst: []token.Token{
-			tok(`x`, token.TT_ID),
-			tok(`y`, token.TT_ID),
+			tok(`x`, token.TK_ID),
+			tok(`y`, token.TK_ID),
 		},
 		src: []expr.Expr{
-			dummy(`4`, token.TT_NUMBER, value.Number(4)),
-			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
-			dummy(`_`, token.TT_VOID, nil),
+			dummy(`4`, token.TK_NUMBER, value.Number(4)),
+			dummy(`Dragonfly`, token.TK_STRING, value.String(`Dragonfly`)),
+			dummy(`_`, token.TK_VOID, nil),
 		},
 	}
 
@@ -135,15 +135,15 @@ func TestAssign_Eval_5(t *testing.T) {
 
 func TestAssign_Eval_6(t *testing.T) {
 	a := assign{
-		t: tok(`<-`, token.TT_ASSIGN),
+		t: tok(`<-`, token.TK_ASSIGN),
 		dst: []token.Token{
-			tok(`x`, token.TT_ID),
-			tok(`y`, token.TT_ID),
-			tok(`z`, token.TT_ID),
+			tok(`x`, token.TK_ID),
+			tok(`y`, token.TK_ID),
+			tok(`z`, token.TK_ID),
 		},
 		src: []expr.Expr{
-			dummy(`4`, token.TT_NUMBER, value.Number(4)),
-			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
+			dummy(`4`, token.TK_NUMBER, value.Number(4)),
+			dummy(`Dragonfly`, token.TK_STRING, value.String(`Dragonfly`)),
 		},
 	}
 
@@ -154,12 +154,12 @@ func TestAssign_Eval_6(t *testing.T) {
 
 func TestAssign_Eval_7(t *testing.T) {
 	a := assign{
-		t: tok(`<-`, token.TT_ASSIGN),
+		t: tok(`<-`, token.TK_ASSIGN),
 		dst: []token.Token{
-			tok(`x`, token.TT_ID),
+			tok(`x`, token.TK_ID),
 		},
 		src: []expr.Expr{
-			dummy(`Dragonfly`, token.TT_STRING, value.String(`Dragonfly`)),
+			dummy(`Dragonfly`, token.TK_STRING, value.String(`Dragonfly`)),
 		},
 	}
 

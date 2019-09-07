@@ -38,6 +38,6 @@ func newShebangToken(r *runer.Runer, text string, start int) token.Token {
 		r.Line(),
 		start,
 		r.NextCol(),
-		token.TT_SHEBANG,
+		token.TK_SHEBANG,
 	)
 }

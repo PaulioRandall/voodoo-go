@@ -42,9 +42,9 @@ func wordToken(r *runer.Runer, start int, w string) token.Token {
 func findWordKind(w string) token.Kind {
 	switch strings.ToLower(w) {
 	case `true`, `false`:
-		return token.TT_BOOL
+		return token.TK_BOOL
 	default:
-		return token.TT_ID
+		return token.TK_ID
 	}
 
 }

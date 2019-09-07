@@ -20,41 +20,41 @@ func dummy(t string, e int, k token.Kind) token.Token {
 }
 
 func TestScanSpace_1(t *testing.T) {
-	exp := dummy(` `, 1, token.TT_SPACE)
+	exp := dummy(` `, 1, token.TK_SPACE)
 	doTestScanSpace(t, ` `, exp)
 }
 
 func TestScanSpace_2(t *testing.T) {
-	exp := dummy(" \r\v\f\t", 5, token.TT_SPACE)
+	exp := dummy(" \r\v\f\t", 5, token.TK_SPACE)
 	doTestScanSpace(t, " \r\v\f\t", exp)
 }
 
 func TestScanSpace_3(t *testing.T) {
-	exp := dummy("   ", 3, token.TT_SPACE)
+	exp := dummy("   ", 3, token.TK_SPACE)
 	doTestScanSpace(t, "   \r\n   ", exp)
 }
 
 func TestScanSpace_4(t *testing.T) {
-	exp := dummy("   ", 3, token.TT_SPACE)
+	exp := dummy("   ", 3, token.TK_SPACE)
 	doTestScanSpace(t, "   \n   ", exp)
 }
 
 func TestScanSpace_5(t *testing.T) {
-	exp := dummy("   ", 3, token.TT_SPACE)
+	exp := dummy("   ", 3, token.TK_SPACE)
 	doTestScanSpace(t, "   abc   ", exp)
 }
 
 func TestScanSpace_6(t *testing.T) {
-	exp := dummy("\n", 1, token.TT_NEWLINE)
+	exp := dummy("\n", 1, token.TK_NEWLINE)
 	doTestScanSpace(t, "\n", exp)
 }
 
 func TestScanSpace_7(t *testing.T) {
-	exp := dummy("\r\n", 2, token.TT_NEWLINE)
+	exp := dummy("\r\n", 2, token.TK_NEWLINE)
 	doTestScanSpace(t, "\r\n", exp)
 }
 
 func TestScanSpace_8(t *testing.T) {
-	exp := dummy("\n", 1, token.TT_NEWLINE)
+	exp := dummy("\n", 1, token.TK_NEWLINE)
 	doTestScanSpace(t, "\n   ", exp)
 }

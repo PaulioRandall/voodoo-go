@@ -40,7 +40,7 @@ func TestNext_1(t *testing.T) {
 	r := runer.NewByStr("#!/bin/bash\n")
 
 	exp := []token.Token{
-		token.New(`#!/bin/bash`, 0, 0, 11, token.TT_SHEBANG),
+		token.New(`#!/bin/bash`, 0, 0, 11, token.TK_SHEBANG),
 	}
 
 	doTestNext(t, true, r, exp)
@@ -50,11 +50,11 @@ func TestNext_2(t *testing.T) {
 	r := runer.NewByStr("x <- 1")
 
 	exp := []token.Token{
-		token.New(`x`, 0, 0, 1, token.TT_ID),
-		token.New(` `, 0, 1, 2, token.TT_SPACE),
-		token.New(`<-`, 0, 2, 4, token.TT_ASSIGN),
-		token.New(` `, 0, 4, 5, token.TT_SPACE),
-		token.New(`1`, 0, 5, 6, token.TT_NUMBER),
+		token.New(`x`, 0, 0, 1, token.TK_ID),
+		token.New(` `, 0, 1, 2, token.TK_SPACE),
+		token.New(`<-`, 0, 2, 4, token.TK_ASSIGN),
+		token.New(` `, 0, 4, 5, token.TK_SPACE),
+		token.New(`1`, 0, 5, 6, token.TK_NUMBER),
 	}
 
 	doTestNext(t, false, r, exp)
@@ -65,25 +65,25 @@ func TestNext_3(t *testing.T) {
 
 	exp := []token.Token{
 		// x <- 1
-		token.New(`x`, 0, 0, 1, token.TT_ID),
-		token.New(` `, 0, 1, 2, token.TT_SPACE),
-		token.New(`<-`, 0, 2, 4, token.TT_ASSIGN),
-		token.New(` `, 0, 4, 5, token.TT_SPACE),
-		token.New(`1`, 0, 5, 6, token.TT_NUMBER),
-		token.New("\n", 0, 6, 7, token.TT_NEWLINE),
+		token.New(`x`, 0, 0, 1, token.TK_ID),
+		token.New(` `, 0, 1, 2, token.TK_SPACE),
+		token.New(`<-`, 0, 2, 4, token.TK_ASSIGN),
+		token.New(` `, 0, 4, 5, token.TK_SPACE),
+		token.New(`1`, 0, 5, 6, token.TK_NUMBER),
+		token.New("\n", 0, 6, 7, token.TK_NEWLINE),
 		// y := 2
-		token.New(`y`, 1, 0, 1, token.TT_ID),
-		token.New(` `, 1, 1, 2, token.TT_SPACE),
-		token.New(`:=`, 1, 2, 4, token.TT_ASSIGN),
-		token.New(` `, 1, 4, 5, token.TT_SPACE),
-		token.New(`2`, 1, 5, 6, token.TT_NUMBER),
-		token.New("\r\n", 1, 6, 8, token.TT_NEWLINE),
+		token.New(`y`, 1, 0, 1, token.TK_ID),
+		token.New(` `, 1, 1, 2, token.TK_SPACE),
+		token.New(`:=`, 1, 2, 4, token.TK_ASSIGN),
+		token.New(` `, 1, 4, 5, token.TK_SPACE),
+		token.New(`2`, 1, 5, 6, token.TK_NUMBER),
+		token.New("\r\n", 1, 6, 8, token.TK_NEWLINE),
 		// z <- 3
-		token.New(`z`, 2, 0, 1, token.TT_ID),
-		token.New(` `, 2, 1, 2, token.TT_SPACE),
-		token.New(`<-`, 2, 2, 4, token.TT_ASSIGN),
-		token.New(` `, 2, 4, 5, token.TT_SPACE),
-		token.New(`32`, 2, 5, 7, token.TT_NUMBER),
+		token.New(`z`, 2, 0, 1, token.TK_ID),
+		token.New(` `, 2, 1, 2, token.TK_SPACE),
+		token.New(`<-`, 2, 2, 4, token.TK_ASSIGN),
+		token.New(` `, 2, 4, 5, token.TK_SPACE),
+		token.New(`32`, 2, 5, 7, token.TK_NUMBER),
 	}
 
 	doTestNext(t, false, r, exp)
@@ -93,11 +93,11 @@ func TestNext_4(t *testing.T) {
 	r := runer.NewByStr("x <- _")
 
 	exp := []token.Token{
-		token.New(`x`, 0, 0, 1, token.TT_ID),
-		token.New(` `, 0, 1, 2, token.TT_SPACE),
-		token.New(`<-`, 0, 2, 4, token.TT_ASSIGN),
-		token.New(` `, 0, 4, 5, token.TT_SPACE),
-		token.New(`_`, 0, 5, 6, token.TT_VOID),
+		token.New(`x`, 0, 0, 1, token.TK_ID),
+		token.New(` `, 0, 1, 2, token.TK_SPACE),
+		token.New(`<-`, 0, 2, 4, token.TK_ASSIGN),
+		token.New(` `, 0, 4, 5, token.TK_SPACE),
+		token.New(`_`, 0, 5, 6, token.TK_VOID),
 	}
 
 	doTestNext(t, false, r, exp)
@@ -107,13 +107,13 @@ func TestNext_5(t *testing.T) {
 	r := runer.NewByStr("x,y<-1,_")
 
 	exp := []token.Token{
-		token.New(`x`, 0, 0, 1, token.TT_ID),
-		token.New(`,`, 0, 1, 2, token.TT_DELIM),
-		token.New(`y`, 0, 2, 3, token.TT_ID),
-		token.New(`<-`, 0, 3, 5, token.TT_ASSIGN),
-		token.New(`1`, 0, 5, 6, token.TT_NUMBER),
-		token.New(`,`, 0, 6, 7, token.TT_DELIM),
-		token.New(`_`, 0, 7, 8, token.TT_VOID),
+		token.New(`x`, 0, 0, 1, token.TK_ID),
+		token.New(`,`, 0, 1, 2, token.TK_DELIM),
+		token.New(`y`, 0, 2, 3, token.TK_ID),
+		token.New(`<-`, 0, 3, 5, token.TK_ASSIGN),
+		token.New(`1`, 0, 5, 6, token.TK_NUMBER),
+		token.New(`,`, 0, 6, 7, token.TK_DELIM),
+		token.New(`_`, 0, 7, 8, token.TK_VOID),
 	}
 
 	doTestNext(t, false, r, exp)

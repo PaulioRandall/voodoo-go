@@ -53,7 +53,7 @@ func (a assign) doAssign(c ctx.Context, v value.Value, di int) (int, perror.Perr
 		t := a.dst[di].Text()
 		delete(c.Vars, t)
 		di++
-	case a.dst[di].Kind() == token.TT_VOID:
+	case a.dst[di].Kind() == token.TK_VOID:
 		di++
 	default:
 		di, e = a.assignToID(c, v, di)

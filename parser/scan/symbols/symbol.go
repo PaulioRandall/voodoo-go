@@ -21,23 +21,23 @@ func ScanSymbol(r *runer.Runer) (token.Token, perror.Perror) {
 
 	switch {
 	case ru1 == '<' && ru2 == '-':
-		return symbolToken(r, 2, token.TT_ASSIGN)
+		return symbolToken(r, 2, token.TK_ASSIGN)
 	case ru1 == ':' && ru2 == '=':
-		return symbolToken(r, 2, token.TT_ASSIGN)
+		return symbolToken(r, 2, token.TK_ASSIGN)
 	case ru1 == '+':
-		return symbolToken(r, 1, token.TT_ADD)
+		return symbolToken(r, 1, token.TK_ADD)
 	case ru1 == '-':
-		return symbolToken(r, 1, token.TT_SUBTRACT)
+		return symbolToken(r, 1, token.TK_SUBTRACT)
 	case ru1 == '*':
-		return symbolToken(r, 1, token.TT_MULTIPLY)
+		return symbolToken(r, 1, token.TK_MULTIPLY)
 	case ru1 == '/':
-		return symbolToken(r, 1, token.TT_DIVIDE)
+		return symbolToken(r, 1, token.TK_DIVIDE)
 	case ru1 == '%':
-		return symbolToken(r, 1, token.TT_MODULO)
+		return symbolToken(r, 1, token.TK_MODULO)
 	case ru1 == '_':
-		return symbolToken(r, 1, token.TT_VOID)
+		return symbolToken(r, 1, token.TK_VOID)
 	case ru1 == ',':
-		return symbolToken(r, 1, token.TT_DELIM)
+		return symbolToken(r, 1, token.TK_DELIM)
 	default:
 		return nil, unknownSymbol(r, ru1)
 	}

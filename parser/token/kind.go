@@ -4,56 +4,56 @@ package token
 type Kind int
 
 const (
-	TT_UNDEFINED Kind = iota
-	TT_NEWLINE        // '\n' or '\r\n'
-	TT_SPACE          // All whitespace characters except newlines
-	TT_SHEBANG        // Always the first line in a file
-	TT_ID             // Identifier
-	TT_ASSIGN         // <-, :=
-	TT_BOOL           // true, false
-	TT_NUMBER         // 123.456
-	TT_STRING         // `...`
-	TT_ADD            // +
-	TT_SUBTRACT       // -
-	TT_MULTIPLY       // *
-	TT_DIVIDE         // /
-	TT_MODULO         // %
-	TT_VOID           // _
-	TT_DELIM          // ,
+	TK_UNDEFINED Kind = iota
+	TK_NEWLINE        // '\n' or '\r\n'
+	TK_SPACE          // All whitespace characters except newlines
+	TK_SHEBANG        // Always the first line in a file
+	TK_ID             // Identifier
+	TK_ASSIGN         // <-, :=
+	TK_BOOL           // true, false
+	TK_NUMBER         // 123.456
+	TK_STRING         // `...`
+	TK_ADD            // +
+	TK_SUBTRACT       // -
+	TK_MULTIPLY       // *
+	TK_DIVIDE         // /
+	TK_MODULO         // %
+	TK_VOID           // _
+	TK_DELIM          // ,
 )
 
 // KindName returns the name of the token type.
 func KindName(t Kind) string {
 	switch t {
-	case TT_SHEBANG:
+	case TK_SHEBANG:
 		return `SHEBANG`
-	case TT_NEWLINE:
+	case TK_NEWLINE:
 		return `NEWLINE`
-	case TT_SPACE:
+	case TK_SPACE:
 		return `SPACE`
-	case TT_ID:
+	case TK_ID:
 		return `ID`
-	case TT_ASSIGN:
+	case TK_ASSIGN:
 		return `ASSIGN`
-	case TT_BOOL:
+	case TK_BOOL:
 		return `BOOL`
-	case TT_NUMBER:
+	case TK_NUMBER:
 		return `NUMBER`
-	case TT_STRING:
+	case TK_STRING:
 		return `STRING`
-	case TT_ADD:
+	case TK_ADD:
 		return `ADD`
-	case TT_SUBTRACT:
+	case TK_SUBTRACT:
 		return `SUBTRACT`
-	case TT_MULTIPLY:
+	case TK_MULTIPLY:
 		return `MULTIPLY`
-	case TT_DIVIDE:
+	case TK_DIVIDE:
 		return `DIVIDE`
-	case TT_MODULO:
+	case TK_MODULO:
 		return `MODULO`
-	case TT_VOID:
+	case TK_VOID:
 		return `VOID`
-	case TT_DELIM:
+	case TK_DELIM:
 		return `DELIM`
 	default:
 		return `UNDEFINED`

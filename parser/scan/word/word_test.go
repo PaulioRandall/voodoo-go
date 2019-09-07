@@ -20,31 +20,31 @@ func wordDummy(e int, t string, k token.Kind) token.Token {
 }
 
 func TestScanWord_1(t *testing.T) {
-	exp := wordDummy(1, `a`, token.TT_ID)
+	exp := wordDummy(1, `a`, token.TK_ID)
 	doTestScanWord(t, `a`, exp)
 }
 
 func TestScanWord_2(t *testing.T) {
-	exp := wordDummy(7, `abc_123`, token.TT_ID)
+	exp := wordDummy(7, `abc_123`, token.TK_ID)
 	doTestScanWord(t, `abc_123`, exp)
 }
 
 func TestScanWord_3(t *testing.T) {
-	exp := wordDummy(20, `a__________123456789`, token.TT_ID)
+	exp := wordDummy(20, `a__________123456789`, token.TK_ID)
 	doTestScanWord(t, `a__________123456789`, exp)
 }
 
 func TestScanWord_4(t *testing.T) {
-	exp := wordDummy(3, `abc`, token.TT_ID)
+	exp := wordDummy(3, `abc`, token.TK_ID)
 	doTestScanWord(t, `abc efg`, exp)
 }
 
 func TestScanWord_5(t *testing.T) {
-	exp := wordDummy(4, `true`, token.TT_BOOL)
+	exp := wordDummy(4, `true`, token.TK_BOOL)
 	doTestScanWord(t, `true`, exp)
 }
 
 func TestScanWord_6(t *testing.T) {
-	exp := wordDummy(5, `false`, token.TT_BOOL)
+	exp := wordDummy(5, `false`, token.TK_BOOL)
 	doTestScanWord(t, `false`, exp)
 }

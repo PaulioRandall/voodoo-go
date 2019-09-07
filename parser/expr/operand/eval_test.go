@@ -17,7 +17,7 @@ func tok(t string, k token.Kind) token.Token {
 
 func TestOperand_Eval_1(t *testing.T) {
 	o := operand{
-		t: tok(`1`, token.TT_NUMBER),
+		t: tok(`1`, token.TK_NUMBER),
 	}
 
 	c := ctx.New(nil)
@@ -30,7 +30,7 @@ func TestOperand_Eval_1(t *testing.T) {
 
 func TestOperand_Eval_2(t *testing.T) {
 	o := operand{
-		t: tok(`3.14159`, token.TT_NUMBER),
+		t: tok(`3.14159`, token.TK_NUMBER),
 	}
 
 	c := ctx.New(nil)
@@ -43,7 +43,7 @@ func TestOperand_Eval_2(t *testing.T) {
 
 func TestOperand_Eval_3(t *testing.T) {
 	o := operand{
-		t: tok(` `, token.TT_SPACE),
+		t: tok(` `, token.TK_SPACE),
 	}
 
 	c := ctx.New(nil)
@@ -55,7 +55,7 @@ func TestOperand_Eval_3(t *testing.T) {
 
 func TestOperand_Eval_4(t *testing.T) {
 	o := operand{
-		t: tok(`x`, token.TT_ID),
+		t: tok(`x`, token.TK_ID),
 	}
 
 	c := ctx.New(nil)
@@ -69,7 +69,7 @@ func TestOperand_Eval_4(t *testing.T) {
 
 func TestOperand_Eval_5(t *testing.T) {
 	o := operand{
-		t: tok(`x`, token.TT_ID),
+		t: tok(`x`, token.TK_ID),
 	}
 
 	c := ctx.New(nil)
@@ -81,7 +81,7 @@ func TestOperand_Eval_5(t *testing.T) {
 
 func TestOperand_Eval_6(t *testing.T) {
 	o := operand{
-		t: tok(`true`, token.TT_BOOL),
+		t: tok(`true`, token.TK_BOOL),
 	}
 
 	c := ctx.New(nil)
@@ -94,7 +94,7 @@ func TestOperand_Eval_6(t *testing.T) {
 
 func TestOperand_Eval_7(t *testing.T) {
 	o := operand{
-		t: tok(`Dragonfly`, token.TT_STRING),
+		t: tok(`Dragonfly`, token.TK_STRING),
 	}
 
 	c := ctx.New(nil)

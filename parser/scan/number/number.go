@@ -100,6 +100,6 @@ func numberToken(r *runer.Runer, start int, text string) token.Token {
 		r.Line(),
 		start,
 		r.NextCol(),
-		token.TT_NUMBER,
+		token.TK_NUMBER,
 	)
 }
