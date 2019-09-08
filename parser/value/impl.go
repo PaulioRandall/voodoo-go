@@ -23,7 +23,7 @@ func (v value) SameKind(other Value) bool {
 
 // Bool satisfies the Value interface.
 func (v value) Bool() (bool, bool) {
-	if v.k == VK_BOOL {
+	if v.k != VK_BOOL {
 		return false, false
 	}
 	return v.v.(bool), true
@@ -31,7 +31,7 @@ func (v value) Bool() (bool, bool) {
 
 // Num satisfies the Value interface.
 func (v value) Num() (float64, bool) {
-	if v.k == VK_NUMBER {
+	if v.k != VK_NUMBER {
 		return 0, false
 	}
 	return v.v.(float64), true
@@ -39,7 +39,7 @@ func (v value) Num() (float64, bool) {
 
 // Str satisfies the Value interface.
 func (v value) Str() (string, bool) {
-	if v.k == VK_STRING {
+	if v.k != VK_STRING {
 		return ``, false
 	}
 	return v.v.(string), true
@@ -47,7 +47,7 @@ func (v value) Str() (string, bool) {
 
 // Tuple satisfies the Value interface.
 func (v value) Tuple() ([]Value, bool) {
-	if v.k == VK_TUPLE {
+	if v.k != VK_TUPLE {
 		return nil, false
 	}
 	return v.v.([]Value), true

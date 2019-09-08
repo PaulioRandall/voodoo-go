@@ -20,5 +20,4 @@ s <- `Happiness`
 x, s, z <- y, `Dragonfly`, false
 a,b,c := _,_,_
 
-s, s <- _, 99
-s := `:(`
+n := 1 + 2
