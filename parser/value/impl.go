@@ -58,13 +58,13 @@ func (v value) String() string {
 	switch v.k {
 	case VK_BOOL:
 		b, _ := v.v.(bool)
-		return strconv.FormatBool(b) + ` (Bool)`
+		return `( Bool ) -> ` + strconv.FormatBool(b)
 	case VK_NUMBER:
 		n, _ := v.v.(float64)
-		return strconv.FormatFloat(n, byte('g'), -1, 64) + ` (Number)`
+		return `(Number) -> ` + strconv.FormatFloat(n, byte('g'), -1, 64)
 	case VK_STRING:
 		s, _ := v.v.(string)
-		return s + ` (String)`
+		return `(String) -> ` + "`" + s + "`"
 	case VK_TUPLE:
 		t, _ := v.v.([]Value)
 		return tupleString(t)
@@ -85,5 +85,5 @@ func tupleString(v []Value) string {
 	}
 
 	sb.WriteRune(']')
-	return sb.String() + ` (Tuple)`
+	return ` (Tuple ) -> ` + sb.String()
 }

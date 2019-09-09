@@ -27,7 +27,7 @@ func (c Context) String() string {
 
 	for k, v := range c.Vars {
 		sb.WriteString(k)
-		sb.WriteString(`: `)
+		sb.WriteString(`.`)
 		sb.WriteString(v.String())
 		sb.WriteRune('\n')
 	}

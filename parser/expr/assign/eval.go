@@ -9,72 +9,91 @@ import (
 
 // Eval satisfies the Expr interface.
 func (a assign) Eval(c ctx.Context) (value.Value, perror.Perror) {
-	var e perror.Perror
-	targets := len(a.dst)
-	di := 0
 
-	for si, _ := range a.src {
-		if di >= targets {
-			return nil, a.noTarget(si)
+	values, e := a.evalSrcExprs(c)
+	if e != nil {
+		return nil, e
+	}
+
+	return nil, a.doAssignments(c, values)
+}
+
+// evalSrcExprs evaluates the source expressions.
+func (a assign) evalSrcExprs(c ctx.Context) ([]value.Value, perror.Perror) {
+	targets := len(a.dst)
+	values := []value.Value{}
+
+	for i, src := range a.src {
+		if i >= targets {
+			return nil, a.noTarget(i)
 		}
 
-		di, e = a.evalAssign(c, si, di)
+		v, e := src.Eval(c)
 		if e != nil {
 			return nil, e
 		}
+
+		values = append(values, v)
 	}
 
-	if di < len(a.dst) {
-		return nil, a.noSource(di)
-	}
-
-	return nil, nil
+	return values, nil
 }
 
-// evalAssign evaluates a single source expression and assigns the result to the
-// target identifiers; there may be more than one target in some cases such as
-// the return from functions and spells.
-func (a assign) evalAssign(c ctx.Context, si, di int) (int, perror.Perror) {
-	v, e := a.src[si].Eval(c)
-	if e != nil {
-		return 0, e
+// doAssignments assigns the values to their identifiers.
+func (a assign) doAssignments(c ctx.Context, values []value.Value) perror.Perror {
+	var e perror.Perror
+	targets := len(a.dst)
+	idIndex := 0
+
+	for i, v := range values {
+		if idIndex >= targets {
+			return a.noTarget(i)
+		}
+
+		idIndex, e = a.doAssign(c, v, idIndex)
+		if e != nil {
+			return e
+		}
 	}
 
-	return a.doAssign(c, v, di)
+	if idIndex < len(a.dst) {
+		return a.noSource(idIndex)
+	}
+
+	return nil
 }
 
 // doAssign assigns the value to the one or many variables. The index to the
 // next assignment target is returned.
-func (a assign) doAssign(c ctx.Context, v value.Value, di int) (int, perror.Perror) {
-	var e perror.Perror
+func (a assign) doAssign(c ctx.Context, v value.Value, idIndex int) (int, perror.Perror) {
 
 	switch {
 	case v == nil:
-		t := a.dst[di].Text()
+		t := a.dst[idIndex].Text()
 		delete(c.Vars, t)
-		di++
-	case a.dst[di].Kind() == token.TK_VOID:
-		di++
+		idIndex++
+	case a.dst[idIndex].Kind() == token.TK_VOID:
+		idIndex++
 	default:
-		di, e = a.assignToID(c, v, di)
+		return a.assignToID(c, v, idIndex)
 	}
 
-	return di, e
+	return idIndex, nil
 }
 
 // assignToID assigns a value to an identifier.
-func (a assign) assignToID(c ctx.Context, new value.Value, di int) (int, perror.Perror) {
-	t := a.dst[di].Text()
+func (a assign) assignToID(c ctx.Context, new value.Value, idIndex int) (int, perror.Perror) {
+	t := a.dst[idIndex].Text()
 
 	switch old := c.Vars[t]; {
 	case old == nil, old.SameKind(new):
 		c.Vars[t] = new
 	default:
-		return 0, a.kindMismatch(old, new, di)
+		return 0, a.kindMismatch(old, new, idIndex)
 	}
 
-	di++
-	return di, nil
+	idIndex++
+	return idIndex, nil
 }
 
 // kindMismatch returns a new Perror for when an identifier already has a value
