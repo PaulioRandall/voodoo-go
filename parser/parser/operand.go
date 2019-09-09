@@ -8,17 +8,16 @@ import (
 )
 
 // matchOperand returns true if the next part of the statement is an operand.
-func matchOperand(p *Parser) bool {
-	k := p.t[p.i].Kind()
+func matchOperand(p *Parser, ip int) bool {
+	k := p.t[ip].Kind()
 	return k == token.TK_ID ||
-		k == token.TK_BOOL ||
-		k == token.TK_NUMBER ||
 		k == token.TK_STRING ||
 		k == token.TK_VOID
 }
 
-// parseOperand parses an operand expression.
-func parseOperand(p *Parser) (expr.Expr, perror.Perror) {
+// parseOperandOnly parses an operand expression but does not atempt to match
+// the expression afterwards.
+func parseOperandOnly(p *Parser) (expr.Expr, perror.Perror) {
 	o := operand.New(p.t[p.i])
 	p.i++
 	return o, nil

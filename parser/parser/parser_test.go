@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/PaulioRandall/voodoo-go/parser/expr"
+	"github.com/PaulioRandall/voodoo-go/parser/expr/arithmetic"
 	"github.com/PaulioRandall/voodoo-go/parser/expr/assign"
 	"github.com/PaulioRandall/voodoo-go/parser/expr/operand"
 	//"github.com/PaulioRandall/voodoo-go/parser/perror"
@@ -159,6 +160,128 @@ func TestParse_6(t *testing.T) {
 			in[0],
 			in[2],
 			in[4],
+		},
+	)
+
+	doTestParseStat(t, in, exp, false)
+}
+
+func TestParse_7(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`6`, token.TK_NUMBER),
+		dummy(`*`, token.TK_MULTIPLY),
+		dummy(`7`, token.TK_NUMBER),
+	}
+
+	exp := assign.New(
+		in[1],
+		[]expr.Expr{
+			arithmetic.New(
+				in[3],
+				operand.New(in[2]),
+				operand.New(in[4]),
+			),
+		},
+		[]token.Token{
+			in[0],
+		},
+	)
+
+	doTestParseStat(t, in, exp, false)
+}
+
+func TestParse_8(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`y`, token.TK_ID),
+		dummy(`%`, token.TK_MODULO),
+		dummy(`z`, token.TK_ID),
+	}
+
+	exp := assign.New(
+		in[1],
+		[]expr.Expr{
+			arithmetic.New(
+				in[3],
+				operand.New(in[2]),
+				operand.New(in[4]),
+			),
+		},
+		[]token.Token{
+			in[0],
+		},
+	)
+
+	doTestParseStat(t, in, exp, false)
+}
+
+func TestParse_9(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`1`, token.TK_NUMBER),
+		dummy(`+`, token.TK_ADD),
+		dummy(`2`, token.TK_NUMBER),
+		dummy(`+`, token.TK_ADD),
+		dummy(`3`, token.TK_NUMBER),
+	}
+
+	exp := assign.New(
+		in[1],
+		[]expr.Expr{
+			arithmetic.New(
+				in[5],
+				arithmetic.New(
+					in[3],
+					operand.New(in[2]),
+					operand.New(in[4]),
+				),
+				operand.New(in[6]),
+			),
+		},
+		[]token.Token{
+			in[0],
+		},
+	)
+
+	doTestParseStat(t, in, exp, false)
+}
+
+func TestParse_10(t *testing.T) {
+	in := []token.Token{
+		dummy(`x`, token.TK_ID),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`y`, token.TK_ID),
+		dummy(`<-`, token.TK_ASSIGN),
+		dummy(`1`, token.TK_NUMBER),
+		dummy(`+`, token.TK_ADD),
+		dummy(`2`, token.TK_NUMBER),
+		dummy(`,`, token.TK_DELIM),
+		dummy(`9`, token.TK_NUMBER),
+		dummy(`-`, token.TK_SUBTRACT),
+		dummy(`3`, token.TK_NUMBER),
+	}
+
+	exp := assign.New(
+		in[3],
+		[]expr.Expr{
+			arithmetic.New(
+				in[5],
+				operand.New(in[4]),
+				operand.New(in[6]),
+			),
+			arithmetic.New(
+				in[9],
+				operand.New(in[8]),
+				operand.New(in[10]),
+			),
+		},
+		[]token.Token{
+			in[0],
+			in[2],
 		},
 	)
 

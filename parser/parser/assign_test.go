@@ -18,7 +18,7 @@ func TestMatchAssign_1(t *testing.T) {
 		dummy(`1`, token.TK_NUMBER),
 	})
 
-	m := matchAssign(p)
+	m := matchAssign(p, 0)
 	assert.True(t, m)
 }
 
@@ -27,7 +27,7 @@ func TestMatchAssign_2(t *testing.T) {
 		dummy(`1`, token.TK_NUMBER),
 	})
 
-	m := matchAssign(p)
+	m := matchAssign(p, 0)
 	assert.False(t, m)
 }
 
@@ -38,7 +38,7 @@ func TestMatchAssign_3(t *testing.T) {
 		dummy(`_`, token.TK_VOID),
 	})
 
-	m := matchAssign(p)
+	m := matchAssign(p, 0)
 	assert.True(t, m)
 }
 
@@ -49,7 +49,7 @@ func TestMatchAssign_4(t *testing.T) {
 		dummy(`4`, token.TK_NUMBER),
 	})
 
-	m := matchAssign(p)
+	m := matchAssign(p, 0)
 	assert.True(t, m)
 }
 
@@ -68,6 +68,6 @@ func TestMatchAssign_5(t *testing.T) {
 		dummy(`_`, token.TK_VOID),
 	})
 
-	m := matchAssign(p)
+	m := matchAssign(p, 0)
 	assert.True(t, m)
 }

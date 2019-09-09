@@ -68,7 +68,7 @@ func analyse(p *Parser, tk token.Token) bool {
 // parse kicks off the parsing process.
 func parse(p *Parser) (expr.Expr, perror.Perror) {
 	switch {
-	case matchAssign(p):
+	case matchAssign(p, p.i):
 		return parseAssign(p)
 	default:
 		return nil, noMatch(p)

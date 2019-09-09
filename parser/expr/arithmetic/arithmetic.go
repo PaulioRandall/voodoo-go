@@ -33,9 +33,7 @@ func (a arithmetic) String() string {
 	sb := strings.Builder{}
 
 	sb.WriteString(a.nu.String())
-	sb.WriteRune(' ')
 	sb.WriteString(a.t.Text())
-	sb.WriteRune(' ')
 	sb.WriteString(a.de.String())
 
 	return sb.String()

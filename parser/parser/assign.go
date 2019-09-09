@@ -8,8 +8,8 @@ import (
 )
 
 // matchAssign returns true if the next part of the statement is an assignment.
-func matchAssign(p *Parser) bool {
-	for i, tk := range p.t[p.i:] {
+func matchAssign(p *Parser, ip int) bool {
+	for i, tk := range p.t[ip:] {
 		k := tk.Kind()
 
 		if i%2 == 0 {
@@ -63,8 +63,10 @@ func parseAssignDst(p *Parser) []token.Token {
 func parseAssignSrc(p *Parser) ([]expr.Expr, perror.Perror) {
 	src := []expr.Expr{}
 
-	for ; p.i < p.size; p.i = p.i + 1 {
-		ex, e := nextAssignSrc(p)
+	// TODO: This needs to be changed so it checks that a comma appears
+	// TODO: between each expression.
+	for ; p.i < p.size; p.i++ {
+		ex, e := parseNextSrc(p)
 		if e != nil {
 			return nil, e
 		}
@@ -76,12 +78,16 @@ func parseAssignSrc(p *Parser) ([]expr.Expr, perror.Perror) {
 	return src, nil
 }
 
-// nextAssignSrc parses the source expressions that produce the values to
-// assign.
-func nextAssignSrc(p *Parser) (expr.Expr, perror.Perror) {
+// parseNextSrc parses a source expression whos result will be assigned to a
+// variable.
+func parseNextSrc(p *Parser) (expr.Expr, perror.Perror) {
 	switch {
-	case matchOperand(p):
-		return parseOperand(p)
+	case matchNumber(p, p.i):
+		return parseNumber(p)
+	case matchBool(p, p.i):
+		return parseBool(p)
+	case matchOperand(p, p.i):
+		return parseOperandOnly(p)
 	case p.t[p.i].Kind() == token.TK_NEWLINE:
 		p.i++
 		return nil, nil
