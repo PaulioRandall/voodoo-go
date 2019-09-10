@@ -22,7 +22,7 @@ func AssertEqual(t *testing.T, exp Perror, act Perror) bool {
 
 	return utils.LogicalConjunction(
 		assert.Equal(t, exp.Line(), act.Line(), `Perror.Line()`),
-		assert.Equal(t, exp.Index(), act.Index(), `Perror.Index()`),
+		assert.Equal(t, exp.Cols(), act.Cols(), `Perror.Cols()`),
 		assertErrors(t, act),
 	)
 }

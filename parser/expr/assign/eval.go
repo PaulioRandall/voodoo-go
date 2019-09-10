@@ -102,7 +102,10 @@ func (a assign) assignToID(c ctx.Context, new value.Value, idIndex int) (int, pe
 func (a assign) kindMismatch(old, new value.Value, i int) perror.Perror {
 	return perror.New(
 		a.dst[i].Line(),
-		a.dst[i].Start(),
+		[]int{
+			a.src[i].Token().Start(),
+			a.dst[i].Start(),
+		},
 		[]string{
 			"Expression result type does not match variable storage type",
 			"Variable stores type `" + old.Kind().Name() + "`",
@@ -116,7 +119,9 @@ func (a assign) kindMismatch(old, new value.Value, i int) perror.Perror {
 func (a assign) noSource(i int) perror.Perror {
 	return perror.New(
 		a.dst[i].Line(),
-		a.dst[i].Start(),
+		[]int{
+			a.dst[i].Start(),
+		},
 		[]string{
 			"No source expression for assignment target",
 			"`" + a.dst[i].Text() + "` declared but no value to assign",
@@ -130,7 +135,9 @@ func (a assign) noSource(i int) perror.Perror {
 func (a assign) noTarget(i int) perror.Perror {
 	return perror.New(
 		a.src[i].Token().Line(),
-		a.src[i].Token().Start(),
+		[]int{
+			a.src[i].Token().Start(),
+		},
 		[]string{
 			"No target identifier for expression result",
 			"`" + a.src[i].String() + "` has no assignment target",

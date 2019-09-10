@@ -3,28 +3,28 @@ package perror
 // Perror represents an error found while parsing.
 type Perror interface {
 
-	// Line returns the offending line within the scroill.
+	// Line returns the offending line index within the scroill.
 	Line() int
 
-	// Index returns the offending index within the scroll.
-	Index() int
+	// Cols returns the offending column indices within the scroll.
+	Cols() []int
 
-	// Errors returns an array of errors messages.
+	// Errors returns an array of error messages.
 	Errors() []string
 }
 
 // perror is an implementation of Perror.
 type perror struct {
 	l int
-	i int
+	c []int
 	e []string
 }
 
 // New returns a new initialised Perror.
-func New(l, i int, e []string) Perror {
+func New(l int, c []int, e []string) Perror {
 	return perror{
 		l: l,
-		i: i,
+		c: c,
 		e: e,
 	}
 }
@@ -34,9 +34,9 @@ func (e perror) Line() int {
 	return e.l
 }
 
-// Index satisfies the Perror interface.
-func (e perror) Index() int {
-	return e.i
+// Cols satisfies the Perror interface.
+func (e perror) Cols() []int {
+	return e.c
 }
 
 // Errors satisfies the Perror interface.
@@ -45,10 +45,10 @@ func (e perror) Errors() []string {
 }
 
 // NewByError creates a new Perror from an error.
-func NewByError(l, i int, e error) Perror {
+func NewByError(l, c int, e error) Perror {
 	return perror{
 		l: l,
-		i: i,
+		c: []int{c},
 		e: []string{e.Error()},
 	}
 }

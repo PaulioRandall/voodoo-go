@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -44,7 +45,7 @@ func printError(f *os.File, perr Perror) error {
 		return e
 	}
 
-	addMsgs(sb, perr.Index(), perr.Errors()...)
+	addMsgs(sb, perr.Cols(), perr.Errors()...)
 	e = addLines(f, sb, line+1, line+trailLines)
 	if e != nil {
 		return e
@@ -165,21 +166,32 @@ func addLines(f *os.File, sb *strings.Builder, start, end int) error {
 }
 
 // addMsgs adds each input message to the print message.
-func addMsgs(sb *strings.Builder, col int, msgs ...string) {
-	first := true
+func addMsgs(sb *strings.Builder, cols []int, msgs ...string) {
+	sort.Ints(cols)
+
+	writeLineOfRunes(sb, msgIndent, cols, '^')
+
 	for _, s := range msgs {
-		addIndent(sb, msgIndent+col)
+		addIndent(sb, msgIndent)
 
-		if first {
-			first = false
-			sb.WriteString("^...")
-		} else {
-			sb.WriteString("    ")
-		}
+		sb.WriteString(`  `)
 
+		s = fmt.Sprintf("\033[1;33m%s\033[0m", s)
 		sb.WriteString(s)
 		sb.WriteRune('\n')
 	}
+}
+
+// writeLineOfRunes writes a rune to the string builder at every column index
+// in the column array before finishing with a line feed.
+func writeLineOfRunes(sb *strings.Builder, baseIndent int, cols []int, ru rune) {
+	addIndent(sb, baseIndent)
+	for i, c := range cols {
+		addIndent(sb, c-i)
+		s := fmt.Sprintf("\033[1;31m%s\033[0m", string(ru))
+		sb.WriteString(s)
+	}
+	sb.WriteRune('\n')
 }
 
 // addIndent adds a defined number of spaces to the print message.

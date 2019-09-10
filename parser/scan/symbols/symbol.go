@@ -86,7 +86,9 @@ func runesToText(r *runer.Runer, n int) (string, int, perror.Perror) {
 func unknownSymbol(r *runer.Runer, ru rune) perror.Perror {
 	return perror.New(
 		r.Line(),
-		r.NextCol(),
+		[]int{
+			r.NextCol(),
+		},
 		[]string{
 			"I don't know what this symbol means '" + string(ru) + "'",
 		},

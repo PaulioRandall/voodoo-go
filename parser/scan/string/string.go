@@ -42,7 +42,9 @@ func ScanString(r *runer.Runer) (token.Token, perror.Perror) {
 func unclosedString(r *runer.Runer) perror.Perror {
 	return perror.New(
 		r.Line(),
-		r.NextCol(),
+		[]int{
+			r.NextCol(),
+		},
 		[]string{
 			"Did some one forget to close a string literal?!",
 		},

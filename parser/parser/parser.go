@@ -35,7 +35,9 @@ func (p *Parser) Parse(tk token.Token) (expr.Expr, perror.Perror) {
 	if tk == nil {
 		return nil, perror.New(
 			p.t[0].Line(),
-			p.t[0].Start(),
+			[]int{
+				p.t[0].Start(),
+			},
 			[]string{
 				`Nil passed to parser`,
 			},
@@ -80,7 +82,9 @@ func parse(p *Parser) (expr.Expr, perror.Perror) {
 func noMatch(p *Parser) perror.Perror {
 	return perror.New(
 		p.t[0].Line(),
-		p.t[0].Start(),
+		[]int{
+			p.t[0].Start(),
+		},
 		[]string{
 			`Statement has no matching pattern,`,
 			`I don't know how to parse it ¯\_(--)_/¯`,

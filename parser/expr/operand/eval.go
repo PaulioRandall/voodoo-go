@@ -95,7 +95,9 @@ func (o operand) invalidKind() perror.Perror {
 func (o operand) newPerror(m []string) perror.Perror {
 	return perror.New(
 		o.t.Line(),
-		o.t.Start(),
+		[]int{
+			o.t.Start(),
+		},
 		m,
 	)
 }

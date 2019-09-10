@@ -84,7 +84,9 @@ func scanFracInt(r *runer.Runer) (string, perror.Perror) {
 func badFractional(r *runer.Runer) perror.Perror {
 	return perror.New(
 		r.Line(),
-		r.NextCol(),
+		[]int{
+			r.NextCol(),
+		},
 		[]string{
 			"Invalid number format, either...",
 			"- fractional digits are missing",

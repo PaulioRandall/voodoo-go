@@ -23,7 +23,7 @@ func dummy(end int, text string) token.Token {
 }
 
 func dummyErr(i int) perror.Perror {
-	return perror.New(0, i, []string{`:)`})
+	return perror.New(0, []int{i}, []string{`:)`})
 }
 
 func TestScanNumber_1(t *testing.T) {

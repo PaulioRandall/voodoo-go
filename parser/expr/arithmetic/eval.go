@@ -94,7 +94,9 @@ func evalToFloat64(c ctx.Context, ex expr.Expr) (float64, perror.Perror) {
 func notInteger(t token.Token) perror.Perror {
 	return perror.New(
 		t.Line(),
-		t.Start(),
+		[]int{
+			t.Start(),
+		},
 		[]string{
 			"The numerator is not an integer",
 			"Can't find the remainder of a non integer",
@@ -107,7 +109,9 @@ func notInteger(t token.Token) perror.Perror {
 func divideByZero(t token.Token) perror.Perror {
 	return perror.New(
 		t.Line(),
-		t.Start(),
+		[]int{
+			t.Start(),
+		},
 		[]string{
 			"The denominator is zero",
 			"Can't divide by zero",
@@ -120,7 +124,9 @@ func divideByZero(t token.Token) perror.Perror {
 func notNumber(t token.Token) perror.Perror {
 	return perror.New(
 		t.Line(),
-		t.Start(),
+		[]int{
+			t.Start(),
+		},
 		[]string{
 			"Expected value to be a number",
 		},
@@ -139,7 +145,9 @@ func (a arithmetic) invalidKind() perror.Perror {
 func (a arithmetic) newPerror(m []string) perror.Perror {
 	return perror.New(
 		a.t.Line(),
-		a.t.Start(),
+		[]int{
+			a.t.Start(),
+		},
 		m,
 	)
 }
